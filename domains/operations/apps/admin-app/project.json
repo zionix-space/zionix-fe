@@ -67,7 +67,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "domains/operations/teams/admin-team/admin-app/jest.config.js"
+        "jestConfig": "domains/operations/apps/admin-app/jest.config.js"
       }
     }
   }

@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'adminApp',
+  name: "adminApp",
 
   exposes: {
-    './Module': './src/remote-entry.js',
+    "./Module": "./src/remote-entry.js",
   },
 };

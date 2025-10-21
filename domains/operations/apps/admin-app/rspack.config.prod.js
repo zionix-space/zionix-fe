@@ -1,1 +1,1 @@
-module.exports = require('./rspack.config');
+module.exports = require("./rspack.config");

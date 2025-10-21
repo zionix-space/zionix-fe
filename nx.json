@@ -24,14 +24,18 @@
       "cache": true,
       "inputs": [
         "default",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/tools/linting/.eslintrc.json",
+        "{workspaceRoot}/tools/linting/.eslintignore",
         "{workspaceRoot}/eslint.config.js"
       ]
     },
     "@nx/jest:jest": {
       "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/tools/testing/jest.preset.js"
+      ],
       "options": {
         "passWithNoTests": true
       },
