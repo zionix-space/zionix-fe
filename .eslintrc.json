@@ -1,0 +1,39 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nx"],
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript", "eslint:recommended", "plugin:react/recommended"],
+      "rules": {
+        "react/react-in-jsx-scope": "off",
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "*",
+                "onlyDependOnLibsWithTags": ["*"]
+              }
+            ]
+          }
+        ],
+        "no-unused-vars": "error", // Ensures no unused variables
+        "no-console": "warn", // Warns about console statements
+        "react/prop-types": "off" // Disable prop-types if you're not using them
+      }
+    },
+    {
+      "files": ["*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        // You can add test-specific rules here if needed
+      }
+    }
+  ]
+}

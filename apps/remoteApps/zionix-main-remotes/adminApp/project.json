@@ -1,0 +1,74 @@
+{
+  "name": "adminApp",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/remoteApps/zionix-main-remotes/adminApp/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/apps/remoteApps/zionix-main-remotes/adminApp",
+        "main": "apps/remoteApps/zionix-main-remotes/adminApp/src/main.jsx",
+        "tsConfig": "apps/remoteApps/zionix-main-remotes/adminApp/tsconfig.app.json",
+        "rspackConfig": "apps/remoteApps/zionix-main-remotes/adminApp/rspack.config.js",
+        "assets": [
+          "apps/remoteApps/zionix-main-remotes/adminApp/src/favicon.ico",
+          "apps/remoteApps/zionix-main-remotes/adminApp/src/assets"
+        ]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "apps/remoteApps/zionix-main-remotes/adminApp/rspack.config.prod.js"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "adminApp:build:development",
+        "port": 4202
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "adminApp:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "adminApp:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "adminApp:serve:development"
+        },
+        "production": {
+          "serveTarget": "adminApp:serve:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/remoteApps/zionix-main-remotes/adminApp/jest.config.js"
+      }
+    }
+  }
+}
