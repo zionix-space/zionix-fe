@@ -1,7 +1,7 @@
 {
   "name": "zionix-main-host",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/hostApps/zionix-main-host/src",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "platform/shell/main-shell/zionix-main-host/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,13 +11,13 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/apps/hostApps/zionix-main-host",
-        "main": "apps/hostApps/zionix-main-host/src/main.jsx",
-        "tsConfig": "apps/hostApps/zionix-main-host/tsconfig.app.json",
-        "rspackConfig": "apps/hostApps/zionix-main-host/rspack.config.js",
+        "outputPath": "dist/platform/shell/main-shell/zionix-main-host",
+        "main": "platform/shell/main-shell/zionix-main-host/src/main.jsx",
+        "tsConfig": "platform/shell/main-shell/zionix-main-host/tsconfig.app.json",
+        "rspackConfig": "platform/shell/main-shell/zionix-main-host/rspack.config.js",
         "assets": [
-          "apps/hostApps/zionix-main-host/src/favicon.ico",
-          "apps/hostApps/zionix-main-host/src/assets"
+          "platform/shell/main-shell/zionix-main-host/src/favicon.ico",
+          "platform/shell/main-shell/zionix-main-host/src/assets"
         ]
       },
       "configurations": {
@@ -66,7 +66,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/hostApps/zionix-main-host/jest.config.js"
+        "jestConfig": "platform/shell/main-shell/zionix-main-host/jest.config.js"
       }
     }
   }

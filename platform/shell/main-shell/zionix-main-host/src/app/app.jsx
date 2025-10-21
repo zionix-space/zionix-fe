@@ -90,3 +90,21 @@ export function App() {
 }
 
 export default App;
+
+// Auto-generated Module Federation switch statement
+function getModuleComponent(moduleName) {
+  let ModuleComponent;
+
+  switch (moduleName) {
+      case 'adminApp':
+        ModuleComponent = React.lazy(() => import('adminApp/Module').catch(err => {
+          console.error('Failed to load module adminApp:', err);
+          return { default: () => <div>Error loading adminApp</div> };
+        }));
+        break;
+    default:
+      ModuleComponent = () => <div>Module '{moduleName}' not found</div>;
+  }
+
+  return ModuleComponent;
+}

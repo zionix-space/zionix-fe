@@ -2,9 +2,9 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Function to get modules from the apps/hp_main directory
+// Function to get modules from the domains/operations directory
 function getRelevantModules() {
-  const zionixMainPath = path.resolve('apps/remoteApps/zionix-main-remotes');
+  const zionixMainPath = path.resolve('domains/operations/teams/admin-team');
   console.log(`Scanning directory: ${zionixMainPath}`);
 
   if (!fs.existsSync(zionixMainPath)) {
@@ -43,7 +43,7 @@ function generateRemoteConfig(environment) {
 
   const remotes = relevantModules.map((module) => module);
   const remotesConfigPath = path.resolve(
-    'apps/hostApps/zionix-main-host/module-federation.config.js'
+    'platform/shell/main-shell/zionix-main-host/module-federation.config.js'
   );
 
   // Create or update the configuration file with the current remotes
@@ -57,7 +57,7 @@ function generateRemoteConfig(environment) {
 
 function updateAppJs() {
   const appJsPath = path.resolve(
-    'apps/hostApps/zionix-main-host/src/app/app.jsx'
+    'platform/shell/main-shell/zionix-main-host/src/app/app.jsx'
   );
   let appJsContent = fs.readFileSync(appJsPath, 'utf-8');
   const relevantModules = require('./zionix-main.modules.json');

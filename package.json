@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "env-cmd -f .env-cmdrc -e dev nx run zionix-main-host:serve",
-    "start-zionix-main": "node scripts/zionix-main.script.config.js",
-    "start-hp-portal": "node scripts/hpPortal.script.config.js",
+    "start-zionix-main": "node tools/deployment/zionix-main.script.config.js",
+    "start-hp-portal": "node tools/deployment/hpPortal.script.config.js",
     "lint": "nx run-many --target=lint",
     "lint:fix": "nx run-many --target=lint --fix",
     "eslint": "eslint --ext .js,.ts,.jsx,.tsx apps/",

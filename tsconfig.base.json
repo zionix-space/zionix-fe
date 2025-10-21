@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "adminApp/Module": [
-        "apps/remoteApps/zionix-main-remotes/adminApp/src/remote-entry.js"
+        "domains/operations/teams/admin-team/admin-app/src/remote-entry.js"
       ]
     }
   },

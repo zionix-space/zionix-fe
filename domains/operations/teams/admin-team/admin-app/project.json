@@ -1,7 +1,7 @@
 {
   "name": "adminApp",
-  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/remoteApps/zionix-main-remotes/adminApp/src",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "domains/operations/teams/admin-team/admin-app/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,13 +11,13 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/apps/remoteApps/zionix-main-remotes/adminApp",
-        "main": "apps/remoteApps/zionix-main-remotes/adminApp/src/main.jsx",
-        "tsConfig": "apps/remoteApps/zionix-main-remotes/adminApp/tsconfig.app.json",
-        "rspackConfig": "apps/remoteApps/zionix-main-remotes/adminApp/rspack.config.js",
+        "outputPath": "dist/domains/operations/teams/admin-team/admin-app",
+        "main": "domains/operations/teams/admin-team/admin-app/src/main.jsx",
+        "tsConfig": "domains/operations/teams/admin-team/admin-app/tsconfig.app.json",
+        "rspackConfig": "domains/operations/teams/admin-team/admin-app/rspack.config.js",
         "assets": [
-          "apps/remoteApps/zionix-main-remotes/adminApp/src/favicon.ico",
-          "apps/remoteApps/zionix-main-remotes/adminApp/src/assets"
+          "domains/operations/teams/admin-team/admin-app/src/favicon.ico",
+          "domains/operations/teams/admin-team/admin-app/src/assets"
         ]
       },
       "configurations": {
@@ -28,7 +28,7 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "apps/remoteApps/zionix-main-remotes/adminApp/rspack.config.prod.js"
+          "rspackConfig": "domains/operations/teams/admin-team/admin-app/rspack.config.prod.js"
         }
       }
     },
@@ -36,7 +36,7 @@
       "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
         "buildTarget": "adminApp:build:development",
-        "port": 4202
+        "port": 4201
       },
       "configurations": {
         "development": {},
@@ -67,7 +67,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/remoteApps/zionix-main-remotes/adminApp/jest.config.js"
+        "jestConfig": "domains/operations/teams/admin-team/admin-app/jest.config.js"
       }
     }
   }
