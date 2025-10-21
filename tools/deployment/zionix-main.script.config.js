@@ -14,14 +14,32 @@ function getRelevantModules() {
 
   const allProjects = fs.readdirSync(zionixMainPath);
 
-  // Filter to include only main modules (excluding e2e and hpshell)
-  return allProjects.filter((project) => {
+  // Filter to include only main modules (excluding e2e and hpshell) and get actual project names
+  const relevantProjects = allProjects.filter((project) => {
     const projectPath = path.join(zionixMainPath, project);
     return (
       fs.statSync(projectPath).isDirectory() &&
       !project.endsWith('-e2e') && // Exclude E2E files
       project !== 'hpshell'
     ); // Exclude the host file
+  });
+
+  // Read actual project names from project.json files
+  return relevantProjects.map((folderName) => {
+    const projectJsonPath = path.join(zionixMainPath, folderName, 'project.json');
+    
+    if (fs.existsSync(projectJsonPath)) {
+      try {
+        const projectJson = JSON.parse(fs.readFileSync(projectJsonPath, 'utf-8'));
+        return projectJson.name || folderName; // Use project name from project.json, fallback to folder name
+      } catch (error) {
+        console.warn(`Warning: Could not read project.json for ${folderName}, using folder name`);
+        return folderName;
+      }
+    } else {
+      console.warn(`Warning: project.json not found for ${folderName}, using folder name`);
+      return folderName;
+    }
   });
 }
 

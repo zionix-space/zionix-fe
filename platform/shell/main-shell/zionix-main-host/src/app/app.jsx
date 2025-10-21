@@ -97,10 +97,7 @@ function getModuleComponent(moduleName) {
 
   switch (moduleName) {
       case 'adminApp':
-        ModuleComponent = React.lazy(() => import('adminApp/Module').catch(err => {
-          console.error('Failed to load module adminApp:', err);
-          return { default: () => <div>Error loading adminApp</div> };
-        }));
+        ModuleComponent = React.lazy(() => import('adminApp/Module'));
         break;
     default:
       ModuleComponent = () => <div>Module '{moduleName}' not found</div>;
