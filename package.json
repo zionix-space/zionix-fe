@@ -9,7 +9,12 @@
     "lint": "nx run-many --target=lint",
     "lint:fix": "nx run-many --target=lint --fix",
     "eslint": "eslint --ext .js,.ts,.jsx,.tsx apps/",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deploy:vercel": "node tools/dockerconfig/deploy-vercel.js",
+    "deploy:main": "node tools/dockerconfig/deploy-vercel.js zionix-main-host",
+    "deploy:admin": "node tools/dockerconfig/deploy-vercel.js adminApp",
+    "docker:dev": "cd tools/dockerconfig && docker-compose up",
+    "docker:prod": "cd tools/dockerconfig && docker-compose -f docker-compose.prod.yml up"
   },
   "private": true,
   "dependencies": {

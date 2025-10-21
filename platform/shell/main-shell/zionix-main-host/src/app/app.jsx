@@ -100,6 +100,7 @@ function getModuleComponent(moduleName) {
         break;
 
 
+
     default:
       ModuleComponent = function NotFoundComponent() {
         return <div>Module &apos;{moduleName}&apos; not found</div>;
