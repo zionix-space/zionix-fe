@@ -5,11 +5,7 @@
   "overrides": [
     {
       "files": ["*.js", "*.jsx"],
-      "extends": [
-        "plugin:@nx/javascript",
-        "eslint:recommended",
-        "plugin:react/recommended"
-      ],
+      "extends": ["plugin:@nx/javascript", "eslint:recommended", "plugin:react/recommended"],
       "rules": {
         "react/react-in-jsx-scope": "off",
         "@nx/enforce-module-boundaries": [

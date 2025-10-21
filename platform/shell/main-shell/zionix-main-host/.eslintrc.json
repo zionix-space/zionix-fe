@@ -1,6 +1,6 @@
 {
-  "extends": ["plugin:@nx/react", "../../../../tools/linting/.eslintrc.json"],
-  "ignorePatterns": ["!**/*", "dist/**/*", "@mf-types/**/*"],
+  "extends": ["plugin:@nx/react", "../../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
