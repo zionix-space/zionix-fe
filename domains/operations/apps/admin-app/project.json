@@ -1,7 +1,7 @@
 {
   "name": "adminApp",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "domains/operations/teams/admin-team/admin-app/src",
+  "sourceRoot": "domains/operations/apps/admin-app/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,13 +11,13 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/domains/operations/teams/admin-team/admin-app",
-        "main": "domains/operations/teams/admin-team/admin-app/src/main.jsx",
-        "tsConfig": "domains/operations/teams/admin-team/admin-app/tsconfig.app.json",
-        "rspackConfig": "domains/operations/teams/admin-team/admin-app/rspack.config.js",
+        "outputPath": "dist/domains/operations/apps/admin-app",
+        "main": "domains/operations/apps/admin-app/src/main.jsx",
+        "tsConfig": "domains/operations/apps/admin-app/tsconfig.app.json",
+        "rspackConfig": "domains/operations/apps/admin-app/rspack.config.js",
         "assets": [
-          "domains/operations/teams/admin-team/admin-app/src/favicon.ico",
-          "domains/operations/teams/admin-team/admin-app/src/assets"
+          "domains/operations/apps/admin-app/src/favicon.ico",
+          "domains/operations/apps/admin-app/src/assets"
         ]
       },
       "configurations": {
@@ -28,7 +28,7 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "domains/operations/teams/admin-team/admin-app/rspack.config.prod.js"
+          "rspackConfig": "domains/operations/apps/admin-app/rspack.config.prod.js"
         }
       }
     },
@@ -67,7 +67,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "domains/operations/teams/admin-team/admin-app/jest.config.js"
+        "jestConfig": "domains/operations/apps/admin-app/jest.config.js"
       }
     }
   }

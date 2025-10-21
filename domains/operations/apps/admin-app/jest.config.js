@@ -1,6 +1,6 @@
 /* eslint-disable */
 module.exports = {
-  displayName: "zionix-main-host",
+  displayName: "adminApp",
   preset: "../../../../tools/testing/jest.preset.js",
   transform: {
     "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "@nx/react/plugins/jest",
@@ -16,5 +16,6 @@ module.exports = {
     ],
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-  coverageDirectory: "../../../coverage/apps/hostApps/zionix-main-host",
+  coverageDirectory:
+    "../../../../coverage/apps/remoteApps/zionix-main-remotes/adminApp",
 };
