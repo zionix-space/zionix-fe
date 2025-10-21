@@ -2,7 +2,7 @@ const { composePlugins, withNx, withReact } = require('@nx/rspack');
 const { withModuleFederation } = require('@nx/rspack/module-federation');
 
 const baseConfig = require('./module-federation.config');
-const commonRulesRsPack = require('../../../../../tools/deployment/rspack.common');
+const commonRulesRsPack = require('../../../../tools/deployment/rspack.common');
 
 const config = {
   ...baseConfig,
@@ -18,7 +18,7 @@ module.exports = composePlugins(
   withNx(),
   withReact(),
   withModuleFederation(config),
-  (config, { context }) => {
+  (config) => {
     commonRulesRsPack(config);
     return config;
   }

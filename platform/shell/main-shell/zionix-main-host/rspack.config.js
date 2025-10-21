@@ -15,7 +15,7 @@ module.exports = composePlugins(
   withNx(),
   withReact(),
   withModuleFederation(config),
-  (config, { context }) => {
+  (config) => {
     commonRulesRsPack(config);
     return config;
   }

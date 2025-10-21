@@ -17,7 +17,7 @@ const HostDummyComponent = () => {
       }}
     >
       <h1 style={{ color: '#333', marginBottom: '20px' }}>
-        Host App - Hello World
+ 
       </h1>
       <p style={{ color: '#666', fontSize: '18px' }}>
         This is the main host application
@@ -92,6 +92,7 @@ export function App() {
 export default App;
 
 // Auto-generated Module Federation switch statement
+// eslint-disable-next-line no-unused-vars
 function getModuleComponent(moduleName) {
   let ModuleComponent;
 
@@ -101,8 +102,22 @@ function getModuleComponent(moduleName) {
         break;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     default:
-      ModuleComponent = () => <div>Module '{moduleName}' not found</div>;
+      ModuleComponent = function NotFoundComponent() {
+        return <div>Module &apos;{moduleName}&apos; not found</div>;
+      };
   }
 
   return ModuleComponent;
