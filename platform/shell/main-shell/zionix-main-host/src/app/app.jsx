@@ -1,32 +1,32 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { ThemeProvider } from "@zionix/design-system";
+import HostAppLayout from "../components/shell/layout/HostAppLayout";
 
 // Simple dummy component for the host app
 const HostDummyComponent = () => {
   return (
     <div
       style={{
-        padding: "20px",
         textAlign: "center",
-        backgroundColor: "#f0f0f0",
-        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        height: "400px",
       }}
     >
-      <h1 style={{ color: "#333", marginBottom: "20px" }}></h1>
-      <p style={{ color: "#666", fontSize: "18px" }}>
-        This is the main host application
-      </p>
+      {/* <h1 style={{ marginBottom: "20px" }}>Welcome to Zionix Main Shell</h1>
+      <p style={{ fontSize: "18px", marginBottom: "30px" }}>
+        This is the main host application with Buffer-like layout
+      </p> */}
 
-      <div style={{ marginTop: "30px" }}>
+      <div>
         <Link
           to="/admin-app"
           style={{
             padding: "10px 20px",
-            backgroundColor: "#007acc",
+            backgroundColor: "#1890ff",
             color: "white",
             textDecoration: "none",
             borderRadius: "5px",
@@ -46,13 +46,7 @@ const AdminApp = React.lazy(() => import("adminApp/Module"));
 // Admin page component that loads the remote app
 const AdminPage = () => {
   return (
-    <div
-      style={{
-        padding: "20px",
-        backgroundColor: "#f0f0f0",
-        minHeight: "100vh",
-      }}
-    >
+    <div>
       <div style={{ marginBottom: "20px" }}>
         <Link
           to="/"
@@ -78,33 +72,31 @@ const AdminPage = () => {
 
 export function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HostDummyComponent />} />
-        <Route path="/admin-app" element={<AdminPage />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <HostAppLayout>
+          <Routes>
+            <Route path="/" element={<HostDummyComponent />} />
+            <Route path="/admin-app" element={<AdminPage />} />
+          </Routes>
+        </HostAppLayout>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
 export default App;
 
-// Auto-generated Module Federation switch statement
-// eslint-disable-next-line no-unused-vars
 function getModuleComponent(moduleName) {
   let ModuleComponent;
 
   switch (moduleName) {
-      case 'adminApp':
-        ModuleComponent = React.lazy(() => import('adminApp/Module'));
-        break;
-
-
+    case "adminApp":
+      ModuleComponent = React.lazy(() => import("adminApp/Module"));
+      break;
 
     default:
-      ModuleComponent = function NotFoundComponent() {
-        return <div>Module &apos;{moduleName}&apos; not found</div>;
-      };
+      ModuleComponent = () => <div>Module not found</div>;
   }
 
   return ModuleComponent;

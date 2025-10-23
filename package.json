@@ -5,7 +5,6 @@
   "scripts": {
     "start": "env-cmd -f .env-cmdrc -e dev nx run zionix-main-host:serve",
     "start-zionix-main": "node tools/deployment/zionix-main.script.config.js",
-    "start-hp-portal": "node tools/deployment/hpPortal.script.config.js",
     "lint": "nx run-many --target=lint",
     "lint:fix": "nx run-many --target=lint --fix",
     "eslint": "eslint --ext .js,.ts,.jsx,.tsx apps/",
@@ -18,11 +17,16 @@
   },
   "private": true,
   "dependencies": {
+    "antd": "^5.27.6",
+    "classnames": "^2.5.1",
     "env-cmd": "^10.1.0",
+    "framer-motion": "^12.23.24",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "6.11.2",
-    "tslib": "^2.3.0"
+    "remixicon": "^4.7.0",
+    "tslib": "^2.3.0",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@module-federation/enhanced": "^0.18.0",
