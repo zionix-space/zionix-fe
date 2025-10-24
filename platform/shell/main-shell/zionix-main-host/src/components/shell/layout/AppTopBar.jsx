@@ -2,6 +2,7 @@ import React from "react";
 import { Layout, Menu, Button, Avatar, Badge, Space, theme } from "antd";
 // Remix Icons are now used via CSS classes
 import { useTheme } from "@zionix/design-system";
+import { useStyles } from "./AppTopBar.style";
 
 const { Header } = Layout;
 const { useToken } = theme;
@@ -9,25 +10,7 @@ const { useToken } = theme;
 const AppTopBar = () => {
   const { token } = useToken();
   const { isDarkMode, toggleTheme, isRTL, toggleRTL } = useTheme();
-
-  const topBarStyle = {
-    background: token.colorBgContainer,
-    borderBottom: `1px solid ${token.colorBorderSecondary}`,
-    padding: "0 24px",
-    height: "64px",
-    display: "flex",
-    alignItems: "center",
-    position: "sticky",
-    top: 0,
-    zIndex: 1000,
-  };
-
-  const logoStyle = {
-    fontSize: "20px",
-    fontWeight: 600,
-    color: token.colorPrimary,
-    marginRight: "32px",
-  };
+  const styles = useStyles(token);
 
   const navigationItems = [
     { key: "create", label: "Create" },
@@ -37,61 +20,33 @@ const AppTopBar = () => {
     { key: "start-page", label: "Start Page" },
   ];
 
-  const menuStyle = {
-    background: "transparent",
-    border: "none",
-    fontSize: "14px",
-    fontWeight: 500,
-  };
-
-  const rightActionsStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  };
-
-  const iconButtonStyle = {
-    border: "none",
-    background: "transparent",
-    color: token.colorTextSecondary,
-    fontSize: "16px",
-    width: "32px",
-    height: "32px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
-
   return (
-    <Header style={topBarStyle}>
+    <Header style={styles.topBarStyle}>
       {/* Left Section - Logo and Navigation */}
-      <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
-        <div style={logoStyle}>Zionix</div>
+      <div style={styles.leftSectionStyle}>
+        <div style={styles.logoStyle}>Zionix</div>
 
         {/* Navigation Menu - starts right after logo */}
         <Menu
           mode="horizontal"
           defaultSelectedKeys={["create"]}
           items={navigationItems}
-          style={menuStyle}
+          style={styles.menuStyle}
           theme="light"
         />
       </div>
 
       {/* Right Section - Actions */}
-      <Space style={rightActionsStyle}>
+      <Space style={styles.rightActionsStyle}>
         <Badge count={3} size="small">
-          <Button type="text" icon={<i className="ri-notification-line" />} style={iconButtonStyle} />
+          <Button type="text" icon={<i className="ri-notification-line" />} style={styles.iconButtonStyle} />
         </Badge>
 
         <Button
           type="text"
           icon={<i className="ri-swap-line" />}
           onClick={toggleRTL}
-          style={{
-            ...iconButtonStyle,
-            color: isRTL ? token.colorPrimary : token.colorTextSecondary,
-          }}
+          style={styles.rtlToggleStyle(isRTL)}
           title={isRTL ? "Switch to LTR" : "Switch to RTL"}
         />
 
@@ -99,7 +54,7 @@ const AppTopBar = () => {
           type="text"
           icon={isDarkMode ? <i className="ri-sun-line" /> : <i className="ri-moon-line" />}
           onClick={toggleTheme}
-          style={iconButtonStyle}
+          style={styles.iconButtonStyle}
           title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
         />
       </Space>

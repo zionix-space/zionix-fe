@@ -2,36 +2,17 @@ import React, { useState } from "react";
 import { theme } from "antd";
 import AppTopBar from "./AppTopBar";
 import AppSidebar from "./AppSidebar";
+import { useStyles } from "./HostAppLayout.style";
 
 const { useToken } = theme;
 
 const HostAppLayout = ({ children }) => {
   const { token } = useToken();
   const [collapsed, setCollapsed] = useState(false);
-  // Main container style - simple div instead of Ant Layout
-  const containerStyle = {
-    height: "100vh",
-    width: "100vw",
-    background: token.colorBgLayout,
-    overflow: "hidden", // Prevent page-level scrolling
-    position: "relative",
-  };
-
-  // Content area style - positioned to account for fixed sidebar and top bar
-  const contentStyle = {
-    background: token.colorBgContainer,
-    position: "absolute",
-    top: "64px", // Account for top bar height
-    insetInlineStart: collapsed ? "76px" : "260px", // Account for sidebar width - RTL aware
-    insetInlineEnd: "0",
-    bottom: "0",
-    padding: "24px",
-    overflow: "auto", // Only content should scroll
-    transition: "inset-inline-start 0.2s ease", // Smooth transition when sidebar collapses - RTL aware
-  };
+  const styles = useStyles(token);
 
   return (
-    <div style={containerStyle}>
+    <div style={styles.containerStyle}>
       {/* Fixed Top Bar */}
       <AppTopBar />
 
@@ -39,18 +20,9 @@ const HostAppLayout = ({ children }) => {
       <AppSidebar collapsed={collapsed} onCollapse={setCollapsed} />
 
       {/* Content Area */}
-      <div style={contentStyle}>
+      <div style={styles.contentStyle(collapsed)}>
         {children || (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "400px",
-              color: token.colorTextSecondary,
-              fontSize: "16px",
-            }}
-          >
+          <div style={styles.defaultContentStyle(token)}>
             Main content area - your app content goes here
           </div>
         )}
