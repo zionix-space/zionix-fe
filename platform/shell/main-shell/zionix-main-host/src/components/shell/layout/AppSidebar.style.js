@@ -28,18 +28,18 @@ export const useStyles = (token) => ({
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: '8px', // Consistent with 8px grid system
-    paddingTop: '8px', // Add top padding for better spacing
+    paddingBottom: '4px', // Reduced for better density
+    paddingTop: '4px', // Reduced for better density
     // Custom scrollbar styling for modern SaaS appearance
     '&::-webkit-scrollbar': {
-      width: '6px',
+      width: '4px', // Thinner scrollbar for more space
     },
     '&::-webkit-scrollbar-track': {
       background: 'transparent',
     },
     '&::-webkit-scrollbar-thumb': {
       background: token.colorBorderSecondary,
-      borderRadius: '3px',
+      borderRadius: '2px',
       transition: 'background 0.2s ease',
     },
     '&::-webkit-scrollbar-thumb:hover': {
@@ -51,14 +51,14 @@ export const useStyles = (token) => ({
   },
   
   zxHostToggleContainer: {
-    padding: `${token.paddingSM}px`, // Reduced from token.padding for more compact layout
+    padding: `${token.paddingXS}px ${token.paddingSM}px`, // Further reduced padding
     borderBottom: `1px solid ${token.colorBorderSecondary}`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     background: token.colorFillQuaternary,
     userSelect: 'none', // Prevent text selection on toggle
-    minHeight: '48px', // Ensure consistent height while reducing padding
+    minHeight: '40px', // Reduced height for more compact layout
     gap: token.paddingXS, // Add gap between search and toggle button
   },
   
@@ -93,17 +93,17 @@ export const useStyles = (token) => ({
   },
   
   zxHostSectionHeader: {
-    padding: '12px 16px 8px 16px', // Optimized spacing following 8px grid
-    fontSize: '11px',
-    fontWeight: 600,
-    color: token.colorTextSecondary,
+    padding: '8px 16px 4px 16px', // Reduced padding for more compact look
+    fontSize: '10px', // Smaller font size for less prominence
+    fontWeight: 500, // Reduced from 600 for subtlety
+    color: token.colorTextTertiary, // More subtle color
     textTransform: 'uppercase',
-    letterSpacing: '0.5px',
+    letterSpacing: '0.3px', // Reduced letter spacing
     display: 'flex',
     alignItems: 'center',
-    gap: '8px', // Consistent with 8px grid
+    gap: '6px', // Reduced gap
     userSelect: 'none', // Prevent text selection on section headers
-    marginTop: '8px', // Add consistent top spacing
+    marginTop: '4px', // Reduced top spacing
   },
   
   zxHostSectionHeaderCollapsed: {
@@ -117,9 +117,26 @@ export const useStyles = (token) => ({
   },
   
   zxHostMenuContainer: {
-    padding: '0 12px', // Optimized for 8px grid system (12px = 1.5 * 8px)
+    padding: '0 8px', // Reduced padding for better density
     userSelect: 'none', // Prevent text selection on menu container
-    marginBottom: '8px', // Add consistent spacing between sections
+    marginBottom: '4px', // Reduced spacing between sections
+    '& .ant-menu': {
+      fontSize: '14px', // Consistent font size
+    },
+    '& .ant-menu-item': {
+      height: '32px', // Reduced from default height for better density
+      lineHeight: '32px',
+      marginBottom: '2px', // Reduced margin between items
+      paddingLeft: '12px !important', // Consistent left padding
+    },
+    '& .ant-menu-submenu': {
+      '& .ant-menu-submenu-title': {
+        height: '32px', // Consistent height for submenu titles
+        lineHeight: '32px',
+        marginBottom: '2px',
+        paddingLeft: '12px !important',
+      },
+    },
   },
   
   zxHostMenuItemBadge: {
@@ -167,33 +184,33 @@ export const useStyles = (token) => ({
   },
   
   zxHostProfileInfo: {
-    marginLeft: token.padding,
+    marginLeft: token.paddingSM, // Reduced from token.padding
     flex: 1,
   },
   
   zxHostProfileName: {
     fontWeight: 600,
     color: token.colorText,
-    fontSize: token.fontSize,
-    lineHeight: token.lineHeight,
-    marginBottom: '2px',
+    fontSize: token.fontSizeSM, // Reduced from token.fontSize
+    lineHeight: 1.3, // Tighter line height
+    marginBottom: '1px', // Reduced from 2px
   },
   
   zxHostProfileEmail: {
     color: token.colorTextSecondary,
     fontSize: token.fontSizeSM,
-    lineHeight: token.lineHeightSM,
+    lineHeight: 1.2, // Tighter line height
   },
   
   zxHostSearchContainer: {
-    padding: `${token.paddingXS}px ${token.paddingSM}px`, // Reduced padding for compact look
+    padding: `0 ${token.paddingXS}px`, // Minimal padding for maximum compactness
     flex: 1,
   },
   
   zxHostSearchInput: {
-    borderRadius: '6px', // Consistent with SaaS standards
-    height: '32px', // Standard SaaS search bar height
-    fontSize: '14px',
+    borderRadius: '4px', // Slightly smaller radius for compactness
+    height: '28px', // Reduced height for more compact look
+    fontSize: '13px', // Slightly smaller font
     border: `1px solid ${token.colorBorderSecondary}`,
     backgroundColor: token.colorFillQuaternary,
     transition: 'all 0.2s ease',
@@ -209,12 +226,12 @@ export const useStyles = (token) => ({
     '& .ant-input': {
       backgroundColor: 'transparent',
       border: 'none',
-      fontSize: '14px',
-      padding: '0 8px',
+      fontSize: '13px',
+      padding: '0 6px', // Reduced padding
     },
     '& .anticon': {
       color: token.colorTextTertiary,
-      fontSize: '14px',
+      fontSize: '13px',
     },
   },
 });

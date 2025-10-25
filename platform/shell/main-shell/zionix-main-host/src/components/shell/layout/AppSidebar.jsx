@@ -564,10 +564,10 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                 onMouseLeave={() => setIsProfileHovered(false)}
               >
                 <Avatar
-                  size={collapsed ? 28 : 40}
+                  size={collapsed ? 24 : 32}
                   src={section.userData.avatar}
                   style={{
-                    border: `2px solid ${token.colorBorder}`,
+                    border: `1px solid ${token.colorBorder}`,
                   }}
                 />
                 {!collapsed && (
