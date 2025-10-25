@@ -116,6 +116,7 @@ const ThemeProvider = ({ children }) => {
       colorTextSecondary: "#666666",
       colorWhite: "#ffffff",
       colorSuccess: "#52c41a",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
     },
   };
 
@@ -133,6 +134,7 @@ const ThemeProvider = ({ children }) => {
       colorTextSecondary: "#a6a6a6",
       colorWhite: "#ffffff",
       colorSuccess: "#52c41a",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
     },
   };
 

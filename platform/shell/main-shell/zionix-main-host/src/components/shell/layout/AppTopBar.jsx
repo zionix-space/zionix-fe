@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu, Button, Avatar, Badge, Space, theme } from "antd";
-// Remix Icons are now used via CSS classes
+// Using Remix Icons CSS classes for better performance
 import { useTheme } from "@zionix/design-system";
 import { useStyles } from "./AppTopBar.style";
 
@@ -44,7 +44,7 @@ const AppTopBar = () => {
 
         <Button
           type="text"
-          icon={<i className="ri-swap-line" />}
+          icon={<i className="ri-arrow-left-right-line" />}
           onClick={toggleRTL}
           style={styles.rtlToggleStyle(isRTL)}
           title={isRTL ? "Switch to LTR" : "Switch to RTL"}

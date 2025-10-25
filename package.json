@@ -17,6 +17,7 @@
   },
   "private": true,
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "antd": "^5.27.6",
     "classnames": "^2.5.1",
     "env-cmd": "^10.1.0",

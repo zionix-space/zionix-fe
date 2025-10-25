@@ -12,6 +12,8 @@ import {
 import { useTheme } from "@zionix/design-system";
 import { useStyles } from "./AppSidebar.style";
 
+// Using Remix Icons CSS classes for optimal performance
+
 const { Sider } = Layout;
 const { useToken } = theme;
 
@@ -25,8 +27,6 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const [isToggleHovered, setIsToggleHovered] = useState(false);
   const [isProfileHovered, setIsProfileHovered] = useState(false);
   const [openKeys, setOpenKeys] = useState(["dashboard", "products"]);
-
-
 
   // Load collapsed state from localStorage
   useEffect(() => {
@@ -62,12 +62,9 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       // Using Ant Design's standard breakpoints
       const mobileBreakpoint = token.screenSM || 576; // Small screen
       const tabletBreakpoint = token.screenMD || 768; // Medium screen
-      
+
       setIsMobile(width < mobileBreakpoint);
-      setIsTablet(
-        width < tabletBreakpoint &&
-          width >= mobileBreakpoint
-      );
+      setIsTablet(width < tabletBreakpoint && width >= mobileBreakpoint);
 
       // Auto-collapse on mobile
       if (width < mobileBreakpoint && !collapsed) {
@@ -99,18 +96,21 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                 { key: "dashboard-overview-main-widgets", label: "Widgets" },
                 { key: "dashboard-overview-main-charts", label: "Charts" },
                 { key: "dashboard-overview-main-metrics", label: "Metrics" },
-              ]
+              ],
             },
             {
               key: "dashboard-overview-custom",
               label: "Custom Views",
               children: [
-                { key: "dashboard-overview-custom-personal", label: "Personal" },
+                {
+                  key: "dashboard-overview-custom-personal",
+                  label: "Personal",
+                },
                 { key: "dashboard-overview-custom-team", label: "Team" },
                 { key: "dashboard-overview-custom-company", label: "Company" },
-              ]
-            }
-          ]
+              ],
+            },
+          ],
         },
         {
           key: "dashboard-analytics",
@@ -122,22 +122,34 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               key: "dashboard-analytics-reports",
               label: "Reports",
               children: [
-                { key: "dashboard-analytics-reports-daily", label: "Daily Reports" },
-                { key: "dashboard-analytics-reports-weekly", label: "Weekly Reports" },
-                { key: "dashboard-analytics-reports-monthly", label: "Monthly Reports" },
-              ]
+                {
+                  key: "dashboard-analytics-reports-daily",
+                  label: "Daily Reports",
+                },
+                {
+                  key: "dashboard-analytics-reports-weekly",
+                  label: "Weekly Reports",
+                },
+                {
+                  key: "dashboard-analytics-reports-monthly",
+                  label: "Monthly Reports",
+                },
+              ],
             },
             {
               key: "dashboard-analytics-insights",
               label: "Insights",
               children: [
                 { key: "dashboard-analytics-insights-trends", label: "Trends" },
-                { key: "dashboard-analytics-insights-predictions", label: "Predictions" },
-              ]
-            }
-          ]
-        }
-      ]
+                {
+                  key: "dashboard-analytics-insights-predictions",
+                  label: "Predictions",
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       key: "products",
@@ -155,19 +167,28 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               children: [
                 { key: "products-catalog-items-active", label: "Active Items" },
                 { key: "products-catalog-items-draft", label: "Draft Items" },
-                { key: "products-catalog-items-archived", label: "Archived Items" },
-              ]
+                {
+                  key: "products-catalog-items-archived",
+                  label: "Archived Items",
+                },
+              ],
             },
             {
               key: "products-catalog-categories",
               label: "Categories",
               children: [
-                { key: "products-catalog-categories-main", label: "Main Categories" },
-                { key: "products-catalog-categories-sub", label: "Sub Categories" },
+                {
+                  key: "products-catalog-categories-main",
+                  label: "Main Categories",
+                },
+                {
+                  key: "products-catalog-categories-sub",
+                  label: "Sub Categories",
+                },
                 { key: "products-catalog-categories-tags", label: "Tags" },
-              ]
-            }
-          ]
+              ],
+            },
+          ],
         },
         {
           key: "products-inventory",
@@ -179,39 +200,66 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               key: "products-inventory-stock",
               label: "Stock Management",
               children: [
-                { key: "products-inventory-stock-levels", label: "Stock Levels" },
-                { key: "products-inventory-stock-alerts", label: "Low Stock Alerts" },
-                { key: "products-inventory-stock-transfers", label: "Transfers" },
-              ]
+                {
+                  key: "products-inventory-stock-levels",
+                  label: "Stock Levels",
+                },
+                {
+                  key: "products-inventory-stock-alerts",
+                  label: "Low Stock Alerts",
+                },
+                {
+                  key: "products-inventory-stock-transfers",
+                  label: "Transfers",
+                },
+              ],
             },
             {
               key: "products-inventory-warehouses",
               label: "Warehouses",
               children: [
-                { key: "products-inventory-warehouses-main", label: "Main Warehouse" },
-                { key: "products-inventory-warehouses-secondary", label: "Secondary" },
-              ]
-            }
-          ]
+                {
+                  key: "products-inventory-warehouses-main",
+                  label: "Main Warehouse",
+                },
+                {
+                  key: "products-inventory-warehouses-secondary",
+                  label: "Secondary",
+                },
+              ],
+            },
+          ],
         },
         {
           key: "products-orders",
-          icon: <i className="ri-store-line" />,
+          icon: <i className="ri-building-line" />,
           label: "Orders",
           children: [
             {
               key: "products-orders-management",
               label: "Order Management",
               children: [
-                { key: "products-orders-management-pending", label: "Pending Orders" },
-                { key: "products-orders-management-processing", label: "Processing" },
-                { key: "products-orders-management-completed", label: "Completed" },
-                { key: "products-orders-management-cancelled", label: "Cancelled" },
-              ]
-            }
-          ]
-        }
-      ]
+                {
+                  key: "products-orders-management-pending",
+                  label: "Pending Orders",
+                },
+                {
+                  key: "products-orders-management-processing",
+                  label: "Processing",
+                },
+                {
+                  key: "products-orders-management-completed",
+                  label: "Completed",
+                },
+                {
+                  key: "products-orders-management-cancelled",
+                  label: "Cancelled",
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       key: "schedule",
@@ -228,8 +276,11 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               label: "Personal",
               children: [
                 { key: "schedule-calendar-personal-events", label: "Events" },
-                { key: "schedule-calendar-personal-reminders", label: "Reminders" },
-              ]
+                {
+                  key: "schedule-calendar-personal-reminders",
+                  label: "Reminders",
+                },
+              ],
             },
             {
               key: "schedule-calendar-team",
@@ -237,11 +288,11 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               children: [
                 { key: "schedule-calendar-team-meetings", label: "Meetings" },
                 { key: "schedule-calendar-team-deadlines", label: "Deadlines" },
-              ]
-            }
-          ]
-        }
-      ]
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       key: "my-task",
@@ -260,7 +311,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               children: [
                 { key: "my-task-active-high-urgent", label: "Urgent" },
                 { key: "my-task-active-high-important", label: "Important" },
-              ]
+              ],
             },
             {
               key: "my-task-active-normal",
@@ -268,9 +319,9 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               children: [
                 { key: "my-task-active-normal-today", label: "Due Today" },
                 { key: "my-task-active-normal-week", label: "This Week" },
-              ]
-            }
-          ]
+              ],
+            },
+          ],
         },
         {
           key: "my-task-completed",
@@ -283,11 +334,11 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               children: [
                 { key: "my-task-completed-recent-today", label: "Today" },
                 { key: "my-task-completed-recent-week", label: "This Week" },
-              ]
-            }
-          ]
-        }
-      ]
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       key: "reporting",
@@ -304,41 +355,57 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               label: "Sales Analytics",
               children: [
                 { key: "reporting-analytics-sales-revenue", label: "Revenue" },
-                { key: "reporting-analytics-sales-conversion", label: "Conversion" },
+                {
+                  key: "reporting-analytics-sales-conversion",
+                  label: "Conversion",
+                },
                 { key: "reporting-analytics-sales-trends", label: "Trends" },
-              ]
+              ],
             },
             {
               key: "reporting-analytics-performance",
               label: "Performance",
               children: [
-                { key: "reporting-analytics-performance-kpi", label: "KPI Dashboard" },
-                { key: "reporting-analytics-performance-metrics", label: "Metrics" },
-              ]
-            }
-          ]
+                {
+                  key: "reporting-analytics-performance-kpi",
+                  label: "KPI Dashboard",
+                },
+                {
+                  key: "reporting-analytics-performance-metrics",
+                  label: "Metrics",
+                },
+              ],
+            },
+          ],
         },
         {
           key: "reporting-financial",
-          icon: <i className="ri-funds-line" />,
+          icon: <i className="ri-more-line" />,
           label: "Financial",
           children: [
             {
               key: "reporting-financial-statements",
               label: "Statements",
               children: [
-                { key: "reporting-financial-statements-income", label: "Income Statement" },
-                { key: "reporting-financial-statements-balance", label: "Balance Sheet" },
-                { key: "reporting-financial-statements-cashflow", label: "Cash Flow" },
-              ]
-            }
-          ]
-        }
-      ]
-    }
+                {
+                  key: "reporting-financial-statements-income",
+                  label: "Income Statement",
+                },
+                {
+                  key: "reporting-financial-statements-balance",
+                  label: "Balance Sheet",
+                },
+                {
+                  key: "reporting-financial-statements-cashflow",
+                  label: "Cash Flow",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ];
-
-
 
   // Advanced section separator component
   const SectionSeparator = ({
@@ -349,20 +416,17 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     if (collapsed) {
       // Return minimal spacing only - no visual indicators
       return (
-        <div
-          style={styles.zxHostSectionHeaderCollapsed}
-          aria-label={title}
-        />
+        <div style={styles.zxHostSectionHeaderCollapsed} aria-label={title} />
       );
     }
 
     return (
       <div style={styles.zxHostSectionHeader}>
         <span>{title}</span>
-        <div 
-          style={{ 
+        <div
+          style={{
             ...styles.zxHostSectionDivider,
-            background: `linear-gradient(90deg, ${accentColor}30, transparent)` 
+            background: `linear-gradient(90deg, ${accentColor}30, transparent)`,
           }}
         />
       </div>
@@ -376,10 +440,10 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       id: "navigation",
       title: "Navigation Menu",
       accentColor: token.colorPrimary,
-      items: menuItems
+      items: menuItems,
     },
     {
-      type: "section", 
+      type: "section",
       id: "account",
       title: "Account Settings",
       accentColor: "#10b981",
@@ -406,7 +470,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
           icon: <i className="ri-settings-line" />,
           label: "Settings",
         },
-      ]
+      ],
     },
     {
       type: "profile",
@@ -414,12 +478,13 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       userData: {
         name: "John Doe",
         email: "john@company.com",
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        avatar:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
       },
       menuItems: [
         {
           key: "profile",
-          icon: <i className="ri-user-line" />,
+          icon: <i className="ri-dashboard-line" />,
           label: "Profile",
         },
         {
@@ -440,13 +505,13 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
           icon: <i className="ri-logout-box-line" />,
           label: "Logout",
         },
-      ]
-    }
+      ],
+    },
   ];
 
   // Convert menu items to Ant Design Menu format
   const formatMenuItems = (items) => {
-    return items.map(item => {
+    return items.map((item) => {
       const menuItem = {
         key: item.key,
         icon: item.icon,
@@ -455,7 +520,9 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             <span>{item.label}</span>
             <Badge count={item.badge} size="small" />
           </div>
-        ) : item.label,
+        ) : (
+          item.label
+        ),
       };
 
       if (item.children && item.children.length > 0) {
@@ -469,15 +536,17 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   // Render a single section with its menu items
   const renderSection = (section, index) => {
     const isLastSection = index === backendMenuSections.length - 1;
-    
+
     // Handle profile section differently
     if (section.type === "profile") {
       return (
         <div key={section.id} style={styles.zxHostProfileSection}>
-          <div style={{
-            ...styles.zxHostProfileContainer,
-            ...(collapsed ? styles.zxHostProfileContainerCollapsed : {})
-          }}>
+          <div
+            style={{
+              ...styles.zxHostProfileContainer,
+              ...(collapsed ? styles.zxHostProfileContainerCollapsed : {}),
+            }}
+          >
             <Dropdown
               menu={{
                 items: section.menuItems,
@@ -485,11 +554,11 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               placement="topRight"
               trigger={["click"]}
             >
-              <div 
+              <div
                 style={{
                   ...styles.zxHostProfileContent,
                   ...(collapsed ? styles.zxHostProfileContentCollapsed : {}),
-                  ...(isProfileHovered ? styles.zxHostProfileContentHover : {})
+                  ...(isProfileHovered ? styles.zxHostProfileContentHover : {}),
                 }}
                 onMouseEnter={() => setIsProfileHovered(true)}
                 onMouseLeave={() => setIsProfileHovered(false)}
@@ -517,7 +586,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         </div>
       );
     }
-    
+
     // Handle regular sections
     return (
       <div key={section.id}>
@@ -539,16 +608,14 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             inlineCollapsed={collapsed}
             items={formatMenuItems(section.items)}
             style={{
-              border: 'none',
-              backgroundColor: 'transparent',
+              border: "none",
+              backgroundColor: "transparent",
             }}
           />
         </div>
       </div>
     );
   };
-
-
 
   // Integrated Header Toggle Component
   const IntegratedToggle = () => {
@@ -564,7 +631,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               placeholder="Search..."
               prefix={<i className="ri-search-line" />}
               style={styles.zxHostSearchInput}
-              size="small"
+              size="middle"
             />
           </div>
         )}
@@ -576,7 +643,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
           <div
             style={{
               ...styles.zxHostToggleButton,
-              ...(isToggleHovered ? styles.zxHostToggleButtonHover : {})
+              ...(isToggleHovered ? styles.zxHostToggleButtonHover : {}),
             }}
             onClick={() => onCollapse(!collapsed)}
             onMouseEnter={() => setIsToggleHovered(true)}
@@ -592,19 +659,21 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             }}
           >
             {collapsed ? (
-              <i 
-                className="ri-menu-unfold-line" 
+              <i
+                className="ri-menu-line"
                 style={{
+                  fontSize: "16px",
                   ...styles.zxHostToggleIcon,
-                  ...(isToggleHovered ? styles.zxHostToggleIconHover : {})
+                  ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
                 }}
               />
             ) : (
-              <i 
-                className="ri-menu-fold-line" 
+              <i
+                className="ri-menu-fold-line"
                 style={{
+                  fontSize: "16px",
                   ...styles.zxHostToggleIcon,
-                  ...(isToggleHovered ? styles.zxHostToggleIconHover : {})
+                  ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
                 }}
               />
             )}
@@ -621,7 +690,9 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       collapsedWidth={64}
       style={{
         ...styles.zxHostSidebarContainer,
-        [isRTL ? "borderLeft" : "borderRight"]: `1px solid ${token.colorBorderSecondary}`,
+        [isRTL
+          ? "borderLeft"
+          : "borderRight"]: `1px solid ${token.colorBorderSecondary}`,
       }}
       theme="light"
       trigger={null}
@@ -633,7 +704,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         {/* Main Content */}
         <div style={styles.zxHostMainContent}>
           {/* Dynamic Sections Rendering */}
-          {backendMenuSections.map((section, index) => 
+          {backendMenuSections.map((section, index) =>
             renderSection(section, index)
           )}
         </div>
