@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout } from 'antd';
-import PropTypes from 'prop-types';
 import { useTheme } from '@zionix/design-system';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import DesktopTopBar from './DesktopTopBar';
@@ -8,6 +7,13 @@ import DesktopSidebar from './DesktopSidebar';
 
 const { Content } = Layout;
 
+/**
+ * Desktop Layout Component - Provides desktop-specific layout structure with sidebar and top bar
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render
+ * @param {string} [props.className=''] - Additional CSS class
+ * @param {Object} [props.style={}] - Additional inline styles
+ */
 const DesktopLayout = ({ children, className = '', style = {} }) => {
   const themeResult = useTheme();
   const token = themeResult?.token;
@@ -95,12 +101,6 @@ const DesktopLayout = ({ children, className = '', style = {} }) => {
       </Layout>
     </Layout>
   );
-};
-
-DesktopLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  style: PropTypes.object
 };
 
 export default DesktopLayout;

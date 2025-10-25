@@ -70,6 +70,8 @@ function getModuleComponent(moduleName) {
 
 
 
+
+
     default:
       ModuleComponent = () => <div>Module not found</div>;
   }

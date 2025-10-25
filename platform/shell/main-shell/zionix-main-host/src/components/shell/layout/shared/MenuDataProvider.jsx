@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 
 // Menu Data Context
 const MenuDataContext = createContext();
@@ -13,7 +12,11 @@ export const useMenuData = () => {
   return context;
 };
 
-// Menu Data Provider Component
+/**
+ * Menu Data Provider Component - Provides menu data context and state management
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render
+ */
 export const MenuDataProvider = ({ children }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedKey, setSelectedKey] = useState('dashboard');
@@ -304,10 +307,6 @@ export const MenuDataProvider = ({ children }) => {
       {children}
     </MenuDataContext.Provider>
   );
-};
-
-MenuDataProvider.propTypes = {
-  children: PropTypes.node.isRequired
 };
 
 export default MenuDataProvider;

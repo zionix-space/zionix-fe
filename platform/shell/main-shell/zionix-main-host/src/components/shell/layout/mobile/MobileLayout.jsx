@@ -1,10 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useTheme } from '@zionix/design-system';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import MobileHeader from './MobileHeader';
 import MobileBottomNavigation from './MobileBottomNavigation';
 
+/**
+ * Mobile Layout Component - Provides mobile-specific layout structure
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render
+ * @param {string} [props.className=''] - Additional CSS class
+ * @param {Object} [props.style={}] - Additional inline styles
+ */
 const MobileLayout = ({ children, className = '', style = {} }) => {
   const themeResult = useTheme();
   const token = themeResult?.token;
@@ -127,12 +133,6 @@ const MobileLayout = ({ children, className = '', style = {} }) => {
       )}
     </div>
   );
-};
-
-MobileLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  style: PropTypes.object
 };
 
 export default MobileLayout;

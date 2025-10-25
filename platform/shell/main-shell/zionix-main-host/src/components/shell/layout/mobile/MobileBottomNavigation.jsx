@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { Badge } from 'antd';
-import PropTypes from 'prop-types';
 import { useMenuData } from '../shared/MenuDataProvider';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import MobileMoreMenu from './MobileMoreMenu';
 
+/**
+ * Mobile Bottom Navigation Component - Provides bottom navigation bar for mobile devices
+ * @param {Object} props - Component props
+ * @param {string} [props.className=''] - Additional CSS class
+ * @param {Object} [props.style={}] - Additional inline styles
+ * @param {Function} [props.onItemSelect] - Callback function when navigation item is selected
+ */
 const MobileBottomNavigation = ({ 
   className = '',
   style = {},
@@ -226,12 +232,6 @@ const MobileBottomNavigation = ({
       />
     </>
   );
-};
-
-MobileBottomNavigation.propTypes = {
-  className: PropTypes.string,
-  style: PropTypes.object,
-  onItemSelect: PropTypes.func
 };
 
 export default MobileBottomNavigation;

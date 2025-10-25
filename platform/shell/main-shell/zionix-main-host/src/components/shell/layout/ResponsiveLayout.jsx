@@ -1,11 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useResponsiveLayout } from './shared/ResponsiveLayoutProvider';
 
 // Import layout components
 import { DesktopLayout } from './desktop';
 import { MobileLayout } from './mobile';
 
+/**
+ * Responsive Layout Component - Automatically switches between mobile and desktop layouts
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render
+ * @param {string} [props.className=''] - Additional CSS class names
+ * @param {Object} [props.style={}] - Additional inline styles
+ */
 const ResponsiveLayout = ({ children, className = '', style = {} }) => {
   const { deviceType } = useResponsiveLayout();
 
@@ -24,12 +30,6 @@ const ResponsiveLayout = ({ children, className = '', style = {} }) => {
       {children}
     </DesktopLayout>
   );
-};
-
-ResponsiveLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  style: PropTypes.object
 };
 
 export default ResponsiveLayout;

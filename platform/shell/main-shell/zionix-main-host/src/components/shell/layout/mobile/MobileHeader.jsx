@@ -1,10 +1,16 @@
 import React from 'react';
 import { Avatar, Badge, Button } from 'antd';
-import { BellOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
-import PropTypes from 'prop-types';
 import { useTheme } from '@zionix/design-system';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 
+/**
+ * Mobile Header Component - iOS-style header for mobile layout
+ * @param {Object} props - Component props
+ * @param {Function} [props.onMenuToggle] - Function to handle menu toggle
+ * @param {boolean} [props.showMenuButton=true] - Whether to show the menu button
+ * @param {string} [props.className=''] - Additional CSS class names
+ * @param {Object} [props.style={}] - Additional inline styles
+ */
 const MobileHeader = ({ 
   onMenuToggle, 
   showMenuButton = true,
@@ -61,7 +67,7 @@ const MobileHeader = ({
         {showMenuButton && (
           <Button
             type="text"
-            icon={<MenuOutlined />}
+            icon={<i className="ri-menu-line" />}
             onClick={onMenuToggle}
             style={{
               width: '44px',
@@ -142,7 +148,7 @@ const MobileHeader = ({
           aria-label="Notifications"
         >
           <Badge count={3} size="small" offset={[4, -4]}>
-            <BellOutlined />
+            <i className="ri-notification-3-line" />
           </Badge>
         </Button>
 
@@ -161,7 +167,7 @@ const MobileHeader = ({
         >
           <Avatar 
             size={32} 
-            icon={<UserOutlined />}
+            icon={<i className="ri-user-3-line" />}
             style={{ 
               backgroundColor: '#f56a00',
               fontSize: '14px'
@@ -171,13 +177,6 @@ const MobileHeader = ({
       </div>
     </header>
   );
-};
-
-MobileHeader.propTypes = {
-  onMenuToggle: PropTypes.func,
-  showMenuButton: PropTypes.bool,
-  className: PropTypes.string,
-  style: PropTypes.object
 };
 
 export default MobileHeader;

@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { theme } from 'antd';
-import PropTypes from 'prop-types';
 
 const { useToken } = theme;
 
@@ -58,7 +57,11 @@ export const useDeviceDetection = () => {
   };
 };
 
-// Responsive Layout Provider Component
+/**
+ * Responsive Layout Provider Component - Provides responsive layout context and device detection
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render
+ */
 export const ResponsiveLayoutProvider = ({ children }) => {
   const deviceInfo = useDeviceDetection();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -106,9 +109,7 @@ export const ResponsiveLayoutProvider = ({ children }) => {
   );
 };
 
-ResponsiveLayoutProvider.propTypes = {
-  children: PropTypes.node.isRequired
-};
+
 
 // Custom hook to use responsive layout context
 export const useResponsiveLayout = () => {

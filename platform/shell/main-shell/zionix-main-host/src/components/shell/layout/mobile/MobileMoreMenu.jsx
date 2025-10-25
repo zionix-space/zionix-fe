@@ -1,8 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { Badge, Menu } from 'antd';
-import PropTypes from 'prop-types';
 import { useTheme } from '@zionix/design-system';
 
+/**
+ * Mobile More Menu Component - iOS-style slide-up menu for mobile navigation
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Whether the menu is open
+ * @param {Function} props.onClose - Function to close the menu
+ * @param {Array} props.menuItems - Array of menu items to display
+ * @param {string} props.selectedKey - Currently selected menu item key
+ * @param {Function} props.onItemSelect - Function called when menu item is selected
+ * @param {Array} [props.openKeys] - Array of open submenu keys
+ * @param {Function} [props.onOpenChange] - Function called when submenu open state changes
+ */
 const MobileMoreMenu = ({ 
   isOpen, 
   onClose, 
@@ -329,16 +339,6 @@ const MobileMoreMenu = ({
       </div>
     </>
   );
-};
-
-MobileMoreMenu.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  menuItems: PropTypes.array.isRequired,
-  selectedKey: PropTypes.string.isRequired,
-  onItemSelect: PropTypes.func.isRequired,
-  openKeys: PropTypes.array,
-  onOpenChange: PropTypes.func,
 };
 
 export default MobileMoreMenu;
