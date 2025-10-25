@@ -14,7 +14,7 @@ export const useStyles = (token) => ({
     background: token.colorBgContainer,
     position: "absolute",
     top: "64px", // Account for top bar height
-    insetInlineStart: collapsed ? "76px" : "260px", // Account for sidebar width - RTL aware
+    insetInlineStart: collapsed ? "64px" : "260px", // Account for sidebar width - RTL aware
     insetInlineEnd: "0",
     bottom: "0",
     padding: "24px",
