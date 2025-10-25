@@ -31,4 +31,4 @@ export const useStyles = (token) => ({
     color: token.colorTextSecondary,
     fontSize: "16px",
   }),
-})
+});

@@ -9,7 +9,7 @@ const AdminApp = React.lazy(() => import("adminApp/Module"));
 // Admin page component that loads the remote app
 const AdminPage = () => {
   const { token } = useTheme();
-  
+
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -55,22 +55,9 @@ function getModuleComponent(moduleName) {
   let ModuleComponent;
 
   switch (moduleName) {
-      case 'adminApp':
-        ModuleComponent = React.lazy(() => import('adminApp/Module'));
-        break;
-
-
-
-
-
-
-
-
-
-
-
-
-
+    case "adminApp":
+      ModuleComponent = React.lazy(() => import("adminApp/Module"));
+      break;
 
     default:
       ModuleComponent = () => <div>Module not found</div>;
