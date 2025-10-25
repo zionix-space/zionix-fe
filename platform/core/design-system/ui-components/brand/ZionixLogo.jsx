@@ -1,5 +1,29 @@
+/**
+ * @fileoverview Zionix Brand Logo Component
+ * 
+ * This is the official Zionix logo component that should be used across
+ * all applications in the micro-frontend platform. It provides consistent
+ * branding and supports various sizes and styling options.
+ * 
+ * @author Zionix Design System Team
+ * @version 1.0.0
+ */
+
 import React from 'react';
 
+/**
+ * Zionix Logo Component
+ * 
+ * A scalable SVG logo component that maintains brand consistency
+ * across all applications in the platform.
+ * 
+ * @param {Object} props - Component props
+ * @param {number} [props.size=40] - Size of the logo in pixels
+ * @param {string} [props.className=''] - Additional CSS classes
+ * @param {Object} [props.style={}] - Inline styles
+ * @param {...Object} props - Additional props passed to the SVG element
+ * @returns {JSX.Element} The Zionix logo SVG component
+ */
 const ZionixLogo = ({ 
   size = 40, 
   className = '', 

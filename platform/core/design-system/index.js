@@ -21,8 +21,8 @@
 // Theme exports
 export { ThemeProvider, useTheme } from './theme';
 
-// UI Components exports (when available)
-// export * from './ui-components';
+// UI Components exports
+export * from './ui-components';
 
 // Future exports can be added here as the design system grows
 // export * from './tokens';
