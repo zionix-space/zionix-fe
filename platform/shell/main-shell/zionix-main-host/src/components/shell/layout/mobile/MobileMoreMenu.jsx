@@ -74,6 +74,27 @@ const MobileMoreMenu = ({
     onClose();
   };
 
+  // Filter out main navigation items that are already in the bottom navigation
+  const mainNavigationKeys = ['dashboard', 'products', 'calendar', 'my-tasks', 'more'];
+  
+  const filterMainNavigationItems = (items) => {
+    return items.filter(item => {
+      // Exclude main navigation items
+      if (mainNavigationKeys.includes(item.key)) {
+        return false;
+      }
+      
+      // For items with children, filter their children recursively
+      if (item.children && item.children.length > 0) {
+        item.children = filterMainNavigationItems(item.children);
+        // Keep parent if it has remaining children
+        return item.children.length > 0;
+      }
+      
+      return true;
+    });
+  };
+
   // Convert menu items to Ant Design Menu format
   const formatMenuItems = (items) => {
     return items.map(item => {
@@ -91,10 +112,12 @@ const MobileMoreMenu = ({
     });
   };
 
-  const formattedMenuItems = formatMenuItems(menuItems);
+  // Filter and format menu items for the More menu
+  const filteredMenuItems = filterMainNavigationItems(menuItems);
+  const formattedMenuItems = formatMenuItems(filteredMenuItems);
 
   const handleMenuSelect = ({ key }) => {
-    // Find the selected item in the menu structure
+    // Find the selected item in the filtered menu structure
     const findMenuItem = (items, targetKey) => {
       for (const item of items) {
         if (item.key === targetKey) {
@@ -108,7 +131,7 @@ const MobileMoreMenu = ({
       return null;
     };
 
-    const selectedItem = findMenuItem(menuItems, key);
+    const selectedItem = findMenuItem(filteredMenuItems, key);
     if (selectedItem) {
       handleItemClick(selectedItem);
     }

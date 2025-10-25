@@ -1,69 +1,113 @@
 import { useMemo } from "react";
 
 /**
- * Mobile Bottom Navigation Styles - Clean styling matching screenshot
- * Uses proper spacing and sizing for mobile devices
+ * Mobile Bottom Navigation Styles - Clean CSS-in-JS approach
+ * Fixed styling issues and proper responsive design
  */
 export const useStyles = (token) => {
   return useMemo(() => ({
-    // Main navigation container - taller and more spacious
+    // Main navigation container - clean and properly sized
     navigationContainerStyle: {
       position: 'fixed',
       bottom: 0,
-      insetInlineStart: 0,
-      insetInlineEnd: 0,
-      height: '83px', // Fixed height for proper spacing
-      paddingBottom: '34px', // Safe area for home indicator
+      left: 0,
+      right: 0,
+      height: '60px', // Fixed height for mobile
+      paddingBottom: '8px', // Safe area padding
       backgroundColor: token.colorBgContainer,
-      borderBlockStart: `1px solid ${token.colorBorderSecondary}`,
+      borderTop: `1px solid ${token.colorBorderSecondary}`,
       display: 'flex',
-      alignItems: 'flex-start',
+      alignItems: 'center',
       justifyContent: 'space-around',
       paddingTop: '8px',
-      paddingInline: '8px',
+      paddingLeft: '8px',
+      paddingRight: '8px',
       zIndex: 1000,
       boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.06)',
     },
 
-    // Navigation item - proper spacing
+    // Navigation item - clean layout
     navItemStyle: {
       flex: 1,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'flex-start',
-      padding: '6px 4px',
+      justifyContent: 'center',
+      padding: '4px 2px',
       cursor: 'pointer',
-      borderRadius: '8px',
+      borderRadius: '4px',
       transition: 'all 0.2s ease',
-      minHeight: '50px',
+      minHeight: '44px',
     },
 
-    // Icon container - clean and simple
+    // Icon container - simple and clean
     iconContainerStyle: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: '4px',
-      padding: '6px',
-      borderRadius: '8px',
+      marginBottom: '2px',
+    },
+
+    // Base icon styling
+    iconStyle: {
+      fontSize: '22px',
       transition: 'all 0.2s ease',
     },
 
-    // Icon styling - proper size
-    iconStyle: {
+    // Active icon styling
+    activeIconStyle: {
       fontSize: '22px',
-      transition: 'color 0.2s ease',
+      color: token.colorPrimary,
+      transition: 'all 0.2s ease',
     },
 
-    // Label styling - clean typography
+    // Inactive icon styling
+    inactiveIconStyle: {
+      fontSize: '22px',
+      color: token.colorTextSecondary,
+      transition: 'all 0.2s ease',
+    },
+
+    // Base label styling
     labelStyle: {
       fontSize: '10px',
       textAlign: 'center',
       lineHeight: '12px',
       transition: 'all 0.2s ease',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+      fontFamily: token.fontFamily,
       whiteSpace: 'nowrap',
+      marginTop: '1px',
+    },
+
+    // Active label styling
+    activeLabelStyle: {
+      fontSize: '10px',
+      textAlign: 'center',
+      lineHeight: '12px',
+      color: token.colorPrimary,
+      fontWeight: 600,
+      transition: 'all 0.2s ease',
+      fontFamily: token.fontFamily,
+      whiteSpace: 'nowrap',
+      marginTop: '1px',
+    },
+
+    // Inactive label styling
+    inactiveLabelStyle: {
+      fontSize: '10px',
+      textAlign: 'center',
+      lineHeight: '12px',
+      color: token.colorTextSecondary,
+      fontWeight: 400,
+      transition: 'all 0.2s ease',
+      fontFamily: token.fontFamily,
+      whiteSpace: 'nowrap',
+      marginTop: '1px',
+    },
+
+    // Hover state for nav items
+    navItemHoverStyle: {
+      backgroundColor: token.colorFillQuaternary,
     },
   }), [token]);
 };

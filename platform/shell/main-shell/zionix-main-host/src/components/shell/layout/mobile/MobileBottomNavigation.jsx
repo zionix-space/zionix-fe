@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { theme } from 'antd';
+import { useTheme } from '@zionix/design-system';
 import { useMenuData } from '../shared/MenuDataProvider';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import MobileMoreMenu from './MobileMoreMenu';
 import { useStyles } from './MobileBottomNavigation.style';
 
-const { useToken } = theme;
-
 /**
- * Mobile Bottom Navigation Component - Clean bottom navigation matching screenshot
+ * Mobile Bottom Navigation Component - Clean bottom navigation with responsive tokens
  * @param {Object} props - Component props
  * @param {string} [props.className=''] - Additional CSS class
  * @param {Object} [props.style={}] - Additional inline styles
@@ -23,7 +21,8 @@ const MobileBottomNavigation = ({
   const { deviceType } = useResponsiveLayout();
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   
-  const { token } = useToken();
+  // Use enhanced theme with responsive tokens
+  const { token } = useTheme();
   const styles = useStyles(token);
 
   // Only render on mobile devices
@@ -51,50 +50,28 @@ const MobileBottomNavigation = ({
     }
   };
 
-  const handleMoreMenuClose = () => {
-    setIsMoreMenuOpen(false);
-  };
-
-  const renderNavItem = (item) => {
+  const renderNavigationItem = (item) => {
     const isActive = selectedKey === item.key;
     const isMoreItem = item.key === 'more';
 
     return (
       <div
         key={item.key}
-        className="mobile-nav-item"
-        onClick={() => handleItemClick(item)}
         style={styles.navItemStyle}
+        onClick={() => handleItemClick(item)}
+        className={`nav-item ${isActive ? 'active' : ''} ${isMoreItem ? 'more-item' : ''}`}
       >
         {/* Icon container */}
-        <div
-          style={{
-            ...styles.iconContainerStyle,
-            backgroundColor: isActive && !isMoreItem
-              ? `${token.colorPrimary}15` 
-              : 'transparent'
-          }}
-        >
+        <div style={styles.iconContainerStyle}>
           <i 
-            className={item.icon}
-            style={{
-              ...styles.iconStyle,
-              color: isActive && !isMoreItem
-                ? token.colorPrimary
-                : token.colorTextSecondary
-            }}
+            className={`${item.icon}`}
+            style={isActive ? styles.activeIconStyle : styles.inactiveIconStyle}
           />
         </div>
-
+        
         {/* Label */}
-        <span
-          style={{
-            ...styles.labelStyle,
-            fontWeight: isActive && !isMoreItem ? '600' : '500',
-            color: isActive && !isMoreItem
-              ? token.colorPrimary
-              : token.colorTextSecondary
-          }}
+        <span 
+          style={isActive ? styles.activeLabelStyle : styles.inactiveLabelStyle}
         >
           {item.label}
         </span>
@@ -104,35 +81,27 @@ const MobileBottomNavigation = ({
 
   return (
     <>
-      <nav
-        className={`mobile-bottom-navigation ${className}`}
+      {/* Main Navigation Container */}
+      <nav 
         style={{
           ...styles.navigationContainerStyle,
           ...style
         }}
+        className={`mobile-bottom-navigation ${className}`}
       >
-        {/* Render all navigation items */}
-        {navigationItems.map((item) => renderNavItem(item))}
+        {navigationItems.map(renderNavigationItem)}
       </nav>
 
-      {/* More Menu Modal */}
-      {isMoreMenuOpen && (
-        <MobileMoreMenu
-          isOpen={isMoreMenuOpen}
-          onClose={handleMoreMenuClose}
-          menuItems={menuItems}
-          selectedKey={selectedKey}
-          onItemSelect={(item) => {
-            handleMenuSelect(item.key);
-            if (onItemSelect) {
-              onItemSelect(item);
-            }
-            handleMoreMenuClose();
-          }}
-          openKeys={openKeys}
-          onOpenChange={handleOpenChange}
-        />
-      )}
+      {/* More Menu Overlay */}
+      <MobileMoreMenu
+        isOpen={isMoreMenuOpen}
+        onClose={() => setIsMoreMenuOpen(false)}
+        menuItems={menuItems}
+        selectedKey={selectedKey}
+        openKeys={openKeys}
+        onMenuSelect={handleMenuSelect}
+        onOpenChange={handleOpenChange}
+      />
     </>
   );
 };

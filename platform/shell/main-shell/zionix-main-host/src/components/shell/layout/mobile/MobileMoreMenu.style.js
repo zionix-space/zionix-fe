@@ -144,8 +144,8 @@ export const generateMenuItemCSS = (token) => `
   
   .mobile-more-menu-container .ant-menu-inline .ant-menu-item-icon,
   .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-title .ant-menu-item-icon {
-    font-size: 26px !important;
-    color: ${token?.colorTextTertiary} !important;
+    font-size: 22px !important;
+    color: ${token?.colorTextSecondary} !important;
     margin-inline-end: 16px !important;
     transition: all 0.2s ease !important;
   }
@@ -153,7 +153,7 @@ export const generateMenuItemCSS = (token) => `
   .mobile-more-menu-container .ant-menu-inline .ant-menu-item-selected .ant-menu-item-icon,
   .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-item-icon {
     color: ${token?.colorPrimary} !important;
-    transform: scale(1.1) !important;
+    transform: scale(1.05) !important;
   }
   
   .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-arrow {
