@@ -2,7 +2,7 @@ import React from "react";
 import { Layout, Menu, Button, Avatar, Badge, Space, theme } from "antd";
 // Using Remix Icons CSS classes for better performance
 import { useTheme, ZionixLogo } from "@zionix/design-system";
-import { useStyles } from "./AppTopBar.style";
+import { useStyles } from "./DesktopTopBar.style";
 
 const { Header } = Layout;
 const { useToken } = theme;

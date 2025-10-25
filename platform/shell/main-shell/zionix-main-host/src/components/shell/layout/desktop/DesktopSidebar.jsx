@@ -10,7 +10,8 @@ import {
   theme,
 } from "antd";
 import { useTheme } from "@zionix/design-system";
-import { useStyles } from "./AppSidebar.style";
+import { useMenuData } from "../shared/MenuDataProvider";
+import { useStyles } from "./DesktopSidebar.style";
 
 // Using Remix Icons CSS classes for optimal performance
 
@@ -21,12 +22,19 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const { token } = useToken();
   const { isRTL } = useTheme();
   const styles = useStyles(token);
-  const [selectedKey, setSelectedKey] = useState("dashboard");
+  const { 
+    menuItems, 
+    selectedKey, 
+    setSelectedKey, 
+    openKeys, 
+    setOpenKeys,
+    handleMenuSelect,
+    handleOpenChange 
+  } = useMenuData();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   const [isToggleHovered, setIsToggleHovered] = useState(false);
   const [isProfileHovered, setIsProfileHovered] = useState(false);
-  const [openKeys, setOpenKeys] = useState(["dashboard", "products"]);
 
   // Load collapsed state from localStorage
   useEffect(() => {
@@ -77,335 +85,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [collapsed, onCollapse, token]);
 
-  // 4-level nested menu items configuration (simulating backend response)
-  const menuItems = [
-    {
-      key: "dashboard",
-      icon: <i className="ri-dashboard-line" />,
-      label: "Dashboard",
-      children: [
-        {
-          key: "dashboard-overview",
-          icon: <i className="ri-apps-line" />,
-          label: "Overview",
-          children: [
-            {
-              key: "dashboard-overview-main",
-              label: "Main Dashboard",
-              children: [
-                { key: "dashboard-overview-main-widgets", label: "Widgets" },
-                { key: "dashboard-overview-main-charts", label: "Charts" },
-                { key: "dashboard-overview-main-metrics", label: "Metrics" },
-              ],
-            },
-            {
-              key: "dashboard-overview-custom",
-              label: "Custom Views",
-              children: [
-                {
-                  key: "dashboard-overview-custom-personal",
-                  label: "Personal",
-                },
-                { key: "dashboard-overview-custom-team", label: "Team" },
-                { key: "dashboard-overview-custom-company", label: "Company" },
-              ],
-            },
-          ],
-        },
-        {
-          key: "dashboard-analytics",
-          icon: <i className="ri-line-chart-line" />,
-          label: "Analytics",
-          badge: "3",
-          children: [
-            {
-              key: "dashboard-analytics-reports",
-              label: "Reports",
-              children: [
-                {
-                  key: "dashboard-analytics-reports-daily",
-                  label: "Daily Reports",
-                },
-                {
-                  key: "dashboard-analytics-reports-weekly",
-                  label: "Weekly Reports",
-                },
-                {
-                  key: "dashboard-analytics-reports-monthly",
-                  label: "Monthly Reports",
-                },
-              ],
-            },
-            {
-              key: "dashboard-analytics-insights",
-              label: "Insights",
-              children: [
-                { key: "dashboard-analytics-insights-trends", label: "Trends" },
-                {
-                  key: "dashboard-analytics-insights-predictions",
-                  label: "Predictions",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      key: "products",
-      icon: <i className="ri-shopping-bag-line" />,
-      label: "Products",
-      children: [
-        {
-          key: "products-catalog",
-          icon: <i className="ri-price-tag-line" />,
-          label: "Catalog",
-          children: [
-            {
-              key: "products-catalog-items",
-              label: "Items",
-              children: [
-                { key: "products-catalog-items-active", label: "Active Items" },
-                { key: "products-catalog-items-draft", label: "Draft Items" },
-                {
-                  key: "products-catalog-items-archived",
-                  label: "Archived Items",
-                },
-              ],
-            },
-            {
-              key: "products-catalog-categories",
-              label: "Categories",
-              children: [
-                {
-                  key: "products-catalog-categories-main",
-                  label: "Main Categories",
-                },
-                {
-                  key: "products-catalog-categories-sub",
-                  label: "Sub Categories",
-                },
-                { key: "products-catalog-categories-tags", label: "Tags" },
-              ],
-            },
-          ],
-        },
-        {
-          key: "products-inventory",
-          icon: <i className="ri-database-line" />,
-          label: "Inventory",
-          badge: "12",
-          children: [
-            {
-              key: "products-inventory-stock",
-              label: "Stock Management",
-              children: [
-                {
-                  key: "products-inventory-stock-levels",
-                  label: "Stock Levels",
-                },
-                {
-                  key: "products-inventory-stock-alerts",
-                  label: "Low Stock Alerts",
-                },
-                {
-                  key: "products-inventory-stock-transfers",
-                  label: "Transfers",
-                },
-              ],
-            },
-            {
-              key: "products-inventory-warehouses",
-              label: "Warehouses",
-              children: [
-                {
-                  key: "products-inventory-warehouses-main",
-                  label: "Main Warehouse",
-                },
-                {
-                  key: "products-inventory-warehouses-secondary",
-                  label: "Secondary",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          key: "products-orders",
-          icon: <i className="ri-building-line" />,
-          label: "Orders",
-          children: [
-            {
-              key: "products-orders-management",
-              label: "Order Management",
-              children: [
-                {
-                  key: "products-orders-management-pending",
-                  label: "Pending Orders",
-                },
-                {
-                  key: "products-orders-management-processing",
-                  label: "Processing",
-                },
-                {
-                  key: "products-orders-management-completed",
-                  label: "Completed",
-                },
-                {
-                  key: "products-orders-management-cancelled",
-                  label: "Cancelled",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      key: "schedule",
-      icon: <i className="ri-calendar-line" />,
-      label: "Schedule",
-      children: [
-        {
-          key: "schedule-calendar",
-          icon: <i className="ri-calendar-line" />,
-          label: "Calendar",
-          children: [
-            {
-              key: "schedule-calendar-personal",
-              label: "Personal",
-              children: [
-                { key: "schedule-calendar-personal-events", label: "Events" },
-                {
-                  key: "schedule-calendar-personal-reminders",
-                  label: "Reminders",
-                },
-              ],
-            },
-            {
-              key: "schedule-calendar-team",
-              label: "Team",
-              children: [
-                { key: "schedule-calendar-team-meetings", label: "Meetings" },
-                { key: "schedule-calendar-team-deadlines", label: "Deadlines" },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      key: "my-task",
-      icon: <i className="ri-file-text-line" />,
-      label: "My Tasks",
-      badge: "4",
-      children: [
-        {
-          key: "my-task-active",
-          icon: <i className="ri-folder-line" />,
-          label: "Active Tasks",
-          children: [
-            {
-              key: "my-task-active-high",
-              label: "High Priority",
-              children: [
-                { key: "my-task-active-high-urgent", label: "Urgent" },
-                { key: "my-task-active-high-important", label: "Important" },
-              ],
-            },
-            {
-              key: "my-task-active-normal",
-              label: "Normal Priority",
-              children: [
-                { key: "my-task-active-normal-today", label: "Due Today" },
-                { key: "my-task-active-normal-week", label: "This Week" },
-              ],
-            },
-          ],
-        },
-        {
-          key: "my-task-completed",
-          icon: <i className="ri-trophy-line" />,
-          label: "Completed",
-          children: [
-            {
-              key: "my-task-completed-recent",
-              label: "Recent",
-              children: [
-                { key: "my-task-completed-recent-today", label: "Today" },
-                { key: "my-task-completed-recent-week", label: "This Week" },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      key: "reporting",
-      icon: <i className="ri-bar-chart-line" />,
-      label: "Reporting",
-      children: [
-        {
-          key: "reporting-analytics",
-          icon: <i className="ri-pie-chart-line" />,
-          label: "Analytics",
-          children: [
-            {
-              key: "reporting-analytics-sales",
-              label: "Sales Analytics",
-              children: [
-                { key: "reporting-analytics-sales-revenue", label: "Revenue" },
-                {
-                  key: "reporting-analytics-sales-conversion",
-                  label: "Conversion",
-                },
-                { key: "reporting-analytics-sales-trends", label: "Trends" },
-              ],
-            },
-            {
-              key: "reporting-analytics-performance",
-              label: "Performance",
-              children: [
-                {
-                  key: "reporting-analytics-performance-kpi",
-                  label: "KPI Dashboard",
-                },
-                {
-                  key: "reporting-analytics-performance-metrics",
-                  label: "Metrics",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          key: "reporting-financial",
-          icon: <i className="ri-more-line" />,
-          label: "Financial",
-          children: [
-            {
-              key: "reporting-financial-statements",
-              label: "Statements",
-              children: [
-                {
-                  key: "reporting-financial-statements-income",
-                  label: "Income Statement",
-                },
-                {
-                  key: "reporting-financial-statements-balance",
-                  label: "Balance Sheet",
-                },
-                {
-                  key: "reporting-financial-statements-cashflow",
-                  label: "Cash Flow",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ];
+
 
   // Advanced section separator component
   const SectionSeparator = ({
@@ -603,8 +283,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             mode="inline"
             selectedKeys={[selectedKey]}
             openKeys={openKeys}
-            onOpenChange={setOpenKeys}
-            onSelect={({ key }) => setSelectedKey(key)}
+            onOpenChange={handleOpenChange}
+            onSelect={({ key }) => handleMenuSelect(key)}
             inlineCollapsed={collapsed}
             items={formatMenuItems(section.items)}
             style={{

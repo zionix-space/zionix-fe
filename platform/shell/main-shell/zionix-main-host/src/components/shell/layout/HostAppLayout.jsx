@@ -1,33 +1,40 @@
-import React, { useState } from "react";
-import { theme } from "antd";
-import AppTopBar from "./AppTopBar";
-import AppSidebar from "./AppSidebar";
-import { useStyles } from "./HostAppLayout.style";
-
-const { useToken } = theme;
+import React from "react";
+import { useTheme } from "@zionix/design-system";
+import { ResponsiveLayoutProvider } from "./shared/ResponsiveLayoutProvider";
+import { MenuDataProvider } from "./shared/MenuDataProvider";
+import ResponsiveLayout from "./ResponsiveLayout";
 
 const HostAppLayout = ({ children }) => {
-  const { token } = useToken();
-  const [collapsed, setCollapsed] = useState(false);
-  const styles = useStyles(token);
-
+  const themeResult = useTheme();
+  const token = themeResult?.token;
+  
+  // Fallback colors if theme tokens are not available
+  const fallbackColors = {
+    colorTextSecondary: '#666666'
+  };
+  
+  // Debug logging
+  if (!token) {
+    console.warn('HostAppLayout: Theme tokens not available, using fallback colors');
+  }
+  
   return (
-    <div style={styles.containerStyle}>
-      {/* Fixed Top Bar */}
-      <AppTopBar />
-
-      {/* Fixed Sidebar */}
-      <AppSidebar collapsed={collapsed} onCollapse={setCollapsed} />
-
-      {/* Content Area */}
-      <div style={styles.contentStyle(collapsed)}>
-        {children || (
-          <div style={styles.defaultContentStyle(token)}>
-            Main content area - your app content goes here
-          </div>
-        )}
-      </div>
-    </div>
+    <ResponsiveLayoutProvider>
+      <MenuDataProvider>
+        <ResponsiveLayout>
+          {children || (
+            <div style={{
+              padding: '24px',
+              textAlign: 'center',
+              color: token?.colorTextSecondary || fallbackColors.colorTextSecondary,
+              fontSize: '16px'
+            }}>
+              Main content area - your app content goes here
+            </div>
+          )}
+        </ResponsiveLayout>
+      </MenuDataProvider>
+    </ResponsiveLayoutProvider>
   );
 };
 

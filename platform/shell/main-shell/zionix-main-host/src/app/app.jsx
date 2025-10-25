@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { ThemeProvider } from "@zionix/design-system";
+import { ThemeProvider, useTheme } from "@zionix/design-system";
 import HostAppLayout from "../components/shell/layout/HostAppLayout";
 
 // Lazy load the admin remote app
@@ -8,6 +8,8 @@ const AdminApp = React.lazy(() => import("adminApp/Module"));
 
 // Admin page component that loads the remote app
 const AdminPage = () => {
+  const { token } = useTheme();
+  
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -15,8 +17,8 @@ const AdminPage = () => {
           to="/"
           style={{
             padding: "8px 16px",
-            backgroundColor: "#666",
-            color: "white",
+            backgroundColor: token.colorTextSecondary,
+            color: token.colorWhite,
             textDecoration: "none",
             borderRadius: "5px",
             fontSize: "14px",
@@ -56,6 +58,7 @@ function getModuleComponent(moduleName) {
       case 'adminApp':
         ModuleComponent = React.lazy(() => import('adminApp/Module'));
         break;
+
 
 
 
