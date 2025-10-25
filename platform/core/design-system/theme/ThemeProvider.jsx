@@ -33,6 +33,122 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { ConfigProvider, theme } from "antd";
 
 /**
+ * Color utility functions for dynamic color generation
+ */
+const colorUtils = {
+  /**
+   * Convert hex to RGB
+   */
+  hexToRgb: (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  },
+
+  /**
+   * Convert RGB to hex
+   */
+  rgbToHex: (r, g, b) => {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  },
+
+  /**
+   * Lighten a color by percentage
+   */
+  lighten: (hex, percent) => {
+    const rgb = colorUtils.hexToRgb(hex);
+    if (!rgb) return hex;
+    
+    const amount = Math.round(2.55 * percent);
+    const r = Math.min(255, rgb.r + amount);
+    const g = Math.min(255, rgb.g + amount);
+    const b = Math.min(255, rgb.b + amount);
+    
+    return colorUtils.rgbToHex(r, g, b);
+  },
+
+  /**
+   * Darken a color by percentage
+   */
+  darken: (hex, percent) => {
+    const rgb = colorUtils.hexToRgb(hex);
+    if (!rgb) return hex;
+    
+    const amount = Math.round(2.55 * percent);
+    const r = Math.max(0, rgb.r - amount);
+    const g = Math.max(0, rgb.g - amount);
+    const b = Math.max(0, rgb.b - amount);
+    
+    return colorUtils.rgbToHex(r, g, b);
+  },
+
+  /**
+   * Add alpha to a color
+   */
+  addAlpha: (hex, alpha) => {
+    const rgb = colorUtils.hexToRgb(hex);
+    if (!rgb) return hex;
+    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+  },
+
+  /**
+   * Mix two colors
+   */
+  mix: (color1, color2, weight = 0.5) => {
+    const rgb1 = colorUtils.hexToRgb(color1);
+    const rgb2 = colorUtils.hexToRgb(color2);
+    if (!rgb1 || !rgb2) return color1;
+
+    const r = Math.round(rgb1.r * (1 - weight) + rgb2.r * weight);
+    const g = Math.round(rgb1.g * (1 - weight) + rgb2.g * weight);
+    const b = Math.round(rgb1.b * (1 - weight) + rgb2.b * weight);
+
+    return colorUtils.rgbToHex(r, g, b);
+  }
+};
+
+/**
+ * Generate semantic colors from primary color
+ * @param {string} primaryColor - The primary color in hex format
+ * @param {boolean} isDark - Whether this is for dark theme
+ * @returns {Object} Object containing all semantic color tokens
+ */
+const generateSemanticColors = (primaryColor, isDark = false) => {
+  if (isDark) {
+    // Dark theme color generation
+    return {
+      colorPrimary: primaryColor,
+      colorPrimaryBg: colorUtils.mix(primaryColor, "#000000", 0.9),           // Very dark primary for backgrounds
+      colorPrimaryBgHover: colorUtils.mix(primaryColor, "#000000", 0.8),      // Slightly lighter for hover states
+      colorPrimaryBorder: colorUtils.mix(primaryColor, "#000000", 0.6),       // Primary-tinted borders
+      colorPrimaryBorderHover: colorUtils.mix(primaryColor, "#000000", 0.4),  // Primary border hover
+      colorPrimaryHover: colorUtils.lighten(primaryColor, 10),                // Primary hover state
+      colorPrimaryActive: colorUtils.lighten(primaryColor, 20),               // Primary active state
+      colorPrimaryText: primaryColor,                                         // Primary for text
+      colorPrimaryTextHover: colorUtils.lighten(primaryColor, 10),            // Primary text hover
+      colorPrimaryTextActive: colorUtils.lighten(primaryColor, 20),           // Primary text active
+    };
+  } else {
+    // Light theme color generation
+    return {
+      colorPrimary: primaryColor,
+      colorPrimaryBg: colorUtils.mix(primaryColor, "#ffffff", 0.9),           // Very light primary for backgrounds
+      colorPrimaryBgHover: colorUtils.mix(primaryColor, "#ffffff", 0.8),      // Slightly darker for hover states
+      colorPrimaryBorder: colorUtils.mix(primaryColor, "#ffffff", 0.6),       // Primary-tinted borders
+      colorPrimaryBorderHover: colorUtils.mix(primaryColor, "#ffffff", 0.4),  // Primary border hover
+      colorPrimaryHover: colorUtils.lighten(primaryColor, 10),                // Primary hover state
+      colorPrimaryActive: colorUtils.darken(primaryColor, 10),                // Primary active state
+      colorPrimaryText: primaryColor,                                         // Primary for text
+      colorPrimaryTextHover: colorUtils.lighten(primaryColor, 10),            // Primary text hover
+      colorPrimaryTextActive: colorUtils.darken(primaryColor, 10),            // Primary text active
+    };
+  }
+};
+
+/**
  * Theme context for managing global theme state
  * @private
  */
@@ -235,6 +351,7 @@ export const useTheme = () => {
 const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isRTL, setIsRTL] = useState(false);
+  const [primaryColor, setPrimaryColor] = useState("#1f40fc"); // Dynamic primary color state
   const { deviceType, isMobile, isDesktop } = useDeviceDetection();
 
   /**
@@ -261,32 +378,72 @@ const ThemeProvider = ({ children }) => {
   }, [isRTL]);
 
   /**
-   * Base light theme tokens
+   * Generate dynamic light theme tokens based on selected primary color
    */
-  const baseLightTokens = {
-    colorPrimary: "#1f40fc",
-    colorBgContainer: "#ffffff",
-    colorBgLayout: "#f5f5f5",
-    colorBorderSecondary: "#e8e8e8",
-    colorTextSecondary: "#666666",
-    colorWhite: "#ffffff",
-    colorSuccess: "#52c41a",
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
+  const generateLightTokens = (primaryColor) => {
+    const semanticColors = generateSemanticColors(primaryColor, false);
+    
+    return {
+      // Dynamic primary color derivatives
+      ...semanticColors,
+      
+      // Fill colors for different interaction states
+      colorFillQuaternary: "rgba(0, 0, 0, 0.02)",  // Lightest fill
+      colorFillTertiary: "rgba(0, 0, 0, 0.04)",    // Light fill
+      colorFillSecondary: "rgba(0, 0, 0, 0.06)",   // Medium fill
+      colorFill: "rgba(0, 0, 0, 0.08)",            // Standard fill
+      
+      // Dynamic background colors with subtle primary tint
+      colorBgContainer: colorUtils.mix(primaryColor, "#ffffff", 0.98),  // Very subtle primary tint (2% primary + 98% white)
+      colorBgLayout: colorUtils.mix(primaryColor, "#ffffff", 0.95),     // Slightly more primary tint (5% primary + 95% white)
+      colorBgElevated: "#ffffff",                                       // Pure white for elevated surfaces
+      colorBgSpotlight: colorUtils.mix(primaryColor, "#ffffff", 0.97),  // Subtle highlight with primary tint
+      colorBgMask: "rgba(0, 0, 0, 0.45)",                              // Overlay backgrounds
+      
+      // Static tokens that don't change with primary color
+      colorBorderSecondary: "#e8e8e8",
+      colorTextSecondary: "#666666",
+      colorWhite: "#ffffff",
+      colorSuccess: "#52c41a",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
+    };
   };
 
   /**
-   * Base dark theme tokens
+   * Generate dynamic dark theme tokens based on selected primary color
    */
-  const baseDarkTokens = {
-    colorPrimary: "#979cf0",
-    colorBgContainer: "#1f1f1f",
-    colorBgLayout: "#141414",
-    colorBorderSecondary: "#303030",
-    colorTextSecondary: "#a6a6a6",
-    colorWhite: "#ffffff",
-    colorSuccess: "#52c41a",
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
+  const generateDarkTokens = (primaryColor) => {
+    const semanticColors = generateSemanticColors(primaryColor, true);
+    
+    return {
+      // Dynamic primary color derivatives
+      ...semanticColors,
+      
+      // Fill colors for different interaction states (dark theme)
+      colorFillQuaternary: "rgba(255, 255, 255, 0.02)",  // Lightest fill
+      colorFillTertiary: "rgba(255, 255, 255, 0.04)",    // Light fill
+      colorFillSecondary: "rgba(255, 255, 255, 0.06)",   // Medium fill
+      colorFill: "rgba(255, 255, 255, 0.08)",            // Standard fill
+      
+      // Dynamic background colors with subtle primary tint (dark theme)
+      colorBgContainer: colorUtils.mix(primaryColor, "#1f1f1f", 0.95),  // Very subtle primary tint (5% primary + 95% dark)
+      colorBgLayout: colorUtils.mix(primaryColor, "#141414", 0.92),     // Slightly more primary tint (8% primary + 92% darker)
+      colorBgElevated: colorUtils.mix(primaryColor, "#262626", 0.97),   // Elevated surfaces with subtle tint
+      colorBgSpotlight: colorUtils.mix(primaryColor, "#1a1a1a", 0.94),  // Highlighted areas with primary tint
+      colorBgMask: "rgba(0, 0, 0, 0.65)",                              // Overlay backgrounds
+      
+      // Static tokens that don't change with primary color
+      colorBorderSecondary: "#303030",
+      colorTextSecondary: "#a6a6a6",
+      colorWhite: "#ffffff",
+      colorSuccess: "#52c41a",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
+    };
   };
+
+  // Generate dynamic tokens based on current primary color
+  const baseLightTokens = generateLightTokens(primaryColor);
+  const baseDarkTokens = generateDarkTokens(primaryColor);
 
   /**
    * Light theme configuration with responsive tokens
@@ -319,6 +476,8 @@ const ThemeProvider = ({ children }) => {
     deviceType,
     isMobile,
     isDesktop,
+    primaryColor,
+    setPrimaryColor,
   };
 
   return (

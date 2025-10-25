@@ -1,5 +1,5 @@
-import React from "react";
-import { Layout, Menu, Button, Avatar, Badge, Space, theme } from "antd";
+import React, { useState } from "react";
+import { Layout, Menu, Button, Avatar, Badge, Space, theme, ColorPicker, Tooltip } from "antd";
 // Using Remix Icons CSS classes for better performance
 import { useTheme, ZionixLogo } from "@zionix/design-system";
 import { useStyles } from "./DesktopTopBar.style";
@@ -9,7 +9,7 @@ const { useToken } = theme;
 
 const AppTopBar = () => {
   const { token } = useToken();
-  const { isDarkMode, toggleTheme, isRTL, toggleRTL } = useTheme();
+  const { isDarkMode, toggleTheme, isRTL, toggleRTL, primaryColor, setPrimaryColor } = useTheme();
   const styles = useStyles(token);
 
   const navigationItems = [
@@ -45,6 +45,35 @@ const AppTopBar = () => {
         <Badge count={3} size="small">
           <Button type="text" icon={<i className="ri-notification-line" />} style={styles.iconButtonStyle} />
         </Badge>
+
+        {/* Color Picker for Dynamic Theme Testing */}
+        <Tooltip title="Change Primary Color">
+          <ColorPicker
+            value={primaryColor}
+            onChange={(color) => setPrimaryColor(color.toHexString())}
+            size="small"
+            showText={(color) => (
+              <span style={{ marginLeft: 8, fontSize: '12px' }}>
+                Theme
+              </span>
+            )}
+            presets={[
+              {
+                label: 'Recommended',
+                colors: [
+                  '#1f40fc', // Original blue
+                  '#ff4d4f', // Red
+                  '#52c41a', // Green
+                  '#fa8c16', // Orange
+                  '#722ed1', // Purple
+                  '#13c2c2', // Cyan
+                  '#eb2f96', // Magenta
+                  '#f5222d', // Red variant
+                ],
+              },
+            ]}
+          />
+        </Tooltip>
 
         <Button
           type="text"
