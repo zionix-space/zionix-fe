@@ -53,7 +53,7 @@ const MobileHeader = ({
         initial="hidden"
         animate="visible"
       >
-        <ZionixLogo size={32} />
+        <ZionixLogo size={32} useThemeColors={true} />
       </motion.div>
 
       {/* Center Section - Search Bar */}

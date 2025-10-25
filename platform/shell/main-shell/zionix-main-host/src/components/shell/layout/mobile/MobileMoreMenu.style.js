@@ -45,7 +45,7 @@ export const useStyles = (token) => ({
     width: '40px',
     height: '5px',
     backgroundColor: token?.colorTextQuaternary,
-    borderRadius: '3px',
+    borderRadius: token?.borderRadiusSM,
     cursor: 'pointer',
   },
 

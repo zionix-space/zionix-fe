@@ -15,27 +15,7 @@ const { Content } = Layout;
  * @param {Object} [props.style={}] - Additional inline styles
  */
 const DesktopLayout = ({ children, className = '', style = {} }) => {
-  const themeResult = useTheme();
-  const token = themeResult?.token;
-  const isDarkMode = themeResult?.isDarkMode;
-  
-  // Theme-aware fallback colors
-  const fallbackColors = isDarkMode ? {
-    // Dark mode fallbacks
-    colorBgLayout: '#141414',
-    colorBgContainer: '#1f1f1f',
-    colorBorder: '#434343'
-  } : {
-    // Light mode fallbacks
-    colorBgLayout: '#f5f5f5',
-    colorBgContainer: '#ffffff',
-    colorBorder: '#d9d9d9'
-  };
-  
-  // Debug logging
-  if (!token) {
-    console.warn('DesktopLayout: Theme tokens not available, using fallback colors for', isDarkMode ? 'dark' : 'light', 'mode');
-  }
+  const { token } = useTheme();
   
   const { 
     sidebarCollapsed, 
@@ -79,7 +59,7 @@ const DesktopLayout = ({ children, className = '', style = {} }) => {
             className="desktop-content"
             style={{
               padding: contentPadding,
-              backgroundColor: token?.colorBgLayout || fallbackColors.colorBgLayout,
+              backgroundColor: token?.colorBgLayout,
               overflow: 'auto',
               height: 'calc(100vh - 64px)'
             }}
@@ -87,11 +67,11 @@ const DesktopLayout = ({ children, className = '', style = {} }) => {
             {/* Content Container */}
             <div
               style={{
-                backgroundColor: token?.colorBgContainer || fallbackColors.colorBgContainer,
-                borderRadius: '8px',
+                backgroundColor: token?.colorBgContainer,
+                borderRadius: token?.borderRadiusLG,
                 padding: contentPadding,
                 minHeight: '100%',
-                boxShadow: `0 2px 8px ${token?.colorBorder || fallbackColors.colorBorder}20`
+                boxShadow: `0 2px 8px ${token?.colorBorder}20`
               }}
             >
               {children}

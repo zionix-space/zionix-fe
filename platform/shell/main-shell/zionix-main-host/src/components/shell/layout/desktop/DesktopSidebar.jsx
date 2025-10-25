@@ -126,7 +126,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       type: "section",
       id: "account",
       title: "Account Settings",
-      accentColor: "#10b981",
+      accentColor: token.colorPrimary,
       items: [
         {
           key: "messages",

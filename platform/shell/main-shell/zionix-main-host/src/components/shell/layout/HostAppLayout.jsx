@@ -5,18 +5,7 @@ import { MenuDataProvider } from "./shared/MenuDataProvider";
 import ResponsiveLayout from "./ResponsiveLayout";
 
 const HostAppLayout = ({ children }) => {
-  const themeResult = useTheme();
-  const token = themeResult?.token;
-  
-  // Fallback colors if theme tokens are not available
-  const fallbackColors = {
-    colorTextSecondary: '#666666'
-  };
-  
-  // Debug logging
-  if (!token) {
-    console.warn('HostAppLayout: Theme tokens not available, using fallback colors');
-  }
+  const { token } = useTheme();
   
   return (
     <ResponsiveLayoutProvider>
@@ -26,7 +15,7 @@ const HostAppLayout = ({ children }) => {
             <div style={{
               padding: '24px',
               textAlign: 'center',
-              color: token?.colorTextSecondary || fallbackColors.colorTextSecondary,
+              color: token?.colorTextSecondary,
               fontSize: '16px'
             }}>
               Main content area - your app content goes here

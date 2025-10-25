@@ -25,7 +25,7 @@ const AppTopBar = () => {
       {/* Left Section - Brand + Navigation */}
       <div style={styles.leftSectionStyle}>
         <div style={styles.brandContainerStyle}>
-          <ZionixLogo size={48} style={{ marginRight: '16px' }} />
+          <ZionixLogo size={48} useThemeColors={true} style={{ marginRight: '16px' }} />
           <span style={styles.logoTextStyle}>Zionix</span>
         </div>
         
@@ -61,14 +61,14 @@ const AppTopBar = () => {
               {
                 label: 'Recommended',
                 colors: [
-                  '#1f40fc', // Original blue
-                  '#ff4d4f', // Red
-                  '#52c41a', // Green
-                  '#fa8c16', // Orange
+                  token.colorPrimary || '#1f40fc', // Current primary color
+                  '#1f40fc', // Classic blue
+                  '#52c41a', // Success green
+                  '#fa8c16', // Warning orange
+                  '#ff4d4f', // Error red
                   '#722ed1', // Purple
                   '#13c2c2', // Cyan
                   '#eb2f96', // Magenta
-                  '#f5222d', // Red variant
                 ],
               },
             ]}

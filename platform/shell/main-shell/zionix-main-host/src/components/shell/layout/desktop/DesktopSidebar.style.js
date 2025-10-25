@@ -39,7 +39,7 @@ export const useStyles = (token) => ({
     },
     '&::-webkit-scrollbar-thumb': {
       background: token.colorBorderSecondary,
-      borderRadius: '2px',
+      borderRadius: token.borderRadiusSM,
       transition: 'background 0.2s ease',
     },
     '&::-webkit-scrollbar-thumb:hover': {
@@ -65,7 +65,7 @@ export const useStyles = (token) => ({
   zxHostToggleButton: {
     width: '32px',
     height: '32px',
-    borderRadius: '6px', // Consistent with other elements
+    borderRadius: token.borderRadius, // Consistent with other elements
     backgroundColor: 'transparent',
     border: '1px solid transparent',
     display: 'flex',
@@ -208,7 +208,7 @@ export const useStyles = (token) => ({
   },
   
   zxHostSearchInput: {
-    borderRadius: '4px', // Slightly smaller radius for compactness
+    borderRadius: token.borderRadiusSM, // Slightly smaller radius for compactness
     height: '28px', // Reduced height for more compact look
     fontSize: '13px', // Slightly smaller font
     border: `1px solid ${token.colorBorderSecondary}`,

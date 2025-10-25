@@ -35,7 +35,7 @@ export const useStyles = (token) => {
       justifyContent: 'center',
       padding: '4px 2px',
       cursor: 'pointer',
-      borderRadius: '4px',
+      borderRadius: token.borderRadiusSM,
       transition: 'all 0.2s ease',
       minHeight: '44px',
     },

@@ -387,22 +387,22 @@ const ThemeProvider = ({ children }) => {
       // Dynamic primary color derivatives
       ...semanticColors,
       
-      // Fill colors for different interaction states
-      colorFillQuaternary: "rgba(0, 0, 0, 0.02)",  // Lightest fill
-      colorFillTertiary: "rgba(0, 0, 0, 0.04)",    // Light fill
-      colorFillSecondary: "rgba(0, 0, 0, 0.06)",   // Medium fill
-      colorFill: "rgba(0, 0, 0, 0.08)",            // Standard fill
+      // Fill colors for different interaction states (light theme)
+      colorFillQuaternary: colorUtils.addAlpha("#000000", 0.02),  // Lightest fill
+      colorFillTertiary: colorUtils.addAlpha("#000000", 0.04),    // Light fill
+      colorFillSecondary: colorUtils.addAlpha("#000000", 0.06),   // Medium fill
+      colorFill: colorUtils.addAlpha("#000000", 0.08),            // Standard fill
       
       // Dynamic background colors with subtle primary tint
       colorBgContainer: colorUtils.mix(primaryColor, "#ffffff", 0.98),  // Very subtle primary tint (2% primary + 98% white)
       colorBgLayout: colorUtils.mix(primaryColor, "#ffffff", 0.95),     // Slightly more primary tint (5% primary + 95% white)
       colorBgElevated: "#ffffff",                                       // Pure white for elevated surfaces
       colorBgSpotlight: colorUtils.mix(primaryColor, "#ffffff", 0.97),  // Subtle highlight with primary tint
-      colorBgMask: "rgba(0, 0, 0, 0.45)",                              // Overlay backgrounds
+      colorBgMask: colorUtils.addAlpha("#000000", 0.45),               // Overlay backgrounds
       
-      // Static tokens that don't change with primary color
-      colorBorderSecondary: "#e8e8e8",
-      colorTextSecondary: "#666666",
+      // Dynamic semantic tokens based on primary color
+      colorBorderSecondary: colorUtils.mix(primaryColor, "#f0f0f0", 0.95),  // Subtle primary tint in borders
+      colorTextSecondary: colorUtils.mix(primaryColor, "#666666", 0.85),    // Subtle primary tint in secondary text
       colorWhite: "#ffffff",
       colorSuccess: "#52c41a",
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
@@ -420,21 +420,21 @@ const ThemeProvider = ({ children }) => {
       ...semanticColors,
       
       // Fill colors for different interaction states (dark theme)
-      colorFillQuaternary: "rgba(255, 255, 255, 0.02)",  // Lightest fill
-      colorFillTertiary: "rgba(255, 255, 255, 0.04)",    // Light fill
-      colorFillSecondary: "rgba(255, 255, 255, 0.06)",   // Medium fill
-      colorFill: "rgba(255, 255, 255, 0.08)",            // Standard fill
+      colorFillQuaternary: colorUtils.addAlpha("#ffffff", 0.02),  // Lightest fill
+      colorFillTertiary: colorUtils.addAlpha("#ffffff", 0.04),    // Light fill
+      colorFillSecondary: colorUtils.addAlpha("#ffffff", 0.06),   // Medium fill
+      colorFill: colorUtils.addAlpha("#ffffff", 0.08),            // Standard fill
       
       // Dynamic background colors with subtle primary tint (dark theme)
       colorBgContainer: colorUtils.mix(primaryColor, "#1f1f1f", 0.95),  // Very subtle primary tint (5% primary + 95% dark)
       colorBgLayout: colorUtils.mix(primaryColor, "#141414", 0.92),     // Slightly more primary tint (8% primary + 92% darker)
       colorBgElevated: colorUtils.mix(primaryColor, "#262626", 0.97),   // Elevated surfaces with subtle tint
       colorBgSpotlight: colorUtils.mix(primaryColor, "#1a1a1a", 0.94),  // Highlighted areas with primary tint
-      colorBgMask: "rgba(0, 0, 0, 0.65)",                              // Overlay backgrounds
+      colorBgMask: colorUtils.addAlpha("#000000", 0.65),               // Overlay backgrounds
       
-      // Static tokens that don't change with primary color
-      colorBorderSecondary: "#303030",
-      colorTextSecondary: "#a6a6a6",
+      // Dynamic semantic tokens based on primary color (dark theme)
+      colorBorderSecondary: colorUtils.mix(primaryColor, "#303030", 0.90),  // Subtle primary tint in borders
+      colorTextSecondary: colorUtils.mix(primaryColor, "#a6a6a6", 0.85),    // Subtle primary tint in secondary text
       colorWhite: "#ffffff",
       colorSuccess: "#52c41a",
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",

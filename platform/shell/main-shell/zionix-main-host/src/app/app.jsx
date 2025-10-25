@@ -20,7 +20,7 @@ const AdminPage = () => {
             backgroundColor: token.colorTextSecondary,
             color: token.colorWhite,
             textDecoration: "none",
-            borderRadius: "5px",
+            borderRadius: token.borderRadiusSM,
             fontSize: "14px",
           }}
         >

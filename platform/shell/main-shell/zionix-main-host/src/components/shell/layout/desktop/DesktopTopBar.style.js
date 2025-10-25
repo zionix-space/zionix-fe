@@ -92,7 +92,7 @@ export const useStyles = (token) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "6px",
+    borderRadius: token.borderRadius,
     transition: "all 0.2s ease",
     userSelect: "none", // Prevent text selection on buttons
     "&:hover": {
@@ -111,7 +111,7 @@ export const useStyles = (token) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "6px",
+    borderRadius: token.borderRadius,
     transition: "all 0.2s ease",
     color: isRTL ? token.colorWhite : token.colorTextSecondary,
     userSelect: "none", // Prevent text selection on RTL toggle
