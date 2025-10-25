@@ -683,6 +683,10 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     );
   };
 
+  // Separate profile section from navigation sections
+  const navigationSections = backendMenuSections.filter(section => section.type !== "profile");
+  const profileSection = backendMenuSections.find(section => section.type === "profile");
+
   return (
     <Sider
       collapsed={collapsed}
@@ -701,13 +705,16 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         {/* Integrated Header with Toggle */}
         <IntegratedToggle />
 
-        {/* Main Content */}
+        {/* Scrollable Navigation Content */}
         <div style={styles.zxHostMainContent}>
-          {/* Dynamic Sections Rendering */}
-          {backendMenuSections.map((section, index) =>
+          {/* Dynamic Navigation Sections Rendering (excluding profile) */}
+          {navigationSections.map((section, index) =>
             renderSection(section, index)
           )}
         </div>
+
+        {/* Fixed Profile Section at Bottom */}
+        {profileSection && renderSection(profileSection, backendMenuSections.length - 1)}
       </div>
     </Sider>
   );

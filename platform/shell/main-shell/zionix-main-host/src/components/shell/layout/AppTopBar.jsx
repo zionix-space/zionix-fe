@@ -3,6 +3,7 @@ import { Layout, Menu, Button, Avatar, Badge, Space, theme } from "antd";
 // Using Remix Icons CSS classes for better performance
 import { useTheme } from "@zionix/design-system";
 import { useStyles } from "./AppTopBar.style";
+import ZionixLogo from "../../common/ZionixLogo";
 
 const { Header } = Layout;
 const { useToken } = theme;
@@ -22,18 +23,22 @@ const AppTopBar = () => {
 
   return (
     <Header style={styles.topBarStyle}>
-      {/* Left Section - Logo and Navigation */}
+      {/* Left Section - Brand + Navigation */}
       <div style={styles.leftSectionStyle}>
-        <div style={styles.logoStyle}>Zionix</div>
-
-        {/* Navigation Menu - starts right after logo */}
-        <Menu
-          mode="horizontal"
-          defaultSelectedKeys={["create"]}
-          items={navigationItems}
-          style={styles.menuStyle}
-          theme="light"
-        />
+        <div style={styles.brandContainerStyle}>
+          <ZionixLogo size={48} style={{ marginRight: '16px' }} />
+          <span style={styles.logoTextStyle}>Zionix</span>
+        </div>
+        
+        <div style={styles.navigationContainerStyle}>
+          <Menu
+            mode="horizontal"
+            defaultSelectedKeys={["create"]}
+            items={navigationItems}
+            style={styles.menuStyle}
+            theme="light"
+          />
+        </div>
       </div>
 
       {/* Right Section - Actions */}

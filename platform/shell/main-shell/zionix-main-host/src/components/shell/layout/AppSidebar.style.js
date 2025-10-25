@@ -10,6 +10,7 @@ export const useStyles = (token) => ({
     display: 'flex',
     flexDirection: 'column',
     zIndex: 999,
+    userSelect: 'none', // Prevent text selection on sidebar
   },
   
   zxHostSidebarContent: {
@@ -17,6 +18,8 @@ export const useStyles = (token) => ({
     flexDirection: 'column',
     height: '100%',
     minHeight: 'calc(100vh - 64px)',
+    userSelect: 'none', // Prevent text selection on sidebar content
+    overflow: 'hidden', // Prevent the entire sidebar from scrolling
   },
   
   zxHostMainContent: {
@@ -25,30 +28,53 @@ export const useStyles = (token) => ({
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: token.paddingXS,
+    paddingBottom: '8px', // Consistent with 8px grid system
+    paddingTop: '8px', // Add top padding for better spacing
+    // Custom scrollbar styling for modern SaaS appearance
+    '&::-webkit-scrollbar': {
+      width: '6px',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: 'transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: token.colorBorderSecondary,
+      borderRadius: '3px',
+      transition: 'background 0.2s ease',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      background: token.colorBorder,
+    },
+    // Firefox scrollbar styling
+    scrollbarWidth: 'thin',
+    scrollbarColor: `${token.colorBorderSecondary} transparent`,
   },
   
   zxHostToggleContainer: {
-    padding: token.padding,
+    padding: `${token.paddingSM}px`, // Reduced from token.padding for more compact layout
     borderBottom: `1px solid ${token.colorBorderSecondary}`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     background: token.colorFillQuaternary,
+    userSelect: 'none', // Prevent text selection on toggle
+    minHeight: '48px', // Ensure consistent height while reducing padding
+    gap: token.paddingXS, // Add gap between search and toggle button
   },
   
   zxHostToggleButton: {
     width: '32px',
     height: '32px',
-    borderRadius: token.borderRadius,
+    borderRadius: '6px', // Consistent with other elements
     backgroundColor: 'transparent',
     border: '1px solid transparent',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
+    transition: 'all 0.2s ease', // Faster, more responsive transition
     position: 'relative',
+    flexShrink: 0, // Prevent button from shrinking
   },
   
   zxHostToggleButtonHover: {
@@ -67,7 +93,7 @@ export const useStyles = (token) => ({
   },
   
   zxHostSectionHeader: {
-    padding: `${token.padding}px ${token.padding}px ${token.paddingSM}px ${token.padding}px`,
+    padding: '12px 16px 8px 16px', // Optimized spacing following 8px grid
     fontSize: '11px',
     fontWeight: 600,
     color: token.colorTextSecondary,
@@ -75,7 +101,9 @@ export const useStyles = (token) => ({
     letterSpacing: '0.5px',
     display: 'flex',
     alignItems: 'center',
-    gap: token.paddingSM,
+    gap: '8px', // Consistent with 8px grid
+    userSelect: 'none', // Prevent text selection on section headers
+    marginTop: '8px', // Add consistent top spacing
   },
   
   zxHostSectionHeaderCollapsed: {
@@ -89,7 +117,9 @@ export const useStyles = (token) => ({
   },
   
   zxHostMenuContainer: {
-    padding: '0 8px',
+    padding: '0 12px', // Optimized for 8px grid system (12px = 1.5 * 8px)
+    userSelect: 'none', // Prevent text selection on menu container
+    marginBottom: '8px', // Add consistent spacing between sections
   },
   
   zxHostMenuItemBadge: {
@@ -102,23 +132,26 @@ export const useStyles = (token) => ({
   zxHostProfileSection: {
     flexShrink: 0,
     marginTop: 'auto',
+    position: 'relative',
+    zIndex: 1,
   },
   
   zxHostProfileContainer: {
-    padding: token.padding,
+    padding: `${token.paddingXS}px ${token.paddingSM}px`, // Reduced from token.padding
     borderTop: `1px solid ${token.colorBorderSecondary}`,
     backgroundColor: token.colorFillQuaternary,
+    userSelect: 'none', // Prevent text selection on profile container
   },
   
   zxHostProfileContainerCollapsed: {
-    padding: token.paddingSM,
+    padding: token.paddingXS, // Reduced from token.paddingSM
   },
   
   zxHostProfileContent: {
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
-    padding: token.paddingSM,
+    padding: `${token.paddingXS}px ${token.paddingSM}px`, // Reduced vertical padding
     borderRadius: token.borderRadius,
     transition: `background-color ${token.motionDurationMid} ${token.motionEaseInOut}`,
     justifyContent: 'flex-start',
@@ -153,10 +186,35 @@ export const useStyles = (token) => ({
   },
   
   zxHostSearchContainer: {
-    padding: `${token.paddingSM}px ${token.padding}px ${token.padding}px ${token.padding}px`,
+    padding: `${token.paddingXS}px ${token.paddingSM}px`, // Reduced padding for compact look
+    flex: 1,
   },
   
   zxHostSearchInput: {
-    borderRadius: token.borderRadius,
+    borderRadius: '6px', // Consistent with SaaS standards
+    height: '32px', // Standard SaaS search bar height
+    fontSize: '14px',
+    border: `1px solid ${token.colorBorderSecondary}`,
+    backgroundColor: token.colorFillQuaternary,
+    transition: 'all 0.2s ease',
+    '&:hover': {
+      borderColor: token.colorBorder,
+      backgroundColor: token.colorBgContainer,
+    },
+    '&:focus': {
+      borderColor: token.colorPrimary,
+      backgroundColor: token.colorBgContainer,
+      boxShadow: `0 0 0 2px ${token.colorPrimary}10`,
+    },
+    '& .ant-input': {
+      backgroundColor: 'transparent',
+      border: 'none',
+      fontSize: '14px',
+      padding: '0 8px',
+    },
+    '& .anticon': {
+      color: token.colorTextTertiary,
+      fontSize: '14px',
+    },
   },
 });
