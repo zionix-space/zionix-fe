@@ -71,8 +71,8 @@ const DesktopLayout = ({ children, className = '', style = {} }) => {
         {/* Desktop Main Content */}
         <Layout
           style={{
-            marginLeft: `${sidebarWidth}px`,
-            transition: 'margin-left 0.3s ease'
+            marginInlineStart: `${sidebarWidth}px`,
+            transition: 'margin-inline-start 0.3s ease'
           }}
         >
           <Content

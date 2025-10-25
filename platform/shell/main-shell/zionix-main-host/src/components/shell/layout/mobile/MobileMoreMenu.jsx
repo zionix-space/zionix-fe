@@ -1,9 +1,21 @@
 import React, { useEffect, useRef } from 'react';
-import { Badge, Menu } from 'antd';
+import { Badge, Menu, theme } from 'antd';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@zionix/design-system';
+import { 
+  useStyles, 
+  backdropVariants, 
+  menuVariants, 
+  handleBarVariants, 
+  headerVariants,
+  contentVariants,
+  generateMenuItemCSS 
+} from './MobileMoreMenu.style';
+
+const { useToken } = theme;
 
 /**
- * Mobile More Menu Component - iOS-style slide-up menu for mobile navigation
+ * Mobile More Menu Component - Native iOS-style slide-up menu with smooth animations
  * @param {Object} props - Component props
  * @param {boolean} props.isOpen - Whether the menu is open
  * @param {Function} props.onClose - Function to close the menu
@@ -22,58 +34,10 @@ const MobileMoreMenu = ({
   openKeys,
   onOpenChange 
 }) => {
-  const themeResult = useTheme();
-  const rawToken = themeResult?.token;
-  
-  // Comprehensive fallback values for all theme tokens used in this component
-  const fallbackColors = {
-    colorBgMask: 'rgba(0, 0, 0, 0.4)',
-    colorBgElevated: '#ffffff',
-    colorTextQuaternary: '#C7C7CC',
-    colorBorder: '#d9d9d9',
-    colorText: '#000000',
-    colorTextTertiary: '#8E8E93',
-    colorPrimaryBg: '#e6f7ff',
-    colorPrimary: '#1677ff',
-    colorBgTextHover: '#f5f5f5',
-    colorFillQuaternary: '#f0f0f0',
-    colorBgTextActive: '#e6f7ff'
-  };
-  
-  // Create a safe token object with fallback values
-  const token = {
-    ...fallbackColors,
-    ...rawToken
-  };
-  
-  // Debug logging
-  if (!rawToken) {
-    console.warn('MobileMoreMenu: Theme tokens not available, using fallback colors');
-  }
+  const { token } = useToken();
+  const styles = useStyles(token);
   
   const menuRef = useRef(null);
-
-  // Handle click outside to close menu
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-      // Prevent body scroll when menu is open
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose]);
 
   // Handle escape key
   useEffect(() => {
@@ -91,6 +55,19 @@ const MobileMoreMenu = ({
       document.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen, onClose]);
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const handleItemClick = (item) => {
     onItemSelect(item);
@@ -137,207 +114,111 @@ const MobileMoreMenu = ({
     }
   };
 
-  if (!isOpen) return null;
+
 
   return (
-    <>
-      {/* Backdrop with iOS-style blur */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: token.colorBgMask,
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          zIndex: 1999,
-          opacity: isOpen ? 1 : 0,
-          transition: 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        }}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Menu Container with native iOS styling */}
-      <div
-        ref={menuRef}
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: token.colorBgElevated,
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
-          zIndex: 2000,
-          maxHeight: '70vh',
-          overflow: 'hidden',
-          transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
-          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.15)',
-        }}
-        role="dialog"
-        aria-modal="true"
-        aria-label="More menu options"
-      >
-        {/* Handle Bar - iOS style */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            padding: '12px 0 8px',
-          }}
-        >
-          <div
-            style={{
-              width: '36px',
-              height: '5px',
-              backgroundColor: token.colorTextQuaternary,
-              borderRadius: '3px',
-            }}
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop with iOS-style blur and smooth animation */}
+          <motion.div
+            variants={backdropVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={styles.backdropStyle}
+            onClick={onClose}
+            aria-hidden="true"
           />
-        </div>
 
-        {/* Header with iOS typography */}
-        <div
-          style={{
-            padding: '0 24px 20px',
-            borderBottom: `0.5px solid ${token.colorBorder}`,
-          }}
-        >
-          <h3
-            style={{
-              margin: 0,
-              fontSize: '20px',
-              fontWeight: '700',
-              color: token.colorText,
-              fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-              letterSpacing: '-0.02em',
-            }}
+          {/* Menu Container with native iOS styling and smooth animations */}
+          <motion.div
+            ref={menuRef}
+            variants={menuVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={styles.menuContainerStyle}
+            role="dialog"
+            aria-modal="true"
+            aria-label="More menu options"
           >
-            More
-          </h3>
-        </div>
+            {/* Handle Bar - iOS style with animation */}
+            <motion.div
+              variants={handleBarVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              style={styles.handleBarContainerStyle}
+            >
+              <motion.div
+                whileHover={{ scaleX: 1.2 }}
+                whileTap={{ scaleX: 0.9 }}
+                style={styles.handleBarStyle}
+                onClick={onClose}
+              />
+            </motion.div>
 
-        {/* Menu Items with Ant Design Menu component */}
-        <div
-          style={{
-            padding: '0 0 32px',
-            maxHeight: 'calc(70vh - 140px)',
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch', // iOS smooth scrolling
-          }}
-        >
-          <div className="mobile-more-menu-container">
-            <Menu
-              mode="inline"
-              selectedKeys={[selectedKey]}
-              openKeys={openKeys}
-              onOpenChange={onOpenChange}
-              onSelect={handleMenuSelect}
-              items={formattedMenuItems}
-              style={{
-                border: 'none',
-                backgroundColor: 'transparent',
-                fontSize: '17px',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif',
-              }}
-              theme="light"
-              expandIcon={({ isOpen }) => (
-                <i 
-                  className={`ri-arrow-${isOpen ? 'down' : 'right'}-s-line`}
-                  style={{
-                    fontSize: '16px',
-                    color: token.colorTextTertiary,
-                    transition: 'transform 0.2s ease',
-                  }}
+            {/* Header with iOS typography and animation */}
+            <motion.div
+              variants={headerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              style={styles.headerContainerStyle}
+            >
+              <h3
+                style={styles.headerTitleStyle}
+              >
+                More
+              </h3>
+            </motion.div>
+
+            {/* Menu Items with Ant Design Menu component and animations */}
+            <motion.div
+              variants={contentVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              style={styles.contentContainerStyle}
+            >
+              <div className="mobile-more-menu-container">
+                <Menu
+                  mode="inline"
+                  selectedKeys={[selectedKey]}
+                  openKeys={openKeys}
+                  onOpenChange={onOpenChange}
+                  onSelect={handleMenuSelect}
+                  items={formattedMenuItems}
+                  style={styles.menuStyle}
+                  theme="light"
+                  expandIcon={({ isOpen }) => (
+                    <motion.i 
+                      className={`ri-arrow-${isOpen ? 'down' : 'right'}-s-line`}
+                      animate={{ rotate: isOpen ? 0 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={styles.expandIconStyle}
+                    />
+                  )}
                 />
-              )}
-            />
-          </div>
-          
-          <style dangerouslySetInnerHTML={{
-            __html: `
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-item,
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-title {
-                height: 56px !important;
-                line-height: 56px !important;
-                padding: 0 24px !important;
-                margin: 0 !important;
-                border-bottom: 0.5px solid ${token.colorBorder} !important;
-                font-size: 17px !important;
-                font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif !important;
-                letter-spacing: -0.01em !important;
-                border-radius: 0 !important;
-                color: ${token.colorText} !important;
-              }
+              </div>
               
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-item:last-child,
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu:last-child .ant-menu-submenu-title {
-                border-bottom: none !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-item-selected {
-                background-color: ${token.colorPrimaryBg} !important;
-                color: ${token.colorPrimary} !important;
-                font-weight: 600 !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-item:hover,
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-title:hover {
-                background-color: ${token.colorBgTextHover} !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-item-icon,
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-title .ant-menu-item-icon {
-                font-size: 24px !important;
-                color: ${token.colorTextTertiary} !important;
-                margin-right: 16px !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-item-selected .ant-menu-item-icon,
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-item-icon {
-                color: ${token.colorPrimary} !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-submenu-arrow {
-                right: 24px !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-sub {
-                background-color: ${token.colorFillQuaternary} !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-sub .ant-menu-item {
-                padding-left: 64px !important;
-                background-color: ${token.colorFillQuaternary} !important;
-                border-bottom: 0.5px solid ${token.colorBorder} !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-sub .ant-menu-item:hover {
-                background-color: ${token.colorBgTextHover} !important;
-              }
-              
-              .mobile-more-menu-container .ant-menu-inline .ant-menu-sub .ant-menu-item-selected {
-                background-color: ${token.colorBgTextActive} !important;
-                color: ${token.colorPrimary} !important;
-                font-weight: 600 !important;
-              }
-            `
-          }} />
-        </div>
+              <style dangerouslySetInnerHTML={{
+                __html: generateMenuItemCSS(token)
+              }} />
+            </motion.div>
 
-        {/* Safe area padding for devices with home indicator */}
-        <div
-          style={{
-            height: 'env(safe-area-inset-bottom, 0px)',
-            backgroundColor: token.colorBgElevated,
-          }}
-        />
-      </div>
-    </>
+            {/* Safe area padding for devices with home indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              style={styles.safeAreaStyle}
+            />
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 
