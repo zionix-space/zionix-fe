@@ -31,6 +31,8 @@ export function AppRouter() {
         break;
 
 
+
+
       default:
         ModuleComponent = () => <div>Module not found</div>;
     }
@@ -42,7 +44,8 @@ export function AppRouter() {
   return (
     <React.Suspense fallback={null}>
       <AnimatePresence mode="popLayout">
-        <Routes>
+        <div>
+          <Routes>
           {/* <Route
             path="/"
             element={<RouteWithTransition element={<MainAuthApp />} />}
@@ -52,7 +55,6 @@ export function AppRouter() {
             {availableApps
               .filter((moduleName) => moduleName !== excludedModule) // Exclude mainAuthApp
               .map((moduleName) => {
-                console.log(moduleName);
                 const ModuleComponent = getModuleComponent(moduleName);
 
                 return (
@@ -66,6 +68,7 @@ export function AppRouter() {
             <Route path="*" element={<div>Module does not exist</div>} />
           </Route>
         </Routes>
+        </div>
       </AnimatePresence>
     </React.Suspense>
   );

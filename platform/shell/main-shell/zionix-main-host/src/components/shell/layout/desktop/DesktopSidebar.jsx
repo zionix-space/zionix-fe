@@ -13,6 +13,62 @@ import { useTheme } from "@zionix/design-system";
 import { useMenuData } from "../shared/MenuDataProvider";
 import { useStyles } from "./DesktopSidebar.style";
 
+// Inject CSS for webkit scrollbar styles and Ant Design component overrides
+const injectSidebarCSS = (token) => {
+  const styleId = 'desktop-sidebar-styles';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      /* Webkit scrollbar styles */
+      .zx-host-main-content::-webkit-scrollbar {
+        width: 4px;
+      }
+      .zx-host-main-content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .zx-host-main-content::-webkit-scrollbar-thumb {
+        background: ${token.colorBorderSecondary};
+        border-radius: ${token.borderRadiusSM}px;
+        transition: background 0.2s ease;
+      }
+      .zx-host-main-content::-webkit-scrollbar-thumb:hover {
+        background: ${token.colorBorder};
+      }
+      
+      /* Menu container styles */
+      .zx-host-menu-container .ant-menu {
+        fontSize: 14px;
+      }
+      .zx-host-menu-container .ant-menu-item {
+        height: 32px;
+        line-height: 32px;
+        margin-bottom: 2px;
+        padding-left: 12px !important;
+      }
+      .zx-host-menu-container .ant-menu-submenu .ant-menu-submenu-title {
+        height: 32px;
+        line-height: 32px;
+        margin-bottom: 2px;
+        padding-left: 12px !important;
+      }
+      
+      /* Search input styles */
+      .zx-host-search-input .ant-input {
+        background-color: transparent;
+        border: none;
+        font-size: 13px;
+        padding: 0 6px;
+      }
+      .zx-host-search-input .anticon {
+        color: ${token.colorTextTertiary};
+        font-size: 13px;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+};
+
 // Using Remix Icons CSS classes for optimal performance
 
 const { Sider } = Layout;
@@ -62,6 +118,11 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [collapsed, onCollapse]);
+
+  // Inject sidebar CSS
+  useEffect(() => {
+    injectSidebarCSS(token);
+  }, [token]);
 
   // Responsive behavior
   useEffect(() => {
@@ -278,7 +339,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         />
 
         {/* Section Menu Items */}
-        <div style={styles.zxHostMenuContainer}>
+        <div style={styles.zxHostMenuContainer} className="zx-host-menu-container">
           <Menu
             mode="inline"
             selectedKeys={[selectedKey]}
@@ -311,6 +372,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               placeholder="Search..."
               prefix={<i className="ri-search-line" />}
               style={styles.zxHostSearchInput}
+              className="zx-host-search-input"
               size="middle"
             />
           </div>
@@ -386,7 +448,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         <IntegratedToggle />
 
         {/* Scrollable Navigation Content */}
-        <div style={styles.zxHostMainContent}>
+        <div style={styles.zxHostMainContent} className="zx-host-main-content">
           {/* Dynamic Navigation Sections Rendering (excluding profile) */}
           {navigationSections.map((section, index) =>
             renderSection(section, index)

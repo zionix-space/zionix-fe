@@ -12,6 +12,10 @@ import "./styles.scss";
 import React, { StrictMode, useState, useEffect } from "react";
 import * as ReactDOM from "react-dom/client";
 import App from "./app/app";
+import { initializeWarningSuppression } from "./utils/suppressWarnings";
+
+// Initialize warning suppression for known Ant Design issues
+initializeWarningSuppression();
 
 // App wrapper with loading state
 const AppWithLoader = () => {
