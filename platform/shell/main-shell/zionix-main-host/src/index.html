@@ -7,8 +7,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- <link rel="icon" type="image/x-icon" href="favicon.ico" /> -->
     <link rel="icon" type="image/x-icon" href="./assets/zionix-logo.svg" />
+    
+    <!-- Initial theme-matching styles to prevent white screen flash -->
+    <style>
+      /* Reset and base styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+        color: #262626;
+        overflow: hidden; /* Prevent scrollbars during initial load */
+      }
+      
+      #main-module {
+        height: 100vh;
+        width: 100vw;
+        background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+      }
+      
+      /* Initial loading animation with neutral colors */
+      .initial-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      
+      .initial-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(0, 0, 0, 0.06);
+        border-top: 3px solid #8c8c8c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+      }
+      
+      .initial-text {
+        color: #595959;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        opacity: 0.8;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Smooth transition when React takes over */
+      .fade-out {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+      }
+    </style>
   </head>
   <body>
-    <div id="main-module"></div>
+    <div id="main-module">
+      <!-- Initial loading state that shows immediately -->
+      <div id="html-loader" class="initial-loading">
+        <div class="initial-spinner"></div>
+        <div class="initial-text">Loading Zionix Platform...</div>
+      </div>
+    </div>
+    
+    <script>
+      // Remove HTML loader when React is ready
+      window.addEventListener('DOMContentLoaded', function() {
+        // This will be called when the DOM is ready
+        // The actual removal will be handled by main.jsx
+      });
+    </script>
   </body>
 </html>

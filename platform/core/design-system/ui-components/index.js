@@ -12,10 +12,12 @@
 // Brand Components
 export * from './brand';
 
+// Feedback Components
+export * from './feedback';
+
 // Future component categories can be added here:
 // export * from './buttons';
 // export * from './forms';
 // export * from './navigation';
 // export * from './layout';
-// export * from './feedback';
 // export * from './data-display';

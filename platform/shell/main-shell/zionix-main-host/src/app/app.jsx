@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { ThemeProvider, useTheme } from "@zionix/design-system";
+import { ThemeProvider, useTheme, ThemeSafePageLoader } from "@zionix/design-system";
 import HostAppLayout from "../components/shell/layout/HostAppLayout";
 
 // Lazy load the admin remote app
@@ -28,7 +28,7 @@ const AdminPage = () => {
         </Link>
       </div>
 
-      <React.Suspense fallback={<div>Loading Admin App...</div>}>
+      <React.Suspense fallback={<ThemeSafePageLoader message="Loading Admin App..." />}>
         <AdminApp />
       </React.Suspense>
     </div>
@@ -55,12 +55,21 @@ function getModuleComponent(moduleName) {
   let ModuleComponent;
 
   switch (moduleName) {
-    case "adminApp":
-      ModuleComponent = React.lazy(() => import("adminApp/Module"));
-      break;
+      case 'adminApp':
+        ModuleComponent = React.lazy(() => import('adminApp/Module'));
+        break;
 
     default:
-      ModuleComponent = () => <div>Module not found</div>;
+      ModuleComponent = () => (
+        <div style={{ 
+          padding: '48px', 
+          textAlign: 'center', 
+          color: '#666',
+          fontSize: '16px' 
+        }}>
+          Module "{moduleName}" not found
+        </div>
+      );
   }
 
   return ModuleComponent;
