@@ -260,7 +260,7 @@ function generateRemoteConfig(environment) {
 
 function updateAppJs() {
   const appJsPath = path.resolve(
-    "platform/shell/main-shell/zionix-main-host/src/app/app.jsx"
+    "platform/shell/main-shell/zionix-main-host/src/app/appRouter.jsx"
   );
   let appJsContent = fs.readFileSync(appJsPath, "utf-8");
   const relevantModules = require("./zionix-main.modules.json");

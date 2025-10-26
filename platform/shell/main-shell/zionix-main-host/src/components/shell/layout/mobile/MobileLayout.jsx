@@ -1,5 +1,6 @@
 import React from 'react';
 import { theme } from 'antd';
+import { Outlet } from 'react-router-dom';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import MobileHeader from './MobileHeader';
 import MobileBottomNavigation from './MobileBottomNavigation';
@@ -10,11 +11,10 @@ const { useToken } = theme;
 /**
  * Mobile Layout Component - Clean and simple mobile layout
  * @param {Object} props - Component props
- * @param {React.ReactNode} props.children - Child components to render
  * @param {string} [props.className=''] - Additional CSS class
  * @param {Object} [props.style={}] - Additional inline styles
  */
-const MobileLayout = ({ children, className = '', style = {} }) => {
+const MobileLayout = ({ className = '', style = {} }) => {
   const { token } = useToken();
   const styles = useStyles(token);
   
@@ -42,7 +42,7 @@ const MobileLayout = ({ children, className = '', style = {} }) => {
         style={styles.mainContentStyle}
       >
         <div style={styles.contentWrapperStyle}>
-          {children}
+          <Outlet />
         </div>
       </main>
 

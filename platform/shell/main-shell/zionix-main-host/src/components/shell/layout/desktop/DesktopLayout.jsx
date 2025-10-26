@@ -1,5 +1,6 @@
 import React from 'react';
 import { Layout } from 'antd';
+import { Outlet } from 'react-router-dom';
 import { useTheme } from '@zionix/design-system';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import DesktopTopBar from './DesktopTopBar';
@@ -10,11 +11,10 @@ const { Content } = Layout;
 /**
  * Desktop Layout Component - Provides desktop-specific layout structure with sidebar and top bar
  * @param {Object} props - Component props
- * @param {React.ReactNode} props.children - Child components to render
  * @param {string} [props.className=''] - Additional CSS class
  * @param {Object} [props.style={}] - Additional inline styles
  */
-const DesktopLayout = ({ children, className = '', style = {} }) => {
+const DesktopLayout = ({ className = '', style = {} }) => {
   const { token } = useTheme();
   
   const { 
@@ -74,7 +74,7 @@ const DesktopLayout = ({ children, className = '', style = {} }) => {
                 boxShadow: `0 2px 8px ${token?.colorBorder}20`
               }}
             >
-              {children}
+              <Outlet />
             </div>
           </Content>
         </Layout>
