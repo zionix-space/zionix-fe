@@ -99,7 +99,7 @@ const MobileBottomNavigation = ({
         menuItems={menuItems}
         selectedKey={selectedKey}
         openKeys={openKeys}
-        onMenuSelect={handleMenuSelect}
+        onItemSelect={handleMenuSelect}
         onOpenChange={handleOpenChange}
       />
     </>

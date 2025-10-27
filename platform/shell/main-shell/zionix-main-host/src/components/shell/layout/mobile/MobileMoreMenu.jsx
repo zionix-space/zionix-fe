@@ -112,11 +112,56 @@ const MobileMoreMenu = ({
     });
   };
 
+  // Account Settings section items (matching desktop sidebar)
+  const accountSettingsItems = [
+    {
+      key: "messages",
+      icon: <i className="ri-message-3-line" />,
+      label: "Messages",
+      badge: "3"
+    },
+    {
+      key: "notifications",
+      icon: <i className="ri-notification-3-line" />,
+      label: "Notifications", 
+      badge: "12"
+    },
+    {
+      key: "help-support",
+      icon: <i className="ri-customer-service-2-line" />,
+      label: "Help & Support"
+    },
+    {
+      key: "settings",
+      icon: <i className="ri-settings-3-line" />,
+      label: "Settings"
+    }
+  ];
+
   // Filter and format menu items for the More menu
   const filteredMenuItems = filterMainNavigationItems(menuItems);
-  const formattedMenuItems = formatMenuItems(filteredMenuItems);
+  const formattedMenuItems = [
+    ...formatMenuItems(filteredMenuItems),
+    ...accountSettingsItems.map(item => ({
+      key: item.key,
+      icon: item.icon,
+      label: item.badge ? (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <span>{item.label}</span>
+          <Badge count={item.badge} size="small" />
+        </div>
+      ) : item.label
+    }))
+  ];
 
   const handleMenuSelect = ({ key }) => {
+    // Check if it's an Account Settings item first
+    const accountSettingsItem = accountSettingsItems.find(item => item.key === key);
+    if (accountSettingsItem) {
+      handleItemClick(accountSettingsItem);
+      return;
+    }
+
     // Find the selected item in the filtered menu structure
     const findMenuItem = (items, targetKey) => {
       for (const item of items) {

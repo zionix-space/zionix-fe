@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Button, theme } from "antd";
+import { Input, Button, Dropdown, Avatar, theme } from "antd";
 import { motion } from "framer-motion";
 import { useTheme, ZionixLogo } from "@zionix/design-system";
 import { useResponsiveLayout } from "../shared/ResponsiveLayoutProvider";
@@ -28,6 +28,39 @@ const MobileHeader = ({
   const styles = useStyles(token);
 
   const { deviceType } = useResponsiveLayout();
+
+  // Profile dropdown menu items (matching desktop sidebar)
+  const profileMenuItems = [
+    {
+      key: "profile",
+      icon: <i className="ri-user-line" />,
+      label: "Profile",
+    },
+    {
+      key: "upgrade",
+      icon: <i className="ri-vip-crown-line" />,
+      label: "Upgrade to pro",
+    },
+    {
+      key: "profile-settings",
+      icon: <i className="ri-settings-line" />,
+      label: "Settings",
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "logout",
+      icon: <i className="ri-logout-box-line" />,
+      label: "Logout",
+      danger: true,
+    },
+  ];
+
+  const handleProfileMenuClick = ({ key }) => {
+    console.log("Profile menu clicked:", key);
+    // Handle profile menu actions here
+  };
 
   // Only render on mobile devices
   if (deviceType !== "mobile") {
@@ -72,14 +105,54 @@ const MobileHeader = ({
         />
       </motion.div>
 
-      {/* Right Section - Theme Switch */}
+      {/* Right Section - Profile & Theme Switch */}
       <motion.div
         className="mobile-header-right"
-        style={styles.rightSectionStyle}
+        style={{
+          ...styles.rightSectionStyle,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
         variants={themeToggleVariants}
         initial="hidden"
         animate="visible"
       >
+        {/* Profile Dropdown */}
+        <Dropdown
+          menu={{
+            items: profileMenuItems,
+            onClick: handleProfileMenuClick,
+          }}
+          placement="bottomRight"
+          trigger={['click']}
+        >
+          <Button
+            type="text"
+            style={{
+              ...styles.themeToggleStyle,
+              padding: '4px',
+              height: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            aria-label="Profile menu"
+          >
+            <Avatar
+              size={28}
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+              style={{
+                backgroundColor: token.colorPrimary,
+                color: token.colorWhite
+              }}
+            >
+              JD
+            </Avatar>
+          </Button>
+        </Dropdown>
+
+        {/* Theme Toggle */}
         <Button
           type="text"
           icon={isDarkMode ? <i className="ri-sun-line" /> : <i className="ri-moon-line" />}
