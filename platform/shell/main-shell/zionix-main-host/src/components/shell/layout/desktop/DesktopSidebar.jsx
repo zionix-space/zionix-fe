@@ -35,35 +35,7 @@ const injectSidebarCSS = (token) => {
       .zx-host-main-content::-webkit-scrollbar-thumb:hover {
         background: ${token.colorBorder};
       }
-      
-      /* Menu container styles */
-      .zx-host-menu-container .ant-menu {
-        fontSize: 14px;
-      }
-      .zx-host-menu-container .ant-menu-item {
-        height: 32px;
-        line-height: 32px;
-        margin-bottom: 2px;
-        padding-left: 12px !important;
-      }
-      .zx-host-menu-container .ant-menu-submenu .ant-menu-submenu-title {
-        height: 32px;
-        line-height: 32px;
-        margin-bottom: 2px;
-        padding-left: 12px !important;
-      }
-      
-      /* Search input styles */
-      .zx-host-search-input .ant-input {
-        background-color: transparent;
-        border: none;
-        font-size: 13px;
-        padding: 0 6px;
-      }
-      .zx-host-search-input .anticon {
-        color: ${token.colorTextTertiary};
-        font-size: 13px;
-      }
+
     `;
     document.head.appendChild(style);
   }
