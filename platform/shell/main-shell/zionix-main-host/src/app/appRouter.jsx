@@ -33,10 +33,8 @@ export function AppRouter() {
 
 
 
-
-
       default:
-        ModuleComponent = () => <div>Module not found</div>;
+        ModuleComponent = () => <div>App not found</div>;
     }
 
     return ModuleComponent;
@@ -67,7 +65,7 @@ export function AppRouter() {
                     />
                   );
                 })}
-              <Route path="*" element={<div>Module does not exist</div>} />
+              <Route path="*" element={<div>App does not exist</div>} />
             </Route>
           </Routes>
         </div>
