@@ -11,7 +11,8 @@
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s"
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/eslint.config.mjs"
     ],
     "sharedGlobals": []
   },
@@ -56,6 +57,17 @@
       ],
       "dependsOn": ["^build"],
       "cache": true
+    },
+    "@nx/rspack:rspack": {
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "env": "NX_MF_DEV_REMOTES"
+        }
+      ],
+      "dependsOn": ["^build"],
+      "cache": true
     }
   },
   "generators": {
@@ -74,5 +86,41 @@
         "linter": "eslint"
       }
     }
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/react/router-plugin",
+      "options": {
+        "buildTargetName": "build",
+        "devTargetName": "dev",
+        "startTargetName": "start",
+        "watchDepsTargetName": "watch-deps",
+        "buildDepsTargetName": "build-deps",
+        "typecheckTargetName": "typecheck"
+      }
+    },
+    {
+      "plugin": "@nx/rspack/plugin",
+      "options": {
+        "buildTargetName": "rspack:build",
+        "serveTargetName": "rspack:serve",
+        "serveStaticTargetName": "rspack:serve-static",
+        "previewTargetName": "preview",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "eslint:lint"
+      }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "jest:test"
+      }
+    }
+  ]
 }
