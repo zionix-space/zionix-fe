@@ -48,16 +48,16 @@ export const generateLightTokens = (primaryColor) => {
     colorBorderSecondary: colorUtils.mix(primaryColor, '#f0f0f0', 0.95), // Subtle primary tint in borders
     colorTextSecondary: colorUtils.mix(primaryColor, '#666666', 0.85), // Subtle primary tint in secondary text
     colorWhite: '#ffffff',
-    colorTextLightSolid: colorUtils.addAlpha('#000000', 0.9), // Dark text for light backgrounds (tooltips)
-    
+    // colorTextLightSolid: colorUtils.addAlpha('#000000', 0.9), // Dark text for light backgrounds (tooltips)
+
     // Success colors
     colorSuccess: '#52c41a',
-    
+
     // Error colors for light theme
     colorError: '#ff4d4f', // Standard red for error states
     colorErrorBg: '#fff2f0', // Light red background
     colorErrorBorder: '#ffccc7', // Light red border
-    
+
     // Typography
     fontFamily:
       "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",

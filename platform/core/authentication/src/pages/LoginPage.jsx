@@ -1,12 +1,12 @@
 /**
- * @fileoverview Login Page Component for Zionix Authentication
+ * @fileoverview Modern Split-Screen Login Page for Zionix Authentication
  *
- * Responsive login page with email/password authentication, form validation,
- * and smooth animations for mobile-native feel. Integrates with Zionix design
- * system and provides comprehensive user experience.
+ * Professional login page with split-screen layout, social authentication,
+ * and promotional content. Matches the target design exactly with dotwork
+ * branding and blue gradient promotional side.
  *
  * @author Zionix Authentication Team
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 import React, { useState } from 'react';
@@ -19,40 +19,66 @@ import {
   Space,
   Divider,
   message,
+  Row,
+  Col,
+  Carousel,
 } from 'antd';
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  MailOutlined,
-  LockOutlined,
-} from '@ant-design/icons';
+// Using Remix Icons CSS classes for better performance
 import { motion } from 'framer-motion';
 import { useTheme } from '@zionix/design-system';
-import AuthLayout from '../layouts/AuthLayout';
 import { useFormValidation } from '../hooks/useFormValidation';
 import { validateEmail, validatePassword } from '../utils/validation';
-import { useStyles, formVariants, buttonVariants, linkVariants } from './LoginPage.style';
+import { useStyles, containerVariants, formVariants, promoVariants, carouselCustomCSS } from './LoginPage.style';
 
-const { Text, Link } = Typography;
+const { Text, Link, Title } = Typography;
 
 /**
- * Login Page Component
+ * Carousel slides data for promotional content
+ */
+const carouselSlides = [
+  {
+    id: 1,
+    icon: <i className="ri-shield-check-line" />,
+    title: "MFA for all accounts",
+    description: "Secure online accounts with multi-factor authentication. Back up OTP tokens and never lose access to your accounts.",
+    illustration: <i className="ri-user-line" />,
+  },
+  {
+    id: 2,
+    icon: <i className="ri-shield-star-line" />,
+    title: "Enterprise-grade Security",
+    description: "Your data is protected with bank-level encryption. Advanced security protocols keep your information safe.",
+    illustration: <i className="ri-shield-star-line" />,
+  },
+  {
+    id: 3,
+    icon: <i className="ri-links-line" />,
+    title: "Seamless Integration",
+    description: "Connect with every application you use. Everything you need in an easily customizable dashboard.",
+    illustration: <i className="ri-links-line" />,
+  },
+];
+
+/**
+ * Modern Split-Screen Login Page Component
  *
  * Features:
+ * - Split-screen layout with form and promotional content
+ * - Social login options (Google and Facebook)
  * - Email and password authentication
  * - Real-time form validation
- * - Remember me functionality
+ * - Beautiful blue gradient promotional side
+ * - Floating UI elements and dashboard previews
  * - Responsive design for mobile and desktop
- * - Smooth animations and transitions
- * - Integration with Zionix design system
  *
  * @param {Object} props - Component props
  * @param {Function} props.onLogin - Callback function for login submission
  * @param {Function} props.onForgotPassword - Callback for forgot password navigation
  * @param {Function} props.onSignUp - Callback for sign up navigation
- * @returns {JSX.Element} Login page component
+ * @param {Function} props.onSocialLogin - Callback for social login
+ * @returns {JSX.Element} Modern login page component
  */
-const LoginPage = ({ onLogin, onForgotPassword, onSignUp }) => {
+const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
   const { token, isMobile } = useTheme();
   const styles = useStyles(token);
   const [rememberMe, setRememberMe] = useState(false);
@@ -95,6 +121,20 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp }) => {
   });
 
   /**
+   * Handle social login
+   */
+  const handleSocialLogin = (provider) => async () => {
+    try {
+      if (onSocialLogin) {
+        await onSocialLogin(provider);
+      }
+      message.success(`${provider} login initiated`);
+    } catch (error) {
+      message.error(`${provider} login failed`);
+    }
+  };
+
+  /**
    * Handle input changes with validation
    */
   const handleInputChange = (fieldName) => (e) => {
@@ -129,144 +169,386 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp }) => {
     }
   };
 
-  /**
-   * Get responsive styles based on device type
-   */
-  const inputStyle = isMobile ? styles.mobileInputStyle : styles.desktopInputStyle;
-  const buttonStyle = isMobile ? styles.mobileButtonStyle : styles.desktopButtonStyle;
-  const formItemStyle = isMobile ? styles.mobileFormItemStyle : styles.desktopFormItemStyle;
-  const checkboxStyle = isMobile ? styles.mobileCheckboxStyle : styles.desktopCheckboxStyle;
-  const linkStyle = isMobile ? styles.mobileLinkStyle : styles.desktopLinkStyle;
-  const formStyle = isMobile ? styles.mobileFormStyle : styles.desktopFormStyle;
-  const rememberMeContainerStyle = isMobile ? styles.mobileRememberMeContainerStyle : styles.desktopRememberMeContainerStyle;
-  const dividerStyle = isMobile ? styles.mobileDividerStyle : styles.desktopDividerStyle;
-  const dividerTextStyle = isMobile ? styles.mobileDividerTextStyle : styles.desktopDividerTextStyle;
-
-  return (
-    <AuthLayout
-      title="Welcome Back"
-      subtitle="Sign in to your account to continue"
-      footer={
-        <motion.div variants={linkVariants}>
-          <Space
-            direction="vertical"
-            size="small"
-            style={{ width: '100%', textAlign: 'center' }}
-          >
-            <Text style={linkStyle}>
-              Don&apos;t have an account?{' '}
-              <Link onClick={handleSignUpClick} style={{ fontWeight: 500 }}>
-                Sign up
-              </Link>
-            </Text>
-          </Space>
-        </motion.div>
-      }
-    >
-      <motion.div variants={formVariants} style={formStyle}>
-        <Form
-          layout="vertical"
-          onFinish={handleSubmit}
-          autoComplete="off"
-          size={isMobile ? 'large' : 'large'} // Use large size on mobile for better touch targets
+  // Mobile layout - single column
+  if (isMobile) {
+    return (
+      <div style={styles.mobileContainer}>
+        <motion.div
+          style={styles.mobileFormContainer}
+          variants={formVariants}
+          initial="initial"
+          animate="animate"
         >
-          {/* Email Field */}
-          <Form.Item
-            label="Email Address"
-            style={formItemStyle}
-            validateStatus={hasFieldError('email') ? 'error' : ''}
-            help={getFieldError('email')}
-          >
-            <Input
-              prefix={
-                <MailOutlined style={{ color: token.colorTextSecondary }} />
-              }
-              placeholder="Enter your email address"
-              value={getFieldValue('email')}
-              onChange={handleInputChange('email')}
-              onBlur={handleInputBlur('email')}
-              style={inputStyle}
-              autoComplete="email"
-            />
-          </Form.Item>
-
-          {/* Password Field */}
-          <Form.Item
-            label="Password"
-            style={formItemStyle}
-            validateStatus={hasFieldError('password') ? 'error' : ''}
-            help={getFieldError('password')}
-          >
-            <Input.Password
-              prefix={
-                <LockOutlined style={{ color: token.colorTextSecondary }} />
-              }
-              placeholder="Enter your password"
-              value={getFieldValue('password')}
-              onChange={handleInputChange('password')}
-              onBlur={handleInputBlur('password')}
-              style={inputStyle}
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-              autoComplete="current-password"
-            />
-          </Form.Item>
-
-          {/* Remember Me & Forgot Password */}
-          <Form.Item style={formItemStyle}>
-            <div style={rememberMeContainerStyle}>
-              <Checkbox
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                style={checkboxStyle}
-              >
-                Remember me
-              </Checkbox>
-              <Link
-                onClick={handleForgotPasswordClick}
-                style={{ ...linkStyle, fontWeight: 500 }}
-              >
-                Forgot password?
-              </Link>
+          {/* Mobile Logo */}
+          <div style={styles.mobileLogo}>
+            <div style={styles.dotworkLogo}>
+              <div style={styles.logoIcon}>⚡</div>
+              <span style={styles.logoText}>dotwork</span>
             </div>
-          </Form.Item>
+          </div>
 
-          {/* Login Button */}
-          <Form.Item style={styles.submitButtonContainerStyle}>
-            <motion.div variants={buttonVariants} whileTap="tap">
+          {/* Mobile Form Content */}
+          <div style={styles.mobileFormContent}>
+            <Title level={2} style={styles.mobileTitle}>
+              Log in to your Account
+            </Title>
+            <Text style={styles.mobileSubtitle}>
+              Welcome back! Select method to log in:
+            </Text>
+
+            {/* Social Login Buttons */}
+            <div style={styles.socialButtonsContainer}>
+              <Button
+                icon={<i className="ri-google-fill" />}
+                style={styles.socialButton}
+                onClick={handleSocialLogin('Google')}
+              >
+                Google
+              </Button>
+              <Button
+                icon={<i className="ri-facebook-fill" />}
+                style={styles.socialButton}
+                onClick={handleSocialLogin('Facebook')}
+              >
+                Facebook
+              </Button>
+            </div>
+
+            {/* Divider */}
+            <Divider style={styles.divider}>
+              <Text style={styles.dividerText}>or continue with email</Text>
+            </Divider>
+
+            {/* Login Form */}
+            <Form layout="vertical" onFinish={handleSubmit} autoComplete="off">
+              {/* Email Field */}
+              <Form.Item
+                validateStatus={hasFieldError('email') ? 'error' : ''}
+                help={getFieldError('email')}
+                style={styles.formItem}
+              >
+                <Input
+                  prefix={<i className="ri-mail-line" style={styles.inputIcon} />}
+                  placeholder="Email"
+                  value={getFieldValue('email')}
+                  onChange={handleInputChange('email')}
+                  onBlur={handleInputBlur('email')}
+                  style={styles.input}
+                  autoComplete="email"
+                />
+              </Form.Item>
+
+              {/* Password Field */}
+              <Form.Item
+                validateStatus={hasFieldError('password') ? 'error' : ''}
+                help={getFieldError('password')}
+                style={styles.formItem}
+              >
+                <Input.Password
+                  prefix={<i className="ri-lock-line" style={styles.inputIcon} />}
+                  placeholder="Password"
+                  value={getFieldValue('password')}
+                  onChange={handleInputChange('password')}
+                  onBlur={handleInputBlur('password')}
+                  style={styles.input}
+                  iconRender={(visible) =>
+                    visible ? <i className="ri-eye-line" /> : <i className="ri-eye-off-line" />
+                  }
+                  autoComplete="current-password"
+                />
+              </Form.Item>
+
+              {/* Remember Me & Forgot Password */}
+              <div style={styles.rememberForgotContainer}>
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  style={styles.checkbox}
+                >
+                  Remember me
+                </Checkbox>
+                <Link onClick={handleForgotPasswordClick} style={styles.forgotLink}>
+                  Forgot Password?
+                </Link>
+              </div>
+
+              {/* Login Button */}
               <Button
                 type="primary"
                 htmlType="submit"
                 loading={isSubmitting}
                 disabled={!isValid || isSubmitting}
-                style={buttonStyle}
+                style={styles.loginButton}
                 block
               >
-                {isSubmitting ? 'Signing In...' : 'Sign In'}
+                Log In
               </Button>
-            </motion.div>
-          </Form.Item>
+            </Form>
 
-          {/* Divider for future social login */}
-          {!isMobile && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: 1,
-                transition: { delay: 0.4, duration: 0.3 },
-              }}
-            >
-              <Divider style={dividerStyle}>
-                <Text style={dividerTextStyle}>
-                  More options coming soon
-                </Text>
+            {/* Sign Up Link */}
+            <div style={styles.signUpContainer}>
+              <Text style={styles.signUpText}>
+                Don't have an account?{' '}
+                <Link onClick={handleSignUpClick} style={styles.signUpLink}>
+                  Create an account
+                </Link>
+              </Text>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Desktop layout - split screen
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: carouselCustomCSS }} />
+      <div style={styles.container}>
+      <Row style={styles.row}>
+        {/* Left Side - Login Form */}
+        <Col span={12} style={styles.leftColumn}>
+          <motion.div
+            style={styles.formContainer}
+            variants={formVariants}
+            initial="initial"
+            animate="animate"
+          >
+            {/* Logo */}
+            <div style={styles.logo}>
+              <div style={styles.dotworkLogo}>
+                <div style={styles.logoIcon}>⚡</div>
+                <span style={styles.logoText}>dotwork</span>
+              </div>
+            </div>
+
+            {/* Form Content */}
+            <div style={styles.formContent}>
+              <Title level={1} style={styles.title}>
+                Log in to your Account
+              </Title>
+              <Text style={styles.subtitle}>
+                Welcome back! Select method to log in:
+              </Text>
+
+              {/* Social Login Buttons */}
+              <div style={styles.socialButtonsContainer}>
+                <Button
+                  icon={<i className="ri-google-fill" />}
+                  style={styles.socialButton}
+                  onClick={handleSocialLogin('Google')}
+                >
+                  Google
+                </Button>
+                <Button
+                  icon={<i className="ri-facebook-fill" />}
+                  style={styles.socialButton}
+                  onClick={handleSocialLogin('Facebook')}
+                >
+                  Facebook
+                </Button>
+              </div>
+
+              {/* Divider */}
+              <Divider style={styles.divider}>
+                <Text style={styles.dividerText}>or continue with email</Text>
               </Divider>
-            </motion.div>
-          )}
-        </Form>
-      </motion.div>
-    </AuthLayout>
+
+              {/* Login Form */}
+              <Form layout="vertical" onFinish={handleSubmit} autoComplete="off">
+                {/* Email Field */}
+                <Form.Item
+                  validateStatus={hasFieldError('email') ? 'error' : ''}
+                  help={getFieldError('email')}
+                  style={styles.formItem}
+                >
+                  <Input
+                    prefix={<i className="ri-mail-line" style={styles.inputIcon} />}
+                    placeholder="Email"
+                    value={getFieldValue('email')}
+                    onChange={handleInputChange('email')}
+                    onBlur={handleInputBlur('email')}
+                    style={styles.input}
+                    autoComplete="email"
+                  />
+                </Form.Item>
+
+                {/* Password Field */}
+                <Form.Item
+                  validateStatus={hasFieldError('password') ? 'error' : ''}
+                  help={getFieldError('password')}
+                  style={styles.formItem}
+                >
+                  <Input.Password
+                    prefix={<i className="ri-lock-line" style={styles.inputIcon} />}
+                    placeholder="Password"
+                    value={getFieldValue('password')}
+                    onChange={handleInputChange('password')}
+                    onBlur={handleInputBlur('password')}
+                    style={styles.input}
+                    iconRender={(visible) =>
+                      visible ? <i className="ri-eye-line" /> : <i className="ri-eye-off-line" />
+                    }
+                    autoComplete="current-password"
+                  />
+                </Form.Item>
+
+                {/* Remember Me & Forgot Password */}
+                <div style={styles.rememberForgotContainer}>
+                  <Checkbox
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    style={styles.checkbox}
+                  >
+                    Remember me
+                  </Checkbox>
+                  <Link onClick={handleForgotPasswordClick} style={styles.forgotLink}>
+                    Forgot Password?
+                  </Link>
+                </div>
+
+                {/* Login Button */}
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={isSubmitting}
+                  disabled={!isValid || isSubmitting}
+                  style={styles.loginButton}
+                  block
+                >
+                  Log In
+                </Button>
+              </Form>
+
+              {/* Sign Up Link */}
+              <div style={styles.signUpContainer}>
+                <Text style={styles.signUpText}>
+                  Don't have an account?{' '}
+                  <Link onClick={handleSignUpClick} style={styles.signUpLink}>
+                    Create an account
+                  </Link>
+                </Text>
+              </div>
+            </div>
+          </motion.div>
+        </Col>
+
+        {/* Right Side - Promotional Carousel */}
+        <Col span={12} style={styles.rightColumn}>
+          <motion.div
+            style={styles.promoContainer}
+            variants={promoVariants}
+            initial="initial"
+            animate="animate"
+          >
+            {/* Floating UI Elements Background */}
+            <div style={styles.floatingElements}>
+              {/* Google Icon */}
+              <motion.div
+                style={styles.floatingIcon1}
+                animate={{
+                  y: [0, -10, 0],
+                  transition: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                }}
+              >
+                <div style={styles.iconCircle}>
+                  <i className="ri-google-fill" style={styles.floatingIconContent} />
+                </div>
+              </motion.div>
+
+              {/* Play Icon */}
+              <motion.div
+                style={styles.floatingIcon2}
+                animate={{
+                  y: [0, -15, 0],
+                  transition: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }
+                }}
+              >
+                <div style={styles.iconCircle}>
+                  <div style={styles.playIcon}>▶</div>
+                </div>
+              </motion.div>
+
+              {/* Chrome Icon */}
+              <motion.div
+                style={styles.floatingIcon3}
+                animate={{
+                  y: [0, -12, 0],
+                  transition: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
+                }}
+              >
+                <div style={styles.iconCircle}>
+                  <div style={styles.chromeIcon}>G</div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Carousel Content */}
+            <div style={styles.carouselContainer}>
+              <Carousel
+                autoplay
+                autoplaySpeed={4000}
+                dots={{ className: 'custom-carousel-dots' }}
+                effect="fade"
+                pauseOnHover
+                style={styles.carousel}
+              >
+                {carouselSlides.map((slide) => (
+                  <div key={slide.id}>
+                    <motion.div
+                      style={styles.slideContent}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      {/* Slide Illustration */}
+                      <div style={styles.slideIllustration}>
+                        <div style={styles.slideIconContainer}>
+                          <div style={styles.slideMainIcon}>
+                            {slide.icon}
+                          </div>
+                        </div>
+                        
+                        {/* Feature Icons */}
+                        <div style={styles.featureIcons}>
+                          <div style={styles.featureIcon}>
+                            <i className="ri-user-line" />
+                          </div>
+                          <div style={styles.featureIcon}>
+                            <i className="ri-shield-star-line" />
+                          </div>
+                          <div style={styles.featureIcon}>
+                            <i className="ri-links-line" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Slide Text Content */}
+                      <div style={styles.slideTextContent}>
+                        <Title level={2} style={styles.slideTitle}>
+                          {slide.title}
+                        </Title>
+                        <Text style={styles.slideDescription}>
+                          {slide.description}
+                        </Text>
+                        <Button 
+                          type="link" 
+                          style={styles.learnMoreButton}
+                          onClick={() => console.log(`Learn more about ${slide.title}`)}
+                        >
+                          Learn more
+                        </Button>
+                      </div>
+                    </motion.div>
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          </motion.div>
+        </Col>
+      </Row>
+    </div>
+    </>
   );
 };
 

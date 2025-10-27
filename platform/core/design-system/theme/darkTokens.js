@@ -48,16 +48,16 @@ export const generateDarkTokens = (primaryColor) => {
     colorBorderSecondary: colorUtils.mix(primaryColor, '#303030', 0.9), // Subtle primary tint in borders
     colorTextSecondary: colorUtils.mix(primaryColor, '#a6a6a6', 0.85), // Subtle primary tint in secondary text
     colorWhite: '#ffffff',
-    colorTextLightSolid: '#ffffff', // Light text for dark backgrounds (tooltips)
-    
+    // colorTextLightSolid: '#ffffff', // Light text for dark backgrounds (tooltips)
+
     // Success colors
     colorSuccess: '#73d13d',
-    
+
     // Error colors for dark theme
     colorError: '#ff7875', // Lighter red for dark backgrounds
     colorErrorBg: '#2a1215', // Dark red background
     colorErrorBorder: '#58181c', // Dark red border
-    
+
     // Typography
     fontFamily:
       "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",

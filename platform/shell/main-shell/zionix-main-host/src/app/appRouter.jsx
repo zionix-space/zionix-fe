@@ -32,7 +32,6 @@ export function AppRouter() {
         break;
 
 
-
       default:
         ModuleComponent = () => <div>App not found</div>;
     }
