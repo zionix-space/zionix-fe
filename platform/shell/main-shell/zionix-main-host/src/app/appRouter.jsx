@@ -1,26 +1,25 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import availableApps from 'tools/deployment/zionix-main.modules.json';
-import HostAppLayout from '../components/shell/layout/HostAppLayout';
-const AuthApp = React.lazy(() => import('authApp/Module'));
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import availableApps from "tools/deployment/zionix-main.modules.json";
+import HostAppLayout from "../components/shell/layout/HostAppLayout";
 
-const PageTransition = ({ children }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, z: -50 }}
-      animate={{ opacity: 1, z: 0 }}
-      exit={{ opacity: 0, z: 50 }}
-      transition={{ duration: 0.5 }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+// const PageTransition = ({ children }) => {
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, z: -50 }}
+//       animate={{ opacity: 1, z: 0 }}
+//       exit={{ opacity: 0, z: 50 }}
+//       transition={{ duration: 0.5 }}
+//     >
+//       {children}
+//     </motion.div>
+//   );
+// };
 
-const RouteWithTransition = ({ element }) => {
-  return <PageTransition>{element}</PageTransition>;
-};
+// const RouteWithTransition = ({ element }) => {
+//   return <PageTransition>{element}</PageTransition>;
+// };
 
 export function AppRouter() {
   function getModuleComponent(moduleName) {
@@ -34,42 +33,41 @@ export function AppRouter() {
 
 
 
-
       default:
         ModuleComponent = () => <div>Module not found</div>;
     }
 
     return ModuleComponent;
   }
-  const excludedModule = 'authApp';
+  const excludedModule = "authApp";
 
   return (
     <React.Suspense fallback={null}>
       <AnimatePresence mode="popLayout">
         <div>
           <Routes>
-            <Route
-              path="/"
-              element={<RouteWithTransition element={<AuthApp />} />}
-            />
+          {/* <Route
+            path="/"
+            element={<RouteWithTransition element={<MainAuthApp />} />}
+          /> */}
 
-            <Route path="/*" element={<HostAppLayout />}>
-              {availableApps
-                .filter((moduleName) => moduleName !== excludedModule) // Exclude mainAuthApp
-                .map((moduleName) => {
-                  const ModuleComponent = getModuleComponent(moduleName);
+          <Route path="/*" element={<HostAppLayout />}>
+            {availableApps
+              .filter((moduleName) => moduleName !== excludedModule) // Exclude mainAuthApp
+              .map((moduleName) => {
+                const ModuleComponent = getModuleComponent(moduleName);
 
-                  return (
-                    <Route
-                      key={moduleName}
-                      path={`${moduleName}/*`}
-                      element={<ModuleComponent />}
-                    />
-                  );
-                })}
-              <Route path="*" element={<div>Module does not exist</div>} />
-            </Route>
-          </Routes>
+                return (
+                  <Route
+                    key={moduleName}
+                    path={`${moduleName}/*`}
+                    element={<ModuleComponent />}
+                  />
+                );
+              })}
+            <Route path="*" element={<div>Module does not exist</div>} />
+          </Route>
+        </Routes>
         </div>
       </AnimatePresence>
     </React.Suspense>
