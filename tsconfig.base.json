@@ -15,17 +15,18 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@zionix/design-system": ["platform/core/design-system"],
-      "@zionix/design-system/*": ["platform/core/design-system/*"],
       "@zionix/apiCore": [
         "platform/core/shared-utilities/shared/middleware/axiosCore.js"
       ],
       "@zionix/apiCore/*": [
         "platform/core/shared-utilities/shared/middleware/axiosCore.js"
       ],
+      "@zionix/design-system": ["platform/core/design-system"],
+      "@zionix/design-system/*": ["platform/core/design-system/*"],
       "adminApp/Module": [
         "domains/operations/teams/admin-team/admin-app/src/remote-entry.js"
-      ]
+      ],
+      "authApp/Module": ["platform/core/authentication/src/remote-entry.js"]
     }
   },
   "exclude": ["node_modules", "tmp"]

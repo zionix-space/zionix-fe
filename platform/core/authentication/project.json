@@ -1,0 +1,74 @@
+{
+  "name": "authApp",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "platform/core/authentication/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/platform/core/authentication",
+        "main": "platform/core/authentication/src/main.jsx",
+        "tsConfig": "platform/core/authentication/tsconfig.app.json",
+        "rspackConfig": "platform/core/authentication/rspack.config.js",
+        "assets": [
+          "platform/core/authentication/src/favicon.ico",
+          "platform/core/authentication/src/assets"
+        ]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "platform/core/authentication/rspack.config.prod.js"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "authApp:build:development",
+        "port": 4202
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "authApp:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "authApp:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "authApp:serve:development"
+        },
+        "production": {
+          "serveTarget": "authApp:serve:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "platform/core/authentication/jest.config.js"
+      }
+    }
+  }
+}
