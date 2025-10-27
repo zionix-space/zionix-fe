@@ -583,6 +583,7 @@ export const useStyles = (token) => {
       mobileLogo: {
         textAlign: 'center',
         marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
+        placeSelf: 'center',
       },
 
       // Mobile form content

@@ -191,8 +191,10 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
           {/* Mobile Logo */}
           <div style={styles.mobileLogo}>
             <div style={styles.dotworkLogo}>
-              <div style={styles.logoIcon}>⚡</div>
-              <span style={styles.logoText}>dotwork</span>
+              <div style={styles.logoIcon}>
+                <ZionixLogo />
+              </div>
+              <span style={styles.logoText}>Zionix</span>
             </div>
           </div>
 
@@ -201,31 +203,13 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
             <Title level={2} style={styles.mobileTitle}>
               Log in to your Account
             </Title>
-            <Text style={styles.mobileSubtitle}>
+            {/* <Text style={styles.mobileSubtitle}>
               Welcome back! Select method to log in:
-            </Text>
-
-            {/* Social Login Buttons */}
-            <div style={styles.socialButtonsContainer}>
-              <Button
-                icon={<i className="ri-google-fill" />}
-                style={styles.socialButton}
-                onClick={handleSocialLogin('Google')}
-              >
-                Google
-              </Button>
-              <Button
-                icon={<i className="ri-facebook-fill" />}
-                style={styles.socialButton}
-                onClick={handleSocialLogin('Facebook')}
-              >
-                Facebook
-              </Button>
-            </div>
+            </Text> */}
 
             {/* Divider */}
             <Divider style={styles.divider}>
-              <Text style={styles.dividerText}>or continue with email</Text>
+              <Text style={styles.dividerText}>Continue with email</Text>
             </Divider>
 
             {/* Login Form */}
