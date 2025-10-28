@@ -1,101 +1,148 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 /**
- * Mobile Header Styles - Beautiful header with logo, search, and theme switch
- * Following desktop coding patterns with design system tokens
+ * Mobile Header Styles
+ * Provides styling for the mobile header component with three sections:
+ * - Left: Avatar profile details
+ * - Center: Action icons (notification, search, settings)
+ * - Right: Theme toggle
  */
 export const useStyles = (token) => {
   return useMemo(
     () => ({
       // Main header container
-      headerContainerStyle: {
-        position: "fixed",
+      headerStyle: {
+        position: 'sticky',
         top: 0,
-        insetInlineStart: 0,
-        insetInlineEnd: 0,
         zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        height: token.controlHeightLG + 16,
-        paddingInline: token.paddingMD,
-        paddingBlock: token.paddingSM,
+        width: '100%',
+        height: 56,
         backgroundColor: token.colorBgContainer,
-        borderBlockEnd: `1px solid ${token.colorBorderSecondary}`,
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
+
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: `0 ${token.paddingSM}px`,
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         boxShadow: token.boxShadowTertiary,
       },
 
-      // Left section - Logo
+      // Left section - Compact Avatar Only
       leftSectionStyle: {
-        display: "flex",
-        alignItems: "center",
-        flex: "0 0 auto",
-        minWidth: 40,
+        display: 'flex',
+        alignItems: 'center',
+        flex: '0 0 auto',
+        minWidth: 48,
+        cursor: 'pointer',
       },
 
-      // Center section - Search bar
+      // Center section - Action Icons with better spacing
       centerSectionStyle: {
-        display: "flex",
-        alignItems: "center",
-        flex: "1 1 auto",
-        paddingInline: token.paddingMD,
-        maxWidth: 300,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: '1 1 auto',
+        gap: 0, // Compact spacing between icons
       },
 
-      // Right section - Theme switch
+      // Right section - Theme switch only
       rightSectionStyle: {
-        display: "flex",
-        alignItems: "center",
-        flex: "0 0 auto",
-        minWidth: 40,
+        display: 'flex',
+        alignItems: 'center',
+        flex: '0 0 auto',
+        minWidth: 48,
       },
 
-      // Search input styling
-      searchInputStyle: {
-        width: "100%",
+      // Avatar Profile Styles
+      avatarProfileStyle: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: token.paddingSM,
+        padding: `${token.paddingXS}px ${token.paddingSM}px`,
         borderRadius: token.borderRadiusLG,
-        backgroundColor: token.colorFillQuaternary,
-        border: "none",
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          backgroundColor: token.colorBgTextHover,
+        },
+      },
+
+      avatarStyle: {
+        width: 40,
+        height: 40,
+        borderRadius: '50%',
+        backgroundColor: token.colorPrimary,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: token.colorWhite,
         fontSize: token.fontSizeSM,
-        height: token.controlHeight,
-        "::placeholder": {
-          color: token.colorTextPlaceholder,
-        },
-        "&:focus": {
-          backgroundColor: token.colorFillTertiary,
-          boxShadow: `0 0 0 2px ${token.colorPrimaryBg}`,
-        },
-        "&:hover": {
-          backgroundColor: token.colorFillTertiary,
+        fontWeight: 600,
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          transform: 'scale(1.05)',
+          boxShadow: `0 2px 8px ${token.colorPrimary}20`,
         },
       },
 
-      // Search icon styling
-      searchIconStyle: {
-        color: token.colorTextTertiary,
-        fontSize: token.fontSizeIcon,
+      profileDetailsStyle: {
+        display: 'flex',
+        flexDirection: 'column',
+        lineHeight: 1.2,
       },
 
-      // Theme toggle button styling
-      themeToggleStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: token.controlHeight,
-        height: token.controlHeight,
-        borderRadius: token.borderRadiusLG,
+      userNameStyle: {
+        fontSize: token.fontSizeSM,
+        fontWeight: 500,
+        color: token.colorText,
+        margin: 0,
+      },
+
+      userRoleStyle: {
+        fontSize: token.fontSizeXS,
         color: token.colorTextSecondary,
-        fontSize: token.fontSizeIcon,
-        transition: `all ${token.motionDurationMid}`,
-        "&:hover": {
-          backgroundColor: token.colorFillQuaternary,
-          color: token.colorText,
+        margin: 0,
+      },
+
+      // Action Icons Styles
+      actionIconStyle: {
+        width: 48,
+        height: 48,
+        borderRadius: token.borderRadiusLG,
+        border: 'none',
+        backgroundColor: 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        color: token.colorText,
+        fontSize: 20,
+        position: 'relative',
+        '&:hover': {
+          backgroundColor: token.colorBgTextHover,
+          transform: 'scale(1.05)',
         },
-        "&:active": {
-          backgroundColor: token.colorFillTertiary,
+        '&:active': {
+          transform: 'scale(0.95)',
         },
+      },
+
+      notificationIconStyle: {
+        position: 'relative',
+      },
+
+      notificationBadgeStyle: {
+        position: 'absolute',
+        top: 2,
+        right: 2,
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        backgroundColor: '#ff4d4f', // Red color for visibility
+        border: `2px solid ${token.colorBgContainer}`,
+        display: 'block', // Ensure it's always visible
       },
     }),
     [token]
@@ -113,13 +160,13 @@ export const headerVariants = {
     y: 0,
     transition: {
       duration: 0.4,
-      ease: "easeOut",
+      ease: 'easeOut',
       staggerChildren: 0.1,
     },
   },
 };
 
-export const logoVariants = {
+export const avatarVariants = {
   hidden: {
     opacity: 0,
     x: -20,
@@ -129,22 +176,22 @@ export const logoVariants = {
     x: 0,
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: 'easeOut',
     },
   },
 };
 
-export const searchVariants = {
+export const centerIconsVariants = {
   hidden: {
     opacity: 0,
-    scale: 0.95,
+    y: -10,
   },
   visible: {
     opacity: 1,
-    scale: 1,
+    y: 0,
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: 'easeOut',
       delay: 0.1,
     },
   },
@@ -160,7 +207,7 @@ export const themeToggleVariants = {
     x: 0,
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: 'easeOut',
       delay: 0.2,
     },
   },

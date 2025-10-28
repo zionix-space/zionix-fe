@@ -32,7 +32,7 @@ export const useStyles = (token) => {
       overflow: "auto",
       paddingInline: token.paddingMD,
       paddingBlock: token.paddingMD,
-      backgroundColor: token.colorBgLayout,
+      backgroundColor: token.colorBgContainer,
     },
   }), [token]);
 };
