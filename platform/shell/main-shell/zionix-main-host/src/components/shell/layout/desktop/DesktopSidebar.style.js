@@ -40,8 +40,9 @@ export const useStyles = (token) => ({
     justifyContent: 'space-between',
     userSelect: 'none', // Prevent text selection on toggle
     padding: `${token.paddingSM}px ${token.paddingSM}px`,
-    minHeight: "48px",
+    minHeight: '48px',
     gap: `${token.paddingSM}px`,
+    backgroundColor: token.colorFillQuaternary,
   },
 
   zxHostToggleButton: {
@@ -49,13 +50,13 @@ export const useStyles = (token) => ({
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    width: "32px",
-    height: "32px",
+    width: '32px',
+    height: '32px',
     borderRadius: token.borderRadius,
-    backgroundColor: "transparent",
-    border: "none",
+    backgroundColor: 'transparent',
+    border: 'none',
     transition: `background-color ${token.motionDurationMid} ${token.motionEaseInOut}`,
-    position: "relative",
+    position: 'relative',
     flexShrink: 0,
   },
 
@@ -64,7 +65,7 @@ export const useStyles = (token) => ({
   },
 
   zxHostToggleIcon: {
-    fontSize: "16px",
+    fontSize: '16px',
     color: token.colorText,
   },
 
@@ -73,17 +74,17 @@ export const useStyles = (token) => ({
   },
 
   zxHostSectionHeader: {
-    padding: "12px 16px 6px 16px",
-    fontSize: "11px",
+    padding: '12px 16px 6px 16px',
+    fontSize: '11px',
     fontWeight: 500,
     color: token.colorTextTertiary,
-    textTransform: "uppercase",
-    letterSpacing: "0.5px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    userSelect: "none", // Prevent text selection on section headers
-    marginTop: "8px",
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    userSelect: 'none', // Prevent text selection on section headers
+    marginTop: '8px',
   },
 
   zxHostSectionHeaderCollapsed: {
@@ -97,8 +98,8 @@ export const useStyles = (token) => ({
   },
 
   zxHostMenuContainer: {
-    userSelect: "none", // Prevent text selection on menu container
-    marginBottom: "8px", // Minimal spacing between sections
+    userSelect: 'none', // Prevent text selection on menu container
+    marginBottom: '8px', // Minimal spacing between sections
   },
 
   zxHostMenuItemBadge: {
@@ -119,7 +120,7 @@ export const useStyles = (token) => ({
     padding: `${token.paddingSM}px ${token.paddingSM}px`,
     borderTop: `1px solid ${token.colorBorderSecondary}`,
     backgroundColor: token.colorFillQuaternary,
-    userSelect: "none", // Prevent text selection on profile container
+    userSelect: 'none', // Prevent text selection on profile container
   },
 
   zxHostProfileContainerCollapsed: {
@@ -127,18 +128,18 @@ export const useStyles = (token) => ({
   },
 
   zxHostProfileContent: {
-    display: "flex",
-    alignItems: "center",
-    cursor: "pointer",
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
     padding: `${token.paddingXS}px ${token.paddingSM}px`,
     borderRadius: token.borderRadius,
     transition: `background-color ${token.motionDurationMid} ${token.motionEaseInOut}`,
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
   },
 
   zxHostProfileContentCollapsed: {
     padding: token.paddingXS,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 
   zxHostProfileContentHover: {
@@ -155,7 +156,7 @@ export const useStyles = (token) => ({
     color: token.colorText,
     fontSize: token.fontSizeSM,
     lineHeight: 1.3,
-    marginBottom: "1px",
+    marginBottom: '1px',
   },
 
   zxHostProfileEmail: {
@@ -171,16 +172,16 @@ export const useStyles = (token) => ({
 
   zxHostSearchInput: {
     borderRadius: token.borderRadiusSM,
-    height: "28px",
-    fontSize: "13px",
+    height: '28px',
+    fontSize: '13px',
     border: `1px solid ${token.colorBorderSecondary}`,
     backgroundColor: token.colorFillQuaternary,
-    transition: "all 0.2s ease",
-    "&:hover": {
+    transition: 'all 0.2s ease',
+    '&:hover': {
       borderColor: token.colorBorder,
       backgroundColor: token.colorBgContainer,
     },
-    "&:focus": {
+    '&:focus': {
       borderColor: token.colorPrimary,
       backgroundColor: token.colorBgContainer,
       boxShadow: `0 0 0 2px ${token.colorPrimary}10`,
