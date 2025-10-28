@@ -165,6 +165,27 @@ export const useStyles = (token) => ({
     lineHeight: 1.2,
   },
 
+  zxHostProfileMore: {
+    color: token.colorTextTertiary,
+    fontSize: '16px',
+    marginLeft: 'auto',
+  },
+
+  zxHostProfileCollapsed: {
+    padding: `${token.paddingSM}px`,
+    borderTop: `1px solid ${token.colorBorderSecondary}`,
+    backgroundColor: token.colorFillQuaternary,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  zxHostProfileExpanded: {
+    padding: `${token.paddingSM}px`,
+    borderTop: `1px solid ${token.colorBorderSecondary}`,
+    backgroundColor: token.colorFillQuaternary,
+  },
+
   zxHostSearchContainer: {
     padding: `0 ${token.paddingXS}px`,
     flex: 1,

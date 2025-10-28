@@ -8,7 +8,7 @@
  */
 
 // === MENU HOOKS ===
-export * from './menu/useMenuData';
+// Menu hooks will be added here when needed
 
 /**
  * @example

@@ -11,6 +11,7 @@ import {
 } from "./MobileHeader.style";
 import { MobileSearchPopup } from "./MobileSearchPopup";
 import { MobileProfileDropdown } from "./MobileProfileDropdown";
+import { useMenuStore } from "../../../../data/stores/menu/useMenuStore";
 
 export const MobileHeader = () => {
   const { token, isDarkMode, toggleTheme } = useTheme();
@@ -18,21 +19,12 @@ export const MobileHeader = () => {
   const styles = useStyles(token);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
-
-  // Profile data matching desktop sidebar
-  const profileData = {
-    userData: {
-      name: "John Doe",
-      email: "john@company.com",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-    },
-    menuItems: [
-      { key: "profile", icon: <i className="ri-dashboard-line" />, label: "Profile" },
-      { key: "upgrade", icon: <i className="ri-star-line" />, label: "Upgrade to pro" },
-      { key: "settings", icon: <i className="ri-settings-line" />, label: "Settings" },
-      { type: "divider" },
-      { key: "logout", icon: <i className="ri-logout-box-line" />, label: "Logout" }
-    ]
+  
+  // Get profile data from unified menu structure - direct access like desktop
+  const { completeMenuData } = useMenuStore();
+  const profileData = completeMenuData?.profileSection || {
+    userData: { name: "User", email: "user@example.com" },
+    menuItems: []
   };
 
   // Only render on mobile devices

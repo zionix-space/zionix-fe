@@ -11,11 +11,7 @@
 
 import React, { useState } from 'react';
 import { Form, Input, Button, Typography, Space, Alert, message } from 'antd';
-import {
-  MailOutlined,
-  ArrowLeftOutlined,
-  CheckCircleOutlined,
-} from '@ant-design/icons';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@zionix/design-system';
 import AuthLayout from '../layouts/AuthLayout';
@@ -45,7 +41,7 @@ const SuccessState = ({ email, onBackToLogin, token, isMobile }) => {
       style={styles.successContainerStyle}
     >
       <div style={styles.successContentStyle}>
-        <CheckCircleOutlined style={iconStyle} />
+        <i className="ri-checkbox-circle-line" style={iconStyle} />
         <Title level={isMobile ? 4 : 3} style={titleStyle}>
           Check Your Email
         </Title>
@@ -62,7 +58,7 @@ const SuccessState = ({ email, onBackToLogin, token, isMobile }) => {
         <motion.div variants={buttonVariants} whileTap="tap">
           <Button
             type="default"
-            icon={<ArrowLeftOutlined />}
+            icon={<i className="ri-arrow-left-line" />}
             onClick={onBackToLogin}
             style={buttonStyle}
             block
@@ -233,7 +229,7 @@ const ForgotPasswordPage = ({ onForgotPassword, onBackToLogin }) => {
             >
               <Input
                 prefix={
-                  <MailOutlined style={{ color: token.colorTextSecondary }} />
+                  <i className="ri-mail-line" style={{ color: token.colorTextSecondary }} />
                 }
                 placeholder="Enter your email address"
                 value={getFieldValue('email')}

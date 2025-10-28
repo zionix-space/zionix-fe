@@ -78,6 +78,9 @@ const MobileMoreMenu = ({
   const mainNavigationKeys = ['dashboard', 'products', 'calendar', 'my-tasks', 'more'];
   
   const filterMainNavigationItems = (items) => {
+    if (!items || !Array.isArray(items)) {
+      return [];
+    }
     return items.filter(item => {
       // Exclude main navigation items
       if (mainNavigationKeys.includes(item.key)) {
@@ -97,11 +100,26 @@ const MobileMoreMenu = ({
 
   // Convert menu items to Ant Design Menu format
   const formatMenuItems = (items) => {
+    if (!items || !Array.isArray(items)) {
+      return [];
+    }
     return items.map(item => {
+      const badgeCount = getBadgeCount(item.badge);
+      const badgeColor = getBadgeColor(item.badge);
+      
       const menuItem = {
         key: item.key,
-        icon: item.icon,
-        label: item.label,
+        icon: item.icon ? <i className={item.icon} /> : null,
+        label: badgeCount ? (
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <span>{item.label}</span>
+            <Badge 
+              count={badgeCount} 
+              size="small" 
+              color={badgeColor}
+            />
+          </div>
+        ) : item.label,
       };
 
       if (item.children && item.children.length > 0) {
@@ -116,42 +134,68 @@ const MobileMoreMenu = ({
   const accountSettingsItems = [
     {
       key: "messages",
-      icon: <i className="ri-message-3-line" />,
+      icon: "ri-message-3-line",
       label: "Messages",
       badge: "3"
     },
     {
       key: "notifications",
-      icon: <i className="ri-notification-3-line" />,
+      icon: "ri-notification-3-line",
       label: "Notifications", 
       badge: "12"
     },
     {
       key: "help-support",
-      icon: <i className="ri-customer-service-2-line" />,
+      icon: "ri-customer-service-2-line",
       label: "Help & Support"
     },
     {
       key: "settings",
-      icon: <i className="ri-settings-3-line" />,
+      icon: "ri-settings-3-line",
       label: "Settings"
     }
   ];
 
+  // Helper function to get badge count from badge object or string
+  const getBadgeCount = (badge) => {
+    if (!badge) return null;
+    if (typeof badge === 'object' && badge !== null && badge.count !== undefined) {
+      return badge.count;
+    }
+    return badge;
+  };
+
+  // Helper function to get badge color from badge object
+  const getBadgeColor = (badge) => {
+    if (!badge || typeof badge !== 'object' || badge === null) {
+      return undefined;
+    }
+    return badge.color || undefined;
+  };
+
   // Filter and format menu items for the More menu
-  const filteredMenuItems = filterMainNavigationItems(menuItems);
+  const filteredMenuItems = filterMainNavigationItems(menuItems || []);
   const formattedMenuItems = [
     ...formatMenuItems(filteredMenuItems),
-    ...accountSettingsItems.map(item => ({
-      key: item.key,
-      icon: item.icon,
-      label: item.badge ? (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          <span>{item.label}</span>
-          <Badge count={item.badge} size="small" />
-        </div>
-      ) : item.label
-    }))
+    ...accountSettingsItems.map(item => {
+      const badgeCount = getBadgeCount(item.badge);
+      const badgeColor = getBadgeColor(item.badge);
+      
+      return {
+        key: item.key,
+        icon: item.icon ? <i className={item.icon} /> : null,
+        label: badgeCount ? (
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <span>{item.label}</span>
+            <Badge 
+              count={badgeCount} 
+              size="small" 
+              color={badgeColor}
+            />
+          </div>
+        ) : item.label
+      };
+    })
   ];
 
   const handleMenuSelect = ({ key }) => {

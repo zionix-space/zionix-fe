@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Layout,
   Input,
@@ -8,10 +8,10 @@ import {
   Dropdown,
   Tooltip,
   theme,
-} from "antd";
-import { useTheme } from "@zionix/design-system";
-import { useMenuData } from "../shared/MenuDataProvider";
-import { useStyles } from "./DesktopSidebar.style";
+} from 'antd';
+import { useTheme } from '@zionix/design-system';
+import { useMenuStore } from '../../../../data/stores/menu/useMenuStore';
+import { useStyles } from './DesktopSidebar.style';
 
 // Inject CSS for webkit scrollbar styles and Ant Design component overrides
 const injectSidebarCSS = (token) => {
@@ -50,23 +50,32 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const { token } = useToken();
   const { isRTL } = useTheme();
   const styles = useStyles(token);
-  const { 
-    menuItems, 
-    selectedKey, 
-    setSelectedKey, 
-    openKeys, 
-    setOpenKeys,
-    handleMenuSelect,
-    handleOpenChange 
-  } = useMenuData();
+  // Get sidebar menu data from Zustand store
+  const {
+    sidebarMenus,
+    selectedSidebarKey,
+    setSelectedSidebarKey,
+    openSidebarKeys,
+    setOpenSidebarKeys,
+    completeMenuData,
+  } = useMenuStore();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   const [isToggleHovered, setIsToggleHovered] = useState(false);
-  const [isProfileHovered, setIsProfileHovered] = useState(false);
+
+  // Menu selection handlers
+  const handleMenuSelect = (key) => {
+    setSelectedSidebarKey(key);
+    console.log('Selected menu item:', key);
+  };
+
+  const handleOpenChange = (keys) => {
+    setOpenSidebarKeys(keys);
+  };
 
   // Load collapsed state from localStorage
   useEffect(() => {
-    const savedCollapsed = localStorage.getItem("sidebar-collapsed");
+    const savedCollapsed = localStorage.getItem('sidebar-collapsed');
     if (savedCollapsed !== null) {
       onCollapse(JSON.parse(savedCollapsed));
     }
@@ -74,21 +83,21 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
 
   // Save collapsed state to localStorage
   useEffect(() => {
-    localStorage.setItem("sidebar-collapsed", JSON.stringify(collapsed));
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(collapsed));
   }, [collapsed]);
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event) => {
       // Ctrl+B or Cmd+B to toggle sidebar
-      if ((event.ctrlKey || event.metaKey) && event.key === "b") {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
         event.preventDefault();
         onCollapse(!collapsed);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [collapsed, onCollapse]);
 
   // Inject sidebar CSS
@@ -114,11 +123,9 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     };
 
     handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [collapsed, onCollapse, token]);
-
-
 
   // Advanced section separator component
   const SectionSeparator = ({
@@ -146,92 +153,83 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     );
   };
 
-  // Simulate backend response with sections
-  const backendMenuSections = [
-    {
-      type: "section",
-      id: "navigation",
-      title: "Navigation Menu",
-      accentColor: token.colorPrimary,
-      items: menuItems,
-    },
-    {
-      type: "section",
-      id: "account",
-      title: "Account Settings",
-      accentColor: token.colorPrimary,
-      items: [
-        {
-          key: "messages",
-          icon: <i className="ri-message-line" />,
-          label: "Messages",
-          badge: "3",
-        },
-        {
-          key: "notifications",
-          icon: <i className="ri-notification-line" />,
-          label: "Notifications",
-          badge: "12",
-        },
-        {
-          key: "help",
-          icon: <i className="ri-question-line" />,
-          label: "Help & Support",
-        },
-        {
-          key: "settings",
-          icon: <i className="ri-settings-line" />,
-          label: "Settings",
-        },
-      ],
-    },
-    {
-      type: "profile",
-      id: "user-profile",
-      userData: {
-        name: "John Doe",
-        email: "john@company.com",
-        avatar:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      },
-      menuItems: [
-        {
-          key: "profile",
-          icon: <i className="ri-dashboard-line" />,
-          label: "Profile",
-        },
-        {
-          key: "upgrade",
-          icon: <i className="ri-star-line" />,
-          label: "Upgrade to pro",
-        },
-        {
-          key: "settings",
-          icon: <i className="ri-settings-line" />,
-          label: "Settings",
-        },
-        {
-          type: "divider",
-        },
-        {
-          key: "logout",
-          icon: <i className="ri-logout-box-line" />,
-          label: "Logout",
-        },
-      ],
-    },
-  ];
+  // Create menu sections directly from menu data - simple and clean!
+  const createMenuSections = () => {
+    const sections = [];
+    
+    // Main navigation section with children of selected main menu
+    if (sidebarMenus.length > 0) {
+      sections.push({
+        type: 'section',
+        id: 'navigation',
+        title: 'Navigation Menu',
+        accentColor: token.colorPrimary,
+        items: sidebarMenus,
+      });
+    }
+    
+    // Account Settings section - direct access from completeMenuData
+    if (completeMenuData?.accountSettings) {
+      sections.push({
+        type: 'section',
+        id: 'account',
+        title: completeMenuData.accountSettings.label || 'Account Settings',
+        accentColor: '#1f40fc',
+        items: completeMenuData.accountSettings.children || [], // Ensure it's always an array
+      });
+    }
 
-  // Convert menu items to Ant Design Menu format
+    // Profile section - direct access from completeMenuData
+    if (completeMenuData?.profileSection) {
+      sections.push({
+        ...completeMenuData.profileSection,
+        items: completeMenuData.profileSection.menuItems || [], // Ensure it's always an array
+      });
+    }
+    return sections;
+  };
+
+  const backendMenuSections = createMenuSections();
+
+  // Helper function to get badge count from badge object
+  const getBadgeCount = (badge) => {
+    if (!badge) return null;
+    if (
+      typeof badge === 'object' &&
+      badge !== null &&
+      badge.count !== undefined
+    ) {
+      return badge.count;
+    }
+    return badge;
+  };
+
+  // Helper function to get badge color from badge object
+  const getBadgeColor = (badge) => {
+    if (!badge || typeof badge !== 'object' || badge === null) {
+      return undefined;
+    }
+    return badge.color || undefined;
+  };
+
+  // Format menu items for Ant Design Menu component
   const formatMenuItems = (items) => {
+    // Add null check to prevent TypeError
+    if (!items || !Array.isArray(items)) {
+      return [];
+    }
+    
     return items.map((item) => {
+      const badgeCount = getBadgeCount(item.badge);
+      const badgeColor = getBadgeColor(item.badge);
+
       const menuItem = {
         key: item.key,
-        icon: item.icon,
-        label: item.badge ? (
+        icon: item.icon ? <i className={item.icon} /> : null,
+        label: badgeCount ? (
           <div style={styles.zxHostMenuItemBadge}>
             <span>{item.label}</span>
-            <Badge count={item.badge} size="small" />
+            <Badge count={badgeCount} size="small" color={badgeColor} />
           </div>
         ) : (
           item.label
@@ -248,56 +246,9 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
 
   // Render a single section with its menu items
   const renderSection = (section, index) => {
-    const isLastSection = index === backendMenuSections.length - 1;
-
     // Handle profile section differently
-    if (section.type === "profile") {
-      return (
-        <div key={section.id} style={styles.zxHostProfileSection}>
-          <div
-            style={{
-              ...styles.zxHostProfileContainer,
-              ...(collapsed ? styles.zxHostProfileContainerCollapsed : {}),
-            }}
-          >
-            <Dropdown
-              menu={{
-                items: section.menuItems,
-              }}
-              placement="topRight"
-              trigger={["click"]}
-            >
-              <div
-                style={{
-                  ...styles.zxHostProfileContent,
-                  ...(collapsed ? styles.zxHostProfileContentCollapsed : {}),
-                  ...(isProfileHovered ? styles.zxHostProfileContentHover : {}),
-                }}
-                onMouseEnter={() => setIsProfileHovered(true)}
-                onMouseLeave={() => setIsProfileHovered(false)}
-              >
-                <Avatar
-                  size={collapsed ? 24 : 32}
-                  src={section.userData.avatar}
-                  style={{
-                    border: `1px solid ${token.colorBorder}`,
-                  }}
-                />
-                {!collapsed && (
-                  <div style={styles.zxHostProfileInfo}>
-                    <div style={styles.zxHostProfileName}>
-                      {section.userData.name}
-                    </div>
-                    <div style={styles.zxHostProfileEmail}>
-                      {section.userData.email}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Dropdown>
-          </div>
-        </div>
-      );
+    if (section.type === 'profile') {
+      return renderProfileSection(section);
     }
 
     // Handle regular sections
@@ -311,21 +262,74 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         />
 
         {/* Section Menu Items */}
-        <div style={styles.zxHostMenuContainer} className="zx-host-menu-container">
+        <div
+          style={styles.zxHostMenuContainer}
+          className="zx-host-menu-container"
+        >
           <Menu
             mode="inline"
-            selectedKeys={[selectedKey]}
-            openKeys={openKeys}
+            selectedKeys={[selectedSidebarKey]}
+            openKeys={openSidebarKeys}
             onOpenChange={handleOpenChange}
             onSelect={({ key }) => handleMenuSelect(key)}
             inlineCollapsed={collapsed}
             items={formatMenuItems(section.items)}
             style={{
-              border: "none",
-              backgroundColor: "transparent",
+              border: 'none',
+              backgroundColor: 'transparent',
             }}
           />
         </div>
+      </div>
+    );
+  };
+
+  // Render profile section with user info and dropdown
+  const renderProfileSection = (profileSection) => {
+    const { userData, menuItems } = profileSection;
+    
+    if (collapsed) {
+      // Collapsed profile - just avatar
+      return (
+        <div key={profileSection.id} style={styles.zxHostProfileCollapsed}>
+          <Dropdown
+            menu={{
+              items: formatMenuItems(menuItems.filter(item => item.type !== 'divider')),
+              onClick: ({ key }) => handleMenuSelect(key),
+            }}
+            placement="rightTop"
+            trigger={['click']}
+          >
+            <Avatar
+              src={userData.avatar}
+              size={32}
+              style={{ cursor: 'pointer' }}
+            />
+          </Dropdown>
+        </div>
+      );
+    }
+
+    // Expanded profile - full user info with dropdown
+    return (
+      <div key={profileSection.id} style={styles.zxHostProfileExpanded}>
+        <Dropdown
+          menu={{
+            items: formatMenuItems(menuItems.filter(item => item.type !== 'divider')),
+            onClick: ({ key }) => handleMenuSelect(key),
+          }}
+          placement="topLeft"
+          trigger={['click']}
+        >
+          <div style={styles.zxHostProfileContent}>
+            <Avatar src={userData.avatar} size={40} />
+            <div style={styles.zxHostProfileInfo}>
+              <div style={styles.zxHostProfileName}>{userData.name}</div>
+              <div style={styles.zxHostProfileEmail}>{userData.email}</div>
+            </div>
+            <i className="ri-more-2-line" style={styles.zxHostProfileMore} />
+          </div>
+        </Dropdown>
       </div>
     );
   };
@@ -352,7 +356,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
 
         <Tooltip
           title={toggleTooltip}
-          placement={collapsed ? "right" : "bottom"}
+          placement={collapsed ? 'right' : 'bottom'}
         >
           <div
             style={{
@@ -366,7 +370,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             aria-label={toggleTooltip}
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
+              if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 onCollapse(!collapsed);
               }
@@ -376,7 +380,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               <i
                 className="ri-menu-line"
                 style={{
-                  fontSize: "16px",
+                  fontSize: '16px',
                   ...styles.zxHostToggleIcon,
                   ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
                 }}
@@ -385,7 +389,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               <i
                 className="ri-menu-fold-line"
                 style={{
-                  fontSize: "16px",
+                  fontSize: '16px',
                   ...styles.zxHostToggleIcon,
                   ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
                 }}
@@ -397,9 +401,12 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     );
   };
 
-  // Separate profile section from navigation sections
-  const navigationSections = backendMenuSections.filter(section => section.type !== "profile");
-  const profileSection = backendMenuSections.find(section => section.type === "profile");
+  const navigationSections = backendMenuSections.filter(
+      (section) => section.type !== 'profile'
+    );
+    const profileSection = backendMenuSections.find(
+      (section) => section.type === 'profile'
+    );
 
   return (
     <Sider
@@ -409,8 +416,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       style={{
         ...styles.zxHostSidebarContainer,
         [isRTL
-          ? "borderLeft"
-          : "borderRight"]: `1px solid ${token.colorBorderSecondary}`,
+          ? 'borderLeft'
+          : 'borderRight']: `1px solid ${token.colorBorderSecondary}`,
       }}
       theme="light"
       trigger={null}
@@ -428,7 +435,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         </div>
 
         {/* Fixed Profile Section at Bottom */}
-        {profileSection && renderSection(profileSection, backendMenuSections.length - 1)}
+        {profileSection &&
+          renderSection(profileSection, backendMenuSections.length - 1)}
       </div>
     </Sider>
   );

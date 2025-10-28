@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme } from '@zionix/design-system';
-import { useMenuData } from '../shared/MenuDataProvider';
+import { useMenuStore } from '../../../../data/stores/menu/useMenuStore';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import MobileMoreMenu from './MobileMoreMenu';
 import { useStyles } from './MobileBottomNavigation.style';
@@ -17,7 +17,7 @@ const MobileBottomNavigation = ({
   style = {},
   onItemSelect 
 }) => {
-  const { selectedKey, handleMenuSelect, menuItems, openKeys, handleOpenChange } = useMenuData();
+  const { selectedSidebarKey, setSelectedSidebarKey, mainMenus } = useMenuStore();
   const { deviceType } = useResponsiveLayout();
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   
@@ -30,12 +30,12 @@ const MobileBottomNavigation = ({
     return null;
   }
 
-  // Fixed navigation items matching the screenshot exactly
+  // Get navigation items from the same source as desktop sidebar
+  const mainNavItems = mainMenus || [];
+  
+  // Take first 4 items and add "More" button
   const navigationItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: 'ri-dashboard-line' },
-    { key: 'products', label: 'Products', icon: 'ri-shopping-bag-line' },
-    { key: 'calendar', label: 'Calendar', icon: 'ri-calendar-line' },
-    { key: 'my-tasks', label: 'My Tasks', icon: 'ri-task-line' },
+    ...mainNavItems.slice(0, 4),
     { key: 'more', label: 'More', icon: 'ri-menu-line' }
   ];
 
@@ -43,7 +43,7 @@ const MobileBottomNavigation = ({
     if (item.key === 'more') {
       setIsMoreMenuOpen(true);
     } else {
-      handleMenuSelect(item.key);
+      setSelectedSidebarKey(item.key);
       if (onItemSelect) {
         onItemSelect(item);
       }
@@ -51,7 +51,7 @@ const MobileBottomNavigation = ({
   };
 
   const renderNavigationItem = (item) => {
-    const isActive = selectedKey === item.key;
+    const isActive = selectedSidebarKey === item.key;
     const isMoreItem = item.key === 'more';
 
     return (
@@ -96,11 +96,9 @@ const MobileBottomNavigation = ({
       <MobileMoreMenu
         isOpen={isMoreMenuOpen}
         onClose={() => setIsMoreMenuOpen(false)}
-        menuItems={menuItems}
-        selectedKey={selectedKey}
-        openKeys={openKeys}
-        onItemSelect={handleMenuSelect}
-        onOpenChange={handleOpenChange}
+        menuItems={mainMenus}
+        selectedKey={selectedSidebarKey}
+        onItemSelect={setSelectedSidebarKey}
       />
     </>
   );

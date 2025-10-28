@@ -26,8 +26,7 @@ src/data/
 │   └── queryKeys.js     # Centralized query key factory
 ├── hooks/               # Custom Hooks Layer
 │   ├── index.js        # Hooks exports
-│   └── menu/           # Menu-related hooks
-│       └── useMenuData.js # Menu data management hook
+│   └── menu/           # Menu-related hooks (empty - using Zustand store instead)
 └── stores/             # State Management Layer
     ├── index.js       # Store exports
     └── menu/          # Menu-related stores

@@ -11,7 +11,7 @@
 
 import React, { useState } from 'react';
 import { Form, Input, Button, Typography, Space, Progress, Alert, message } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, CheckCircleOutlined } from '@ant-design/icons';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@zionix/design-system';
 import AuthLayout from '../layouts/AuthLayout';
@@ -116,7 +116,7 @@ const SuccessState = ({ onBackToLogin, token, isMobile }) => {
       style={styles.successContainerStyle}
     >
       <div style={styles.successContentStyle}>
-        <CheckCircleOutlined style={iconStyle} />
+        <i className="ri-checkbox-circle-line" style={iconStyle} />
         <Title level={isMobile ? 4 : 3} style={titleStyle}>
           Password Changed Successfully
         </Title>
@@ -317,13 +317,13 @@ const ChangePasswordPage = ({
               help={getFieldError('currentPassword')}
             >
               <Input.Password
-                prefix={<LockOutlined style={{ color: token.colorTextSecondary }} />}
+                prefix={<i className="ri-lock-line" style={{ color: token.colorTextSecondary }} />}
                 placeholder="Enter your current password"
                 value={getFieldValue('currentPassword')}
                 onChange={handleInputChange('currentPassword')}
                 onBlur={handleInputBlur('currentPassword')}
                 style={inputStyle}
-                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                iconRender={(visible) => (visible ? <i className="ri-eye-line" /> : <i className="ri-eye-off-line" />)}
                 autoComplete="current-password"
               />
             </Form.Item>
@@ -336,13 +336,13 @@ const ChangePasswordPage = ({
               help={getFieldError('newPassword')}
             >
               <Input.Password
-                prefix={<LockOutlined style={{ color: token.colorTextSecondary }} />}
+                prefix={<i className="ri-lock-line" style={{ color: token.colorTextSecondary }} />}
                 placeholder="Enter your new password"
                 value={getFieldValue('newPassword')}
                 onChange={handleInputChange('newPassword')}
                 onBlur={handleInputBlur('newPassword')}
                 style={inputStyle}
-                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                iconRender={(visible) => (visible ? <i className="ri-eye-line" /> : <i className="ri-eye-off-line" />)}
                 autoComplete="new-password"
               />
               
@@ -362,13 +362,13 @@ const ChangePasswordPage = ({
               help={getFieldError('confirmPassword')}
             >
               <Input.Password
-                prefix={<LockOutlined style={{ color: token.colorTextSecondary }} />}
+                prefix={<i className="ri-lock-line" style={{ color: token.colorTextSecondary }} />}
                 placeholder="Confirm your new password"
                 value={getFieldValue('confirmPassword')}
                 onChange={handleInputChange('confirmPassword')}
                 onBlur={handleInputBlur('confirmPassword')}
                 style={inputStyle}
-                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                iconRender={(visible) => (visible ? <i className="ri-eye-line" /> : <i className="ri-eye-off-line" />)}
                 autoComplete="new-password"
               />
             </Form.Item>

@@ -82,7 +82,7 @@ export const MobileProfileDropdown = ({
         }}
       >
         <div style={styles.menuItemIconStyle}>
-          {item.icon}
+          {item.icon ? <i className={item.icon} /> : null}
         </div>
         <span style={styles.menuItemLabelStyle}>
           {item.label}
