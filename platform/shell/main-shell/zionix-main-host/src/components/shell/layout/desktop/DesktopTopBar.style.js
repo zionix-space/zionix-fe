@@ -41,37 +41,57 @@ export const useStyles = (token) => ({
     display: "flex",
     alignItems: "center",
     flex: 1,
+    minWidth: 0, // Allow flex item to shrink
+    maxWidth: "calc(100vw - 400px)", // Reserve space for brand and actions
     userSelect: "none", // Prevent text selection on navigation
   },
 
   menuStyle: {
-    // background: "transparent",
-    // border: "none",
+    background: "transparent",
+    border: "none",
     fontSize: "14px",
     fontWeight: 600,
-    // lineHeight: 1,
-    // flex: 1,
-    // "& .ant-menu-item": {
-    //   padding: "0 16px",
-    //   margin: "0 4px",
-    //   height: "32px",
-    //   lineHeight: "32px",
-    //   borderRadius: "6px",
-    //   transition: "all 0.2s ease",
-    //   color: token.colorTextSecondary,
-    // },
-    // "& .ant-menu-item:hover": {
-    //   backgroundColor: token.colorFillQuaternary,
-    //   color: token.colorText,
-    // },
-    // '& .ant-menu-item-selected': {
-    //   backgroundColor: token.colorPrimary,
-    //   color: token.colorWhite,
-    //   fontWeight: 600,
-    // },
-    // '& .ant-menu-item-selected::after': {
-    //   display: 'none',
-    // },
+    flex: 1,
+    minWidth: 0, // Allow menu to shrink
+    "& .ant-menu-item": {
+      padding: "0 16px",
+      margin: "0 4px",
+      height: "32px",
+      lineHeight: "32px",
+      borderRadius: "6px",
+      transition: "all 0.2s ease",
+      color: token.colorTextSecondary,
+    },
+    "& .ant-menu-item:hover": {
+      backgroundColor: token.colorFillQuaternary,
+      color: token.colorText,
+    },
+    "& .ant-menu-item-selected": {
+      backgroundColor: token.colorPrimary,
+      color: token.colorWhite,
+      fontWeight: 600,
+    },
+    "& .ant-menu-item-selected::after": {
+      display: "none",
+    },
+    "& .ant-menu-overflow-item": {
+      flex: "0 0 auto",
+    },
+    "& .ant-menu-submenu": {
+      "& .ant-menu-submenu-title": {
+        padding: "0 16px",
+        margin: "0 4px",
+        height: "32px",
+        lineHeight: "32px",
+        borderRadius: "6px",
+        transition: "all 0.2s ease",
+        color: token.colorTextSecondary,
+      },
+      "&:hover .ant-menu-submenu-title": {
+        backgroundColor: token.colorFillQuaternary,
+        color: token.colorText,
+      },
+    },
   },
 
   rightActionsStyle: {

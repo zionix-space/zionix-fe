@@ -111,6 +111,7 @@ const AppTopBar = () => {
             style={styles.menuStyle}
             theme="light"
             onSelect={handleMainMenuSelect}
+            overflowedIndicator={<i className="ri-more-line" />}
           />
         </div>
       </div>

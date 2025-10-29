@@ -16,25 +16,22 @@ const { Content } = Layout;
  */
 const DesktopLayout = ({ className = '', style = {} }) => {
   const { token } = useTheme();
-  
-  const { 
-    sidebarCollapsed, 
-    setSidebarCollapsed,
-    screenWidth 
-  } = useResponsiveLayout();
+
+  const { sidebarCollapsed, setSidebarCollapsed, screenWidth } =
+    useResponsiveLayout();
 
   // Responsive sidebar behavior for tablet screens
   const isTabletSize = screenWidth >= 768 && screenWidth < 1024;
-  const sidebarWidth = sidebarCollapsed ? 80 : (isTabletSize ? 200 : 256);
+  const sidebarWidth = sidebarCollapsed ? 80 : isTabletSize ? 200 : 256;
   const contentPadding = isTabletSize ? '16px' : '24px';
 
   return (
-    <Layout 
+    <Layout
       className={`desktop-layout ${className}`}
       style={{
         height: '100vh',
         overflow: 'hidden',
-        ...style
+        ...style,
       }}
     >
       {/* Desktop Top Bar */}
@@ -43,7 +40,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
       {/* Desktop Layout Container */}
       <Layout style={{ marginTop: '64px' }}>
         {/* Desktop Sidebar */}
-        <DesktopSidebar 
+        <DesktopSidebar
           collapsed={sidebarCollapsed}
           onCollapse={setSidebarCollapsed}
         />
@@ -52,7 +49,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
         <Layout
           style={{
             marginInlineStart: `${sidebarWidth}px`,
-            transition: 'margin-inline-start 0.3s ease'
+            transition: 'margin-inline-start 0.3s ease',
           }}
         >
           <Content
@@ -61,7 +58,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
               padding: contentPadding,
               backgroundColor: token?.colorBgLayout,
               overflow: 'auto',
-              height: 'calc(100vh - 64px)'
+              height: 'calc(100vh - 64px)',
             }}
           >
             {/* Content Container */}
@@ -71,7 +68,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
                 borderRadius: token?.borderRadiusLG,
                 padding: contentPadding,
                 minHeight: '100%',
-                boxShadow: `0 2px 8px ${token?.colorBorder}20`
+                boxShadow: `0 2px 8px ${token?.colorBorder}20`,
               }}
             >
               <Outlet />
