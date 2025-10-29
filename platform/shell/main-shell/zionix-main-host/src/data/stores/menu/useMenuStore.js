@@ -70,7 +70,7 @@ export const useMenuStore = create(
         /** @type {boolean} Loading state for menu data */
         isLoading: false,
 
-        /** @type {Object|null} Complete menu data including accountSettings and profileSection */
+        /** @type {Object|null} Complete menu data including profileSection */
         completeMenuData: null,
 
         /** @type {string|null} Current menu data version for cache invalidation */
@@ -177,7 +177,7 @@ export const useMenuStore = create(
 
         /**
          * Initialize menus with comprehensive menu data structure
-         * @param {Object} menuData - Complete menu data object with mainNavigation, accountSettings, profileSection
+         * @param {Object} menuData - Complete menu data object with mainNavigation, profileSection
          */
         initializeMenus: (menuData) => {
           // Handle both old array format and new object format for backward compatibility
@@ -205,7 +205,7 @@ export const useMenuStore = create(
               openSidebarKeys:
                 sidebarMenus.length > 0 ? [sidebarMenus[0].key] : [],
               isLoading: false,
-              // Store the complete menu data for access to accountSettings and profileSection
+              // Store the complete menu data for access to profileSection
               completeMenuData: menuData,
             },
             false,

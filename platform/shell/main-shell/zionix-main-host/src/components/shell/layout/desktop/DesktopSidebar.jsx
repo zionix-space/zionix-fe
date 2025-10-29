@@ -53,6 +53,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   // Get sidebar menu data from Zustand store
   const {
     sidebarMenus,
+    selectedMainMenu,
     selectedSidebarKey,
     setSelectedSidebarKey,
     openSidebarKeys,
@@ -159,25 +160,19 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     
     // Main navigation section with children of selected main menu
     if (sidebarMenus.length > 0) {
+      // Get section title from selected main menu, with fallback
+      const sectionTitle = selectedMainMenu?.sectionTitle || 'Navigation Menu';
+      
       sections.push({
         type: 'section',
         id: 'navigation',
-        title: 'Navigation Menu',
+        title: sectionTitle,
         accentColor: token.colorPrimary,
         items: sidebarMenus,
       });
     }
     
-    // Account Settings section - direct access from completeMenuData
-    if (completeMenuData?.accountSettings) {
-      sections.push({
-        type: 'section',
-        id: 'account',
-        title: completeMenuData.accountSettings.label || 'Account Settings',
-        accentColor: '#1f40fc',
-        items: completeMenuData.accountSettings.children || [], // Ensure it's always an array
-      });
-    }
+
 
     // Profile section - direct access from completeMenuData
     if (completeMenuData?.profileSection) {

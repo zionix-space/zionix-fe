@@ -2,7 +2,7 @@
  * @fileoverview Comprehensive Menu Data Structure
  *
  * Unified menu data structure following Ant Design's menu documentation.
- * This structure includes main navigation, account settings, and profile sections
+ * This structure includes main navigation and profile sections
  * in one comprehensive format that can be replicated by backend developers.
  *
  * @author Zionix Platform Team
@@ -15,7 +15,6 @@
  *
  * Structure includes:
  * - Main navigation menus (topbar items with children for sidebar)
- * - Account settings section (always visible in sidebar)
  * - Profile section (bottom of sidebar with user data and dropdown)
  *
  * Each menu item follows Ant Design's structure:
@@ -36,9 +35,10 @@ export const dummyMenuData = {
     {
       key: 'app-management',
       label: 'App setup',
-      icon: 'ri-apps-line',
+      icon: '',
       description: 'Manage applications and configurations',
       badge: null,
+      sectionTitle: 'Application Configuration',
       children: [
         {
           key: 'domains',
@@ -85,9 +85,10 @@ export const dummyMenuData = {
     {
       key: 'client-management',
       label: 'Client setup',
-      icon: 'ri-user-line',
+      icon: '',
       description: 'Client and organizational management',
       badge: null,
+      sectionTitle: 'Client Management',
       children: [
         {
           key: 'clients',
@@ -150,9 +151,10 @@ export const dummyMenuData = {
     {
       key: 'user-roles-management',
       label: 'User Roles setup',
-      icon: 'ri-user-settings-line',
+      icon: '',
       description: 'User roles and permissions management',
       badge: null,
+      sectionTitle: 'User Management',
       children: [
         {
           key: 'roles',
@@ -174,49 +176,9 @@ export const dummyMenuData = {
     },
   ],
 
-  /**
-   * Account settings section - always visible in sidebar below main navigation
-   * This section appears consistently across all main menu selections
-   */
-  accountSettings: {
-    type: 'group',
-    key: 'account-settings-group',
-    label: 'Account Settings',
-    children: [
-      {
-        type: 'divider',
-        key: 'account-divider',
-      },
-      {
-        key: 'messages',
-        label: 'Messages',
-        icon: 'ri-message-line',
-        badge: { count: 3, color: 'red' },
-        children: [],
-      },
-      {
-        key: 'notifications',
-        label: 'Notifications',
-        icon: 'ri-notification-line',
-        badge: { count: 12, color: 'orange' },
-        children: [],
-      },
-      {
-        key: 'help-support',
-        label: 'Help & Support',
-        icon: 'ri-question-line',
-        badge: null,
-        children: [],
-      },
-      {
-        key: 'settings',
-        label: 'Settings',
-        icon: 'ri-settings-line',
-        badge: null,
-        children: [],
-      },
-    ],
-  },
+
+
+
 
   /**
    * Profile section - bottom section of sidebar with user information and dropdown
@@ -247,12 +209,7 @@ export const dummyMenuData = {
         badge: { count: 'NEW', color: 'gold' },
         children: [],
       },
-      {
-        key: 'account-settings',
-        label: 'Account Settings',
-        icon: 'ri-settings-line',
-        children: [],
-      },
+
       {
         type: 'divider',
         key: 'profile-divider',
@@ -290,19 +247,19 @@ export const dummyMenuData = {
  */
 export const fetchMenuData = async (currentVersion = null) => {
   // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 100));
-  
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
   // In real implementation, this would be an API call like:
   // const response = await fetch('/api/menu-data?version=' + currentVersion);
   // if (response.status === 304) return null; // No changes
   // return response.json();
-  
+
   // For now, always return data (in real app, compare versions)
   return {
     ...dummyMenuData,
     config: {
       ...dummyMenuData.config,
       lastUpdated: new Date().toISOString(), // Current timestamp
-    }
+    },
   };
 };
