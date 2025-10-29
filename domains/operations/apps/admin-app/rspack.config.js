@@ -1,8 +1,8 @@
-const { composePlugins, withNx, withReact } = require("@nx/rspack");
-const { withModuleFederation } = require("@nx/rspack/module-federation");
+const { composePlugins, withNx, withReact } = require('@nx/rspack');
+const { withModuleFederation } = require('@nx/rspack/module-federation');
 
-const baseConfig = require("./module-federation.config");
-const commonRulesRsPack = require("../../../../tools/deployment/rspack.common");
+const baseConfig = require('./module-federation.config');
+const commonRulesRsPack = require('../../../../tools/deployment/rspack.common');
 
 const config = {
   ...baseConfig,

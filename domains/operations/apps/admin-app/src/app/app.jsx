@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
+import FormBuilderLibrary from '../pages/Formbuilder/core';
 
 export function DashboardAdmin() {
   return <b>Admin Dashboard</b>;
@@ -7,7 +8,7 @@ export function DashboardAdmin() {
 export function App() {
   return (
     <Routes>
-      <Route exact path="/" element={<DashboardAdmin />} />
+      <Route exact path="/form-setup" element={<FormBuilderLibrary />} />
     </Routes>
   );
 }
