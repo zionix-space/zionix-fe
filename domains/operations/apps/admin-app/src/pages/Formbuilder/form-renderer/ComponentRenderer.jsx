@@ -46,15 +46,7 @@ import {
   Space,
   Typography,
 } from "antd";
-import { 
-  UploadOutlined, 
-  UserOutlined, 
-  MailOutlined, 
-  MobileOutlined, 
-  LinkOutlined,
-  DollarOutlined,
-  InboxOutlined 
-} from "@ant-design/icons";
+
 import { SelectableComponent } from "../components/properties";
 import { EmbeddedGalleryView } from "../components/views/GalleryView/EmbeddedGalleryView";
 import { EmbeddedListView } from "../components/views/ListView/EmbeddedListView";
@@ -315,7 +307,7 @@ const ComponentRenderer = ({ component, value, onChange, formInstance }) => {
             showUploadList={component.styling?.showUploadList}
             maxCount={component.styling?.maxCount}
           >
-            <Button icon={<UploadOutlined />}>
+            <Button icon={<i className="ri-upload-line" />}>
               {component.styling?.uploadText || "Click to Upload"}
             </Button>
           </Upload>
@@ -419,7 +411,7 @@ const ComponentRenderer = ({ component, value, onChange, formInstance }) => {
             shape={component.styling?.shape}
             src={component.src || undefined}
             alt={component.alt}
-            icon={component.styling?.icon ? <UserOutlined /> : undefined}
+            icon={component.styling?.icon ? <i className="ri-user-line" /> : undefined}
           />
         );
 
@@ -759,7 +751,7 @@ const ComponentRenderer = ({ component, value, onChange, formInstance }) => {
           <Input
             {...getCommonProps()}
             type="email"
-            prefix={component.styling?.prefix === "MailOutlined" ? <MailOutlined /> : component.styling?.prefix}
+            prefix={component.styling?.prefix === "MailOutlined" ? <i className="ri-mail-line" /> : component.styling?.prefix}
             allowClear={component.styling?.allowClear}
           />
         );
@@ -768,7 +760,7 @@ const ComponentRenderer = ({ component, value, onChange, formInstance }) => {
         return (
           <Input
             {...getCommonProps()}
-            prefix={component.styling?.prefix === "PhoneOutlined" ? <MobileOutlined /> : component.styling?.prefix}
+            prefix={component.styling?.prefix === "PhoneOutlined" ? <i className="ri-phone-line" /> : component.styling?.prefix}
             allowClear={component.styling?.allowClear}
           />
         );
@@ -778,7 +770,7 @@ const ComponentRenderer = ({ component, value, onChange, formInstance }) => {
           <Input
             {...getCommonProps()}
             type="url"
-            prefix={component.styling?.prefix === "LinkOutlined" ? <LinkOutlined /> : component.styling?.prefix}
+            prefix={component.styling?.prefix === "LinkOutlined" ? <i className="ri-link" /> : component.styling?.prefix}
             allowClear={component.styling?.allowClear}
           />
         );
@@ -887,7 +879,7 @@ const ComponentRenderer = ({ component, value, onChange, formInstance }) => {
             showUploadList={component.styling?.showUploadList}
           >
             <p className="ant-upload-drag-icon">
-              <InboxOutlined />
+              <i className="ri-inbox-line"></i>
             </p>
             <p className="ant-upload-text">{component.text}</p>
             <p className="ant-upload-hint">{component.hint}</p>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button, Space, Typography, Tag } from "antd";
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+
 import { GalleryPreview } from "./GalleryView/GalleryPreview";
 import { ListViewPreview } from "./ListView/ListViewPreview";
 import { SheetViewPreview } from "./SheetView/SheetViewPreview";
@@ -121,7 +121,7 @@ const ViewRenderer = ({
             {onPreview && (
               <Button 
                 size="small" 
-                icon={<EyeOutlined />}
+                icon={<i className="ri-eye-line" />}
                 onClick={() => onPreview(view)}
               >
                 Preview
@@ -130,7 +130,7 @@ const ViewRenderer = ({
             {onEdit && (
               <Button 
                 size="small" 
-                icon={<EditOutlined />}
+                icon={<i className="ri-edit-line" />}
                 onClick={() => onEdit(view)}
               >
                 Edit
@@ -140,7 +140,7 @@ const ViewRenderer = ({
               <Button 
                 size="small" 
                 danger
-                icon={<DeleteOutlined />}
+                icon={<i className="ri-delete-bin-line" />}
                 onClick={() => onDelete(view)}
               >
                 Delete

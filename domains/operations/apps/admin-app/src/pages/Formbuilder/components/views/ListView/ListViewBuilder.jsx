@@ -4,7 +4,7 @@ import { ListViewSettings } from "./ListViewSettings";
 import { ColumnManager } from "./ColumnManager";
 import { FilterBuilder } from "./FilterBuilder";
 import { Button, Tabs, Card, Space, Typography, Divider } from "antd";
-import { TableOutlined, FilterOutlined, SettingOutlined } from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme"; // Removed problematic import
 
@@ -240,7 +240,7 @@ export function ListViewBuilder({
       key: "columns",
       label: (
         <Space>
-          <TableOutlined style={{ fontSize: 16 }} />
+          <i className="ri-table-line" style={{ fontSize: 16 }} />
           Columns
         </Space>
       ),
@@ -256,7 +256,7 @@ export function ListViewBuilder({
       key: "filters",
       label: (
         <Space>
-          <FilterOutlined style={{ fontSize: 16 }} />
+          <i className="ri-filter-line" style={{ fontSize: 16 }} />
           Filters
         </Space>
       ),
@@ -272,7 +272,7 @@ export function ListViewBuilder({
       key: "settings",
       label: (
         <Space>
-          <SettingOutlined style={{ fontSize: 16 }} />
+          <i className="ri-settings-line" style={{ fontSize: 16 }} />
           Settings
         </Space>
       ),

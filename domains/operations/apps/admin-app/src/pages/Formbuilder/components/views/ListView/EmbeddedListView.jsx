@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Button, Input, Select, Space, Tag } from "antd";
-import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme";
 
@@ -116,7 +116,7 @@ export function EmbeddedListView({
       key: "action",
       width: 80,
       render: () => (
-        <Button type="link" size="small" icon={<EyeOutlined style={{ fontSize: 14 }} />} />
+        <Button type="link" size="small" icon={<i className="ri-eye-line" style={{ fontSize: 14 }} />} />
       ),
     },
   ];
@@ -136,7 +136,7 @@ export function EmbeddedListView({
           </Select>
         </Space>
 
-        <Button type="primary" size="small" icon={<PlusOutlined style={{ fontSize: 14 }} />}>
+        <Button type="primary" size="small" icon={<i className="ri-add-line" style={{ fontSize: 14 }} />}>
           Add New
         </Button>
       </ListViewToolbar>

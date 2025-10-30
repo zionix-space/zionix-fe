@@ -19,14 +19,7 @@ import {
   Transfer,
   TreeSelect,
 } from "antd";
-import { 
-  UploadOutlined, 
-  MailOutlined, 
-  MobileOutlined, 
-  LinkOutlined,
-  DollarOutlined,
-  InboxOutlined 
-} from "@ant-design/icons";
+
 
 const { TextArea } = Input;
 
@@ -88,7 +81,7 @@ const DataEntryComponents = ({ component, commonProps }) => {
     case "upload":
       return (
         <Upload {...commonProps} disabled>
-          <Button size="small" icon={<UploadOutlined />}>
+          <Button size="small" icon={<i className="ri-upload-line" />}>
             Upload
           </Button>
         </Upload>
@@ -142,7 +135,7 @@ const DataEntryComponents = ({ component, commonProps }) => {
       return (
         <Input 
           {...commonProps} 
-          prefix={<MailOutlined />}
+          prefix={<i className="ri-mail-line" />}
           placeholder="email@example.com"
         />
       );
@@ -151,7 +144,7 @@ const DataEntryComponents = ({ component, commonProps }) => {
       return (
         <Input 
           {...commonProps} 
-          prefix={<MobileOutlined />}
+          prefix={<i className="ri-phone-line" />}
           placeholder="+1 (555) 123-4567"
         />
       );
@@ -160,7 +153,7 @@ const DataEntryComponents = ({ component, commonProps }) => {
       return (
         <Input 
           {...commonProps} 
-          prefix={<LinkOutlined />}
+          prefix={<i className="ri-link" />}
           placeholder="https://example.com"
         />
       );
@@ -172,7 +165,7 @@ const DataEntryComponents = ({ component, commonProps }) => {
       return (
         <InputNumber 
           {...commonProps} 
-          prefix={<DollarOutlined />}
+          prefix={<i className="ri-money-dollar-circle-line" />}
           precision={2}
           placeholder="0.00"
         />
@@ -221,7 +214,7 @@ const DataEntryComponents = ({ component, commonProps }) => {
       return (
         <Dragger {...commonProps} disabled style={{ padding: "8px" }}>
           <p className="ant-upload-drag-icon">
-            <InboxOutlined style={{ fontSize: "24px" }} />
+            <i className="ri-inbox-line" style={{ fontSize: "24px" }} />
           </p>
           <p style={{ fontSize: "12px", margin: 0 }}>Drag & Drop</p>
         </Dragger>

@@ -1,24 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Button, Select, Tooltip, Popover } from "antd";
-import {
-  UndoOutlined,
-  RedoOutlined,
-  ZoomInOutlined,
-  ZoomOutOutlined,
-  BgColorsOutlined,
-  LayoutOutlined,
-  FileTextOutlined,
-  AppstoreOutlined,
-  CheckSquareOutlined,
-  ArrowRightOutlined,
-  DownOutlined,
-  TableOutlined,
-  DashboardOutlined,
-  ProjectOutlined,
-  ClockCircleOutlined,
-  BorderOutlined,
-  SplitCellsOutlined,
-} from "@ant-design/icons";
+
 import * as FB from "../../styles/components/FormBuilder.styles";
 
 const { Option } = Select;
@@ -176,17 +158,17 @@ const FormBuilderHeader = ({
           {/* Form Statistics */}
           <FB.FormStats>
             <div className="stat-item">
-              <AppstoreOutlined className="stat-icon" />
+              <i className="ri-apps-line stat-icon" />
               <span className="stat-value">{totalSections}</span>
               <span>Sections</span>
             </div>
             <div className="stat-item">
-              <FileTextOutlined className="stat-icon" />
+              <i className="ri-file-text-line stat-icon" />
               <span className="stat-value">{totalFields}</span>
               <span>Fields</span>
             </div>
             <div className="stat-item">
-              <CheckSquareOutlined className="stat-icon" />
+              <i className="ri-checkbox-line stat-icon" />
               <span className="stat-value">{requiredFields}</span>
               <span>Required</span>
             </div>
@@ -202,7 +184,7 @@ const FormBuilderHeader = ({
                 onClick={handleZoomOut}
                 disabled={zoom <= 50}
               >
-                <ZoomOutOutlined style={{ fontSize: "12px" }} />
+                <i className="ri-zoom-out-line" style={{ fontSize: "12px" }} />
               </button>
             </Tooltip>
             <div
@@ -218,7 +200,7 @@ const FormBuilderHeader = ({
                 onClick={handleZoomIn}
                 disabled={zoom >= 200}
               >
-                <ZoomInOutlined style={{ fontSize: "12px" }} />
+                <i className="ri-zoom-in-line" style={{ fontSize: "12px" }} />
               </button>
             </Tooltip>
           </FB.ZoomControls>
@@ -229,43 +211,43 @@ const FormBuilderHeader = ({
               className="layout-selector"
               value={layout}
               onChange={onLayoutChange}
-              suffixIcon={<LayoutOutlined style={{ fontSize: "12px" }} />}
+              suffixIcon={<i className="ri-layout-line" style={{ fontSize: "12px" }} />}
               placeholder="Select Layout"
             >
               <Option value="single">
-                <FileTextOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-file-text-line" style={{ marginRight: "6px" }} />
                 Single Page
               </Option>
               <Option value="step">
-                <ArrowRightOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-arrow-right-line" style={{ marginRight: "6px" }} />
                 Step Form
               </Option>
               <Option value="accordion">
-                <DownOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-arrow-down-line" style={{ marginRight: "6px" }} />
                 Accordion
               </Option>
               <Option value="tabbed">
-                <TableOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-table-line" style={{ marginRight: "6px" }} />
                 Tabbed Layout
               </Option>
               <Option value="dashboard">
-                <DashboardOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-dashboard-line" style={{ marginRight: "6px" }} />
                 Dashboard
               </Option>
               <Option value="kanban">
-                <ProjectOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-kanban-view" style={{ marginRight: "6px" }} />
                 Kanban Board
               </Option>
               <Option value="timeline">
-                <ClockCircleOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-time-line" style={{ marginRight: "6px" }} />
                 Timeline
               </Option>
               <Option value="matrix">
-                <BorderOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-grid-line" style={{ marginRight: "6px" }} />
                 Matrix Layout
               </Option>
               <Option value="split-screen">
-                <SplitCellsOutlined style={{ marginRight: "6px" }} />
+                <i className="ri-split-cells-horizontal" style={{ marginRight: "6px" }} />
                 Split Screen
               </Option>
             </Select>
@@ -281,7 +263,7 @@ const FormBuilderHeader = ({
                 onClick={onUndo}
                 disabled={!canUndo}
               >
-                <UndoOutlined style={{ fontSize: "12px" }} />
+                <i className="ri-arrow-go-back-line" style={{ fontSize: "12px" }} />
               </button>
             </Tooltip>
             <Tooltip title="Redo">
@@ -290,7 +272,7 @@ const FormBuilderHeader = ({
                 onClick={onRedo}
                 disabled={!canRedo}
               >
-                <RedoOutlined style={{ fontSize: "12px" }} />
+                <i className="ri-arrow-go-forward-line" style={{ fontSize: "12px" }} />
               </button>
             </Tooltip>
           </FB.UndoRedoControls>
@@ -306,7 +288,8 @@ const FormBuilderHeader = ({
               <Tooltip title="Background Color">
                 <div className="color-picker-trigger">
                   <div className="color-preview" style={{ backgroundColor }} />
-                  <BgColorsOutlined
+                  <i
+                    className="ri-palette-line"
                     style={{
                       position: "absolute",
                       top: "50%",

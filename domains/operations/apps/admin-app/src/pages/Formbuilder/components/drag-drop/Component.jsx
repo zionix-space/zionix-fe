@@ -1,10 +1,6 @@
 import React, { useRef, memo, useMemo, useCallback, useState } from "react";
 import { useDrag } from "react-dnd";
-import {
-  DeleteOutlined,
-  CopyOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+
 import { COMPONENT } from "../../constants";
 // Container component imports removed
 import * as S from "../../styles";

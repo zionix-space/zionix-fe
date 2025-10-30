@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { Alert, Typography } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -12,7 +11,7 @@ const ColumnWarningInfo = memo(() => {
       description={
         <div style={{ marginTop: '8px' }}>
           <Text>
-            <InfoCircleOutlined style={{ marginRight: '4px', color: '#1890ff' }} />
+            <i className="ri-information-line" style={{ marginRight: '4px', color: '#1890ff' }}></i>
             <strong>Best Practices:</strong>
           </Text>
           <ul style={{ marginTop: '8px', marginBottom: '0', paddingLeft: '20px' }}>

@@ -7,7 +7,7 @@ import {
   Input,
   QRCode,
 } from "antd";
-import { UserOutlined, SearchOutlined } from "@ant-design/icons";
+
 
 /**
  * Renders data display components for the form builder drag preview
@@ -27,7 +27,7 @@ const DataDisplayComponents = ({ component, commonProps }) => {
             gap: "8px",
           }}
         >
-          <Avatar size="small" icon={<UserOutlined />} />
+          <Avatar size="small" icon={<i className="ri-user-line" />} />
           <span style={{ fontSize: "12px" }}>Avatar</span>
         </div>
       );
@@ -270,7 +270,7 @@ const DataDisplayComponents = ({ component, commonProps }) => {
           {...commonProps} 
           showSearch
           placeholder="Search and select..."
-          suffixIcon={<SearchOutlined />}
+          suffixIcon={<i className="ri-search-line" />}
         >
           <Select.Option value="item1">Sample Item 1</Select.Option>
           <Select.Option value="item2">Sample Item 2</Select.Option>

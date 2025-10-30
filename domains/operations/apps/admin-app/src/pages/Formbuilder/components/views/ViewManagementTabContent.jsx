@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Card, Button, Input, Select, Row, Col, Space, Typography, Statistic, Modal, message, Tag } from 'antd';
-import { PlusOutlined, SearchOutlined, EditOutlined, DeleteOutlined, EyeOutlined, AppstoreAddOutlined } from '@ant-design/icons';
+
 import ViewManager from './ViewManager';
 import ViewRenderer from './ViewRenderer';
 
@@ -492,7 +492,7 @@ const ViewManagementTabContent = ({
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{ width: 300 }}
-                    prefix={<SearchOutlined />}
+                    prefix={<i className="ri-search-line" />}
                   />
                   <Select
                     value={filterType}
@@ -511,26 +511,26 @@ const ViewManagementTabContent = ({
                 <Space>
                   <Button 
                     type="primary" 
-                    icon={<PlusOutlined />}
+                    icon={<i className="ri-add-line" />}
                     onClick={() => handleCreateView()}
                     size="large"
                   >
                     Create New View
                   </Button>
                   <Button 
-                    icon={<PlusOutlined />}
+                    icon={<i className="ri-add-line" />}
                     onClick={() => handleCreateView('gallery')}
                   >
                     Gallery
                   </Button>
                   <Button 
-                    icon={<PlusOutlined />}
+                    icon={<i className="ri-add-line" />}
                     onClick={() => handleCreateView('list')}
                   >
                     List
                   </Button>
                   <Button 
-                    icon={<PlusOutlined />}
+                    icon={<i className="ri-add-line" />}
                     onClick={() => handleCreateView('sheet')}
                   >
                     Sheet
@@ -549,7 +549,7 @@ const ViewManagementTabContent = ({
                     hoverable
                     actions={[
                       <Button 
-                        icon={<EyeOutlined />} 
+                        icon={<i className="ri-eye-line" />} 
                         onClick={() => setSelectedView(view)}
                         size="small"
                         title="Preview view"
@@ -557,7 +557,7 @@ const ViewManagementTabContent = ({
                         Preview
                       </Button>,
                       <Button 
-                        icon={<EditOutlined />} 
+                        icon={<i className="ri-edit-line" />} 
                         onClick={() => handleEditView(view)}
                         size="small"
                         title="Edit view"
@@ -566,7 +566,7 @@ const ViewManagementTabContent = ({
                       </Button>,
                       <Button 
                         type="primary" 
-                        icon={<AppstoreAddOutlined />}
+                        icon={<i className="ri-apps-2-add-line" />}
                         onClick={() => handleEmbedView(view)}
                         size="small"
                         title="Embed view into form"
@@ -575,7 +575,7 @@ const ViewManagementTabContent = ({
                       </Button>,
                       <Button 
                         danger 
-                        icon={<DeleteOutlined />} 
+                        icon={<i className="ri-delete-bin-line" />} 
                         onClick={() => handleDeleteView(view.id)}
                         size="small"
                         title="Delete view"
@@ -626,7 +626,7 @@ const ViewManagementTabContent = ({
                     <div style={{ marginTop: '16px' }}>
                       <Button 
                         type="primary" 
-                        icon={<PlusOutlined />}
+                        icon={<i className="ri-add-line" />}
                         onClick={() => handleCreateView()}
                         size="large"
                       >

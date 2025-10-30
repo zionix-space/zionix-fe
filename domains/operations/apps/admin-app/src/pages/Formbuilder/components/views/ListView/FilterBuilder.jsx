@@ -9,7 +9,7 @@ import {
   Typography,
   Divider,
 } from "antd";
-import { PlusOutlined, FilterOutlined, DeleteOutlined } from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme";
 
@@ -300,7 +300,7 @@ export function FilterBuilder({
 
               <Button
                 type="primary"
-                icon={<PlusOutlined style={{ fontSize: 14 }} />}
+                icon={<i className="ri-add-line" style={{ fontSize: 14 }} />}
                 onClick={addFilter}
                 disabled={!newFilter.field || !newFilter.operator}
               >
@@ -315,7 +315,7 @@ export function FilterBuilder({
         {filters.length === 0 ? (
           <Card>
             <div style={{ textAlign: "center", padding: "16px" }}>
-              <FilterOutlined style={{ fontSize: 32, color: "#9ca3af" }} />
+              <i className="ri-filter-line" style={{ fontSize: 32, color: "#9ca3af" }} />
               <Text
                 type="secondary"
                 style={{ display: "block", marginTop: "8px" }}
@@ -384,7 +384,7 @@ export function FilterBuilder({
                   <Button
                     type="text"
                     danger
-                    icon={<DeleteOutlined style={{ fontSize: 14 }} />}
+                    icon={<i className="ri-delete-bin-line" style={{ fontSize: 14 }} />}
                     onClick={() => removeFilter(filter.id)}
                   />
                 </FilterRow>

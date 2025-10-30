@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Table,
   Button,
@@ -8,23 +8,9 @@ import {
   Tooltip,
   Input,
   Tag,
-} from "antd";
-import {
-  PlusOutlined,
-  MinusOutlined,
-  BoldOutlined,
-  ItalicOutlined,
-  DollarOutlined,
-  PercentageOutlined,
-  BgColorsOutlined,
-  CalculatorOutlined,
-  SortAscendingOutlined,
-  FilterOutlined,
-  BarChartOutlined,
-  SaveOutlined,
-  FunctionOutlined,
-} from "@ant-design/icons";
-import styled from "styled-components";
+} from 'antd';
+
+import styled from 'styled-components';
 // import { theme } from "../../../../styles/theme"; // Removed problematic import
 
 const { Option } = Select;
@@ -153,11 +139,11 @@ const FormulaInput = styled(Input)`
 export function EmbeddedSheetView({ config, isPreview = false }) {
   const [selectedCell, setSelectedCell] = useState(null);
   const [editingCell, setEditingCell] = useState(null);
-  const [formulaValue, setFormulaValue] = useState("");
+  const [formulaValue, setFormulaValue] = useState('');
 
   // Generate sample sheet data
   const generateSheetData = () => {
-    const columns = ["A", "B", "C", "D", "E", "F"];
+    const columns = ['A', 'B', 'C', 'D', 'E', 'F'];
     const data = [];
 
     for (let i = 1; i <= 10; i++) {
@@ -170,7 +156,7 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
         if (i === 1) {
           // Header row
           row[col] =
-            ["Product", "Quantity", "Price", "Total", "Status", "Notes"][
+            ['Product', 'Quantity', 'Price', 'Total', 'Status', 'Notes'][
               colIndex
             ] || `Col ${col}`;
         } else {
@@ -193,7 +179,7 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
               row[col] = `=B${i}*C${i}`;
               break;
             case 4: // Status
-              row[col] = ["Active", "Pending", "Completed"][
+              row[col] = ['Active', 'Pending', 'Completed'][
                 Math.floor(Math.random() * 3)
               ];
               break;
@@ -217,11 +203,11 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
   // Create table columns
   const tableColumns = [
     {
-      title: "",
-      dataIndex: "rowNumber",
-      key: "rowNumber",
+      title: '',
+      dataIndex: 'rowNumber',
+      key: 'rowNumber',
       width: 40,
-      className: "row-number",
+      className: 'row-number',
       render: (value) => value,
     },
     ...sheetColumns.map((col, index) => ({
@@ -253,23 +239,23 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
 
         return (
           <div
-            className={isSelected ? "selected-cell" : ""}
+            className={isSelected ? 'selected-cell' : ''}
             onClick={() => {
               setSelectedCell({ row: rowIndex, col: index });
-              setFormulaValue(value?.toString() || "");
+              setFormulaValue(value?.toString() || '');
             }}
             onDoubleClick={() => setEditingCell({ row: rowIndex, col: index })}
             style={{
-              minHeight: "20px",
-              cursor: "cell",
-              padding: "2px 4px",
+              minHeight: '20px',
+              cursor: 'cell',
+              padding: '2px 4px',
             }}
           >
-            {typeof value === "string" && value.startsWith("=") ? (
+            {typeof value === 'string' && value.startsWith('=') ? (
               <span
                 style={{
-                  color: "#2563eb",
-                  fontFamily: "monospace",
+                  color: '#2563eb',
+                  fontFamily: 'monospace',
                 }}
               >
                 {value}
@@ -285,47 +271,47 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
 
   const toolbarMenuItems = [
     {
-      key: "insert-row",
-      label: "Insert Row",
-      icon: <PlusOutlined />,
+      key: 'insert-row',
+      label: 'Insert Row',
+      icon: <i className="ri-add-line" />,
     },
     {
-      key: "insert-column",
-      label: "Insert Column",
-      icon: <PlusOutlined />,
+      key: 'insert-column',
+      label: 'Insert Column',
+      icon: <i className="ri-add-line" />,
     },
     {
-      key: "delete-row",
-      label: "Delete Row",
-      icon: <MinusOutlined />,
+      key: 'delete-row',
+      label: 'Delete Row',
+      icon: <i className="ri-subtract-line" />,
     },
     {
-      key: "delete-column",
-      label: "Delete Column",
-      icon: <MinusOutlined />,
+      key: 'delete-column',
+      label: 'Delete Column',
+      icon: <i className="ri-subtract-line" />,
     },
   ];
 
   const formatMenuItems = [
     {
-      key: "bold",
-      label: "Bold",
-      icon: <BoldOutlined />,
+      key: 'bold',
+      label: 'Bold',
+      icon: <i className="ri-bold" />,
     },
     {
-      key: "italic",
-      label: "Italic",
-      icon: <ItalicOutlined />,
+      key: 'italic',
+      label: 'Italic',
+      icon: <i className="ri-italic" />,
     },
     {
-      key: "currency",
-      label: "Currency",
-      icon: <DollarOutlined />,
+      key: 'currency',
+      label: 'Currency',
+      icon: <i className="ri-money-dollar-circle-line" />,
     },
     {
-      key: "percentage",
-      label: "Percentage",
-      icon: <PercentageOutlined />,
+      key: 'percentage',
+      label: 'Percentage',
+      icon: <i className="ri-percent-line" />,
     },
   ];
 
@@ -334,37 +320,41 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
       {/* Sheet Toolbar */}
       <SheetToolbar>
         <ToolbarSection>
-          <Dropdown menu={{ items: toolbarMenuItems }} trigger={["click"]}>
-            <Button size="small" icon={<PlusOutlined />}>
+          <Dropdown menu={{ items: toolbarMenuItems }} trigger={['click']}>
+            <Button size="small" icon={<i className="ri-add-line" />}>
               Insert
             </Button>
           </Dropdown>
 
-          <Dropdown menu={{ items: formatMenuItems }} trigger={["click"]}>
-            <Button size="small" icon={<BgColorsOutlined />}>
+          <Dropdown menu={{ items: formatMenuItems }} trigger={['click']}>
+            <Button size="small" icon={<i className="ri-palette-line" />}>
               Format
             </Button>
           </Dropdown>
 
-          <Button size="small" icon={<CalculatorOutlined />}>
+          <Button size="small" icon={<i className="ri-calculator-line" />}>
             Functions
           </Button>
         </ToolbarSection>
 
         <ToolbarSection>
           <Tooltip title="Sort">
-            <Button size="small" icon={<SortAscendingOutlined />} />
+            <Button size="small" icon={<i className="ri-sort-asc" />} />
           </Tooltip>
 
           <Tooltip title="Filter">
-            <Button size="small" icon={<FilterOutlined />} />
+            <Button size="small" icon={<i className="ri-filter-line" />} />
           </Tooltip>
 
           <Tooltip title="Chart">
-            <Button size="small" icon={<BarChartOutlined />} />
+            <Button size="small" icon={<i className="ri-bar-chart-line" />} />
           </Tooltip>
 
-          <Button type="primary" size="small" icon={<SaveOutlined />}>
+          <Button
+            type="primary"
+            size="small"
+            icon={<i className="ri-save-line" />}
+          >
             Save
           </Button>
         </ToolbarSection>
@@ -375,9 +365,9 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
         <CellReference>
           {selectedCell
             ? `${sheetColumns[selectedCell.col]}${selectedCell.row + 1}`
-            : "A1"}
+            : 'A1'}
         </CellReference>
-        <FunctionOutlined />
+        <i className="ri-function-line" />
         <FormulaInput
           value={formulaValue}
           onChange={(e) => setFormulaValue(e.target.value)}
@@ -393,7 +383,7 @@ export function EmbeddedSheetView({ config, isPreview = false }) {
           pagination={false}
           size="small"
           bordered
-          scroll={{ x: "max-content", y: 300 }}
+          scroll={{ x: 'max-content', y: 300 }}
           showHeader={true}
         />
       </SheetContent>

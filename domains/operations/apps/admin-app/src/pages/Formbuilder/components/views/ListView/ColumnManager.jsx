@@ -20,38 +20,7 @@ import {
   InputNumber,
   Radio,
 } from "antd";
-import {
-  FontSizeOutlined,
-  NumberOutlined,
-  DollarOutlined,
-  CalendarOutlined,
-  ClockCircleOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  DownOutlined,
-  CheckSquareOutlined,
-  UserOutlined,
-  BankOutlined,
-  StarOutlined,
-  FileOutlined,
-  PictureOutlined,
-  FileTextOutlined,
-  MenuOutlined,
-  StarTwoTone,
-  SortAscendingOutlined,
-  FilterOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  SecurityScanOutlined,
-  SettingOutlined,
-  EyeOutlined,
-  EditOutlined,
-  ExportOutlined,
-  LockOutlined,
-  AuditOutlined,
-  DragOutlined,
-  EyeInvisibleOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme";
 
@@ -320,23 +289,23 @@ export function ColumnManager({
 
   const getFieldIcon = (fieldType) => {
     const iconMap = {
-      text: FontSizeOutlined,
-      number: NumberOutlined,
-      currency: DollarOutlined,
-      date: CalendarOutlined,
-      datetime: ClockCircleOutlined,
-      email: MailOutlined,
-      phone: PhoneOutlined,
-      dropdown: DownOutlined,
-      checkbox: CheckSquareOutlined,
-      user: UserOutlined,
-      department: BankOutlined,
-      rating: StarOutlined,
-      file: FileOutlined,
-      image: PictureOutlined,
+      text: "ri-font-size",
+      number: "ri-hashtag",
+      currency: "ri-money-dollar-circle-line",
+      date: "ri-calendar-line",
+      datetime: "ri-calendar-event-line",
+      email: "ri-mail-line",
+      phone: "ri-phone-line",
+      dropdown: "ri-arrow-down-s-line",
+      checkbox: "ri-checkbox-line",
+      user: "ri-user-line",
+      department: "ri-building-line",
+      rating: "ri-star-line",
+      file: "ri-file-line",
+      image: "ri-image-line",
     };
-    const IconComponent = iconMap[fieldType] || FileTextOutlined;
-    return <IconComponent style={{ fontSize: 14 }} />;
+    const iconClass = iconMap[fieldType] || "ri-file-text-line";
+    return <i className={iconClass} style={{ fontSize: 14 }} />;
   };
 
   const getColumnTypeOptions = () => [
@@ -834,7 +803,7 @@ export function ColumnManager({
                 key: 'customization',
                 label: (
                   <Space>
-                    <StarOutlined />
+                    <i className="ri-star-line"></i>
                     Advanced Features
                   </Space>
                 ),

@@ -20,19 +20,7 @@ import {
   Tag,
   Alert
 } from 'antd';
-import {
-  SettingOutlined,
-  EyeOutlined,
-  CodeOutlined,
-  CheckCircleOutlined,
-  InfoCircleOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  FormOutlined,
-  SafetyCertificateOutlined,
-  BgColorsOutlined,
-  ToolOutlined
-} from '@ant-design/icons';
+
 import { useFormBuilder } from '../../contexts/FormBuilderContext';
 import * as S from '../../styles/components/Properties.styles';
 
@@ -103,12 +91,12 @@ const PropertiesPanel = ({
       <S.PropertiesPanelContainer>
         <S.PropertiesHeader>
           <S.HeaderTitle>
-            <SettingOutlined /> Properties
+            <i className="ri-settings-line" /> Properties
           </S.HeaderTitle>
         </S.PropertiesHeader>
         <S.EmptyState>
           <S.EmptyIcon>
-            <SettingOutlined />
+            <i className="ri-settings-line" />
           </S.EmptyIcon>
           <S.EmptyTitle>No Selection</S.EmptyTitle>
           <S.EmptyDescription>
@@ -129,7 +117,7 @@ const PropertiesPanel = ({
         key: 'basic',
         label: (
           <span>
-            <FormOutlined />
+            <i className="ri-file-text-line" />
             Basic
           </span>
         ),
@@ -165,7 +153,7 @@ const PropertiesPanel = ({
         key: 'validation',
         label: (
           <span>
-            <SafetyCertificateOutlined />
+            <i className="ri-shield-check-line" />
             Validation
           </span>
         ),
@@ -213,7 +201,7 @@ const PropertiesPanel = ({
         key: 'styling',
         label: (
           <span>
-            <BgColorsOutlined />
+            <i className="ri-palette-line" />
             Styling
           </span>
         ),
@@ -259,7 +247,7 @@ const PropertiesPanel = ({
         key: 'advanced',
         label: (
           <span>
-            <ToolOutlined />
+            <i className="ri-tools-line" />
             Advanced
           </span>
         ),
@@ -294,7 +282,7 @@ const PropertiesPanel = ({
         key: 'options',
         label: (
           <span>
-            <CodeOutlined />
+            <i className="ri-code-line" />
             Options
           </span>
         ),
@@ -321,7 +309,7 @@ const PropertiesPanel = ({
                       </Form.Item>
                       <Button
                         type="text"
-                        icon={<DeleteOutlined />}
+                        icon={<i className="ri-delete-bin-line" />}
                         onClick={() => remove(name)}
                         size="small"
                       />
@@ -331,7 +319,7 @@ const PropertiesPanel = ({
                     type="dashed"
                     onClick={() => add({ label: '', value: '' })}
                     block
-                    icon={<PlusOutlined />}
+                    icon={<i className="ri-add-line" />}
                     size="small"
                   >
                     Add Option
@@ -368,7 +356,7 @@ const PropertiesPanel = ({
         key: 'basic',
         label: (
           <span>
-            <FormOutlined />
+            <i className="ri-file-text-line" />
             Properties
           </span>
         ),
@@ -399,7 +387,7 @@ const PropertiesPanel = ({
         key: 'styling',
         label: (
           <span>
-            <BgColorsOutlined />
+            <i className="ri-palette-line" />
             Styling
           </span>
         ),
@@ -446,7 +434,7 @@ const PropertiesPanel = ({
     <S.PropertiesPanelContainer>
       <S.PropertiesHeader>
         <S.HeaderTitle>
-          <SettingOutlined /> Properties
+          <i className="ri-settings-line" /> Properties
         </S.HeaderTitle>
         <S.HeaderSubtitle>
           {isComponent && `${selectedComponent.type} Field`}

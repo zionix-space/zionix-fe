@@ -11,15 +11,7 @@ import {
   Tooltip,
   Dropdown,
 } from "antd";
-import {
-  UserOutlined,
-  DownloadOutlined,
-  DeleteOutlined,
-  CheckOutlined,
-  ReloadOutlined,
-  PlusOutlined,
-  DownOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme"; // Removed problematic import
 
@@ -187,7 +179,7 @@ export function ListViewPreview({ config, schema }) {
       case "user":
         return (
           <Space>
-            <Avatar size="small" icon={<UserOutlined style={{ fontSize: "12px" }} />} />
+            <Avatar size="small" icon={<i className="ri-user-line" style={{ fontSize: "12px" }} />} />
             {value}
           </Space>
         );
@@ -200,7 +192,7 @@ export function ListViewPreview({ config, schema }) {
 
       case "file":
         return value ? (
-          <Button type="link" size="small" icon={<DownloadOutlined style={{ fontSize: "12px" }} />}>
+          <Button type="link" size="small" icon={<i className="ri-download-line" style={{ fontSize: "12px" }} />}>
             Download
           </Button>
         ) : (
@@ -246,7 +238,7 @@ export function ListViewPreview({ config, schema }) {
       key: "export",
       label: (
         <Space>
-          <DownloadOutlined style={{ fontSize: "14px" }} />
+          <i className="ri-download-line" style={{ fontSize: "14px" }} />
           Export Selected
         </Space>
       ),
@@ -255,7 +247,7 @@ export function ListViewPreview({ config, schema }) {
       key: "delete",
       label: (
         <Space>
-          <DeleteOutlined style={{ fontSize: "14px" }} />
+          <i className="ri-delete-bin-line" style={{ fontSize: "14px" }} />
           Delete Selected
         </Space>
       ),
@@ -265,7 +257,7 @@ export function ListViewPreview({ config, schema }) {
       key: "approve",
       label: (
         <Space>
-          <CheckOutlined style={{ fontSize: "14px" }} />
+          <i className="ri-check-line" style={{ fontSize: "14px" }} />
           Approve Selected
         </Space>
       ),
@@ -291,9 +283,9 @@ export function ListViewPreview({ config, schema }) {
         </div>
 
         <Space>
-          <Button icon={<ReloadOutlined style={{ fontSize: "14px" }} />}>Refresh</Button>
-          <Button icon={<DownloadOutlined style={{ fontSize: "14px" }} />}>Export</Button>
-          <Button type="primary" icon={<PlusOutlined style={{ fontSize: "14px" }} />}>
+          <Button icon={<i className="ri-refresh-line" style={{ fontSize: "14px" }} />}>Refresh</Button>
+          <Button icon={<i className="ri-download-line" style={{ fontSize: "14px" }} />}>Export</Button>
+          <Button type="primary" icon={<i className="ri-add-line" style={{ fontSize: "14px" }} />}>
             Add Record
           </Button>
         </Space>
@@ -341,7 +333,7 @@ export function ListViewPreview({ config, schema }) {
               >
                 <Button>
                   Bulk Actions
-                  <DownOutlined style={{ fontSize: "14px" }} />
+                  <i className="ri-arrow-down-s-line" style={{ fontSize: "14px" }} />
                 </Button>
               </Dropdown>
             </Space>

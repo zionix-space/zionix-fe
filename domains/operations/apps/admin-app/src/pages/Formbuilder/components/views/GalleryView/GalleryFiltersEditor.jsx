@@ -10,11 +10,7 @@ import {
   Tag,
   Switch,
 } from "antd";
-import {
-  PlusOutlined,
-  FilterOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme";
 
@@ -264,7 +260,7 @@ export function GalleryFiltersEditor({
               <Button
                 type="primary"
                 size="small"
-                icon={<PlusOutlined style={{ fontSize: "14px" }} />}
+                icon={<i className="ri-add-line" style={{ fontSize: "14px" }} />}
                 onClick={addFilter}
                 disabled={!newFilter.field}
               >
@@ -279,7 +275,7 @@ export function GalleryFiltersEditor({
         {filters.length === 0 ? (
           <Card>
             <div style={{ textAlign: "center", padding: "16px" }}>
-              <FilterOutlined style={{ fontSize: "32px", color: "#9ca3af" }} />
+              <i className="ri-filter-line" style={{ fontSize: "32px", color: "#9ca3af" }} />
               <Text
                 type="secondary"
                 style={{ display: "block", marginTop: "8px" }}
@@ -296,7 +292,7 @@ export function GalleryFiltersEditor({
             <FilterItem key={filter.id}>
               <FilterHeader>
                 <FilterTitle>
-                  <FilterOutlined style={{ fontSize: "14px" }} />
+                  <i className="ri-filter-line" style={{ fontSize: "14px" }} />
                   <Text strong style={{ fontSize: "14px" }}>
                     {filter.label}
                   </Text>
@@ -313,7 +309,7 @@ export function GalleryFiltersEditor({
                   <Button
                     type="text"
                     size="small"
-                    icon={<DeleteOutlined style={{ fontSize: "12px" }} />}
+                    icon={<i className="ri-delete-bin-line" style={{ fontSize: "12px" }} />}
                     onClick={() => removeFilter(filter.id)}
                     danger
                   />

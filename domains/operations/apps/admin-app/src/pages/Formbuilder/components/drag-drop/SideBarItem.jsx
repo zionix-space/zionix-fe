@@ -3,104 +3,65 @@ import { useDrag } from "react-dnd";
 import { Tooltip } from "antd";
 import { SIDEBAR_ITEM } from "../../constants";
 import * as S from "../../styles/components";
-import {
-  EditOutlined,
-  FileOutlined,
-  CalculatorOutlined,
-  CalendarOutlined,
-  UnorderedListOutlined,
-  CheckCircleOutlined,
-  CheckSquareOutlined,
-  SwitcherOutlined,
-  ClockCircleOutlined,
-  SearchOutlined,
-  LinkOutlined,
-  BgColorsOutlined,
-  MessageOutlined,
-  SwapOutlined,
-  BranchesOutlined,
-  UploadOutlined,
-  PictureOutlined,
-  UserOutlined,
-  TableOutlined,
-  OrderedListOutlined,
-  PartitionOutlined,
-  LineOutlined,
-  StarOutlined,
-  TagOutlined,
-  InboxOutlined,
-  HistoryOutlined,
-  ExclamationCircleOutlined,
-  DashboardOutlined,
-  LoadingOutlined,
-  HomeOutlined,
-  MenuOutlined,
-  StepForwardOutlined,
-  MinusOutlined,
-  BorderOutlined,
-  ControlOutlined,
-  FontSizeOutlined,
-  AppstoreOutlined,
-  HolderOutlined,
-} from "@ant-design/icons";
+
 
 // Component icons mapping based on Lowcode field types using Ant Design icons
 const getComponentIcon = (type) => {
   const iconMap = {
     // Basic fields
-    input: <EditOutlined />,
-    textarea: <FileOutlined />,
-    number: <CalculatorOutlined />,
-    date: <CalendarOutlined />,
-    select: <UnorderedListOutlined />,
-    radio: <CheckCircleOutlined />,
-    checkbox: <CheckSquareOutlined />,
-    switch: <SwitcherOutlined />,
-    timepicker: <ClockCircleOutlined />,
+    input: <i className="ri-edit-line" />,
+    textarea: <i className="ri-file-text-line" />,
+    number: <i className="ri-calculator-line" />,
+    date: <i className="ri-calendar-line" />,
+    select: <i className="ri-list-unordered" />,
+    radio: <i className="ri-radio-button-line" />,
+    checkbox: <i className="ri-checkbox-line" />,
+    switch: <i className="ri-toggle-line" />,
+    timepicker: <i className="ri-time-line" />,
 
     // Advanced fields
-    autocomplete: <SearchOutlined />,
-    cascader: <LinkOutlined />,
-    colorpicker: <BgColorsOutlined />,
-    mentions: <MessageOutlined />,
-    transfer: <SwapOutlined />,
-    treeselect: <BranchesOutlined />,
+    autocomplete: <i className="ri-search-line" />,
+    cascader: <i className="ri-link" />,
+    colorpicker: <i className="ri-palette-line" />,
+    mentions: <i className="ri-message-line" />,
+    transfer: <i className="ri-arrow-left-right-line" />,
+    treeselect: <i className="ri-node-tree" />,
 
     // File & Media
-    upload: <UploadOutlined />,
-    image: <PictureOutlined />,
-    avatar: <UserOutlined />,
+    upload: <i className="ri-upload-line" />,
+    image: <i className="ri-image-line" />,
+    avatar: <i className="ri-user-line" />,
 
     // Data lookup
-    calendar: <CalendarOutlined />,
-    table: <TableOutlined />,
-    list: <OrderedListOutlined />,
-    tree: <BranchesOutlined />,
-    descriptions: <PartitionOutlined />,
+    calendar: <i className="ri-calendar-line" />,
+    table: <i className="ri-table-line" />,
+    list: <i className="ri-list-ordered" />,
+    tree: <i className="ri-node-tree" />,
+    descriptions: <i className="ri-layout-grid-line" />,
 
     // Widget
-    slider: <LineOutlined />,
-    rate: <StarOutlined />,
-    badge: <TagOutlined />,
-    carousel: <PictureOutlined />,
-    empty: <InboxOutlined />,
-    tag: <TagOutlined />,
-    timeline: <HistoryOutlined />,
-    alert: <ExclamationCircleOutlined />,
-    progress: <DashboardOutlined />,
-    skeleton: <LoadingOutlined />,
-    spin: <LoadingOutlined />,
-    breadcrumb: <HomeOutlined />,
-    menu: <MenuOutlined />,
-    pagination: <StepForwardOutlined />,
-    steps: <StepForwardOutlined />,
-    divider: <MinusOutlined />,
-    space: <BorderOutlined />,
-    button: <ControlOutlined />,
-    typography: <FontSizeOutlined />,
+    slider: <i className="ri-slider-line" />,
+    rate: <i className="ri-star-line" />,
+    badge: <i className="ri-price-tag-line" />,
+    carousel: <i className="ri-slideshow-line" />,
+    empty: <i className="ri-inbox-line" />,
+    tag: <i className="ri-price-tag-line" />,
+    timeline: <i className="ri-history-line" />,
+    alert: <i className="ri-error-warning-line" />,
+    progress: <i className="ri-dashboard-line" />,
+    skeleton: <i className="ri-loader-line" />,
+    spin: <i className="ri-loader-line" />,
+    breadcrumb: <i className="ri-home-line" />,
+    menu: <i className="ri-menu-line" />,
+    pagination: <i className="ri-skip-forward-line" />,
+    steps: <i className="ri-skip-forward-line" />,
+    divider: <i className="ri-subtract-line" />,
+    space: <i className="ri-layout-line" />,
+    button: <i className="ri-cursor-line" />,
+    typography: <i className="ri-font-size" />,
   };
 
-  return iconMap[type] || <AppstoreOutlined />;
+  return iconMap[type] || <i className="ri-apps-line" />;
 };
 
 const SideBarItem = memo(({ component }) => {
@@ -187,7 +148,7 @@ const SideBarItem = memo(({ component }) => {
             fontSize: "12px",
           }}
         >
-          <HolderOutlined />
+          <i className="ri-drag-move-line" />
         </div>
       </div>
     </Tooltip>

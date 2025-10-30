@@ -12,17 +12,7 @@ import {
   Tooltip,
   Popconfirm,
 } from "antd";
-import {
-  CheckOutlined,
-  CloseOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  UploadOutlined,
-  DownloadOutlined,
-  TableOutlined,
-  MoreOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme";
 
@@ -263,7 +253,7 @@ export function DataTableComponent({
               type="link"
               size="small"
               onClick={() => save(record.id)}
-              icon={<CheckOutlined />}
+              icon={<i className="ri-check-line"></i>}
             >
               Save
             </Button>
@@ -271,7 +261,7 @@ export function DataTableComponent({
               type="link"
               size="small"
               onClick={cancel}
-              icon={<CloseOutlined />}
+              icon={<i className="ri-close-line"></i>}
             >
               Cancel
             </Button>
@@ -283,7 +273,7 @@ export function DataTableComponent({
                 type="link"
                 size="small"
                 onClick={() => edit(record)}
-                icon={<EditOutlined />}
+                icon={<i className="ri-edit-line"></i>}
               />
             </Tooltip>
             <Popconfirm
@@ -297,7 +287,7 @@ export function DataTableComponent({
                   type="link"
                   size="small"
                   danger
-                  icon={<DeleteOutlined />}
+                  icon={<i className="ri-delete-bin-line"></i>}
                 />
               </Tooltip>
             </Popconfirm>
@@ -311,17 +301,17 @@ export function DataTableComponent({
     {
       key: "add-column",
       label: "Add Column",
-      icon: <PlusOutlined />,
+      icon: <i className="ri-add-line"></i>,
     },
     {
       key: "import",
       label: "Import Data",
-      icon: <UploadOutlined />,
+      icon: <i className="ri-upload-line"></i>,
     },
     {
       key: "export",
       label: "Export Data",
-      icon: <DownloadOutlined />,
+      icon: <i className="ri-download-line"></i>,
     },
   ];
 
@@ -330,7 +320,7 @@ export function DataTableComponent({
       <TableContainer isSelected={isSelected}>
         <TableHeader>
           <TableTitle>
-            <TableOutlined />
+            <i className="ri-table-line"></i>
             {field.label}
           </TableTitle>
 
@@ -355,7 +345,7 @@ export function DataTableComponent({
             >
               <ActionButton
                 size="small"
-                icon={<MoreOutlined />}
+                icon={<i className="ri-more-line"></i>}
               />
             </Dropdown>
 
@@ -369,7 +359,7 @@ export function DataTableComponent({
                 <ActionButton
                   size="small"
                   danger
-                  icon={<DeleteOutlined />}
+                  icon={<i className="ri-delete-bin-line"></i>}
                 />
               </Popconfirm>
             )}

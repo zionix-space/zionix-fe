@@ -1,19 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Button, Modal, Input, Form, message } from "antd";
-import {
-  EditOutlined,
-  DeleteOutlined,
-  SettingOutlined,
-  CopyOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  DragOutlined,
-  DownOutlined,
-  RightOutlined,
-  FileTextOutlined,
-  PlusOutlined,
-  TableOutlined,
-} from "@ant-design/icons";
+
 import { DropZone } from "../drag-drop";
 import { SelectableSection } from "../properties";
 import shortid from "shortid";
@@ -298,9 +285,9 @@ const FormSectionManager = ({
                       }
                     >
                       {isCollapsed ? (
-                        <RightOutlined style={{ fontSize: "12px" }} />
+                        <i className="ri-arrow-right-s-line" style={{ fontSize: "12px" }}></i>
                       ) : (
-                        <DownOutlined style={{ fontSize: "12px" }} />
+                        <i className="ri-arrow-down-s-line" style={{ fontSize: "12px" }}></i>
                       )}
                     </div>
                     <div className="section-content">
@@ -363,16 +350,16 @@ const FormSectionManager = ({
 
                   <div className="section-meta">
                     <div className="section-field-count">
-                      <FileTextOutlined style={{ fontSize: "10px" }} />
+                      <i className="ri-file-text-line" style={{ fontSize: "10px" }}></i>
                       {fieldCount} {fieldCount === 1 ? "field" : "fields"}
                     </div>
                   </div>
 
                   <div className="section-actions">
                     <div className="section-action-btn" title="Drag to reorder">
-                      <DragOutlined
+                      <i className="ri-drag-move-line"
                         style={{ fontSize: "12px", color: "#9ca3af" }}
-                      />
+                      ></i>
                     </div>
                     <div
                       className="section-action-btn"
@@ -382,7 +369,7 @@ const FormSectionManager = ({
                       }}
                       title="Section settings"
                     >
-                      <SettingOutlined style={{ fontSize: "12px" }} />
+                      <i className="ri-settings-line" style={{ fontSize: "12px" }}></i>
                     </div>
                     <div
                       className="section-action-btn"
@@ -392,7 +379,7 @@ const FormSectionManager = ({
                       }}
                       title="Edit section"
                     >
-                      <EditOutlined style={{ fontSize: "12px" }} />
+                      <i className="ri-edit-line" style={{ fontSize: "12px" }}></i>
                     </div>
                     <div
                       className="section-action-btn success"
@@ -402,7 +389,7 @@ const FormSectionManager = ({
                       }}
                       title="Copy section"
                     >
-                      <CopyOutlined style={{ fontSize: "12px" }} />
+                      <i className="ri-file-copy-line" style={{ fontSize: "12px" }}></i>
                     </div>
                     <div
                       className={`section-action-btn ${
@@ -418,7 +405,7 @@ const FormSectionManager = ({
                         cursor: sectionIndex === 0 ? "not-allowed" : "pointer",
                       }}
                     >
-                      <ArrowUpOutlined style={{ fontSize: "12px" }} />
+                      <i className="ri-arrow-up-line" style={{ fontSize: "12px" }}></i>
                     </div>
                     <div
                       className={`section-action-btn ${
@@ -438,7 +425,7 @@ const FormSectionManager = ({
                             : "pointer",
                       }}
                     >
-                      <ArrowDownOutlined style={{ fontSize: "12px" }} />
+                      <i className="ri-arrow-down-line" style={{ fontSize: "12px" }}></i>
                     </div>
                     <div
                       className="section-action-btn danger"
@@ -448,7 +435,7 @@ const FormSectionManager = ({
                       }}
                       title="Delete section"
                     >
-                      <DeleteOutlined style={{ fontSize: "12px" }} />
+                      <i className="ri-delete-bin-line" style={{ fontSize: "12px" }}></i>
                     </div>
                   </div>
                 </FB.SectionHeader>
@@ -535,7 +522,7 @@ const FormSectionManager = ({
                     className="action-button"
                     type="text"
                     onClick={() => setAddSectionModalVisible(true)}
-                    icon={<PlusOutlined style={{ fontSize: "12px" }} />}
+                    icon={<i className="ri-add-line" style={{ fontSize: "12px" }}></i>}
                   >
                     Add Section
                   </Button>
@@ -543,7 +530,7 @@ const FormSectionManager = ({
                     className="action-button"
                     type="text"
                     onClick={() => handleViewManagerOpen(section.id)}
-                    icon={<TableOutlined style={{ fontSize: "12px" }} />}
+                    icon={<i className="ri-table-line" style={{ fontSize: "12px" }}></i>}
                   >
                     Add View
                   </Button>

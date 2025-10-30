@@ -1,10 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { Button, Spin } from "antd";
-import {
-  DownloadOutlined,
-  UploadOutlined,
-  FileOutlined,
-} from "@ant-design/icons";
+
 import * as S from "../../styles";
 
 // Lazy load FormRenderer for better performance
@@ -33,19 +29,19 @@ const FormPreviewTab = ({
         <h3>Form Preview</h3>
         <div style={{ display: "flex", gap: "8px" }}>
           {/* View JSON button - opens modal to display current schema */}
-          <Button icon={<FileOutlined />} onClick={handleViewJSON}>
+          <Button icon={<i className="ri-file-text-line"></i>} onClick={handleViewJSON}>
             View JSON
           </Button>
 
           {/* Import JSON button - opens modal to import schema */}
-          <Button icon={<UploadOutlined />} onClick={handleImportJSON}>
+          <Button icon={<i className="ri-upload-line"></i>} onClick={handleImportJSON}>
             Import JSON
           </Button>
 
           {/* Export JSON button - downloads current schema */}
           <Button
             type="primary"
-            icon={<DownloadOutlined />}
+            icon={<i className="ri-download-line"></i>}
             onClick={handleExportJSON}
           >
             Export JSON

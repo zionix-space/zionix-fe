@@ -12,15 +12,7 @@ import {
   Card,
   Badge,
 } from "antd";
-import {
-  UserOutlined,
-  EyeOutlined,
-  ReloadOutlined,
-  DownloadOutlined,
-  PlusOutlined,
-  AppstoreOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme";
 
@@ -357,7 +349,7 @@ export function GalleryPreview({ config, schema }) {
       case "avatar":
         return (
           <Space>
-            <Avatar size="small" icon={<UserOutlined />} />
+            <Avatar size="small" icon={<i className="ri-user-line" />} />
             {value}
           </Space>
         );
@@ -419,7 +411,7 @@ export function GalleryPreview({ config, schema }) {
             .map((action) => {
               return (
                 <OverlayButton key={action.id} size="small">
-                  <EyeOutlined />
+                  <i className="ri-eye-line" />
                 </OverlayButton>
               );
             })}
@@ -468,9 +460,9 @@ export function GalleryPreview({ config, schema }) {
         </div>
 
         <Space>
-          <Button icon={<ReloadOutlined />}>Refresh</Button>
-          <Button icon={<DownloadOutlined />}>Export</Button>
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button icon={<i className="ri-refresh-line" />}>Refresh</Button>
+          <Button icon={<i className="ri-download-line" />}>Export</Button>
+          <Button type="primary" icon={<i className="ri-add-line" />}>
             Add Item
           </Button>
         </Space>
@@ -522,8 +514,8 @@ export function GalleryPreview({ config, schema }) {
               </Select>
             )}
 
-            <Button icon={<AppstoreOutlined />} />
-            <Button icon={<UnorderedListOutlined />} />
+            <Button icon={<i className="ri-apps-line" />} />
+            <Button icon={<i className="ri-list-unordered" />} />
           </Space>
         </GalleryToolbar>
       )}

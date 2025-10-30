@@ -1,18 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { Button, Spin, Tooltip } from "antd";
-import {
-  FileTextOutlined,
-  PlusOutlined,
-  UndoOutlined,
-  RedoOutlined,
-  EyeOutlined,
-  SaveOutlined,
-  DownloadOutlined,
-  UploadOutlined,
-  ExpandOutlined,
-  CompressOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+
 import { TrashDropZone } from "../drag-drop";
 import FormSectionManager from "../form/FormSectionManager";
 import ComponentPaletteSidebar from "../sidebar/ComponentPaletteSidebar";

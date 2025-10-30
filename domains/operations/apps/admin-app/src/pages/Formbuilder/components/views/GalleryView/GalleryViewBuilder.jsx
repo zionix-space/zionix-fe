@@ -10,11 +10,7 @@ import { CardTemplateEditor } from "./CardTemplateEditor";
 import { GalleryLayoutEditor } from "./GalleryLayoutEditor";
 import { GalleryFiltersEditor } from "./GalleryFiltersEditor";
 import { Button, Tabs, Card, Space, Typography, Input, Select } from "antd";
-import {
-  LayoutOutlined,
-  AppstoreOutlined,
-  FilterOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme";
 
@@ -253,7 +249,7 @@ export function GalleryViewBuilder({ schema, onSave, onClose }) {
       key: "template",
       label: (
         <Space>
-          <LayoutOutlined />
+          <i className="ri-layout-line" />
           Card Template
         </Space>
       ),
@@ -271,7 +267,7 @@ export function GalleryViewBuilder({ schema, onSave, onClose }) {
       key: "layout",
       label: (
         <Space>
-          <AppstoreOutlined />
+          <i className="ri-apps-line" />
           Layout
         </Space>
       ),
@@ -288,7 +284,7 @@ export function GalleryViewBuilder({ schema, onSave, onClose }) {
       key: "filters",
       label: (
         <Space>
-          <FilterOutlined />
+          <i className="ri-filter-line" />
           Filters
         </Space>
       ),

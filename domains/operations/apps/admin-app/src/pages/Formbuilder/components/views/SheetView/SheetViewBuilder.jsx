@@ -9,10 +9,7 @@ import { SheetViewPreview } from "./SheetViewPreview";
 import { SheetColumnsEditor } from "./SheetColumnsEditor";
 import { SheetSettingsEditor } from "./SheetSettingsEditor";
 import { Button, Tabs, Card, Space, Typography, Input, Select } from "antd";
-import {
-  TableOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme"; // Removed problematic import
 
@@ -248,7 +245,7 @@ export function SheetViewBuilder({
       key: "columns",
       label: (
         <Space>
-          <TableOutlined style={{ fontSize: 16 }} />
+          <i className="ri-table-line" style={{ fontSize: 16 }} />
           Columns
         </Space>
       ),
@@ -266,7 +263,7 @@ export function SheetViewBuilder({
       key: "settings",
       label: (
         <Space>
-          <SettingOutlined style={{ fontSize: 16 }} />
+          <i className="ri-settings-line" style={{ fontSize: 16 }} />
           Settings
         </Space>
       ),

@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Avatar, Tag, Space, Button } from "antd";
-import { AppstoreOutlined, UnorderedListOutlined, PlusOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme"; // Removed problematic import
 
@@ -116,11 +116,11 @@ export function EmbeddedGalleryView({
     <GalleryContainer>
       <GalleryToolbar>
         <Space>
-          <Button size="small" icon={<AppstoreOutlined style={{ fontSize: 14 }} />} />
-          <Button size="small" icon={<UnorderedListOutlined style={{ fontSize: 14 }} />} />
+          <Button size="small" icon={<i className="ri-apps-line" style={{ fontSize: 14 }} />} />
+          <Button size="small" icon={<i className="ri-list-unordered" style={{ fontSize: 14 }} />} />
         </Space>
 
-        <Button type="primary" size="small" icon={<PlusOutlined style={{ fontSize: 14 }} />}>
+        <Button type="primary" size="small" icon={<i className="ri-add-line" style={{ fontSize: 14 }} />}>
           Add Item
         </Button>
       </GalleryToolbar>
@@ -152,13 +152,13 @@ export function EmbeddedGalleryView({
                 <Button
                   type="text"
                   size="small"
-                  icon={<EyeOutlined style={{ fontSize: 12 }} />}
+                  icon={<i className="ri-eye-line" style={{ fontSize: 12 }} />}
                   style={{ padding: "0", height: "auto" }}
                 />
                 <Button
                   type="text"
                   size="small"
-                  icon={<EditOutlined style={{ fontSize: 12 }} />}
+                  icon={<i className="ri-edit-line" style={{ fontSize: 12 }} />}
                   style={{ padding: "0", height: "auto" }}
                 />
               </Space>

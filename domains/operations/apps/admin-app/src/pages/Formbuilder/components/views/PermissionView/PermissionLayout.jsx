@@ -15,19 +15,7 @@ import {
   Tag,
   Segmented,
 } from "antd";
-import {
-  EditOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
-  FileTextOutlined,
-  TeamOutlined,
-  CopyOutlined,
-  ThunderboltOutlined,
-  PlusOutlined,
-  UserAddOutlined,
-  DeleteOutlined,
-  LinkOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 import { theme } from "../../../../styles/theme";
 
@@ -276,9 +264,9 @@ export function PermissionLayout({ schema }) {
   ];
 
   const permissionTypes = [
-    { id: "editable", name: "Editable", icon: <EditOutlined /> },
-    { id: "readonly", name: "Read-only", icon: <EyeOutlined /> },
-    { id: "hidden", name: "Hidden", icon: <EyeInvisibleOutlined /> },
+    { id: "editable", name: "Editable", icon: <i className="ri-edit-line"></i> },
+    { id: "readonly", name: "Read-only", icon: <i className="ri-eye-line"></i> },
+    { id: "hidden", name: "Hidden", icon: <i className="ri-eye-off-line"></i> },
   ];
 
   // Render a field with permission controls
@@ -298,17 +286,17 @@ export function PermissionLayout({ schema }) {
           <Radio.Group defaultValue="editable" size="small" buttonStyle="solid">
             <Tooltip title="Editable">
               <Radio.Button value="editable">
-                <EditOutlined />
+                <i className="ri-edit-line"></i>
               </Radio.Button>
             </Tooltip>
             <Tooltip title="Read-only">
               <Radio.Button value="readonly">
-                <EyeOutlined />
+                <i className="ri-eye-line"></i>
               </Radio.Button>
             </Tooltip>
             <Tooltip title="Hidden">
               <Radio.Button value="hidden">
-                <EyeInvisibleOutlined />
+                <i className="ri-eye-off-line"></i>
               </Radio.Button>
             </Tooltip>
           </Radio.Group>
@@ -446,17 +434,17 @@ export function PermissionLayout({ schema }) {
           <Radio.Group defaultValue="editable" size="small" buttonStyle="solid">
             <Tooltip title="All Editable">
               <Radio.Button value="editable">
-                <EditOutlined />
+                <i className="ri-edit-line"></i>
               </Radio.Button>
             </Tooltip>
             <Tooltip title="All Read-only">
               <Radio.Button value="readonly">
-                <EyeOutlined />
+                <i className="ri-eye-line"></i>
               </Radio.Button>
             </Tooltip>
             <Tooltip title="All Hidden">
               <Radio.Button value="hidden">
-                <EyeInvisibleOutlined />
+                <i className="ri-eye-off-line"></i>
               </Radio.Button>
             </Tooltip>
           </Radio.Group>
@@ -485,7 +473,7 @@ export function PermissionLayout({ schema }) {
       key: "field",
       label: (
         <span>
-          <FileTextOutlined style={{ marginRight: "8px" }} />
+          <i className="ri-file-text-line" style={{ marginRight: "8px" }}></i>
           Field Permissions
         </span>
       ),
@@ -525,7 +513,7 @@ export function PermissionLayout({ schema }) {
                 {roles.map((role) => (
                   <Option key={role.id} value={role.id}>
                     <Space>
-                      <TeamOutlined />
+                      <i className="ri-team-line"></i>
                       {role.name}
                     </Space>
                   </Option>
@@ -538,12 +526,12 @@ export function PermissionLayout({ schema }) {
             <FormPreviewHeader>
               <FormPreviewTitle>
                 <Space>
-                  <FileTextOutlined />
+                  <i className="ri-file-text-line"></i>
                   {schema.title}
                 </Space>
               </FormPreviewTitle>
               <Space>
-                <Button size="small" icon={<CopyOutlined />}>
+                <Button size="small" icon={<i className="ri-file-copy-line"></i>}>
                   Copy from
                 </Button>
                 <Select defaultValue="all" style={{ width: 120 }} size="small">
@@ -579,7 +567,7 @@ export function PermissionLayout({ schema }) {
       key: "action",
       label: (
         <span>
-          <ThunderboltOutlined style={{ marginRight: "8px" }} />
+          <i className="ri-flashlight-line" style={{ marginRight: "8px" }}></i>
           Action Permissions
         </span>
       ),
@@ -672,7 +660,7 @@ export function PermissionLayout({ schema }) {
       key: "role",
       label: (
         <span>
-          <TeamOutlined style={{ marginRight: "8px" }} />
+          <i className="ri-team-line" style={{ marginRight: "8px" }}></i>
           Role Management
         </span>
       ),
@@ -700,7 +688,7 @@ export function PermissionLayout({ schema }) {
                 Manage roles and their permissions for this form.
               </p>
             </div>
-            <Button type="primary" icon={<PlusOutlined />}>
+            <Button type="primary" icon={<i className="ri-add-line"></i>}>
               Add Role
             </Button>
           </div>
@@ -756,14 +744,14 @@ export function PermissionLayout({ schema }) {
                 >
                   <td style={{ padding: "12px 16px" }}>
                     <Space>
-                      <TeamOutlined />
+                      <i className="ri-team-line"></i>
                       {role.name}
                       {role.id === "admin" && <Tag color="blue">Default</Tag>}
                     </Space>
                   </td>
                   <td style={{ padding: "12px 16px" }}>{role.description}</td>
                   <td style={{ padding: "12px 16px" }}>
-                    <Button size="small" icon={<UserAddOutlined />}>
+                    <Button size="small" icon={<i className="ri-user-add-line"></i>}>
                       Assign Users
                     </Button>
                   </td>
@@ -772,13 +760,13 @@ export function PermissionLayout({ schema }) {
                       <Button
                         type="text"
                         size="small"
-                        icon={<EditOutlined />}
+                        icon={<i className="ri-edit-line"></i>}
                         disabled={role.id === "admin"}
                       />
                       <Button
                         type="text"
                         size="small"
-                        icon={<DeleteOutlined />}
+                        icon={<i className="ri-delete-bin-line"></i>}
                         danger
                         disabled={role.id === "admin"}
                       />
@@ -824,7 +812,7 @@ export function PermissionLayout({ schema }) {
               </QuickHelpText>
               <ReadMoreLink href="#">
                 Read more
-                <LinkOutlined />
+                <i className="ri-link"></i>
               </ReadMoreLink>
             </QuickHelpItem>
 
@@ -838,7 +826,7 @@ export function PermissionLayout({ schema }) {
               </QuickHelpText>
               <ReadMoreLink href="#">
                 Read more
-                <LinkOutlined />
+                <i className="ri-link"></i>
               </ReadMoreLink>
             </QuickHelpItem>
           </QuickHelp>

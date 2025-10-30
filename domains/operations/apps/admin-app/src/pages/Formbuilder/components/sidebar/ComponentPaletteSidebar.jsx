@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import { SIDEBAR_ITEMS } from "../../constants";
 import SideBarItem from "../drag-drop/SideBarItem";
 
@@ -226,7 +225,7 @@ const ComponentPaletteSidebar = () => {
         <Input
           placeholder="Search a field type here"
           prefix={
-            <SearchOutlined style={{ color: "#718096", fontSize: "14px" }} />
+            <i className="ri-search-line" style={{ color: "#718096", fontSize: "14px" }} />
           }
           value={searchTerm}
           onChange={handleSearchChange}

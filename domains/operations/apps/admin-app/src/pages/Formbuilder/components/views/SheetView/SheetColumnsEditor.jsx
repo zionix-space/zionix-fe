@@ -10,30 +10,7 @@ import {
   Typography,
   Tooltip,
 } from "antd";
-import {
-  FontSizeOutlined,
-  NumberOutlined,
-  DollarOutlined,
-  CalendarOutlined,
-  ClockCircleOutlined,
-  SwitcherOutlined,
-  DownOutlined,
-  UnorderedListOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  LinkOutlined,
-  CalculatorOutlined,
-  SearchOutlined,
-  PaperClipOutlined,
-  UserOutlined,
-  TagOutlined,
-  FileTextOutlined,
-  PlusOutlined,
-  HolderOutlined,
-  StarOutlined,
-  LockOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // import { theme } from "../../../../styles/theme"; // Removed problematic import
 
@@ -164,26 +141,26 @@ export function SheetColumnsEditor({
 
   const getColumnTypeIcon = (type) => {
     const iconMap = {
-      text: FontSizeOutlined,
-      number: NumberOutlined,
-      currency: DollarOutlined,
-      date: CalendarOutlined,
-      datetime: ClockCircleOutlined,
-      time: ClockCircleOutlined,
-      boolean: SwitcherOutlined,
-      dropdown: DownOutlined,
-      multiselect: UnorderedListOutlined,
-      email: MailOutlined,
-      phone: PhoneOutlined,
-      url: LinkOutlined,
-      formula: CalculatorOutlined,
-      lookup: SearchOutlined,
-      attachment: PaperClipOutlined,
-      user: UserOutlined,
-      status: TagOutlined,
+      text: "ri-font-size",
+      number: "ri-hashtag",
+      currency: "ri-money-dollar-circle-line",
+      date: "ri-calendar-line",
+      datetime: "ri-calendar-event-line",
+      time: "ri-time-line",
+      boolean: "ri-toggle-line",
+      dropdown: "ri-arrow-down-s-line",
+      multiselect: "ri-list-check",
+      email: "ri-mail-line",
+      phone: "ri-phone-line",
+      url: "ri-link",
+      formula: "ri-calculator-line",
+      lookup: "ri-search-line",
+      attachment: "ri-attachment-line",
+      user: "ri-user-line",
+      status: "ri-price-tag-3-line",
     };
-    const IconComponent = iconMap[type] || FileTextOutlined;
-    return <IconComponent style={{ fontSize: 14 }} />;
+    const iconClass = iconMap[type] || "ri-file-text-line";
+    return <i className={iconClass} style={{ fontSize: 14 }} />;
   };
 
   const getColumnTypeOptions = () => [
@@ -364,7 +341,7 @@ export function SheetColumnsEditor({
                     <Button
                       size="small"
                       type={column.required ? "primary" : "default"}
-                      icon={<StarOutlined style={{ fontSize: 10 }} />}
+                      icon={<i className="ri-star-line" style={{ fontSize: 10 }} />}
                       onClick={() =>
                         updateColumn(column.id, { required: !column.required })
                       }
@@ -375,7 +352,7 @@ export function SheetColumnsEditor({
                     <Button
                       size="small"
                       type={column.frozen ? "primary" : "default"}
-                      icon={<LockOutlined style={{ fontSize: 10 }} />}
+                      icon={<i className="ri-lock-line" style={{ fontSize: 10 }} />}
                       onClick={() =>
                         updateColumn(column.id, { frozen: !column.frozen })
                       }

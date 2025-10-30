@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Typography } from "antd";
-import { AppstoreOutlined, UnorderedListOutlined, TableOutlined } from "@ant-design/icons";
+
 
 const { Text } = Typography;
 
@@ -18,7 +18,7 @@ const ViewComponents = ({ component, commonProps }) => {
           size="small"
           title={
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <AppstoreOutlined style={{ color: "#1890ff" }} />
+              <i className="ri-apps-line" style={{ color: "#1890ff" }} />
               <Text strong>Gallery View</Text>
             </div>
           }
@@ -51,7 +51,7 @@ const ViewComponents = ({ component, commonProps }) => {
           size="small"
           title={
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <UnorderedListOutlined style={{ color: "#52c41a" }} />
+              <i className="ri-list-unordered" style={{ color: "#52c41a" }} />
               <Text strong>List View</Text>
             </div>
           }
@@ -80,7 +80,7 @@ const ViewComponents = ({ component, commonProps }) => {
           size="small"
           title={
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <TableOutlined style={{ color: "#fa8c16" }} />
+              <i className="ri-table-line" style={{ color: "#fa8c16" }} />
               <Text strong>Sheet View</Text>
             </div>
           }
@@ -123,7 +123,7 @@ const ViewComponents = ({ component, commonProps }) => {
                 size="small"
                 title={
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <AppstoreOutlined style={{ color: "#1890ff" }} />
+                    <i className="ri-apps-line" style={{ color: "#1890ff" }} />
                     <Text strong>{component.label || "Gallery View"}</Text>
                   </div>
                 }
@@ -155,7 +155,7 @@ const ViewComponents = ({ component, commonProps }) => {
                 size="small"
                 title={
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <UnorderedListOutlined style={{ color: "#52c41a" }} />
+                    <i className="ri-list-unordered" style={{ color: "#52c41a" }} />
                     <Text strong>{component.label || "List View"}</Text>
                   </div>
                 }
@@ -183,7 +183,7 @@ const ViewComponents = ({ component, commonProps }) => {
                 size="small"
                 title={
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <TableOutlined style={{ color: "#fa8c16" }} />
+                    <i className="ri-table-line" style={{ color: "#fa8c16" }} />
                     <Text strong>{component.label || "Sheet View"}</Text>
                   </div>
                 }
@@ -226,7 +226,7 @@ const ViewComponents = ({ component, commonProps }) => {
           size="small"
           title={
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <AppstoreOutlined style={{ color: "#722ed1" }} />
+              <i className="ri-apps-line" style={{ color: "#722ed1" }} />
               <Text strong>{component.label || "Embedded View"}</Text>
             </div>
           }
@@ -240,7 +240,7 @@ const ViewComponents = ({ component, commonProps }) => {
             border: "2px dashed #d9d9d9",
             borderRadius: "4px"
           }}>
-            <AppstoreOutlined style={{ fontSize: "24px", marginBottom: "8px", color: "#722ed1" }} />
+            <i className="ri-apps-line" style={{ fontSize: "24px", marginBottom: "8px", color: "#722ed1" }} />
             <div style={{ fontSize: "14px", fontWeight: "500" }}>
               {component.label || "Embedded View"}
             </div>

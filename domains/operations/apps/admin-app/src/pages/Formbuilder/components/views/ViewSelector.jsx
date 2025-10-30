@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Empty, Input, Space, Typography, Tag, Tooltip } from "antd";
-import {
-  ArrowLeftOutlined,
-  SearchOutlined,
-  PlusOutlined,
-  TableOutlined,
-  AppstoreOutlined,
-  UnorderedListOutlined,
-  SafetyOutlined,
-  EyeOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 
 const { Title, Text } = Typography;
@@ -122,22 +112,22 @@ const ViewSelector = ({ onBack, onSelectView, onCreateView, onEditView, availabl
 
   const viewTypes = {
     gallery: {
-      icon: <AppstoreOutlined />,
+      icon: <i className="ri-apps-line" />,
       name: "Gallery View",
       description: "Card-based layout perfect for visual content",
     },
     list: {
-      icon: <UnorderedListOutlined />,
+      icon: <i className="ri-list-unordered" />,
       name: "List View",
       description: "Table format ideal for structured data",
     },
     sheet: {
-      icon: <TableOutlined />,
+      icon: <i className="ri-table-line" />,
       name: "Sheet View",
       description: "Spreadsheet-style interface for data manipulation",
     },
     permission: {
-      icon: <SafetyOutlined />,
+      icon: <i className="ri-shield-check-line" />,
       name: "Permission View",
       description: "Manage user permissions and access controls",
     },
@@ -161,7 +151,7 @@ const ViewSelector = ({ onBack, onSelectView, onCreateView, onEditView, availabl
       <HeaderSection>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <BackButton onClick={onBack}>
-            <ArrowLeftOutlined />
+            <i className="ri-arrow-left-line" />
             Back to Form Builder
           </BackButton>
           <div>
@@ -171,7 +161,7 @@ const ViewSelector = ({ onBack, onSelectView, onCreateView, onEditView, availabl
         </div>
         <Search
           placeholder="Search views..."
-          prefix={<SearchOutlined />}
+          prefix={<i className="ri-search-line" />}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ width: 300 }}

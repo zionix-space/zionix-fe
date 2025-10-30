@@ -10,21 +10,7 @@ import {
   Divider,
   ColorPicker,
 } from "antd";
-import {
-  FontSizeOutlined,
-  AlignLeftOutlined,
-  PictureOutlined,
-  UserOutlined,
-  TagOutlined,
-  CalendarOutlined,
-  StarOutlined,
-  TagsOutlined,
-  InfoCircleOutlined,
-  FileTextOutlined,
-  MenuOutlined,
-  DeleteOutlined,
-  LayoutOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 // // import { theme } from "../../../../styles/theme"; // Removed problematic import
 
@@ -244,19 +230,19 @@ export function CardTemplateEditor({
 
   const getFieldIcon = (fieldType) => {
     const iconMap = {
-      title: FontSizeOutlined,
-      subtitle: FontSizeOutlined,
-      description: AlignLeftOutlined,
-      image: PictureOutlined,
-      avatar: UserOutlined,
-      status: TagOutlined,
-      date: CalendarOutlined,
-      rating: StarOutlined,
-      tags: TagsOutlined,
-      metadata: InfoCircleOutlined,
+      title: "ri-font-size",
+      subtitle: "ri-font-size",
+      description: "ri-align-left",
+      image: "ri-image-line",
+      avatar: "ri-user-line",
+      status: "ri-price-tag-3-line",
+      date: "ri-calendar-line",
+      rating: "ri-star-line",
+      tags: "ri-price-tag-3-line",
+      metadata: "ri-information-line",
     };
-    const IconComponent = iconMap[fieldType] || FileTextOutlined;
-    return <IconComponent />;
+    const iconClass = iconMap[fieldType] || "ri-file-text-line";
+    return <i className={iconClass} />;
   };
 
   const handleDragStart = (fieldId) => {
@@ -425,7 +411,7 @@ export function CardTemplateEditor({
         {template.fields.length === 0 ? (
           <Card>
             <div style={{ textAlign: "center", padding: "16px" }}>
-              <LayoutOutlined style={{ fontSize: "32px", color: "#9ca3af" }} />
+              <i className="ri-layout-line" style={{ fontSize: "32px", color: "#9ca3af" }} />
               <Text
                 type="secondary"
                 style={{ display: "block", marginTop: "8px" }}
@@ -449,7 +435,7 @@ export function CardTemplateEditor({
             >
               <FieldHeader>
                 <FieldTitle>
-                  <MenuOutlined style={{ color: "#9ca3af" }} />
+                  <i className="ri-menu-line" style={{ color: "#9ca3af" }} />
                   {getFieldIcon(field.type)}
                   <Text strong style={{ fontSize: "14px" }}>
                     {field.label}
@@ -467,7 +453,7 @@ export function CardTemplateEditor({
                   <Button
                     type="text"
                     size="small"
-                    icon={<DeleteOutlined />}
+                    icon={<i className="ri-delete-bin-line" />}
                     onClick={() => removeField(field.id)}
                     danger
                   />

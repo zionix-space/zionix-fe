@@ -9,25 +9,7 @@ import {
   Dropdown,
   Menu,
 } from "antd";
-import {
-  PlusOutlined,
-  MinusOutlined,
-  BoldOutlined,
-  ItalicOutlined,
-  DollarOutlined,
-  PercentageOutlined,
-  CalendarOutlined,
-  ReloadOutlined,
-  DownloadOutlined,
-  SaveOutlined,
-  BgColorsOutlined,
-  CalculatorOutlined,
-  BarChartOutlined,
-  SortAscendingOutlined,
-  FilterOutlined,
-  LockOutlined,
-  FunctionOutlined,
-} from "@ant-design/icons";
+
 import styled from "styled-components";
 
 const { Search } = Input;
@@ -330,27 +312,27 @@ export function SheetViewPreview({ config, schema }) {
     {
       key: "insert-row",
       label: "Insert Row Above",
-      icon: React.createElement(PlusOutlined),
+      icon: <i className="ri-add-line" />,
     },
     {
       key: "insert-row-below",
       label: "Insert Row Below",
-      icon: React.createElement(PlusOutlined),
+      icon: <i className="ri-add-line" />,
     },
     {
       key: "insert-column",
       label: "Insert Column",
-      icon: React.createElement(PlusOutlined),
+      icon: <i className="ri-add-line" />,
     },
     {
       key: "delete-row",
       label: "Delete Row",
-      icon: React.createElement(MinusOutlined),
+      icon: <i className="ri-subtract-line" />,
     },
     {
       key: "delete-column",
       label: "Delete Column",
-      icon: React.createElement(MinusOutlined),
+      icon: <i className="ri-subtract-line" />,
     },
   ];
 
@@ -358,27 +340,27 @@ export function SheetViewPreview({ config, schema }) {
     {
       key: "bold",
       label: "Bold",
-      icon: React.createElement(BoldOutlined),
+      icon: <i className="ri-bold" />,
     },
     {
       key: "italic",
       label: "Italic",
-      icon: React.createElement(ItalicOutlined),
+      icon: <i className="ri-italic" />,
     },
     {
       key: "currency",
       label: "Currency Format",
-      icon: React.createElement(DollarOutlined),
+      icon: <i className="ri-money-dollar-circle-line" />,
     },
     {
       key: "percentage",
       label: "Percentage Format",
-      icon: React.createElement(PercentageOutlined),
+      icon: <i className="ri-percent-line" />,
     },
     {
       key: "date",
       label: "Date Format",
-      icon: React.createElement(CalendarOutlined),
+      icon: <i className="ri-calendar-line" />,
     },
   ];
 
@@ -401,9 +383,9 @@ export function SheetViewPreview({ config, schema }) {
         </div>
 
         <Space>
-          <Button icon={<ReloadOutlined />}>Refresh</Button>
-          <Button icon={<DownloadOutlined />}>Export</Button>
-          <Button type="primary" icon={<SaveOutlined />}>
+          <Button icon={<i className="ri-refresh-line" />}>Refresh</Button>
+          <Button icon={<i className="ri-download-line" />}>Export</Button>
+          <Button type="primary" icon={<i className="ri-save-line" />}>
             Save
           </Button>
         </Space>
@@ -413,37 +395,37 @@ export function SheetViewPreview({ config, schema }) {
       <SheetToolbar>
         <Space>
           <Dropdown menu={{ items: toolbarMenuItems }} trigger={["click"]}>
-            <Button size="small" icon={<PlusOutlined />}>
+            <Button size="small" icon={<i className="ri-add-line" />}>
               Insert
             </Button>
           </Dropdown>
 
           <Dropdown menu={{ items: formatMenuItems }} trigger={["click"]}>
-            <Button size="small" icon={<BgColorsOutlined />}>
+            <Button size="small" icon={<i className="ri-palette-line" />}>
               Format
             </Button>
           </Dropdown>
 
-          <Button size="small" icon={<CalculatorOutlined />}>
+          <Button size="small" icon={<i className="ri-calculator-line" />}>
             Functions
           </Button>
 
-          <Button size="small" icon={<BarChartOutlined />}>
+          <Button size="small" icon={<i className="ri-bar-chart-line" />}>
             Chart
           </Button>
         </Space>
 
         <Space>
           <Tooltip title="Sort">
-            <Button size="small" icon={<SortAscendingOutlined />} />
+            <Button size="small" icon={<i className="ri-sort-asc" />} />
           </Tooltip>
 
           <Tooltip title="Filter">
-            <Button size="small" icon={<FilterOutlined />} />
+            <Button size="small" icon={<i className="ri-filter-line" />} />
           </Tooltip>
 
           <Tooltip title="Freeze Panes">
-            <Button size="small" icon={<LockOutlined />} />
+            <Button size="small" icon={<i className="ri-lock-line" />} />
           </Tooltip>
         </Space>
       </SheetToolbar>
