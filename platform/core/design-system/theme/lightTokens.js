@@ -44,11 +44,23 @@ export const generateLightTokens = (primaryColor) => {
     colorBgSpotlight: colorUtils.mix(primaryColor, '#ffffff', 0.97), // Subtle highlight with primary tint
     colorBgMask: colorUtils.addAlpha('#000000', 0.45), // Overlay backgrounds
 
+    // Essential text colors for light theme
+    colorText: 'rgba(0, 0, 0, 0.88)', // Primary text color
+    colorTextBase: 'rgba(0, 0, 0, 0.88)', // Base text color
+    colorTextHeading: 'rgba(0, 0, 0, 0.88)', // Heading text color
+    colorTextLabel: 'rgba(0, 0, 0, 0.88)', // Label text color
+    colorTextDescription: 'rgba(0, 0, 0, 0.65)', // Description text
+    colorTextDisabled: 'rgba(0, 0, 0, 0.25)', // Disabled text
+    colorTextPlaceholder: 'rgba(0, 0, 0, 0.25)', // Placeholder text
+
+    // Essential border colors for light theme
+    colorBorder: 'rgba(0, 0, 0, 0.15)', // Primary border color
+    colorBorderSecondary: 'rgba(0, 0, 0, 0.06)', // Secondary border color
+
     // Dynamic semantic tokens based on primary color
-    colorBorderSecondary: colorUtils.mix(primaryColor, '#f0f0f0', 0.95), // Subtle primary tint in borders
     colorTextSecondary: colorUtils.mix(primaryColor, '#666666', 0.85), // Subtle primary tint in secondary text
     colorWhite: '#ffffff',
-    colorTextLightSolid: colorUtils.addAlpha('#444141ff', 0.9), // Dark text for light backgrounds (tooltips)
+    // colorTextLightSolid removed - using global CSS for tooltips
 
     // Success colors
     colorSuccess: '#52c41a',

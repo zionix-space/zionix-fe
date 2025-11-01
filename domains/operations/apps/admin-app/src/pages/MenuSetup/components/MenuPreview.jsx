@@ -301,54 +301,19 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                 <Title level={4} style={styles.contentTitle}>
                   Menus
                 </Title>
-                <Button
-                  type="primary"
-                  onClick={() => handleAddNode()}
-                  icon={<i className="ri-add-line" />}
-                >
-                  Add Menu
-                </Button>
-              </div>
 
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <Search
-                    placeholder="Search menus"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    style={{ marginBottom: 16 }}
-                  />
-                </Col>
-                <Col span={8}>
-                  <Select placeholder="Search Applications" value={[]} />
-                </Col>
-              </Row>
-
-              {/* Tree Component */}
-              <div style={{ 
-                background: '#fff', 
-                padding: '16px', 
-                borderRadius: '8px', 
-                border: '1px solid #d9d9d9',
-                width: '100%'
-              }}>
-                {/* Tree Actions */}
-                <div style={{ 
-                  marginBottom: '12px', 
-                  display: 'flex', 
-                  gap: '8px',
-                  borderBottom: '1px solid #f0f0f0',
-                  paddingBottom: '12px'
-                }}>
-                  <Button 
-                    size="small" 
-                    icon={<i className="ri-add-line" />}
+                <Space>
+                  {' '}
+                  <Button
+                    type="primary"
                     onClick={() => handleAddNode()}
+                    size="small"
+                    icon={<i className="ri-add-line" />}
                   >
-                    Add Root
+                    Add Menu
                   </Button>
-                  <Button 
-                    size="small" 
+                  <Button
+                    size="small"
                     icon={<i className="ri-edit-line" />}
                     disabled={selectedKeys.length === 0}
                     onClick={() => {
@@ -370,8 +335,8 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                   >
                     Edit
                   </Button>
-                  <Button 
-                    size="small" 
+                  <Button
+                    size="small"
                     icon={<i className="ri-delete-bin-line" />}
                     danger
                     disabled={selectedKeys.length === 0}
@@ -383,8 +348,31 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                   >
                     Delete
                   </Button>
-                </div>
+                </Space>
+              </div>
 
+              <Row gutter={[16, 16]}>
+                <Col span={8}>
+                  <Search
+                    placeholder="Search menus"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    style={{ marginBottom: 16 }}
+                  />
+                </Col>
+                <Col span={8}>
+                  <Select placeholder="Search Applications" value={[]} />
+                </Col>
+              </Row>
+
+              {/* Tree Component */}
+              <div
+                style={{
+                  padding: '16px',
+                  borderRadius: '8px',
+                  width: '100%',
+                }}
+              >
                 <Tree
                   showLine
                   showIcon
@@ -400,7 +388,7 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
                     MozUserSelect: 'none',
-                    msUserSelect: 'none'
+                    msUserSelect: 'none',
                   }}
                 />
               </div>

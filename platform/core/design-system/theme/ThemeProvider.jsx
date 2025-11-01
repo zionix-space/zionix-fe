@@ -34,8 +34,6 @@ import { ConfigProvider, theme } from 'antd';
 import { generateLightTokens } from './lightTokens';
 import { generateDarkTokens } from './darkTokens';
 
-
-
 /**
  * Theme context for managing global theme state
  * @private
@@ -90,14 +88,15 @@ const createResponsiveTokens = (baseTokens, deviceType) => {
 
   // Mobile-specific token overrides
   const mobileTokens = {
-    // Typography - smaller for mobile
+    // Typography - smaller for mobile (but not affecting component-specific tokens)
     fontSize: 12,
     fontSizeSM: 10,
     fontSizeLG: 14,
     fontSizeXL: 16,
-    fontSizeIcon: 22,
+    // fontSizeIcon removed - let component tokens handle this
 
-    // Control heights - reduced for mobile
+    // Control heights - reduced for mobile (but component tokens will override)
+    // These are fallback values for components without specific tokens
     controlHeight: 28,
     controlHeightSM: 24,
     controlHeightLG: 36,
@@ -139,14 +138,15 @@ const createResponsiveTokens = (baseTokens, deviceType) => {
 
   // Desktop-specific token overrides
   const desktopTokens = {
-    // Typography - standard sizes for desktop
+    // Typography - standard sizes for desktop (but not affecting component-specific tokens)
     fontSize: 14,
     fontSizeSM: 12,
     fontSizeLG: 16,
     fontSizeXL: 20,
-    fontSizeIcon: 24,
+    // fontSizeIcon removed - let component tokens handle this
 
-    // Control heights - standard for desktop
+    // Control heights - standard for desktop (but component tokens will override)
+    // These are fallback values for components without specific tokens
     controlHeight: 32,
     controlHeightSM: 28,
     controlHeightLG: 48,
@@ -192,6 +192,18 @@ const createResponsiveTokens = (baseTokens, deviceType) => {
   return {
     ...baseTokens,
     ...responsiveOverrides,
+    // Preserve essential text colors from base tokens (CRITICAL - don't override these)
+    colorText: baseTokens.colorText,
+    colorTextBase: baseTokens.colorTextBase,
+    colorTextHeading: baseTokens.colorTextHeading,
+    colorTextLabel: baseTokens.colorTextLabel,
+    colorTextDescription: baseTokens.colorTextDescription,
+    colorTextDisabled: baseTokens.colorTextDisabled,
+    colorTextPlaceholder: baseTokens.colorTextPlaceholder,
+    colorTextSecondary: baseTokens.colorTextSecondary,
+    // Preserve essential border colors from base tokens
+    colorBorder: baseTokens.colorBorder,
+    colorBorderSecondary: baseTokens.colorBorderSecondary,
     // Add device type for components to use
     deviceType,
     isMobile,
@@ -267,26 +279,125 @@ const ThemeProvider = ({ children }) => {
     );
   }, [isRTL]);
 
-
+  // Set HTML document theme attribute when theme changes
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      'data-theme',
+      isDarkMode ? 'dark' : 'light'
+    );
+  }, [isDarkMode]);
 
   // Generate dynamic tokens based on current primary color
   const baseLightTokens = generateLightTokens(primaryColor);
   const baseDarkTokens = generateDarkTokens(primaryColor);
 
   /**
-   * Light theme configuration with responsive tokens
+   * Component-specific token configuration to ensure consistent sizing
+   * This overrides responsive tokens for specific components
+   */
+  const getComponentTokens = (isDark) => ({
+    Select: {
+      // Ensure consistent Select component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16, // Consistent caret size
+      sizeUnit: 4,
+      borderRadius: 6,
+      // Override responsive tokens for Select specifically
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+    },
+    Input: {
+      // Consistent Input component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16,
+      sizeUnit: 4,
+      borderRadius: 6,
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+    },
+    Button: {
+      // Consistent Button component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16,
+      sizeUnit: 4,
+      borderRadius: 6,
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+      // CRITICAL: Explicit text colors for buttons
+      colorText: isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.88)',
+      colorTextDisabled: isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)',
+    },
+    DatePicker: {
+      // Consistent DatePicker component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16,
+      sizeUnit: 4,
+      borderRadius: 6,
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+    },
+    TreeSelect: {
+      // Consistent TreeSelect component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16,
+      sizeUnit: 4,
+      borderRadius: 6,
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+    },
+    Cascader: {
+      // Consistent Cascader component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16,
+      sizeUnit: 4,
+      borderRadius: 6,
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+    },
+    AutoComplete: {
+      // Consistent AutoComplete component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16,
+      sizeUnit: 4,
+      borderRadius: 6,
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+    },
+    TimePicker: {
+      // Consistent TimePicker component sizing
+      controlHeight: 32,
+      fontSize: 14,
+      fontSizeIcon: 16,
+      sizeUnit: 4,
+      borderRadius: 6,
+      controlHeightSM: 24,
+      controlHeightLG: 40,
+    },
+  });
+
+  /**
+   * Light theme configuration with responsive tokens and component overrides
    */
   const lightTheme = {
     algorithm: theme.defaultAlgorithm,
     token: createResponsiveTokens(baseLightTokens, deviceType),
+    components: getComponentTokens(false), // false = light theme
   };
 
   /**
-   * Dark theme configuration with responsive tokens
+   * Dark theme configuration with responsive tokens and component overrides
    */
   const darkTheme = {
     algorithm: theme.darkAlgorithm,
     token: createResponsiveTokens(baseDarkTokens, deviceType),
+    components: getComponentTokens(true), // true = dark theme
   };
 
   const currentTheme = isDarkMode ? darkTheme : lightTheme;
