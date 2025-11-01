@@ -1,5 +1,5 @@
 // MenuPreview styles - Responsive preview with device-specific layouts
-export const useStyles = (token, previewMode) => {
+export const useStyles = (token, previewMode, collapsed = false) => {
   const getPreviewScale = () => {
     switch (previewMode) {
       case 'mobile':
@@ -28,10 +28,13 @@ export const useStyles = (token, previewMode) => {
   return {
     previewContainer: {
       height: '100%',
+      width: '100%',
       display: 'flex',
-      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
       background: token.colorBgLayout,
       overflow: 'hidden',
+      padding: previewMode !== 'desktop' ? token.padding : 0,
     },
 
     previewHeader: {
@@ -67,7 +70,7 @@ export const useStyles = (token, previewMode) => {
     previewLayout: {
       width: width,
       height: previewMode === 'mobile' ? '667px' : '100%',
-      maxHeight: '800px',
+      maxHeight: previewMode !== 'desktop' ? '800px' : 'none',
       transform: `scale(${scale})`,
       transformOrigin: 'center center',
       border:
@@ -77,6 +80,8 @@ export const useStyles = (token, previewMode) => {
       backgroundColor: token.colorBgContainer,
       boxShadow:
         previewMode !== 'desktop' ? '0 8px 24px rgba(0, 0, 0, 0.12)' : 'none',
+      display: 'flex',
+      flexDirection: 'column',
     },
 
     topBar: {
@@ -157,13 +162,21 @@ export const useStyles = (token, previewMode) => {
     },
 
     contentLayout: {
+      flex: 1,
+      display: 'flex',
       height: 'calc(100% - 56px)',
+      minHeight: 0, // Important for flex child to shrink
     },
 
     sidebar: {
+      width: previewMode === 'desktop' ? (collapsed ? '80px' : '240px') : '200px',
+      flexShrink: 0,
       background: token.colorBgContainer,
       borderRight: `1px solid ${token.colorBorder}`,
       height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'width 0.2s ease',
     },
 
     sidebarHeader: {
@@ -195,6 +208,8 @@ export const useStyles = (token, previewMode) => {
       border: 'none',
       backgroundColor: 'transparent',
       fontSize: '12px',
+      flex: 1,
+      overflow: 'auto',
 
       '& .antMenuItem': {
         margin: `1px ${token.paddingXXS}px`,
@@ -223,9 +238,11 @@ export const useStyles = (token, previewMode) => {
     },
 
     mainContent: {
+      flex: 1,
       background: token.colorBgLayout,
       padding: 0,
       overflow: 'auto',
+      minWidth: 0, // Important for flex child to shrink
     },
 
     contentArea: {

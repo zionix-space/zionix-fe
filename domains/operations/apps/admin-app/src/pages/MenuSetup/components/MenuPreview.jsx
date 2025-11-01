@@ -37,9 +37,8 @@ const iconMap = {
 
 const MenuViewer = ({ previewMode = 'desktop' }) => {
   const { token } = theme.useToken();
-  const styles = useStyles(token, previewMode);
-
   const [collapsed, setCollapsed] = useState(false);
+  const styles = useStyles(token, previewMode, collapsed);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
   const [searchValue, setSearchValue] = useState('');
@@ -210,65 +209,21 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
     });
   };
 
-  // Render tree nodes with action buttons
+  // Render tree nodes with clean default styling
   const renderTreeNodes = (data) => {
     return data.map((item) => ({
-      ...item,
+      key: item.key,
+      title: item.title,
       icon: iconMap[item.icon] || <i className="ri-file-line" />,
-      title: (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
-        >
-          <span>{item.title}</span>
-          <Space size="small">
-            <Button
-              type="text"
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAddNode(item.key);
-              }}
-            >
-              <i className="ri-add-line" />
-            </Button>
-            <Button
-              type="text"
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleEditNode(item);
-              }}
-            >
-              <i className="ri-edit-line" />
-            </Button>
-            <Button
-              type="text"
-              size="small"
-              danger
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteNode(item.key);
-              }}
-            >
-              <i className="ri-delete-bin-line" />
-            </Button>
-          </Space>
-        </div>
-      ),
       children: item.children ? renderTreeNodes(item.children) : undefined,
     }));
   };
 
   return (
-    <>
-      <Layout style={styles.previewLayout}>
+    <div style={styles.previewContainer}>
+      <div style={styles.previewLayout}>
         {/* Top Bar */}
-        <Header style={styles.topBar}>
+        <div style={styles.topBar}>
           <div style={styles.topBarLeft}>
             <div style={styles.brand}>
               <Text strong style={styles.brandText}>
@@ -293,19 +248,12 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
               <Text style={styles.userText}>John Doe</Text>
             </Space>
           </div>
-        </Header>
+        </div>
 
-        <Layout style={styles.contentLayout}>
+        <div style={styles.contentLayout}>
           {/* Sidebar */}
           {(previewMode === 'desktop' || previewMode === 'tablet') && (
-            <Sider
-              width={previewMode === 'desktop' ? 240 : 200}
-              collapsible={previewMode === 'desktop'}
-              collapsed={collapsed}
-              onCollapse={setCollapsed}
-              style={styles.sidebar}
-              theme="light"
-            >
+            <div style={styles.sidebar}>
               {/* Sidebar Header */}
               <div style={styles.sidebarHeader}>
                 {!collapsed && (
@@ -336,11 +284,11 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                 style={styles.sidebarMenu}
                 inlineCollapsed={collapsed}
               />
-            </Sider>
+            </div>
           )}
 
           {/* Main Content - Tree Editor */}
-          <Content style={styles.mainContent}>
+          <div style={styles.mainContent}>
             <div style={styles.contentArea}>
               <div
                 style={{
@@ -377,23 +325,85 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
               </Row>
 
               {/* Tree Component */}
-              <Tree
-                showLine
-                className="draggable-tree"
-                showIcon
-                defaultExpandAll
-                selectedKeys={selectedKeys}
-                expandedKeys={expandedKeys}
-                onSelect={setSelectedKeys}
-                onExpand={setExpandedKeys}
-                treeData={renderTreeNodes(treeData)}
-                // style={{
-                //   background: '#fff',
-                //   padding: 16,
-                //   borderRadius: 8,
-                //   border: '1px solid #d9d9d9',
-                // }}
-              />
+              <div style={{ 
+                background: '#fff', 
+                padding: '16px', 
+                borderRadius: '8px', 
+                border: '1px solid #d9d9d9',
+                width: '100%'
+              }}>
+                {/* Tree Actions */}
+                <div style={{ 
+                  marginBottom: '12px', 
+                  display: 'flex', 
+                  gap: '8px',
+                  borderBottom: '1px solid #f0f0f0',
+                  paddingBottom: '12px'
+                }}>
+                  <Button 
+                    size="small" 
+                    icon={<i className="ri-add-line" />}
+                    onClick={() => handleAddNode()}
+                  >
+                    Add Root
+                  </Button>
+                  <Button 
+                    size="small" 
+                    icon={<i className="ri-edit-line" />}
+                    disabled={selectedKeys.length === 0}
+                    onClick={() => {
+                      if (selectedKeys.length > 0) {
+                        const findNode = (data, key) => {
+                          for (const item of data) {
+                            if (item.key === key) return item;
+                            if (item.children) {
+                              const found = findNode(item.children, key);
+                              if (found) return found;
+                            }
+                          }
+                          return null;
+                        };
+                        const node = findNode(treeData, selectedKeys[0]);
+                        if (node) handleEditNode(node);
+                      }
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button 
+                    size="small" 
+                    icon={<i className="ri-delete-bin-line" />}
+                    danger
+                    disabled={selectedKeys.length === 0}
+                    onClick={() => {
+                      if (selectedKeys.length > 0) {
+                        handleDeleteNode(selectedKeys[0]);
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+
+                <Tree
+                  showLine
+                  showIcon
+                  defaultExpandAll
+                  blockNode
+                  selectedKeys={selectedKeys}
+                  expandedKeys={expandedKeys}
+                  onSelect={setSelectedKeys}
+                  onExpand={setExpandedKeys}
+                  treeData={renderTreeNodes(treeData)}
+                  style={{
+                    width: '100%',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none'
+                  }}
+                />
+              </div>
 
               {/* Mobile Menu Preview */}
               {previewMode === 'mobile' && (
@@ -407,9 +417,9 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                 </div>
               )}
             </div>
-          </Content>
-        </Layout>
-      </Layout>
+          </div>
+        </div>
+      </div>
 
       {/* Add/Edit Modal */}
       <Modal
@@ -477,7 +487,7 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 

@@ -2,22 +2,44 @@
 export const useStyles = (token) => ({
   layoutContainer: {
     height: '100vh',
+    width: '100%',
     background: token.colorBgLayout,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
   },
 
-  contentLayout: {
-    height: 'calc(100vh - 64px)',
+  topControls: {
+    flexShrink: 0,
+    background: token.colorBgContainer,
+    borderBottom: `1px solid ${token.colorBorder}`,
+    padding: '8px 16px',
   },
+
   spaceContainer: {
     display: 'flex',
     justifyContent: 'center',
-    padding: '6px',
+    gap: '16px',
+  },
+
+  deviceIcon: {
+    fontSize: '18px',
+    color: token.colorTextSecondary,
+    cursor: 'pointer',
+    padding: '8px',
+    borderRadius: token.borderRadiusSM,
+    transition: 'all 0.2s ease',
+    '&:hover': {
+      color: token.colorPrimary,
+      backgroundColor: token.colorFillQuaternary,
+    },
   },
 
   mainContent: {
-    background: token.colorBgContainer,
-    padding: 0,
+    flex: 1,
+    background: token.colorBgLayout,
     overflow: 'hidden',
+    minHeight: 0, // Important for flex child to shrink
   },
 
   contentContainer: {
