@@ -1,165 +1,476 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Avatar, Typography, theme, Space, Button } from 'antd';
-import { 
-  UserOutlined,
-  MoreOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  AppstoreOutlined,
-  SettingOutlined,
-  FileOutlined,
-  FolderOutlined,
-  DashboardOutlined
-} from '@ant-design/icons';
+import {
+  Layout,
+  Menu,
+  Avatar,
+  Typography,
+  theme,
+  Space,
+  Button,
+  Tree,
+  Input,
+  Modal,
+  Form,
+  Select,
+  message,
+} from 'antd';
+import { useMenuStore } from '../../../stores/menu/useMenuStore';
 import { useStyles } from '../styles/MenuPreview.style';
 
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
+const { Search } = Input;
 
-// Icon mapping for preview
+// Icon mapping for preview using Remix CSS classes
 const iconMap = {
-  AppstoreOutlined: <AppstoreOutlined />,
-  SettingOutlined: <SettingOutlined />,
-  UserOutlined: <UserOutlined />,
-  FileOutlined: <FileOutlined />,
-  FolderOutlined: <FolderOutlined />,
-  DashboardOutlined: <DashboardOutlined />,
+  'ri-dashboard-line': <i className="ri-dashboard-line" />,
+  'ri-settings-line': <i className="ri-settings-line" />,
+  'ri-user-line': <i className="ri-user-line" />,
+  'ri-file-line': <i className="ri-file-line" />,
+  'ri-folder-line': <i className="ri-folder-line" />,
+  'ri-apps-line': <i className="ri-apps-line" />,
+  'ri-home-line': <i className="ri-home-line" />,
+  'ri-menu-line': <i className="ri-menu-line" />,
 };
 
-const MenuPreview = ({ previewMode, menuData, mainMenus, sidebarMenus }) => {
+const MenuViewer = ({ previewMode = 'desktop' }) => {
   const { token } = theme.useToken();
   const styles = useStyles(token, previewMode);
-  
+
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedMainMenu, setSelectedMainMenu] = useState(mainMenus[0]?.key || '');
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [expandedKeys, setExpandedKeys] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingNode, setEditingNode] = useState(null);
+  const [form] = Form.useForm();
+
+  const {
+    completeMenuData,
+    mainMenus,
+    sidebarMenus,
+    setCompleteMenuData,
+    setMainMenus,
+    setSidebarMenus,
+  } = useMenuStore();
+
+  // Sample tree data with CRUD functionality
+  const [treeData, setTreeData] = useState([
+    {
+      title: 'Dashboard',
+      key: 'dashboard',
+      icon: 'ri-dashboard-line',
+      children: [
+        {
+          title: 'Analytics',
+          key: 'analytics',
+          icon: 'ri-bar-chart-line',
+        },
+        {
+          title: 'Reports',
+          key: 'reports',
+          icon: 'ri-file-chart-line',
+        },
+      ],
+    },
+    {
+      title: 'Settings',
+      key: 'settings',
+      icon: 'ri-settings-line',
+      children: [
+        {
+          title: 'User Management',
+          key: 'user-management',
+          icon: 'ri-user-settings-line',
+        },
+        {
+          title: 'System Config',
+          key: 'system-config',
+          icon: 'ri-settings-3-line',
+        },
+      ],
+    },
+  ]);
 
   // Convert menu items for Ant Design Menu component
   const convertMenuItems = (items) => {
-    return items?.map(item => ({
-      key: item.key,
-      icon: iconMap[item.icon] || <FileOutlined />,
-      label: item.label,
-      disabled: item.disabled,
-      children: item.children ? convertMenuItems(item.children) : undefined,
-    })) || [];
+    return (
+      items?.map((item) => ({
+        key: item.key,
+        icon: iconMap[item.icon] || <i className="ri-file-line" />,
+        label: item.label,
+        disabled: item.disabled,
+        children: item.children ? convertMenuItems(item.children) : undefined,
+      })) || []
+    );
   };
 
   // Get main menu items
   const mainMenuItems = convertMenuItems(mainMenus);
 
-  // Get sidebar menu items for selected main menu
-  const currentSidebarMenus = sidebarMenus[selectedMainMenu] || [];
-  const sidebarMenuItems = convertMenuItems(currentSidebarMenus);
+  // Get sidebar menu items
+  const sidebarMenuItems = convertMenuItems(sidebarMenus?.dashboard || []);
+
+  // Tree operations
+  const handleAddNode = (parentKey = null) => {
+    setEditingNode({ parentKey, isNew: true });
+    setIsModalVisible(true);
+    form.resetFields();
+  };
+
+  const handleEditNode = (node) => {
+    setEditingNode({ ...node, isNew: false });
+    setIsModalVisible(true);
+    form.setFieldsValue({
+      title: node.title,
+      key: node.key,
+      icon: node.icon,
+    });
+  };
+
+  const handleDeleteNode = (nodeKey) => {
+    const deleteFromTree = (nodes) => {
+      return nodes.filter((node) => {
+        if (node.key === nodeKey) {
+          return false;
+        }
+        if (node.children) {
+          node.children = deleteFromTree(node.children);
+        }
+        return true;
+      });
+    };
+    setTreeData(deleteFromTree(treeData));
+    message.success('Node deleted successfully');
+  };
+
+  const handleModalOk = () => {
+    form.validateFields().then((values) => {
+      if (editingNode.isNew) {
+        const newNode = {
+          title: values.title,
+          key: values.key,
+          icon: values.icon,
+          children: [],
+        };
+
+        if (editingNode.parentKey) {
+          // Add as child
+          const addToParent = (nodes) => {
+            return nodes.map((node) => {
+              if (node.key === editingNode.parentKey) {
+                return {
+                  ...node,
+                  children: [...(node.children || []), newNode],
+                };
+              }
+              if (node.children) {
+                return {
+                  ...node,
+                  children: addToParent(node.children),
+                };
+              }
+              return node;
+            });
+          };
+          setTreeData(addToParent(treeData));
+        } else {
+          // Add as root
+          setTreeData([...treeData, newNode]);
+        }
+        message.success('Node added successfully');
+      } else {
+        // Edit existing node
+        const updateNode = (nodes) => {
+          return nodes.map((node) => {
+            if (node.key === editingNode.key) {
+              return {
+                ...node,
+                title: values.title,
+                key: values.key,
+                icon: values.icon,
+              };
+            }
+            if (node.children) {
+              return {
+                ...node,
+                children: updateNode(node.children),
+              };
+            }
+            return node;
+          });
+        };
+        setTreeData(updateNode(treeData));
+        message.success('Node updated successfully');
+      }
+      setIsModalVisible(false);
+      setEditingNode(null);
+    });
+  };
+
+  // Render tree nodes with action buttons
+  const renderTreeNodes = (data) => {
+    return data.map((item) => ({
+      ...item,
+      icon: iconMap[item.icon] || <i className="ri-file-line" />,
+      title: (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <span>{item.title}</span>
+          <Space size="small">
+            <Button
+              type="text"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddNode(item.key);
+              }}
+            >
+              <i className="ri-add-line" />
+            </Button>
+            <Button
+              type="text"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEditNode(item);
+              }}
+            >
+              <i className="ri-edit-line" />
+            </Button>
+            <Button
+              type="text"
+              size="small"
+              danger
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteNode(item.key);
+              }}
+            >
+              <i className="ri-delete-bin-line" />
+            </Button>
+          </Space>
+        </div>
+      ),
+      children: item.children ? renderTreeNodes(item.children) : undefined,
+    }));
+  };
 
   return (
-    <div style={styles.previewContainer}>
-      {/* Preview Header */}
-      <div style={styles.previewHeader}>
-        <Title level={5} style={styles.previewTitle}>
-          Live Preview - {previewMode.charAt(0).toUpperCase() + previewMode.slice(1)}
-        </Title>
-        <Text type="secondary" style={styles.previewSubtitle}>
-          Real-time preview of your menu changes
-        </Text>
-      </div>
-
-      {/* Preview Content */}
-      <div style={styles.previewContent}>
-        <Layout style={styles.previewLayout}>
-          {/* Top Bar */}
-          <Header style={styles.topBar}>
-            <div style={styles.topBarLeft}>
-              <div style={styles.brand}>
-                <Text strong style={styles.brandText}>Zionix</Text>
-              </div>
-              
-              {/* Main Navigation */}
-              {previewMode === 'desktop' && (
-                <Menu
-                  mode="horizontal"
-                  selectedKeys={[selectedMainMenu]}
-                  items={mainMenuItems}
-                  style={styles.mainMenu}
-                  onSelect={({ key }) => setSelectedMainMenu(key)}
-                />
-              )}
+    <>
+      <Layout style={styles.previewLayout}>
+        {/* Top Bar */}
+        <Header style={styles.topBar}>
+          <div style={styles.topBarLeft}>
+            <div style={styles.brand}>
+              <Text strong style={styles.brandText}>
+                Zionix
+              </Text>
             </div>
 
-            <div style={styles.topBarRight}>
-              <Space>
-                <Avatar size="small" icon={<UserOutlined />} />
-                <Text style={styles.userText}>John Doe</Text>
-              </Space>
-            </div>
-          </Header>
-
-          <Layout style={styles.contentLayout}>
-            {/* Sidebar */}
-            {(previewMode === 'desktop' || previewMode === 'tablet') && (
-              <Sider
-                width={previewMode === 'desktop' ? 240 : 200}
-                collapsible={previewMode === 'desktop'}
-                collapsed={collapsed}
-                onCollapse={setCollapsed}
-                style={styles.sidebar}
-                theme="light"
-              >
-                {/* Sidebar Header */}
-                <div style={styles.sidebarHeader}>
-                  {!collapsed && (
-                    <Text strong style={styles.sidebarTitle}>
-                      {selectedMainMenu.charAt(0).toUpperCase() + selectedMainMenu.slice(1)}
-                    </Text>
-                  )}
-                  {previewMode === 'desktop' && (
-                    <Button
-                      type="text"
-                      icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                      onClick={() => setCollapsed(!collapsed)}
-                      style={styles.collapseButton}
-                    />
-                  )}
-                </div>
-
-                {/* Sidebar Menu */}
-                <Menu
-                  mode="inline"
-                  items={sidebarMenuItems}
-                  style={styles.sidebarMenu}
-                  inlineCollapsed={collapsed}
-                />
-              </Sider>
+            {/* Main Navigation */}
+            {previewMode === 'desktop' && (
+              <Menu
+                mode="horizontal"
+                selectedKeys={selectedKeys}
+                items={mainMenuItems}
+                style={styles.mainMenu}
+              />
             )}
+          </div>
 
-            {/* Main Content */}
-            <Content style={styles.mainContent}>
-              <div style={styles.contentArea}>
-                <Title level={4} style={styles.contentTitle}>
-                  Preview Content Area
-                </Title>
-                <Text type="secondary">
-                  This is where your application content would appear. 
-                  The menu structure above reflects your current configuration.
-                </Text>
+          <div style={styles.topBarRight}>
+            <Space>
+              <Avatar size="small" icon={<i className="ri-user-line" />} />
+              <Text style={styles.userText}>John Doe</Text>
+            </Space>
+          </div>
+        </Header>
 
-                {/* Mobile Menu Preview */}
-                {previewMode === 'mobile' && (
-                  <div style={styles.mobileMenuPreview}>
-                    <Title level={5}>Mobile Navigation</Title>
-                    <Menu
-                      mode="inline"
-                      items={[...mainMenuItems, ...sidebarMenuItems]}
-                      style={styles.mobileMenu}
-                    />
-                  </div>
+        <Layout style={styles.contentLayout}>
+          {/* Sidebar */}
+          {(previewMode === 'desktop' || previewMode === 'tablet') && (
+            <Sider
+              width={previewMode === 'desktop' ? 240 : 200}
+              collapsible={previewMode === 'desktop'}
+              collapsed={collapsed}
+              onCollapse={setCollapsed}
+              style={styles.sidebar}
+              theme="light"
+            >
+              {/* Sidebar Header */}
+              <div style={styles.sidebarHeader}>
+                {!collapsed && (
+                  <Text strong style={styles.sidebarTitle}>
+                    Navigation
+                  </Text>
+                )}
+                {previewMode === 'desktop' && (
+                  <Button
+                    type="text"
+                    icon={
+                      collapsed ? (
+                        <i className="ri-menu-unfold-line" />
+                      ) : (
+                        <i className="ri-menu-fold-line" />
+                      )
+                    }
+                    onClick={() => setCollapsed(!collapsed)}
+                    style={styles.collapseButton}
+                  />
                 )}
               </div>
-            </Content>
-          </Layout>
+
+              {/* Sidebar Menu */}
+              <Menu
+                mode="inline"
+                items={sidebarMenuItems}
+                style={styles.sidebarMenu}
+                inlineCollapsed={collapsed}
+              />
+            </Sider>
+          )}
+
+          {/* Main Content - Tree Editor */}
+          <Content style={styles.mainContent}>
+            <div style={styles.contentArea}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}
+              >
+                <Title level={4} style={styles.contentTitle}>
+                  Menu Tree Editor
+                </Title>
+                <Button
+                  type="primary"
+                  onClick={() => handleAddNode()}
+                  icon={<i className="ri-add-line" />}
+                >
+                  Add Root Item
+                </Button>
+              </div>
+
+              {/* Search */}
+              <Search
+                placeholder="Search menu items..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                style={{ marginBottom: 16 }}
+                prefix={<i className="ri-search-line" />}
+              />
+
+              {/* Tree Component */}
+              <Tree
+                showLine
+                showIcon
+                defaultExpandAll
+                selectedKeys={selectedKeys}
+                expandedKeys={expandedKeys}
+                onSelect={setSelectedKeys}
+                onExpand={setExpandedKeys}
+                treeData={renderTreeNodes(treeData)}
+                style={{
+                  background: '#fff',
+                  padding: 16,
+                  borderRadius: 8,
+                  border: '1px solid #d9d9d9',
+                }}
+              />
+
+              {/* Mobile Menu Preview */}
+              {previewMode === 'mobile' && (
+                <div style={styles.mobileMenuPreview}>
+                  <Title level={5}>Mobile Navigation</Title>
+                  <Menu
+                    mode="inline"
+                    items={[...mainMenuItems, ...sidebarMenuItems]}
+                    style={styles.mobileMenu}
+                  />
+                </div>
+              )}
+            </div>
+          </Content>
         </Layout>
-      </div>
-    </div>
+      </Layout>
+
+      {/* Add/Edit Modal */}
+      <Modal
+        title={editingNode?.isNew ? 'Add Menu Item' : 'Edit Menu Item'}
+        open={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={() => {
+          setIsModalVisible(false);
+          setEditingNode(null);
+        }}
+        okText={editingNode?.isNew ? 'Add' : 'Update'}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="title"
+            label="Title"
+            rules={[{ required: true, message: 'Please enter a title' }]}
+          >
+            <Input placeholder="Enter menu item title" />
+          </Form.Item>
+
+          <Form.Item
+            name="key"
+            label="Key"
+            rules={[{ required: true, message: 'Please enter a unique key' }]}
+          >
+            <Input placeholder="Enter unique key (e.g., dashboard)" />
+          </Form.Item>
+
+          <Form.Item
+            name="icon"
+            label="Icon"
+            rules={[{ required: true, message: 'Please select an icon' }]}
+          >
+            <Select placeholder="Select an icon">
+              <Select.Option value="ri-dashboard-line">
+                <i className="ri-dashboard-line" style={{ marginRight: 8 }} />
+                Dashboard
+              </Select.Option>
+              <Select.Option value="ri-settings-line">
+                <i className="ri-settings-line" style={{ marginRight: 8 }} />
+                Settings
+              </Select.Option>
+              <Select.Option value="ri-user-line">
+                <i className="ri-user-line" style={{ marginRight: 8 }} />
+                User
+              </Select.Option>
+              <Select.Option value="ri-file-line">
+                <i className="ri-file-line" style={{ marginRight: 8 }} />
+                File
+              </Select.Option>
+              <Select.Option value="ri-folder-line">
+                <i className="ri-folder-line" style={{ marginRight: 8 }} />
+                Folder
+              </Select.Option>
+              <Select.Option value="ri-apps-line">
+                <i className="ri-apps-line" style={{ marginRight: 8 }} />
+                Apps
+              </Select.Option>
+              <Select.Option value="ri-home-line">
+                <i className="ri-home-line" style={{ marginRight: 8 }} />
+                Home
+              </Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   );
 };
 
-export default MenuPreview;
+export default MenuViewer;

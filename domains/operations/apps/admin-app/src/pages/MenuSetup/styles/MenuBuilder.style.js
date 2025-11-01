@@ -8,6 +8,11 @@ export const useStyles = (token) => ({
   contentLayout: {
     height: 'calc(100vh - 64px)',
   },
+  spaceContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '6px',
+  },
 
   mainContent: {
     background: token.colorBgContainer,
@@ -45,14 +50,14 @@ export const useStyles = (token) => ({
     contentContainer: {
       flexDirection: 'column',
     },
-    
+
     editorSection: {
       minWidth: 'auto',
       borderRight: 'none',
       borderBottom: `1px solid ${token.colorBorder}`,
       flex: '0 0 50%',
     },
-    
+
     previewSection: {
       minWidth: 'auto',
       flex: '0 0 50%',
