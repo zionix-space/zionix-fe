@@ -70,81 +70,83 @@ export const useStyles = (token, previewMode) => {
       maxHeight: '800px',
       transform: `scale(${scale})`,
       transformOrigin: 'center center',
-      border: previewMode !== 'desktop' ? `2px solid ${token.colorBorder}` : 'none',
+      border:
+        previewMode !== 'desktop' ? `2px solid ${token.colorBorder}` : 'none',
       borderRadius: previewMode !== 'desktop' ? token.borderRadiusLG : 0,
       overflow: 'hidden',
       backgroundColor: token.colorBgContainer,
-      boxShadow: previewMode !== 'desktop' ? '0 8px 24px rgba(0, 0, 0, 0.12)' : 'none',
+      boxShadow:
+        previewMode !== 'desktop' ? '0 8px 24px rgba(0, 0, 0, 0.12)' : 'none',
     },
 
     topBar: {
       background: token.colorBgContainer,
       borderBottom: `1px solid ${token.colorBorder}`,
-      boxShadow: "0 1px 4px rgba(0, 0, 0, 0.08)",
-      padding: "0 16px",
-      height: "56px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
+      boxShadow: '0 1px 4px rgba(0, 0, 0, 0.08)',
+      padding: '0 16px',
+      height: '56px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
 
     topBarLeft: {
-      display: "flex",
-      alignItems: "center",
+      display: 'flex',
+      alignItems: 'center',
       flex: 1,
-      gap: previewMode === 'desktop' ? "24px" : "16px",
+      gap: previewMode === 'desktop' ? '24px' : '16px',
     },
 
     topBarRight: {
-      display: "flex",
-      alignItems: "center",
+      display: 'flex',
+      alignItems: 'center',
       flexShrink: 0,
     },
 
     brand: {
-      display: "flex",
-      alignItems: "center",
+      display: 'flex',
+      alignItems: 'center',
       flexShrink: 0,
     },
 
     brandText: {
       fontSize: previewMode === 'mobile' ? '16px' : '18px',
-      fontWeight: "600",
+      fontWeight: '600',
       color: token.colorText,
-      letterSpacing: "-0.01em",
+      letterSpacing: '-0.01em',
     },
 
     mainMenu: {
-      background: "transparent",
-      border: "none",
-      fontSize: "13px",
+      background: 'transparent',
+      border: 'none',
+      fontSize: '13px',
       fontWeight: 500,
       flex: 1,
       minWidth: 0,
-      
-      "& .antMenuItem": {
-        padding: "0 12px",
-        margin: "0 2px",
-        height: "28px",
-        lineHeight: "28px",
+
+      '& .antMenuItem': {
+        padding: '0 12px',
+        margin: '0 2px',
+        height: '28px',
+        lineHeight: '28px',
         borderRadius: token.borderRadiusSM,
-        transition: "all 0.2s ease",
+        transition: 'all 0.2s ease',
         color: token.colorTextSecondary,
       },
-      
-      "& .antMenuItem:hover": {
+
+      '& .antMenuItem:hover': {
         backgroundColor: token.colorFillQuaternary,
         color: token.colorText,
       },
-      
-      "& .antMenuItemSelected": {
+
+      '& .antMenuItemSelected': {
         backgroundColor: token.colorPrimary,
         color: token.colorWhite,
         fontWeight: 600,
       },
-      
-      "& .antMenuItemSelected::after": {
-        display: "none",
+
+      '& .antMenuItemSelected::after': {
+        display: 'none',
       },
     },
 
@@ -193,7 +195,7 @@ export const useStyles = (token, previewMode) => {
       border: 'none',
       backgroundColor: 'transparent',
       fontSize: '12px',
-      
+
       '& .antMenuItem': {
         margin: `1px ${token.paddingXXS}px`,
         padding: `${token.paddingXXS}px ${token.paddingSM}px`,
@@ -203,18 +205,18 @@ export const useStyles = (token, previewMode) => {
         transition: 'all 0.2s ease',
         color: token.colorTextSecondary,
       },
-      
+
       '& .antMenuItem:hover': {
         backgroundColor: token.colorFillQuaternary,
         color: token.colorText,
       },
-      
+
       '& .antMenuItemSelected': {
         backgroundColor: token.colorPrimary,
         color: token.colorWhite,
         fontWeight: 500,
       },
-      
+
       '& .antMenuItemSelected::after': {
         display: 'none',
       },
@@ -250,7 +252,7 @@ export const useStyles = (token, previewMode) => {
       border: 'none',
       backgroundColor: 'transparent',
       fontSize: '14px',
-      
+
       '& .antMenuItem': {
         margin: `2px 0`,
         padding: `${token.paddingXS}px ${token.paddingSM}px`,
@@ -260,12 +262,12 @@ export const useStyles = (token, previewMode) => {
         transition: 'all 0.2s ease',
         color: token.colorTextSecondary,
       },
-      
+
       '& .antMenuItem:hover': {
         backgroundColor: token.colorFillQuaternary,
         color: token.colorText,
       },
-      
+
       '& .antMenuItemSelected': {
         backgroundColor: token.colorPrimary,
         color: token.colorWhite,

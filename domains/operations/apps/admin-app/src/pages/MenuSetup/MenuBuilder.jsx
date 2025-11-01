@@ -17,17 +17,16 @@ const MenuBuilder = () => {
       <Content>
         <Space style={styles.spaceContainer}>
           <i
-            className="ri-computer-line"
-            onClick={() => setPreviewMode('desktop')}
+            className="ri-smartphone-line"
+            onClick={() => setPreviewMode('mobile')}
           />
-
           <i
             className="ri-tablet-line"
             onClick={() => setPreviewMode('tablet')}
           />
           <i
-            className="ri-smartphone-line"
-            onClick={() => setPreviewMode('mobile')}
+            className="ri-computer-line"
+            onClick={() => setPreviewMode('desktop')}
           />
         </Space>
         <MenuViewer previewMode={previewMode} />

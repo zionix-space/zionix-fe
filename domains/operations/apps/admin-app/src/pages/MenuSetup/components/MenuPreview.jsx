@@ -13,6 +13,8 @@ import {
   Form,
   Select,
   message,
+  Row,
+  Col,
 } from 'antd';
 import { useMenuStore } from '../../../stores/menu/useMenuStore';
 import { useStyles } from '../styles/MenuPreview.style';
@@ -349,29 +351,35 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                 }}
               >
                 <Title level={4} style={styles.contentTitle}>
-                  Menu Tree Editor
+                  Menus
                 </Title>
                 <Button
                   type="primary"
                   onClick={() => handleAddNode()}
                   icon={<i className="ri-add-line" />}
                 >
-                  Add Root Item
+                  Add Menu
                 </Button>
               </div>
 
-              {/* Search */}
-              <Search
-                placeholder="Search menu items..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                style={{ marginBottom: 16 }}
-                prefix={<i className="ri-search-line" />}
-              />
+              <Row gutter={[16, 16]}>
+                <Col span={8}>
+                  <Search
+                    placeholder="Search menus"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    style={{ marginBottom: 16 }}
+                  />
+                </Col>
+                <Col span={8}>
+                  <Select placeholder="Search Applications" value={[]} />
+                </Col>
+              </Row>
 
               {/* Tree Component */}
               <Tree
                 showLine
+                className="draggable-tree"
                 showIcon
                 defaultExpandAll
                 selectedKeys={selectedKeys}
@@ -379,12 +387,12 @@ const MenuViewer = ({ previewMode = 'desktop' }) => {
                 onSelect={setSelectedKeys}
                 onExpand={setExpandedKeys}
                 treeData={renderTreeNodes(treeData)}
-                style={{
-                  background: '#fff',
-                  padding: 16,
-                  borderRadius: 8,
-                  border: '1px solid #d9d9d9',
-                }}
+                // style={{
+                //   background: '#fff',
+                //   padding: 16,
+                //   borderRadius: 8,
+                //   border: '1px solid #d9d9d9',
+                // }}
               />
 
               {/* Mobile Menu Preview */}
