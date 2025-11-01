@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
-import { Button, Spin, Tooltip } from "antd";
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import { Button, Spin, Tooltip } from 'antd';
 
-import { TrashDropZone } from "../drag-drop";
-import FormSectionManager from "../form/FormSectionManager";
-import ComponentPaletteSidebar from "../sidebar/ComponentPaletteSidebar";
-import { PropertiesPanel } from "../properties";
-import FormBuilderHeader from "../header/FormBuilderHeader";
-import { useFormBuilder } from "../../contexts/FormBuilderContext";
-import * as FB from "../../styles/components/FormBuilder.styles";
+import { TrashDropZone } from '../drag-drop';
+import FormSectionManager from '../form/FormSectionManager';
+import ComponentPaletteSidebar from '../sidebar/ComponentPaletteSidebar';
+import { PropertiesPanel } from '../properties';
+import FormBuilderHeader from '../header/FormBuilderHeader';
+import { useFormBuilder } from '../../contexts/FormBuilderContext';
+import * as FB from '../../styles/components/FormBuilder.styles';
 
 /**
  * FormBuilderTab component renders the form builder interface
@@ -82,7 +82,7 @@ const FormBuilderTabContent = ({
   const handleAddSection = useCallback(() => {
     const newSection = {
       id: `section-${Date.now()}`,
-      title: "Untitled Section",
+      title: 'Untitled Section',
       description: "Start typing and select text or enter '/' for commands",
       components: [],
     };
@@ -140,11 +140,6 @@ const FormBuilderTabContent = ({
       <div className="form-builder-layout">
         {/* Left Sidebar - Component Palette */}
         <FB.FormBuilderSidebar>
-          <div className="sidebar-header">
-            <h3 className="sidebar-title">Form Elements</h3>
-            <p className="sidebar-subtitle">Drag and drop to add fields</p>
-          </div>
-
           <div className="sidebar-search">
             <ComponentPaletteSidebar />
           </div>
@@ -180,7 +175,7 @@ const FormBuilderTabContent = ({
                 <div
                   style={{
                     transform: `scale(${zoom / 100})`,
-                    transformOrigin: "top left",
+                    transformOrigin: 'top left',
                     backgroundColor,
                   }}
                 >

@@ -38,7 +38,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
       <DesktopTopBar />
 
       {/* Desktop Layout Container */}
-      <Layout style={{ marginTop: '64px' }}>
+      <Layout>
         {/* Desktop Sidebar */}
         <DesktopSidebar
           collapsed={sidebarCollapsed}

@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colors, elevation, motionCurves } from "../theme";
+import styled from 'styled-components';
+import { colors, elevation, motionCurves } from '../theme';
 
 // Lowcode-style compact Sidebar container
 export const SideBar = styled.div`
@@ -12,7 +12,6 @@ export const SideBar = styled.div`
   overflow-y: auto;
   position: relative;
   z-index: 10;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Responsive design */
   @media (max-width: 1024px) {
@@ -52,12 +51,6 @@ export const SideBar = styled.div`
     &:hover {
       background: #adb5bd;
     }
-  }
-
-  .sidebar-header {
-    padding: 12px 16px 8px 16px;
-    border-bottom: 1px solid #e8eaed;
-    background: #f8f9fa;
   }
 
   .sidebar-tabs {
@@ -220,7 +213,6 @@ export const SidebarHeader = styled.div`
   padding: 16px 16px 12px 16px;
   border-bottom: 1px solid #f1f3f4;
   background: #fafbfc;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 `;
 
 // Sidebar tabs container - Lowcode style

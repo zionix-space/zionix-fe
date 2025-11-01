@@ -152,204 +152,206 @@ const FormBuilderHeader = ({
 
   return (
     <FB.FormBuilderToolbar>
-      {/* Control Toolbar */}
-      <FB.FormControlToolbar>
-        <div className="toolbar-left">
-          {/* Form Statistics */}
-          <FB.FormStats>
-            <div className="stat-item">
-              <i className="ri-apps-line stat-icon" />
-              <span className="stat-value">{totalSections}</span>
-              <span>Sections</span>
-            </div>
-            <div className="stat-item">
-              <i className="ri-file-text-line stat-icon" />
-              <span className="stat-value">{totalFields}</span>
-              <span>Fields</span>
-            </div>
-            <div className="stat-item">
-              <i className="ri-checkbox-line stat-icon" />
-              <span className="stat-value">{requiredFields}</span>
-              <span>Required</span>
-            </div>
-          </FB.FormStats>
-        </div>
-
-        <div className="toolbar-center">
-          {/* Zoom Controls */}
-          <FB.ZoomControls>
-            <Tooltip title="Zoom Out">
-              <button
-                className="zoom-button"
-                onClick={handleZoomOut}
-                disabled={zoom <= 50}
-              >
-                <i className="ri-zoom-out-line" style={{ fontSize: "12px" }} />
-              </button>
-            </Tooltip>
+      {/* Left: Form Info and Stats */}
+      <div className="toolbar-left">
+        {/* Form Title and Description */}
+        <FB.FormHeader>
+          {isEditingTitle ? (
+            <input
+              className="form-title"
+              value={tempTitle}
+              onChange={(e) => setTempTitle(e.target.value)}
+              onBlur={handleTitleSubmit}
+              onKeyDown={handleTitleKeyPress}
+              autoFocus
+              placeholder="Enter form title..."
+            />
+          ) : (
             <div
-              className="zoom-display"
-              onClick={handleZoomReset}
-              style={{ cursor: "pointer" }}
+              className="form-title"
+              onClick={handleTitleClick}
+              style={{ cursor: "text" }}
+              title={formTitle}
             >
-              {zoom}%
+              {formTitle}
             </div>
-            <Tooltip title="Zoom In">
-              <button
-                className="zoom-button"
-                onClick={handleZoomIn}
-                disabled={zoom >= 200}
-              >
-                <i className="ri-zoom-in-line" style={{ fontSize: "12px" }} />
-              </button>
-            </Tooltip>
-          </FB.ZoomControls>
+          )}
 
-          {/* Layout Options */}
-          <FB.LayoutOptions>
-            <Select
-              className="layout-selector"
-              value={layout}
-              onChange={onLayoutChange}
-              suffixIcon={<i className="ri-layout-line" style={{ fontSize: "12px" }} />}
-              placeholder="Select Layout"
+          {isEditingDescription ? (
+            <textarea
+              className="form-description"
+              value={tempDescription}
+              onChange={(e) => setTempDescription(e.target.value)}
+              onBlur={handleDescriptionSubmit}
+              onKeyDown={handleDescriptionKeyPress}
+              autoFocus
+              placeholder="Enter form description..."
+            />
+          ) : (
+            <div
+              className="form-description"
+              onClick={handleDescriptionClick}
+              style={{ cursor: "text" }}
+              title={formDescription}
             >
-              <Option value="single">
-                <i className="ri-file-text-line" style={{ marginRight: "6px" }} />
-                Single Page
-              </Option>
-              <Option value="step">
-                <i className="ri-arrow-right-line" style={{ marginRight: "6px" }} />
-                Step Form
-              </Option>
-              <Option value="accordion">
-                <i className="ri-arrow-down-line" style={{ marginRight: "6px" }} />
-                Accordion
-              </Option>
-              <Option value="tabbed">
-                <i className="ri-table-line" style={{ marginRight: "6px" }} />
-                Tabbed Layout
-              </Option>
-              <Option value="dashboard">
-                <i className="ri-dashboard-line" style={{ marginRight: "6px" }} />
-                Dashboard
-              </Option>
-              <Option value="kanban">
-                <i className="ri-kanban-view" style={{ marginRight: "6px" }} />
-                Kanban Board
-              </Option>
-              <Option value="timeline">
-                <i className="ri-time-line" style={{ marginRight: "6px" }} />
-                Timeline
-              </Option>
-              <Option value="matrix">
-                <i className="ri-grid-line" style={{ marginRight: "6px" }} />
-                Matrix Layout
-              </Option>
-              <Option value="split-screen">
-                <i className="ri-split-cells-horizontal" style={{ marginRight: "6px" }} />
-                Split Screen
-              </Option>
-            </Select>
-          </FB.LayoutOptions>
-        </div>
+              {formDescription}
+            </div>
+          )}
+        </FB.FormHeader>
 
-        <div className="toolbar-right">
-          {/* Undo/Redo Controls */}
-          <FB.UndoRedoControls>
-            <Tooltip title="Undo">
-              <button
-                className="undo-redo-button"
-                onClick={onUndo}
-                disabled={!canUndo}
-              >
-                <i className="ri-arrow-go-back-line" style={{ fontSize: "12px" }} />
-              </button>
-            </Tooltip>
-            <Tooltip title="Redo">
-              <button
-                className="undo-redo-button"
-                onClick={onRedo}
-                disabled={!canRedo}
-              >
-                <i className="ri-arrow-go-forward-line" style={{ fontSize: "12px" }} />
-              </button>
-            </Tooltip>
-          </FB.UndoRedoControls>
+        {/* Form Statistics */}
+        <FB.FormStats>
+          <div className="stat-item">
+            <i className="ri-apps-line stat-icon" />
+            <span className="stat-value">{totalSections}</span>
+            <span>Sections</span>
+          </div>
+          <div className="stat-item">
+            <i className="ri-file-text-line stat-icon" />
+            <span className="stat-value">{totalFields}</span>
+            <span>Fields</span>
+          </div>
+          <div className="stat-item">
+            <i className="ri-checkbox-line stat-icon" />
+            <span className="stat-value">{requiredFields}</span>
+            <span>Required</span>
+          </div>
+        </FB.FormStats>
+      </div>
 
-          {/* Background Color Picker */}
-          <FB.BackgroundColorPicker>
-            <Popover
-              content={colorPickerContent}
-              title={null}
-              trigger="click"
-              placement="bottomRight"
+      {/* Center: Zoom and Layout Controls */}
+      <div className="toolbar-center">
+        {/* Zoom Controls */}
+        <FB.ZoomControls>
+          <Tooltip title="Zoom Out">
+            <button
+              className="zoom-button"
+              onClick={handleZoomOut}
+              disabled={zoom <= 50}
             >
-              <Tooltip title="Background Color">
-                <div className="color-picker-trigger">
-                  <div className="color-preview" style={{ backgroundColor }} />
-                  <i
-                    className="ri-palette-line"
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      fontSize: "12px",
-                      color:
-                        backgroundColor === "#ffffff" ? "#374151" : "#ffffff",
-                      textShadow: "0 1px 2px rgba(0,0,0,0.5)",
-                    }}
-                  />
-                </div>
-              </Tooltip>
-            </Popover>
-          </FB.BackgroundColorPicker>
-        </div>
-      </FB.FormControlToolbar>
-
-      {/* Form Header with Title and Description */}
-      <FB.FormHeader>
-        {isEditingTitle ? (
-          <input
-            className="form-title"
-            value={tempTitle}
-            onChange={(e) => setTempTitle(e.target.value)}
-            onBlur={handleTitleSubmit}
-            onKeyDown={handleTitleKeyPress}
-            autoFocus
-            placeholder="Enter form title..."
-          />
-        ) : (
+              <i className="ri-zoom-out-line" style={{ fontSize: "12px" }} />
+            </button>
+          </Tooltip>
           <div
-            className="form-title"
-            onClick={handleTitleClick}
-            style={{ cursor: "text" }}
+            className="zoom-display"
+            onClick={handleZoomReset}
+            style={{ cursor: "pointer" }}
           >
-            {formTitle}
+            {zoom}%
           </div>
-        )}
+          <Tooltip title="Zoom In">
+            <button
+              className="zoom-button"
+              onClick={handleZoomIn}
+              disabled={zoom >= 200}
+            >
+              <i className="ri-zoom-in-line" style={{ fontSize: "12px" }} />
+            </button>
+          </Tooltip>
+        </FB.ZoomControls>
 
-        {isEditingDescription ? (
-          <textarea
-            className="form-description"
-            value={tempDescription}
-            onChange={(e) => setTempDescription(e.target.value)}
-            onBlur={handleDescriptionSubmit}
-            onKeyDown={handleDescriptionKeyPress}
-            autoFocus
-            placeholder="Enter form description..."
-          />
-        ) : (
-          <div
-            className="form-description"
-            onClick={handleDescriptionClick}
-            style={{ cursor: "text" }}
+        {/* Layout Options */}
+        <FB.LayoutOptions>
+          <Select
+            className="layout-selector"
+            value={layout}
+            onChange={onLayoutChange}
+            suffixIcon={<i className="ri-layout-line" style={{ fontSize: "12px" }} />}
+            placeholder="Select Layout"
           >
-            {formDescription}
-          </div>
-        )}
-      </FB.FormHeader>
+            <Option value="single">
+              <i className="ri-file-text-line" style={{ marginRight: "6px" }} />
+              Single Page
+            </Option>
+            <Option value="step">
+              <i className="ri-arrow-right-line" style={{ marginRight: "6px" }} />
+              Step Form
+            </Option>
+            <Option value="accordion">
+              <i className="ri-arrow-down-line" style={{ marginRight: "6px" }} />
+              Accordion
+            </Option>
+            <Option value="tabbed">
+              <i className="ri-table-line" style={{ marginRight: "6px" }} />
+              Tabbed Layout
+            </Option>
+            <Option value="dashboard">
+              <i className="ri-dashboard-line" style={{ marginRight: "6px" }} />
+              Dashboard
+            </Option>
+            <Option value="kanban">
+              <i className="ri-kanban-view" style={{ marginRight: "6px" }} />
+              Kanban Board
+            </Option>
+            <Option value="timeline">
+              <i className="ri-time-line" style={{ marginRight: "6px" }} />
+              Timeline
+            </Option>
+            <Option value="matrix">
+              <i className="ri-grid-line" style={{ marginRight: "6px" }} />
+              Matrix Layout
+            </Option>
+            <Option value="split-screen">
+              <i className="ri-split-cells-horizontal" style={{ marginRight: "6px" }} />
+              Split Screen
+            </Option>
+          </Select>
+        </FB.LayoutOptions>
+      </div>
+
+      {/* Right: Action Controls */}
+      <div className="toolbar-right">
+        {/* Undo/Redo Controls */}
+        <FB.UndoRedoControls>
+          <Tooltip title="Undo">
+            <button
+              className="undo-redo-button"
+              onClick={onUndo}
+              disabled={!canUndo}
+            >
+              <i className="ri-arrow-go-back-line" style={{ fontSize: "12px" }} />
+            </button>
+          </Tooltip>
+          <Tooltip title="Redo">
+            <button
+              className="undo-redo-button"
+              onClick={onRedo}
+              disabled={!canRedo}
+            >
+              <i className="ri-arrow-go-forward-line" style={{ fontSize: "12px" }} />
+            </button>
+          </Tooltip>
+        </FB.UndoRedoControls>
+
+        {/* Background Color Picker */}
+        <FB.BackgroundColorPicker>
+          <Popover
+            content={colorPickerContent}
+            title={null}
+            trigger="click"
+            placement="bottomRight"
+          >
+            <Tooltip title="Background Color">
+              <div className="color-picker-trigger">
+                <div className="color-preview" style={{ backgroundColor }} />
+                <i
+                  className="ri-palette-line"
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "12px",
+                    color:
+                      backgroundColor === "#ffffff" ? "#374151" : "#ffffff",
+                    textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+                  }}
+                />
+              </div>
+            </Tooltip>
+          </Popover>
+        </FB.BackgroundColorPicker>
+      </div>
     </FB.FormBuilderToolbar>
   );
 };

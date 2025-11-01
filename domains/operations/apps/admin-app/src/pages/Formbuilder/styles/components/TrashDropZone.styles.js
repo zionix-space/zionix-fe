@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colors, elevation, motionCurves, fluentTrashPulse } from "../theme";
+import styled from 'styled-components';
+import { colors, elevation, motionCurves, fluentTrashPulse } from '../theme';
 
 // Lowcode Design Trash drop zone
 export const TrashDropZone = styled.div`
@@ -20,14 +20,13 @@ export const TrashDropZone = styled.div`
   transition: all 0.2s ease;
   cursor: pointer;
   z-index: 1000;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Lowcode subtle backdrop */
   backdrop-filter: blur(8px);
   background: rgba(255, 255, 255, 0.95);
 
   &:before {
-    content: "🗑️";
+    content: '🗑️';
     font-size: 20px;
     transition: all 0.2s ease;
   }
@@ -57,13 +56,13 @@ export const TrashDropZone = styled.div`
     animation: ${fluentTrashPulse} 2s ease infinite;
 
     &:before {
-      content: "🗑️";
+      content: '🗑️';
       filter: brightness(0) invert(1);
       transform: scale(1.2);
     }
 
     &::after {
-      content: "Drop to delete";
+      content: 'Drop to delete';
       position: absolute;
       bottom: -32px;
       left: 50%;
@@ -77,7 +76,7 @@ export const TrashDropZone = styled.div`
       white-space: nowrap;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       border: 1px solid #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
         sans-serif;
       letter-spacing: 0.2px;
     }

@@ -8,9 +8,7 @@ import FormBuilderApp from '../FormBuilderApp';
 export default function FormBuilderLibrary() {
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="App">
-        <FormBuilderApp />
-      </div>
+      <FormBuilderApp />
     </DndProvider>
   );
 }

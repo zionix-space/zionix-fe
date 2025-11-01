@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { colors, elevation, motionCurves } from "../theme";
+import styled from 'styled-components';
+import { colors, elevation, motionCurves } from '../theme';
 
 // Properties panel - Lowcode style
 export const PropertiesPanelContainer = styled.div`
@@ -12,7 +12,6 @@ export const PropertiesPanelContainer = styled.div`
   overflow: hidden;
   position: relative;
   z-index: 10;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Collapsible state for focus mode */
   &.collapsed {
@@ -320,7 +319,7 @@ export const TabButton = styled.button`
     background: #ffffff;
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 0;
       left: 0;
@@ -437,7 +436,7 @@ export const ColorPickerWrapper = styled.div`
 export const AdvancedSection = styled.div`
   .code-editor {
     .ant-input {
-      font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
       font-size: 11px;
       line-height: 1.4;
     }

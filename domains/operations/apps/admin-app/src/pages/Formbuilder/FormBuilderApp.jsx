@@ -224,21 +224,8 @@ const FormBuilderContainer = memo(() => {
       <S.Body>
         <div
           style={{
-            position: 'fixed',
-            top: 0,
-            left: '50%',
-            right: '50%',
-            zIndex: 1000,
-            // background: '#ffffff',
-            padding: '12px 24px',
-            // borderBottom: '1px solid #e5e7eb',
             display: 'flex',
             justifyContent: 'center',
-            // boxShadow: '0 1px 4px rgba(0, 0, 0, 0.08)',
-            height: '56px',
-            alignItems: 'center',
-            fontFamily:
-              '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
           }}
         >
           <Segmented

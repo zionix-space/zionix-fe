@@ -161,28 +161,24 @@ export const FormBuilderContent = styled.div`
   }
 `;
 
-// Lowcode-style toolbar
+// Compact single-row toolbar
 export const FormBuilderToolbar = styled.div`
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   z-index: 10;
+  height: 44px;
+  padding: 0 20px;
   display: flex;
-  flex-direction: column;
-
-  .toolbar-section {
-    padding: 16px 20px;
-    border-bottom: 1px solid #f1f5f9;
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
+  align-items: center;
+  justify-content: space-between;
 
   .toolbar-left {
     display: flex;
     align-items: center;
     gap: 16px;
+    flex: 1;
+    min-width: 0;
   }
 
   .toolbar-center {
@@ -195,6 +191,15 @@ export const FormBuilderToolbar = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+
+  .form-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+    max-width: 400px;
   }
 
   .toolbar-button {
@@ -235,31 +240,40 @@ export const FormBuilderToolbar = styled.div`
   }
 `;
 
-// Lowcode-style form header
+// Compact inline form header
 export const FormHeader = styled.div`
-  padding: 20px 20px 16px;
-  background: #ffffff;
-  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+  max-width: 400px;
 
   .form-title {
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 600;
     color: #1a202c;
-    margin: 0 0 6px 0;
+    margin: 0;
     border: none;
     background: transparent;
     width: 100%;
     outline: none;
     font-family: inherit;
-    line-height: 1.3;
+    line-height: 1.2;
     letter-spacing: -0.025em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:focus {
       background: #f7fafc;
-      border-radius: 6px;
-      padding: 8px 12px;
-      margin: -8px -12px 0 -12px;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin: -4px -8px;
       border: 2px solid #3182ce;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
     }
 
     &::placeholder {
@@ -269,7 +283,7 @@ export const FormHeader = styled.div`
   }
 
   .form-description {
-    font-size: 13px;
+    font-size: 11px;
     color: #718096;
     margin: 0;
     border: none;
@@ -277,16 +291,23 @@ export const FormHeader = styled.div`
     width: 100%;
     outline: none;
     resize: none;
-    min-height: 18px;
+    min-height: 14px;
     font-family: inherit;
-    line-height: 1.4;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:focus {
       background: #f7fafc;
-      border-radius: 6px;
-      padding: 8px 12px;
-      margin: -8px -12px;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin: -4px -8px;
       border: 2px solid #3182ce;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      min-height: 40px;
     }
 
     &::placeholder {
@@ -296,70 +317,7 @@ export const FormHeader = styled.div`
   }
 `;
 
-// Lowcode-style form control toolbar
-export const FormControlToolbar = styled.div`
-  height: 52px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-
-  .toolbar-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .toolbar-center {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .toolbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .form-stats {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 12px;
-    color: #718096;
-
-    .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 0px 4px;
-      /* background: #f7fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      height: 28px; */
-
-      .stat-icon {
-        font-size: 12px;
-        color: #3182ce;
-      }
-
-      .stat-value {
-        font-weight: 600;
-        color: #1a202c;
-        font-size: 12px;
-      }
-
-      span:last-child {
-        font-size: 11px;
-        color: #718096;
-      }
-    }
-  }
-`;
+// Removed - functionality merged into FormBuilderToolbar
 
 // Form statistics display - Lowcode style
 export const FormStats = styled.div`
