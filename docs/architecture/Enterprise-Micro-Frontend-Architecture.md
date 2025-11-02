@@ -658,7 +658,7 @@ const generateMicroFrontend = (options) => {
 
 **Multi-Level Testing:**
 ```javascript
-// platform/tools/testing/integration-test-runner.js
+// platform/testing/integration-test-runner.js
 class IntegrationTestRunner {
   async runTests(domain, team, apps) {
     // Unit tests for each app

@@ -1,7 +1,7 @@
 /* eslint-disable */
 module.exports = {
   displayName: "adminApp",
-  preset: "../../../../tools/testing/jest.preset.js",
+  preset: "../../../../jest.preset.js",
   transform: {
     "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "@nx/react/plugins/jest",
     "^.+\\.[tj]sx?$": [

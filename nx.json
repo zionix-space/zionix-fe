@@ -25,8 +25,8 @@
       "cache": true,
       "inputs": [
         "default",
-        "{workspaceRoot}/tools/linting/.eslintrc.json",
-        "{workspaceRoot}/tools/linting/.eslintignore",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
         "{workspaceRoot}/eslint.config.js"
       ]
     },
@@ -35,7 +35,7 @@
       "inputs": [
         "default",
         "^production",
-        "{workspaceRoot}/tools/testing/jest.preset.js"
+        "{workspaceRoot}/jest.preset.js"
       ],
       "options": {
         "passWithNoTests": true
