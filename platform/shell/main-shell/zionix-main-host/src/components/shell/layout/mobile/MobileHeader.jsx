@@ -12,6 +12,7 @@ import {
 import { MobileSearchPopup } from "./MobileSearchPopup";
 import { MobileProfileDropdown } from "./MobileProfileDropdown";
 import { useMenuStore } from "../../../../data/stores/menu/useMenuStore";
+import { NotificationDropdown } from "../shared/NotificationDropdown";
 
 export const MobileHeader = () => {
   const { token, isDarkMode, toggleTheme } = useTheme();
@@ -32,8 +33,9 @@ export const MobileHeader = () => {
     return null;
   }
 
-  const handleNotificationClick = () => {
-    console.log("Notification clicked");
+  const handleNotificationClick = (notificationId, actionType) => {
+    console.log(`Mobile notification action: ${actionType} for notification ${notificationId}`);
+    // Handle notification actions here
   };
 
   const handleSearchClick = () => {
@@ -85,14 +87,11 @@ export const MobileHeader = () => {
 
       {/* Center Section - Action Icons */}
       <motion.div style={styles.centerSectionStyle} variants={centerIconsVariants}>
-        <button
-          style={{...styles.actionIconStyle, ...styles.notificationIconStyle}}
-          onClick={handleNotificationClick}
-          aria-label="Notifications"
-        >
-          <i className="ri-notification-line" />
-          <div style={styles.notificationBadgeStyle}></div>
-        </button>
+        <NotificationDropdown 
+          onNotificationClick={handleNotificationClick}
+          buttonStyle={{...styles.actionIconStyle, ...styles.notificationIconStyle}}
+          isMobile={true}
+        />
 
         <button
           style={styles.actionIconStyle}
