@@ -32,14 +32,14 @@ const AppTopBar = () => {
   const styles = useStyles(token);
 
   // Get menu data from Zustand store
-  const { 
-    mainMenus, 
-    selectedMainMenu, 
-    setSelectedMainMenu, 
+  const {
+    mainMenus,
+    selectedMainMenu,
+    setSelectedMainMenu,
     initializeMenus,
     shouldUpdateMenuData,
     setMenuVersion,
-    menuVersion
+    menuVersion,
   } = useMenuStore();
 
   // Initialize menu data on component mount
@@ -48,18 +48,18 @@ const AppTopBar = () => {
       try {
         // Fetch menu data with current version for comparison
         const menuData = await fetchMenuData(menuVersion);
-        
+
         // Check if we need to update based on version
         if (shouldUpdateMenuData(menuData)) {
           // Update menu version first
           setMenuVersion(menuData.config.version);
-          
+
           // Only initialize if we don't have menu data yet
           // This preserves persisted state after page refresh
           if (mainMenus.length === 0) {
             initializeMenus(menuData);
           } else {
-            // If we have persisted mainMenus but no completeMenuData, 
+            // If we have persisted mainMenus but no completeMenuData,
             // just update the completeMenuData without changing selections
             const { completeMenuData } = useMenuStore.getState();
             if (!completeMenuData) {
@@ -73,7 +73,13 @@ const AppTopBar = () => {
     };
 
     loadMenuData();
-  }, [mainMenus.length, initializeMenus, menuVersion, shouldUpdateMenuData, setMenuVersion]);
+  }, [
+    mainMenus.length,
+    initializeMenus,
+    menuVersion,
+    shouldUpdateMenuData,
+    setMenuVersion,
+  ]);
 
   // Convert main menus to navigation items for the topbar
   const navigationItems = mainMenus.map((menu) => ({
@@ -118,16 +124,8 @@ const AppTopBar = () => {
 
       {/* Right Section - Actions */}
       <Space style={styles.rightActionsStyle}>
-        <Badge count={3} size="small">
-          <Button
-            type="text"
-            icon={<i className="ri-notification-line" />}
-            style={styles.iconButtonStyle}
-          />
-        </Badge>
-
         {/* Color Picker for Dynamic Theme Testing */}
-        <Tooltip title="Change Primary Color">
+        {/* <Tooltip title="Change Primary Color">
           <ColorPicker
             value={primaryColor}
             onChange={(color) => setPrimaryColor(color.toHexString())}
@@ -139,8 +137,8 @@ const AppTopBar = () => {
               {
                 label: 'Recommended',
                 colors: [
-                  token.colorPrimary || '#1f40fc', // Current primary color
-                  '#1f40fc', // Classic blue
+                  token.colorPrimary || '#0050d8', // Current primary color
+                  '#0050d8', // Classic blue
                   '#52c41a', // Success green
                   '#fa8c16', // Warning orange
                   '#ff4d4f', // Error red
@@ -159,7 +157,7 @@ const AppTopBar = () => {
           onClick={toggleRTL}
           style={styles.rtlToggleStyle(isRTL)}
           title={isRTL ? 'Switch to LTR' : 'Switch to RTL'}
-        />
+        /> */}
 
         <Button
           type="text"
@@ -174,6 +172,14 @@ const AppTopBar = () => {
           style={styles.iconButtonStyle}
           title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
         />
+
+        <Badge count={3} size="small">
+          <Button
+            type="text"
+            icon={<i className="ri-notification-line" />}
+            style={styles.iconButtonStyle}
+          />
+        </Badge>
       </Space>
     </Header>
   );

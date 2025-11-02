@@ -35,6 +35,173 @@ import { generateLightTokens } from './lightTokens';
 import { generateDarkTokens } from './darkTokens';
 
 /**
+ * Global Scrollbar Styles Component
+ * Injects clean, professional scrollbar styling using current theme tokens
+ * @private
+ */
+const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
+  useEffect(() => {
+    // Remove existing scrollbar styles
+    const existingStyle = document.getElementById('zionix-scrollbar-styles');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    // Create new style element with theme-aware scrollbar styles
+    const style = document.createElement('style');
+    style.id = 'zionix-scrollbar-styles';
+    style.textContent = `
+      /* Clean SaaS Scrollbar Styling */
+      :root {
+        --scrollbar-width: 8px;
+        --scrollbar-track-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'};
+        --scrollbar-thumb-color: ${themeTokens.colorBorderSecondary || (isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)')};
+        --scrollbar-thumb-hover-color: ${themeTokens.colorBorder || (isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)')};
+        --scrollbar-thumb-active-color: ${themeTokens.colorPrimary || '#1f40fc'};
+      }
+
+      /* Webkit Scrollbars (Chrome, Safari, Edge) */
+      ::-webkit-scrollbar {
+        width: var(--scrollbar-width);
+        height: var(--scrollbar-width);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--scrollbar-track-color);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb-color);
+        border-radius: 4px;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover-color);
+        box-shadow: 0 0 0 1px var(--scrollbar-thumb-hover-color);
+      }
+
+      ::-webkit-scrollbar-thumb:active {
+        background: var(--scrollbar-thumb-active-color);
+      }
+
+      ::-webkit-scrollbar-corner {
+        background: var(--scrollbar-track-color);
+      }
+
+      /* Firefox Scrollbars */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+      }
+
+      /* Enhanced scrollbar for specific containers */
+      .ant-layout,
+      .ant-layout-content,
+      .ant-drawer-body,
+      .ant-modal-body,
+      .ant-table-body,
+      .ant-select-dropdown,
+      .ant-cascader-dropdown,
+      .ant-tree-select-dropdown {
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+      }
+
+      .ant-layout::-webkit-scrollbar,
+      .ant-layout-content::-webkit-scrollbar,
+      .ant-drawer-body::-webkit-scrollbar,
+      .ant-modal-body::-webkit-scrollbar,
+      .ant-table-body::-webkit-scrollbar,
+      .ant-select-dropdown::-webkit-scrollbar,
+      .ant-cascader-dropdown::-webkit-scrollbar,
+      .ant-tree-select-dropdown::-webkit-scrollbar {
+        width: var(--scrollbar-width);
+        height: var(--scrollbar-width);
+      }
+
+      .ant-layout::-webkit-scrollbar-track,
+      .ant-layout-content::-webkit-scrollbar-track,
+      .ant-drawer-body::-webkit-scrollbar-track,
+      .ant-modal-body::-webkit-scrollbar-track,
+      .ant-table-body::-webkit-scrollbar-track,
+      .ant-select-dropdown::-webkit-scrollbar-track,
+      .ant-cascader-dropdown::-webkit-scrollbar-track,
+      .ant-tree-select-dropdown::-webkit-scrollbar-track {
+        background: var(--scrollbar-track-color);
+        border-radius: 4px;
+      }
+
+      .ant-layout::-webkit-scrollbar-thumb,
+      .ant-layout-content::-webkit-scrollbar-thumb,
+      .ant-drawer-body::-webkit-scrollbar-thumb,
+      .ant-modal-body::-webkit-scrollbar-thumb,
+      .ant-table-body::-webkit-scrollbar-thumb,
+      .ant-select-dropdown::-webkit-scrollbar-thumb,
+      .ant-cascader-dropdown::-webkit-scrollbar-thumb,
+      .ant-tree-select-dropdown::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb-color);
+        border-radius: 4px;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .ant-layout::-webkit-scrollbar-thumb:hover,
+      .ant-layout-content::-webkit-scrollbar-thumb:hover,
+      .ant-drawer-body::-webkit-scrollbar-thumb:hover,
+      .ant-modal-body::-webkit-scrollbar-thumb:hover,
+      .ant-table-body::-webkit-scrollbar-thumb:hover,
+      .ant-select-dropdown::-webkit-scrollbar-thumb:hover,
+      .ant-cascader-dropdown::-webkit-scrollbar-thumb:hover,
+      .ant-tree-select-dropdown::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover-color);
+        box-shadow: 0 0 0 1px var(--scrollbar-thumb-hover-color);
+      }
+
+      /* Mobile-friendly scrollbar (thinner on mobile) */
+      @media (max-width: 768px) {
+        :root {
+          --scrollbar-width: 6px;
+        }
+        
+        ::-webkit-scrollbar {
+          width: var(--scrollbar-width);
+          height: var(--scrollbar-width);
+        }
+      }
+
+      /* Hide scrollbar on very small screens but keep functionality */
+      @media (max-width: 480px) {
+        :root {
+          --scrollbar-width: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover,
+        ::-webkit-scrollbar-thumb:active {
+          background: var(--scrollbar-thumb-hover-color);
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+
+    // Cleanup function
+    return () => {
+      const styleToRemove = document.getElementById('zionix-scrollbar-styles');
+      if (styleToRemove) {
+        styleToRemove.remove();
+      }
+    };
+  }, [themeTokens, isDarkMode]);
+
+  return null; // This component only injects styles
+};
+
+/**
  * Theme context for managing global theme state
  * @private
  */
@@ -425,6 +592,10 @@ const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
+      <GlobalScrollbarStyles 
+        themeTokens={currentTheme.token} 
+        isDarkMode={isDarkMode} 
+      />
       <ConfigProvider direction={isRTL ? 'rtl' : 'ltr'} theme={currentTheme}>
         {children}
       </ConfigProvider>
