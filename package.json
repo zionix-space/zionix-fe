@@ -13,7 +13,12 @@
     "deploy:main": "node tools/dockerconfig/deploy-vercel.js zionix-main-host",
     "deploy:admin": "node tools/dockerconfig/deploy-vercel.js adminApp",
     "docker:dev": "cd tools/dockerconfig && docker-compose up",
-    "docker:prod": "cd tools/dockerconfig && docker-compose -f docker-compose.prod.yml up"
+    "docker:prod": "cd tools/dockerconfig && docker-compose -f docker-compose.prod.yml up",
+    "perf:audit": "lighthouse http://localhost:4200 --output=json --output-path=./lighthouse-report.json --only-categories=performance --chrome-flags=\"--headless\"",
+    "perf:audit-admin": "lighthouse http://localhost:4200/adminApp/menu-setup --output=json --output-path=./lighthouse-admin-report.json --only-categories=performance --chrome-flags=\"--headless\"",
+    "perf:analyze": "node -e \"const report = JSON.parse(require('fs').readFileSync('./lighthouse-report.json', 'utf8')); console.log('Performance Score:', report.categories.performance.score * 100); console.log('FCP:', report.audits['first-contentful-paint'].displayValue); console.log('LCP:', report.audits['largest-contentful-paint'].displayValue); console.log('TBT:', report.audits['total-blocking-time'].displayValue);\"",
+    "perf:bundle-analyze": "nx build adminApp --analyze && echo 'Bundle analysis complete. Check dist folder for stats.'",
+    "perf:monitor": "npm run perf:audit && npm run perf:analyze"
   },
   "private": true,
   "dependencies": {

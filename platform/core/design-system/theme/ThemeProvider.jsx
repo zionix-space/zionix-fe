@@ -323,9 +323,13 @@ const ThemeProvider = ({ children }) => {
       fontSize: 14,
       fontSizeIcon: 16,
       sizeUnit: 4,
-      borderRadius: 6,
+      // ROUNDED BUTTON STYLING - Calculate border radius based on button height for perfect rounded appearance
+      borderRadius: 16, // Half of controlHeight (32/2) for perfectly rounded default buttons
       controlHeightSM: 24,
       controlHeightLG: 40,
+      // Rounded styling for different button sizes
+      borderRadiusSM: 12, // Half of controlHeightSM (24/2) for perfectly rounded small buttons
+      borderRadiusLG: 20, // Half of controlHeightLG (40/2) for perfectly rounded large buttons
       // CRITICAL: Explicit text colors for buttons
       colorText: isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.88)',
       colorTextDisabled: isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)',

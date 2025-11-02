@@ -129,7 +129,7 @@ export const useStyles = (token, previewMode, collapsed = false) => {
       flex: 1,
       minWidth: 0,
 
-      '& .antMenuItem': {
+      '& .ant-menu-item': {
         padding: '0 12px',
         margin: '0 2px',
         height: '28px',
@@ -139,18 +139,18 @@ export const useStyles = (token, previewMode, collapsed = false) => {
         color: token.colorTextSecondary,
       },
 
-      '& .antMenuItem:hover': {
+      '& .ant-menu-item:hover': {
         backgroundColor: token.colorFillQuaternary,
         color: token.colorText,
       },
 
-      '& .antMenuItemSelected': {
+      '& .ant-menu-item-selected': {
         backgroundColor: token.colorPrimary,
         color: token.colorWhite,
         fontWeight: 600,
       },
 
-      '& .antMenuItemSelected::after': {
+      '& .ant-menu-item-selected::after': {
         display: 'none',
       },
     },
@@ -211,7 +211,7 @@ export const useStyles = (token, previewMode, collapsed = false) => {
       flex: 1,
       overflow: 'auto',
 
-      '& .antMenuItem': {
+      '& .ant-menu-item': {
         margin: `1px ${token.paddingXXS}px`,
         padding: `${token.paddingXXS}px ${token.paddingSM}px`,
         height: '28px',
@@ -221,18 +221,18 @@ export const useStyles = (token, previewMode, collapsed = false) => {
         color: token.colorTextSecondary,
       },
 
-      '& .antMenuItem:hover': {
+      '& .ant-menu-item:hover': {
         backgroundColor: token.colorFillQuaternary,
         color: token.colorText,
       },
 
-      '& .antMenuItemSelected': {
+      '& .ant-menu-item-selected': {
         backgroundColor: token.colorPrimary,
         color: token.colorWhite,
         fontWeight: 500,
       },
 
-      '& .antMenuItemSelected::after': {
+      '& .ant-menu-item-selected::after': {
         display: 'none',
       },
     },

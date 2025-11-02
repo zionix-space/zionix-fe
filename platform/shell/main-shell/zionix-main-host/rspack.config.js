@@ -2,6 +2,9 @@ const { composePlugins, withNx, withReact } = require("@nx/rspack");
 const { withModuleFederation } = require("@nx/rspack/module-federation");
 const commonRulesRsPack = require("../../../../tools/deployment/rspack.common");
 const baseConfig = require("./module-federation.config");
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 const config = {
   ...baseConfig,
 };
@@ -16,7 +19,43 @@ module.exports = composePlugins(
   withReact(),
   withModuleFederation(config),
   (config) => {
-    commonRulesRsPack(config);
+    commonRulesRsPack(config, isDevelopment);
+    
+    // Development-specific optimizations
+    if (isDevelopment) {
+      // Enable faster source maps for development
+      config.devtool = 'eval-cheap-module-source-map';
+      
+      // Disable optimization in development for faster builds
+      config.optimization = {
+        ...config.optimization,
+        minimize: false,
+        removeAvailableModules: false,
+        removeEmptyChunks: false,
+        splitChunks: false,
+      };
+      
+      // Enable caching for faster rebuilds (Rspack expects boolean)
+      config.cache = true;
+      
+      // Optimize module resolution for faster lookups (only supported options)
+      config.resolve = {
+        ...config.resolve,
+        symlinks: false,
+      };
+      
+      // Optimize dev server for faster HMR
+      config.devServer = {
+        ...config.devServer,
+        hot: true,
+        liveReload: false,
+        compress: false,
+      };
+      
+      // Reduce bundle analysis overhead
+      config.stats = 'errors-warnings';
+    }
+    
     return config;
   }
 );

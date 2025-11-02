@@ -20,6 +20,63 @@ module.exports = composePlugins(
   withModuleFederation(config),
   (config) => {
     commonRulesRsPack(config);
+    
+    // Performance optimizations for adminApp
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          // Separate vendor chunks for better caching
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            priority: 10,
+          },
+          // Separate antd chunk for better caching
+          antd: {
+            test: /[\\/]node_modules[\\/]antd[\\/]/,
+            name: 'antd',
+            chunks: 'all',
+            priority: 20,
+          },
+          // Separate react chunk for better caching
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
+            chunks: 'all',
+            priority: 30,
+          },
+          // Form builder specific chunk
+          formBuilder: {
+            test: /[\\/]src[\\/]pages[\\/]FormSetup[\\/]/,
+            name: 'form-builder',
+            chunks: 'all',
+            priority: 5,
+          },
+        },
+      },
+      // Enable module concatenation for better tree shaking
+      concatenateModules: true,
+      // Enable side effects optimization
+      sideEffects: false,
+    };
+
+    // Add performance hints
+    config.performance = {
+      hints: 'warning',
+      maxEntrypointSize: 500000, // 500KB
+      maxAssetSize: 300000, // 300KB
+    };
+
+    // Optimize resolve for faster builds
+    config.resolve = {
+      ...config.resolve,
+      // Reduce resolve attempts
+      symlinks: false,
+    };
+
     return config;
   }
 );
