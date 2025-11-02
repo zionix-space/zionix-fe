@@ -81,12 +81,17 @@ const AppTopBar = () => {
     setMenuVersion,
   ]);
 
-  // Convert main menus to navigation items for the topbar
-  const navigationItems = mainMenus.map((menu) => ({
-    key: menu.key,
-    label: menu.label,
-    icon: menu.icon ? <i className={menu.icon} /> : null,
-  }));
+  // Filter out admin-app from regular navigation and convert to navigation items
+  const navigationItems = mainMenus
+    .filter((menu) => menu.key !== 'admin-app')
+    .map((menu) => ({
+      key: menu.key,
+      label: menu.label,
+      icon: menu.icon ? <i className={menu.icon} /> : null,
+    }));
+
+  // Get admin menu for the admin button
+  const adminMenu = mainMenus.find((menu) => menu.key === 'admin-app');
 
   // Handle main menu selection
   const handleMainMenuSelect = ({ key }) => {
@@ -124,6 +129,21 @@ const AppTopBar = () => {
 
       {/* Right Section - Actions */}
       <Space style={styles.rightActionsStyle}>
+        {/* Admin Button */}
+        {adminMenu && (
+          <Button
+            type="text"
+            icon={<i className="ri-settings-3-line" />}
+            onClick={() => setSelectedMainMenu(adminMenu)}
+            style={{
+              ...styles.iconButtonStyle,
+              color: selectedMainMenu?.key === 'admin-app' ? token.colorPrimary : undefined,
+              backgroundColor: selectedMainMenu?.key === 'admin-app' ? token.colorPrimaryBg : undefined,
+            }}
+            title="Admin Settings"
+          />
+        )}
+
         {/* Color Picker for Dynamic Theme Testing */}
         {/* <Tooltip title="Change Primary Color">
           <ColorPicker

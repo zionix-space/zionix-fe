@@ -43,7 +43,7 @@ export const dummyMenuData = {
         {
           key: 'app-management',
           label: 'App setup',
-          icon: '',
+          icon: 'ri-apps-2-line',
           description: 'Manage applications and configurations',
           badge: null,
           sectionTitle: 'Application Configuration',
@@ -51,7 +51,7 @@ export const dummyMenuData = {
             {
               key: 'domains',
               label: 'Domains',
-              icon: 'ri-global-line',
+              icon: null,
               description: 'Manage domain configurations',
               badge: null,
               children: [],
@@ -59,7 +59,7 @@ export const dummyMenuData = {
             {
               key: 'apps',
               label: 'Apps',
-              icon: 'ri-smartphone-line',
+              icon: null,
               description: 'Application management',
               badge: { count: 5, color: 'blue' },
               children: [],
@@ -67,7 +67,7 @@ export const dummyMenuData = {
             {
               key: 'menus',
               label: 'Menus',
-              icon: 'ri-menu-line',
+              icon: null,
               description: 'Menu configuration and management',
               badge: null,
               children: [],
@@ -75,7 +75,7 @@ export const dummyMenuData = {
             {
               key: 'forms',
               label: 'Forms',
-              icon: 'ri-file-list-line',
+              icon: null,
               description: 'Form builder and management',
               badge: { count: 3, color: 'green' },
               children: [],
@@ -83,7 +83,7 @@ export const dummyMenuData = {
             {
               key: 'buttons',
               label: 'Buttons',
-              icon: 'ri-checkbox-line',
+              icon: null,
               description: 'Button components and styles',
               badge: null,
               children: [],
@@ -93,7 +93,7 @@ export const dummyMenuData = {
         {
           key: 'client-management',
           label: 'Client setup',
-          icon: '',
+          icon: 'ri-building-2-line',
           description: 'Client and organizational management',
           badge: null,
           sectionTitle: 'Client Management',
@@ -101,7 +101,7 @@ export const dummyMenuData = {
             {
               key: 'clients',
               label: 'Clients',
-              icon: 'ri-team-line',
+              icon: null,
               description: 'Client information and management',
               badge: { count: 12, color: 'orange' },
               children: [],
@@ -109,7 +109,7 @@ export const dummyMenuData = {
             {
               key: 'entities-branches',
               label: 'Entities/Branches',
-              icon: 'ri-building-line',
+              icon: null,
               description: 'Organizational entities and branches',
               badge: null,
               children: [],
@@ -117,7 +117,7 @@ export const dummyMenuData = {
             {
               key: 'date-time',
               label: 'Date & Time',
-              icon: 'ri-calendar-line',
+              icon: null,
               description: 'Date and time configurations',
               badge: null,
               children: [],
@@ -125,7 +125,7 @@ export const dummyMenuData = {
             {
               key: 'department',
               label: 'Department',
-              icon: 'ri-organization-chart',
+              icon: null,
               description: 'Department management',
               badge: { count: 8, color: 'purple' },
               children: [],
@@ -133,7 +133,7 @@ export const dummyMenuData = {
             {
               key: 'divisions',
               label: 'Divisions',
-              icon: 'ri-git-branch-line',
+              icon: null,
               description: 'Division and unit management',
               badge: null,
               children: [],
@@ -141,7 +141,7 @@ export const dummyMenuData = {
             {
               key: 'job-code',
               label: 'Job Code',
-              icon: 'ri-briefcase-line',
+              icon: null,
               description: 'Job classification and codes',
               badge: null,
               children: [],
@@ -149,7 +149,7 @@ export const dummyMenuData = {
             {
               key: 'authentication-policies',
               label: 'Authentication Policies',
-              icon: 'ri-shield-user-line',
+              icon: null,
               description: 'Security and authentication policies',
               badge: { count: 2, color: 'red' },
               children: [],
@@ -159,7 +159,7 @@ export const dummyMenuData = {
         {
           key: 'user-roles-management',
           label: 'User Roles setup',
-          icon: '',
+          icon: 'ri-user-settings-line',
           description: 'User roles and permissions management',
           badge: null,
           sectionTitle: 'User Management',
@@ -167,7 +167,7 @@ export const dummyMenuData = {
             {
               key: 'roles',
               label: 'Roles',
-              icon: 'ri-user-settings-line',
+              icon: null,
               description: 'Role definitions and permissions',
               badge: { count: 6, color: 'cyan' },
               children: [],
@@ -175,7 +175,7 @@ export const dummyMenuData = {
             {
               key: 'users',
               label: 'Users',
-              icon: 'ri-group-line',
+              icon: null,
               description: 'User accounts and management',
               badge: { count: 24, color: 'gold' },
               children: [],
