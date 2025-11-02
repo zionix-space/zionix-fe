@@ -108,6 +108,96 @@ const AppTopBar = () => {
     // Handle notification actions here
   };
 
+  // Fullscreen state management
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Check if fullscreen API is supported
+  const isFullscreenSupported = () => {
+    return !!(
+      document.fullscreenEnabled ||
+      document.webkitFullscreenEnabled ||
+      document.mozFullScreenEnabled ||
+      document.msFullscreenEnabled
+    );
+  };
+
+  // Handle fullscreen change events
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const fullscreenElement = 
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement;
+      
+      setIsFullscreen(!!fullscreenElement);
+    };
+
+    // Add event listeners for different browsers
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      // Cleanup event listeners
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+   }, []);
+
+   // Fullscreen toggle functions
+   const enterFullscreen = async () => {
+     try {
+       const element = document.documentElement;
+       
+       if (element.requestFullscreen) {
+         await element.requestFullscreen();
+       } else if (element.webkitRequestFullscreen) {
+         await element.webkitRequestFullscreen();
+       } else if (element.mozRequestFullScreen) {
+         await element.mozRequestFullScreen();
+       } else if (element.msRequestFullscreen) {
+         await element.msRequestFullscreen();
+       }
+     } catch (error) {
+       console.warn('Failed to enter fullscreen:', error);
+       // Optionally show a user-friendly message
+     }
+   };
+
+   const exitFullscreen = async () => {
+     try {
+       if (document.exitFullscreen) {
+         await document.exitFullscreen();
+       } else if (document.webkitExitFullscreen) {
+         await document.webkitExitFullscreen();
+       } else if (document.mozCancelFullScreen) {
+         await document.mozCancelFullScreen();
+       } else if (document.msExitFullscreen) {
+         await document.msExitFullscreen();
+       }
+     } catch (error) {
+       console.warn('Failed to exit fullscreen:', error);
+       // Optionally show a user-friendly message
+     }
+   };
+
+   const toggleFullscreen = async () => {
+     if (!isFullscreenSupported()) {
+       console.warn('Fullscreen API is not supported in this browser');
+       return;
+     }
+
+     if (isFullscreen) {
+       await exitFullscreen();
+     } else {
+       await enterFullscreen();
+     }
+   };
+
 
 
   return (
@@ -150,6 +240,28 @@ const AppTopBar = () => {
               backgroundColor: selectedMainMenu?.key === 'admin-app' ? token.colorPrimaryBg : undefined,
             }}
             title="Admin Settings"
+          />
+        )}
+
+        {/* Fullscreen Toggle Button */}
+        {isFullscreenSupported() && (
+          <Button
+            type="text"
+            icon={
+              isFullscreen ? (
+                <i className="ri-fullscreen-exit-line" />
+              ) : (
+                <i className="ri-fullscreen-line" />
+              )
+            }
+            onClick={toggleFullscreen}
+            style={{
+              ...styles.iconButtonStyle,
+              color: isFullscreen ? token.colorPrimary : undefined,
+              backgroundColor: isFullscreen ? token.colorPrimaryBg : undefined,
+            }}
+            title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+            aria-label={isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'}
           />
         )}
 
