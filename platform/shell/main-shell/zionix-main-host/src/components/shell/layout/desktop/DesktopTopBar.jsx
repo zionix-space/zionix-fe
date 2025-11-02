@@ -111,92 +111,162 @@ const AppTopBar = () => {
   // Fullscreen state management
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Check if fullscreen API is supported
+  // Enhanced cross-browser fullscreen API support detection
   const isFullscreenSupported = () => {
+    const doc = document;
+    const docEl = document.documentElement;
+    
     return !!(
-      document.fullscreenEnabled ||
-      document.webkitFullscreenEnabled ||
-      document.mozFullScreenEnabled ||
-      document.msFullscreenEnabled
+      // Standard API
+      (doc.fullscreenEnabled !== undefined && doc.fullscreenEnabled) ||
+      // WebKit (Safari, Chrome)
+      (doc.webkitFullscreenEnabled !== undefined && doc.webkitFullscreenEnabled) ||
+      // Mozilla (Firefox)
+      (doc.mozFullScreenEnabled !== undefined && doc.mozFullScreenEnabled) ||
+      // Microsoft (IE/Edge)
+      (doc.msFullscreenEnabled !== undefined && doc.msFullscreenEnabled) ||
+      // Fallback: check if methods exist
+      (docEl.requestFullscreen || docEl.webkitRequestFullscreen || 
+       docEl.mozRequestFullScreen || docEl.msRequestFullscreen)
     );
   };
 
-  // Handle fullscreen change events
+  // Get current fullscreen element across browsers
+  const getFullscreenElement = () => {
+    return (
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      null
+    );
+  };
+
+  // Handle fullscreen change events with enhanced browser support
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const fullscreenElement = 
-        document.fullscreenElement ||
-        document.webkitFullscreenElement ||
-        document.mozFullScreenElement ||
-        document.msFullscreenElement;
-      
+      const fullscreenElement = getFullscreenElement();
       setIsFullscreen(!!fullscreenElement);
     };
 
-    // Add event listeners for different browsers
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+    // Comprehensive event listener setup for all browsers
+    const events = [
+      'fullscreenchange',      // Standard
+      'webkitfullscreenchange', // Safari/Chrome
+      'mozfullscreenchange',    // Firefox
+      'MSFullscreenChange',     // IE/Edge (capital letters)
+      'msfullscreenchange'      // Edge (lowercase fallback)
+    ];
+
+    // Add all event listeners
+    events.forEach(event => {
+      document.addEventListener(event, handleFullscreenChange, false);
+    });
+
+    // Initial state check
+    handleFullscreenChange();
 
     return () => {
-      // Cleanup event listeners
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+      // Cleanup all event listeners
+      events.forEach(event => {
+        document.removeEventListener(event, handleFullscreenChange, false);
+      });
     };
-   }, []);
+  }, []);
 
-   // Fullscreen toggle functions
-   const enterFullscreen = async () => {
-     try {
-       const element = document.documentElement;
-       
-       if (element.requestFullscreen) {
-         await element.requestFullscreen();
-       } else if (element.webkitRequestFullscreen) {
-         await element.webkitRequestFullscreen();
-       } else if (element.mozRequestFullScreen) {
-         await element.mozRequestFullScreen();
-       } else if (element.msRequestFullscreen) {
-         await element.msRequestFullscreen();
-       }
-     } catch (error) {
-       console.warn('Failed to enter fullscreen:', error);
-       // Optionally show a user-friendly message
-     }
-   };
+  // Enhanced fullscreen enter function with comprehensive browser support
+  const enterFullscreen = async () => {
+    if (!isFullscreenSupported()) {
+      console.warn('Fullscreen is not supported in this browser');
+      return false;
+    }
 
-   const exitFullscreen = async () => {
-     try {
-       if (document.exitFullscreen) {
-         await document.exitFullscreen();
-       } else if (document.webkitExitFullscreen) {
-         await document.webkitExitFullscreen();
-       } else if (document.mozCancelFullScreen) {
-         await document.mozCancelFullScreen();
-       } else if (document.msExitFullscreen) {
-         await document.msExitFullscreen();
-       }
-     } catch (error) {
-       console.warn('Failed to exit fullscreen:', error);
-       // Optionally show a user-friendly message
-     }
-   };
+    try {
+      const element = document.documentElement;
+      
+      // Try standard method first
+      if (element.requestFullscreen) {
+        await element.requestFullscreen();
+      }
+      // WebKit (Safari, older Chrome)
+      else if (element.webkitRequestFullscreen) {
+        // Safari requires Element.ALLOW_KEYBOARD_INPUT parameter
+        if (typeof Element !== 'undefined' && Element.ALLOW_KEYBOARD_INPUT) {
+          await element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        } else {
+          await element.webkitRequestFullscreen();
+        }
+      }
+      // Mozilla (Firefox)
+      else if (element.mozRequestFullScreen) {
+        await element.mozRequestFullScreen();
+      }
+      // Microsoft (IE/Edge)
+      else if (element.msRequestFullscreen) {
+        await element.msRequestFullscreen();
+      }
+      else {
+        throw new Error('No fullscreen method available');
+      }
+      
+      return true;
+    } catch (error) {
+      console.warn('Failed to enter fullscreen:', error.message);
+      return false;
+    }
+  };
 
-   const toggleFullscreen = async () => {
-     if (!isFullscreenSupported()) {
-       console.warn('Fullscreen API is not supported in this browser');
-       return;
-     }
+  // Enhanced fullscreen exit function with comprehensive browser support
+  const exitFullscreen = async () => {
+    if (!getFullscreenElement()) {
+      return true; // Already not in fullscreen
+    }
 
-     if (isFullscreen) {
-       await exitFullscreen();
-     } else {
-       await enterFullscreen();
-     }
-   };
+    try {
+      // Try standard method first
+      if (document.exitFullscreen) {
+        await document.exitFullscreen();
+      }
+      // WebKit (Safari, older Chrome)
+      else if (document.webkitExitFullscreen) {
+        await document.webkitExitFullscreen();
+      }
+      // Mozilla (Firefox)
+      else if (document.mozCancelFullScreen) {
+        await document.mozCancelFullScreen();
+      }
+      // Microsoft (IE/Edge)
+      else if (document.msExitFullscreen) {
+        await document.msExitFullscreen();
+      }
+      else {
+        throw new Error('No exit fullscreen method available');
+      }
+      
+      return true;
+    } catch (error) {
+      console.warn('Failed to exit fullscreen:', error.message);
+      return false;
+    }
+  };
+
+  // Enhanced toggle function with better error handling
+  const toggleFullscreen = async () => {
+    if (!isFullscreenSupported()) {
+      console.warn('Fullscreen API is not supported in this browser');
+      return;
+    }
+
+    try {
+      if (isFullscreen) {
+        await exitFullscreen();
+      } else {
+        await enterFullscreen();
+      }
+    } catch (error) {
+      console.error('Fullscreen toggle failed:', error);
+    }
+  };
 
 
 
