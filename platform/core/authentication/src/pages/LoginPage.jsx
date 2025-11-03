@@ -444,27 +444,33 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
             >
               {/* Floating UI Elements Background */}
               <div style={styles.floatingElements}>
-                {/* Google Icon */}
+                {/* Security Shield Icon */}
                 <div style={styles.floatingIcon1}>
                   <div style={styles.iconCircle} className="icon-circle">
                     <i
-                      className="ri-google-fill"
+                      className="ri-shield-check-fill"
                       style={styles.floatingIconContent}
                     />
                   </div>
                 </div>
 
-                {/* Play Icon */}
+                {/* Lock/Encryption Icon */}
                 <div style={styles.floatingIcon2}>
                   <div style={styles.iconCircle} className="icon-circle">
-                    <div style={styles.playIcon}>▶</div>
+                    <i
+                      className="ri-lock-2-fill"
+                      style={styles.floatingIconContent}
+                    />
                   </div>
                 </div>
 
-                {/* Chrome Icon */}
+                {/* Certificate/Verification Icon */}
                 <div style={styles.floatingIcon3}>
                   <div style={styles.iconCircle} className="icon-circle">
-                    <div style={styles.chromeIcon}>G</div>
+                    <i
+                      className="ri-verified-badge-fill"
+                      style={styles.floatingIconContent}
+                    />
                   </div>
                 </div>
               </div>
