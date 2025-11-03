@@ -1,17 +1,6 @@
-/* Simple Chrome Cursor Bug Fix */
+/* Global CSS Reset */
 * {
   box-sizing: border-box;
-  user-select: none; /* Prevent text cursor on non-text elements */
-}
-
-/* Allow text selection only where needed */
-input, textarea, [contenteditable="true"] {
-  user-select: text !important;
-}
-
-/* Hide unwanted carets */
-*:not(input):not(textarea):not([contenteditable="true"]) {
-  caret-color: transparent;
 }
 
 html, body {
