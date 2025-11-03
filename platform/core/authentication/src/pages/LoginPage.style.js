@@ -29,7 +29,7 @@ export const useStyles = (token) => {
       leftColumn: {
         height: '100vh',
         padding: 0,
-        backgroundColor: '#ffffff',
+        backgroundColor: token.colorBgContainer,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -40,8 +40,7 @@ export const useStyles = (token) => {
       rightColumn: {
         height: '100vh',
         padding: 0,
-        background:
-          'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)',
+        background: `linear-gradient(135deg, ${token.colorPrimaryActive} 0%, ${token.colorPrimary} 50%, ${token.colorPrimaryHover} 100%)`,
         position: 'relative',
         overflow: 'hidden',
         minHeight: 'inherit',
@@ -74,7 +73,7 @@ export const useStyles = (token) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#ffffff',
+        color: token.colorWhite,
         fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
         fontWeight: 'bold',
       },
@@ -83,7 +82,7 @@ export const useStyles = (token) => {
       logoText: {
         fontSize: 'clamp(1.125rem, 2.5vw, 1.25rem)',
         fontWeight: '600',
-        color: '#1f2937',
+        color: token.colorText,
       },
 
       // Form content
@@ -95,7 +94,7 @@ export const useStyles = (token) => {
       title: {
         fontSize: 'clamp(1.5rem, 3.5vw, 1rem)',
         fontWeight: '700',
-        color: '#1f2937',
+        color: token.colorText,
         marginBottom: 'clamp(1rem, 2vw, 1.5rem)',
         lineHeight: '1.2',
         whiteSpace: 'nowrap',
@@ -108,7 +107,7 @@ export const useStyles = (token) => {
       // Subtitle
       subtitle: {
         fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-        color: '#6b7280',
+        color: token.colorTextSecondary,
         marginBottom: '2rem',
         lineHeight: '1.5',
       },
@@ -125,9 +124,9 @@ export const useStyles = (token) => {
         flex: 1,
         height: 'clamp(2.5rem, 5vw, 3rem)',
         borderRadius: 'clamp(0.25rem, 1vw, 0.5rem)',
-        border: '1px solid #e5e7eb',
-        backgroundColor: '#ffffff',
-        color: '#374151',
+        border: `1px solid ${token.colorBorder}`,
+        backgroundColor: token.colorBgContainer,
+        color: token.colorText,
         fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
         fontWeight: '500',
         display: 'flex',
@@ -135,28 +134,28 @@ export const useStyles = (token) => {
         justifyContent: 'center',
         gap: 'clamp(0.25rem, 1vw, 0.5rem)',
         transition: 'all 0.2s ease',
-        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        boxShadow: `0 1px 2px 0 ${token.colorBgLayout}`,
         minHeight: '2.5rem',
         cursor: 'pointer',
       },
 
       // Social button hover state (to be applied via React state)
       socialButtonHover: {
-        borderColor: '#d1d5db',
-        backgroundColor: '#f9fafb',
+        borderColor: token.colorBorderSecondary,
+        backgroundColor: token.colorBgTextHover,
         transform: 'translateY(-1px)',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        boxShadow: `0 4px 6px -1px ${token.colorBgLayout}`,
       },
 
       // Divider
       divider: {
         margin: '1.5rem 0',
-        borderColor: '#e5e7eb',
+        borderColor: token.colorBorder,
       },
 
       // Divider text
       dividerText: {
-        color: '#9ca3af',
+        color: token.colorTextSecondary,
         fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
         padding: '0 clamp(0.75rem, 2vw, 1rem)',
       },
@@ -170,7 +169,7 @@ export const useStyles = (token) => {
       input: {
         height: 'clamp(2.5rem, 5vw, 3rem)',
         borderRadius: 'clamp(0.25rem, 1vw, 0.5rem)',
-        border: '1px solid #e5e7eb',
+        border: `1px solid ${token.colorBorder}`,
         fontSize: 'clamp(0.875rem, 1.75vw, 1rem)',
         padding: 'clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
         transition: 'all 0.2s ease',
@@ -179,13 +178,13 @@ export const useStyles = (token) => {
 
       // Input focus state (to be applied via React state)
       inputFocus: {
-        borderColor: '#3b82f6',
-        boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)',
+        borderColor: token.colorPrimary,
+        boxShadow: `0 0 0 3px ${token.colorPrimaryBg}`,
       },
 
       // Input icon
       inputIcon: {
-        color: '#9ca3af',
+        color: token.colorTextSecondary,
         fontSize: 'clamp(0.875rem, 1.75vw, 1rem)',
       },
 
@@ -201,13 +200,13 @@ export const useStyles = (token) => {
       // Checkbox
       checkbox: {
         fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
-        color: '#374151',
+        color: token.colorText,
       },
 
       // Forgot password link
       forgotLink: {
         fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
-        color: '#3b82f6',
+        color: token.colorPrimary,
         fontWeight: '500',
         textDecoration: 'none',
         cursor: 'pointer',
@@ -215,34 +214,42 @@ export const useStyles = (token) => {
 
       // Forgot link hover state (to be applied via React state)
       forgotLinkHover: {
-        color: '#2563eb',
+        color: token.colorPrimaryHover,
         textDecoration: 'underline',
       },
 
       // Login button
       loginButton: {
-        height: 'clamp(2.5rem, 5vw, 3rem)',
-        borderRadius: 'clamp(0.25rem, 1vw, 0.5rem)',
-        backgroundColor: '#3b82f6',
+        width: '100%',
+        height: '48px',
+        backgroundColor: token.colorPrimary,
+        color: token.colorWhite,
         border: 'none',
-        fontSize: 'clamp(0.875rem, 1.75vw, 1rem)',
-        fontWeight: '600',
-        marginBottom: '2rem',
-        transition: 'all 0.2s ease',
-        minHeight: '2.5rem',
+        borderRadius: '8px',
+        fontSize: '16px',
+        fontWeight: 600,
         cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          backgroundColor: token.colorPrimaryHover,
+          transform: 'translateY(-1px)',
+          boxShadow: `0 4px 12px ${token.colorPrimaryBg}`,
+        },
+        '&:active': {
+          transform: 'translateY(0)',
+        },
       },
 
       // Login button hover state (to be applied via React state)
       loginButtonHover: {
-        backgroundColor: '#2563eb',
+        backgroundColor: token.colorPrimaryHover,
         transform: 'translateY(-1px)',
-        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.4)',
+        boxShadow: `0 4px 12px ${token.colorPrimaryBg}`,
       },
 
       // Login button disabled state
       loginButtonDisabled: {
-        backgroundColor: '#9ca3af',
+        backgroundColor: token.colorTextSecondary,
         transform: 'none',
         boxShadow: 'none',
         cursor: 'not-allowed',
@@ -256,12 +263,12 @@ export const useStyles = (token) => {
       // Sign up text
       signUpText: {
         fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
-        color: '#6b7280',
+        color: token.colorTextSecondary,
       },
 
       // Sign up link
       signUpLink: {
-        color: '#3b82f6',
+        color: token.colorPrimary,
         fontWeight: '500',
         textDecoration: 'none',
         fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
@@ -270,7 +277,7 @@ export const useStyles = (token) => {
 
       // Sign up link hover state (to be applied via React state)
       signUpLinkHover: {
-        color: '#2563eb',
+        color: token.colorPrimaryHover,
         textDecoration: 'underline',
       },
 
@@ -319,15 +326,15 @@ export const useStyles = (token) => {
 
       // Icon circle
       iconCircle: {
-        width: 'clamp(3rem, 6vw, 3.75rem)',
-        height: 'clamp(3rem, 6vw, 3.75rem)',
+        width: 'clamp(2rem, 6vw, 3.75rem)',
+        height: 'clamp(2rem, 6vw, 3.75rem)',
         borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        backgroundColor: `${token.colorWhite}33`, // 20% opacity
         backdropFilter: 'blur(10px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
+        border: `1px solid ${token.colorWhite}4D`, // 30% opacity
         animation: 'floatGentle 6s ease-in-out infinite',
         transition: 'all 0.3s ease',
       },
@@ -335,26 +342,26 @@ export const useStyles = (token) => {
       // Icon circle hover state (to be applied via React state)
       iconCircleHover: {
         transform: 'scale(1.1)',
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        backgroundColor: `${token.colorWhite}4D`, // 30% opacity
       },
 
       // Floating icon content
       floatingIconContent: {
         fontSize: 'clamp(1.25rem, 2.5vw, 1.5rem)',
-        color: '#ffffff',
+        color: token.colorWhite,
       },
 
       // Play icon
       playIcon: {
         fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-        color: '#ffffff',
+        color: token.colorWhite,
         marginLeft: '2px',
       },
 
       // Chrome icon
       chromeIcon: {
         fontSize: 'clamp(1.25rem, 2.5vw, 1.5rem)',
-        color: '#ffffff',
+        color: token.colorWhite,
         fontWeight: 'bold',
       },
 
@@ -365,12 +372,12 @@ export const useStyles = (token) => {
         right: 'clamp(5%, 10%, 15%)',
         width: 'clamp(16rem, 25vw, 17.5rem)',
         height: 'clamp(10rem, 18vw, 12.5rem)',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backgroundColor: `${token.colorWhite}F2`, // 95% opacity
         borderRadius: 'clamp(0.5rem, 1.5vw, 0.75rem)',
         padding: 'clamp(0.75rem, 2vw, 1rem)',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+        boxShadow: `0 20px 40px ${token.colorBgLayout}`,
         backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
+        border: `1px solid ${token.colorWhite}33`, // 20% opacity
       },
 
       // Card header
@@ -391,7 +398,7 @@ export const useStyles = (token) => {
         width: 'clamp(0.375rem, 1vw, 0.5rem)',
         height: 'clamp(0.375rem, 1vw, 0.5rem)',
         borderRadius: '50%',
-        backgroundColor: '#e5e7eb',
+        backgroundColor: token.colorBorder,
         display: 'block',
       },
 
@@ -414,7 +421,7 @@ export const useStyles = (token) => {
         width: 'clamp(1.5rem, 3vw, 2rem)',
         height: 'clamp(1.5rem, 3vw, 2rem)',
         borderRadius: '50%',
-        backgroundColor: '#f3f4f6',
+        backgroundColor: token.colorBgTextHover,
       },
 
       // Card text
@@ -428,7 +435,7 @@ export const useStyles = (token) => {
       // Card line
       cardLine: {
         height: 'clamp(0.375rem, 1vw, 0.5rem)',
-        backgroundColor: '#e5e7eb',
+        backgroundColor: token.colorBorder,
         borderRadius: 'clamp(0.125rem, 0.5vw, 0.25rem)',
         width: '100%',
       },
@@ -436,7 +443,7 @@ export const useStyles = (token) => {
       // Card line short
       cardLineShort: {
         height: 'clamp(0.375rem, 1vw, 0.5rem)',
-        backgroundColor: '#f3f4f6',
+        backgroundColor: token.colorBgTextHover,
         borderRadius: 'clamp(0.125rem, 0.5vw, 0.25rem)',
         width: '60%',
       },
@@ -454,16 +461,16 @@ export const useStyles = (token) => {
       promoTitle: {
         fontSize: 'clamp(2rem, 6vw, 3rem)',
         fontWeight: '700',
-        color: '#ffffff',
+        color: token.colorWhite,
         marginBottom: 'clamp(0.75rem, 2vw, 1rem)',
         lineHeight: '1.1',
-        textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        textShadow: `0 2px 4px ${token.colorBgLayout}`,
       },
 
       // Promo subtitle
       promoSubtitle: {
         fontSize: 'clamp(0.875rem, 2vw, 1.125rem)',
-        color: 'rgba(255, 255, 255, 0.9)',
+        color: `${token.colorWhite}E6`, // 90% opacity
         marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)',
         lineHeight: '1.6',
         maxWidth: '100%',
@@ -481,7 +488,7 @@ export const useStyles = (token) => {
         width: 'clamp(0.375rem, 1vw, 0.5rem)',
         height: 'clamp(0.375rem, 1vw, 0.5rem)',
         borderRadius: '50%',
-        backgroundColor: '#ffffff',
+        backgroundColor: token.colorWhite,
       },
 
       // Inactive dot
@@ -489,14 +496,14 @@ export const useStyles = (token) => {
         width: 'clamp(0.375rem, 1vw, 0.5rem)',
         height: 'clamp(0.375rem, 1vw, 0.5rem)',
         borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+        backgroundColor: `${token.colorWhite}66`, // 40% opacity
       },
 
       // Mobile container
       mobileContainer: {
         height: '100vh',
         width: '100vw',
-        backgroundColor: '#ffffff',
+        backgroundColor: token.colorBgContainer,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -526,7 +533,7 @@ export const useStyles = (token) => {
       mobileTitle: {
         fontSize: 'clamp(1.5rem, 5vw, 1.75rem)',
         fontWeight: '700',
-        color: '#1f2937',
+        color: token.colorText,
         marginBottom: 'clamp(0.25rem, 1vw, 0.5rem)',
         textAlign: 'center',
         lineHeight: '1.2',
@@ -535,7 +542,7 @@ export const useStyles = (token) => {
       // Mobile subtitle
       mobileSubtitle: {
         fontSize: 'clamp(0.875rem, 3vw, 1rem)',
-        color: '#6b7280',
+        color: token.colorTextSecondary,
         marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
         textAlign: 'center',
         lineHeight: '1.5',
@@ -594,15 +601,15 @@ export const useStyles = (token) => {
         width: 'clamp(6rem, 12vw, 7.5rem)',
         height: 'clamp(6rem, 12vw, 7.5rem)',
         borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        backgroundColor: `${token.colorWhite}33`, // 20% opacity
         backdropFilter: 'blur(20px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        border: '2px solid rgba(255, 255, 255, 0.3)',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+        border: `2px solid ${token.colorWhite}4D`, // 30% opacity
+        boxShadow: `0 20px 40px ${token.colorBgLayout}`,
         fontSize: 'clamp(2rem, 5vw, 3rem)',
-        color: '#ffffff',
+        color: token.colorWhite,
       },
 
       // Feature icons
@@ -622,14 +629,14 @@ export const useStyles = (token) => {
         width: 'clamp(2rem, 4vw, 2.5rem)',
         height: 'clamp(2rem, 4vw, 2.5rem)',
         borderRadius: '50%',
-        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        backgroundColor: `${token.colorWhite}26`, // 15% opacity
         backdropFilter: 'blur(10px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
+        border: `1px solid ${token.colorWhite}33`, // 20% opacity
         fontSize: 'clamp(0.75rem, 1.5vw, 1rem)',
-        color: '#ffffff',
+        color: token.colorWhite,
       },
 
       // Feature icon positions (to be applied conditionally)
@@ -659,16 +666,16 @@ export const useStyles = (token) => {
       slideTitle: {
         fontSize: 'clamp(1.5rem, 4vw, 2rem)',
         fontWeight: '700',
-        color: '#ffffff',
+        color: token.colorWhite,
         marginBottom: 'clamp(0.75rem, 2vw, 1rem)',
         lineHeight: '1.2',
-        textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        textShadow: `0 2px 4px ${token.colorBgLayout}`,
       },
 
       // Slide description
       slideDescription: {
         fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-        color: 'rgba(255, 255, 255, 0.9)',
+        color: `${token.colorWhite}E6`, // 90% opacity
         lineHeight: '1.6',
         maxWidth: '100%',
       },

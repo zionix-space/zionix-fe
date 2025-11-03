@@ -104,7 +104,9 @@ const AppTopBar = () => {
 
   // Notification handler
   const handleNotificationClick = (notificationId, actionType) => {
-    console.log(`Notification action: ${actionType} for notification ${notificationId}`);
+    console.log(
+      `Notification action: ${actionType} for notification ${notificationId}`
+    );
     // Handle notification actions here
   };
 
@@ -115,19 +117,24 @@ const AppTopBar = () => {
   const isFullscreenSupported = () => {
     const doc = document;
     const docEl = document.documentElement;
-    
+
     return !!(
       // Standard API
-      (doc.fullscreenEnabled !== undefined && doc.fullscreenEnabled) ||
-      // WebKit (Safari, Chrome)
-      (doc.webkitFullscreenEnabled !== undefined && doc.webkitFullscreenEnabled) ||
-      // Mozilla (Firefox)
-      (doc.mozFullScreenEnabled !== undefined && doc.mozFullScreenEnabled) ||
-      // Microsoft (IE/Edge)
-      (doc.msFullscreenEnabled !== undefined && doc.msFullscreenEnabled) ||
-      // Fallback: check if methods exist
-      (docEl.requestFullscreen || docEl.webkitRequestFullscreen || 
-       docEl.mozRequestFullScreen || docEl.msRequestFullscreen)
+      (
+        (doc.fullscreenEnabled !== undefined && doc.fullscreenEnabled) ||
+        // WebKit (Safari, Chrome)
+        (doc.webkitFullscreenEnabled !== undefined &&
+          doc.webkitFullscreenEnabled) ||
+        // Mozilla (Firefox)
+        (doc.mozFullScreenEnabled !== undefined && doc.mozFullScreenEnabled) ||
+        // Microsoft (IE/Edge)
+        (doc.msFullscreenEnabled !== undefined && doc.msFullscreenEnabled) ||
+        // Fallback: check if methods exist
+        docEl.requestFullscreen ||
+        docEl.webkitRequestFullscreen ||
+        docEl.mozRequestFullScreen ||
+        docEl.msRequestFullscreen
+      )
     );
   };
 
@@ -151,15 +158,15 @@ const AppTopBar = () => {
 
     // Comprehensive event listener setup for all browsers
     const events = [
-      'fullscreenchange',      // Standard
+      'fullscreenchange', // Standard
       'webkitfullscreenchange', // Safari/Chrome
-      'mozfullscreenchange',    // Firefox
-      'MSFullscreenChange',     // IE/Edge (capital letters)
-      'msfullscreenchange'      // Edge (lowercase fallback)
+      'mozfullscreenchange', // Firefox
+      'MSFullscreenChange', // IE/Edge (capital letters)
+      'msfullscreenchange', // Edge (lowercase fallback)
     ];
 
     // Add all event listeners
-    events.forEach(event => {
+    events.forEach((event) => {
       document.addEventListener(event, handleFullscreenChange, false);
     });
 
@@ -168,7 +175,7 @@ const AppTopBar = () => {
 
     return () => {
       // Cleanup all event listeners
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, handleFullscreenChange, false);
       });
     };
@@ -183,7 +190,7 @@ const AppTopBar = () => {
 
     try {
       const element = document.documentElement;
-      
+
       // Try standard method first
       if (element.requestFullscreen) {
         await element.requestFullscreen();
@@ -204,11 +211,10 @@ const AppTopBar = () => {
       // Microsoft (IE/Edge)
       else if (element.msRequestFullscreen) {
         await element.msRequestFullscreen();
-      }
-      else {
+      } else {
         throw new Error('No fullscreen method available');
       }
-      
+
       return true;
     } catch (error) {
       console.warn('Failed to enter fullscreen:', error.message);
@@ -238,11 +244,10 @@ const AppTopBar = () => {
       // Microsoft (IE/Edge)
       else if (document.msExitFullscreen) {
         await document.msExitFullscreen();
-      }
-      else {
+      } else {
         throw new Error('No exit fullscreen method available');
       }
-      
+
       return true;
     } catch (error) {
       console.warn('Failed to exit fullscreen:', error.message);
@@ -267,8 +272,6 @@ const AppTopBar = () => {
       console.error('Fullscreen toggle failed:', error);
     }
   };
-
-
 
   return (
     <Header style={styles.topBarStyle}>
@@ -306,8 +309,14 @@ const AppTopBar = () => {
             onClick={() => setSelectedMainMenu(adminMenu)}
             style={{
               ...styles.iconButtonStyle,
-              color: selectedMainMenu?.key === 'admin-app' ? token.colorPrimary : undefined,
-              backgroundColor: selectedMainMenu?.key === 'admin-app' ? token.colorPrimaryBg : undefined,
+              color:
+                selectedMainMenu?.key === 'admin-app'
+                  ? token.colorPrimary
+                  : undefined,
+              backgroundColor:
+                selectedMainMenu?.key === 'admin-app'
+                  ? token.colorPrimaryBg
+                  : undefined,
             }}
             title="Admin Settings"
           />
@@ -331,12 +340,14 @@ const AppTopBar = () => {
               backgroundColor: isFullscreen ? token.colorPrimaryBg : undefined,
             }}
             title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-            aria-label={isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'}
+            aria-label={
+              isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'
+            }
           />
         )}
 
         {/* Color Picker for Dynamic Theme Testing */}
-        {/* <Tooltip title="Change Primary Color">
+        <Tooltip title="Change Primary Color">
           <ColorPicker
             value={primaryColor}
             onChange={(color) => setPrimaryColor(color.toHexString())}
@@ -362,7 +373,7 @@ const AppTopBar = () => {
           />
         </Tooltip>
 
-        <Button
+        {/* <Button
           type="text"
           icon={<i className="ri-arrow-left-right-line" />}
           onClick={toggleRTL}
@@ -384,7 +395,7 @@ const AppTopBar = () => {
           title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
         />
 
-        <NotificationDropdown 
+        <NotificationDropdown
           onNotificationClick={handleNotificationClick}
           buttonStyle={styles.iconButtonStyle}
         />

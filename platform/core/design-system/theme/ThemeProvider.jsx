@@ -54,10 +54,20 @@ const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
       /* Clean SaaS Scrollbar Styling */
       :root {
         --scrollbar-width: 8px;
-        --scrollbar-track-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'};
-        --scrollbar-thumb-color: ${themeTokens.colorBorderSecondary || (isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)')};
-        --scrollbar-thumb-hover-color: ${themeTokens.colorBorder || (isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)')};
-        --scrollbar-thumb-active-color: ${themeTokens.colorPrimary || '#1f40fc'};
+        --scrollbar-track-color: ${
+          isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'
+        };
+        --scrollbar-thumb-color: ${
+          themeTokens.colorBorderSecondary ||
+          (isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)')
+        };
+        --scrollbar-thumb-hover-color: ${
+          themeTokens.colorBorder ||
+          (isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)')
+        };
+        --scrollbar-thumb-active-color: ${
+          themeTokens.colorPrimary || '#1f40fc'
+        };
       }
 
       /* Webkit Scrollbars (Chrome, Safari, Edge) */
@@ -420,7 +430,7 @@ export const useTheme = () => {
 const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isRTL, setIsRTL] = useState(false);
-  const [primaryColor, setPrimaryColor] = useState('#1f40fc'); // Dynamic primary color state
+  const [primaryColor, setPrimaryColor] = useState('#001968'); // Dynamic primary color state
   const { deviceType, isMobile, isDesktop } = useDeviceDetection();
 
   /**
@@ -499,7 +509,9 @@ const ThemeProvider = ({ children }) => {
       borderRadiusLG: 20, // Half of controlHeightLG (40/2) for perfectly rounded large buttons
       // CRITICAL: Explicit text colors for buttons
       colorText: isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.88)',
-      colorTextDisabled: isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)',
+      colorTextDisabled: isDark
+        ? 'rgba(255, 255, 255, 0.25)'
+        : 'rgba(0, 0, 0, 0.25)',
     },
     DatePicker: {
       // Consistent DatePicker component sizing
@@ -592,9 +604,9 @@ const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
-      <GlobalScrollbarStyles 
-        themeTokens={currentTheme.token} 
-        isDarkMode={isDarkMode} 
+      <GlobalScrollbarStyles
+        themeTokens={currentTheme.token}
+        isDarkMode={isDarkMode}
       />
       <ConfigProvider direction={isRTL ? 'rtl' : 'ltr'} theme={currentTheme}>
         {children}
