@@ -54,20 +54,16 @@ const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
       /* Clean SaaS Scrollbar Styling */
       :root {
         --scrollbar-width: 8px;
-        --scrollbar-track-color: ${
-          isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'
-        };
-        --scrollbar-thumb-color: ${
-          themeTokens.colorBorderSecondary ||
-          (isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)')
-        };
-        --scrollbar-thumb-hover-color: ${
-          themeTokens.colorBorder ||
-          (isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)')
-        };
-        --scrollbar-thumb-active-color: ${
-          themeTokens.colorPrimary || '#1f40fc'
-        };
+        --scrollbar-track-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'
+      };
+        --scrollbar-thumb-color: ${themeTokens.colorBorderSecondary ||
+      (isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)')
+      };
+        --scrollbar-thumb-hover-color: ${themeTokens.colorBorder ||
+      (isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)')
+      };
+        --scrollbar-thumb-active-color: ${themeTokens.colorPrimary || '#1f40fc'
+      };
       }
 
       /* Webkit Scrollbars (Chrome, Safari, Edge) */
@@ -391,7 +387,10 @@ const createResponsiveTokens = (baseTokens, deviceType) => {
 /**
  * Custom hook to access theme context
  * @returns {Object} Theme context value containing theme state and controls
- * @throws {Error} When used outside of ThemeProvider
+ * 
+ * NOTE: This hook now provides default values when used outside ThemeProvider,
+ * making it safe to use anywhere in the application. However, for full functionality,
+ * it's recommended to wrap your app with ThemeProvider.
  *
  * @example
  * ```jsx
@@ -400,9 +399,36 @@ const createResponsiveTokens = (baseTokens, deviceType) => {
  */
 export const useTheme = () => {
   const context = useContext(ThemeContext);
+
+  // If no context (not wrapped in ThemeProvider), return safe defaults
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    console.warn(
+      'useTheme: No ThemeProvider found. Using default theme values. ' +
+      'Wrap your app with <ThemeProvider> for full theme functionality.'
+    );
+
+    // Return default theme values that work without context
+    const defaultLightTokens = generateLightTokens('#001968');
+    const defaultDeviceType = typeof window !== 'undefined' && window.innerWidth <= 767 ? 'mobile' : 'desktop';
+
+    return {
+      isDarkMode: false,
+      toggleTheme: () => console.warn('toggleTheme: ThemeProvider not found'),
+      isRTL: false,
+      toggleRTL: () => console.warn('toggleRTL: ThemeProvider not found'),
+      theme: {
+        algorithm: theme.defaultAlgorithm,
+        token: createResponsiveTokens(defaultLightTokens, defaultDeviceType),
+      },
+      token: createResponsiveTokens(defaultLightTokens, defaultDeviceType),
+      deviceType: defaultDeviceType,
+      isMobile: defaultDeviceType === 'mobile',
+      isDesktop: defaultDeviceType === 'desktop',
+      primaryColor: '#001968',
+      setPrimaryColor: () => console.warn('setPrimaryColor: ThemeProvider not found'),
+    };
   }
+
   return context;
 };
 

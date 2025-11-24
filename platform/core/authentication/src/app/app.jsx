@@ -8,23 +8,31 @@
  * @version 1.0.0
  */
 
+import { ThemeProvider } from '@zionix/design-system';
 import AuthRouter from '../components/AuthRouter';
 
 /**
  * Main Authentication Application Component
  *
  * Features:
- * - React Router integration for SPA navigation
+ * - React Router integration for SPA navigation (provided by host)
  * - Zionix design system theme provider
  * - Ant Design configuration provider
  * - Responsive design support
  * - Dark/light theme support
  * - RTL/LTR direction support
  *
+ * Note: BrowserRouter is provided by the host application (main-shell).
+ * This app uses the router context from the host.
+ *
  * @returns {JSX.Element} Main authentication app component
  */
 export function App() {
-  return <AuthRouter />;
+  return (
+    <ThemeProvider>
+      <AuthRouter />
+    </ThemeProvider>
+  );
 }
 
 export default App;

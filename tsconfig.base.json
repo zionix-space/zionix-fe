@@ -10,9 +10,11 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2021", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "jsx": "react",
     "baseUrl": ".",
     "paths": {
       "@zionix/apiCore": [
@@ -23,6 +25,8 @@
       ],
       "@zionix/design-system": ["platform/core/design-system"],
       "@zionix/design-system/*": ["platform/core/design-system/*"],
+      "@zionix-formEngine/core": ["domains/operations/apps/admin-app/src/pages/FormEngine/core"],
+      "@zionix-formEngine/core/*": ["domains/operations/apps/admin-app/src/pages/FormEngine/core/*"],
       "adminApp/Module": [
         "domains/operations/teams/admin-team/admin-app/src/remote-entry.js"
       ],

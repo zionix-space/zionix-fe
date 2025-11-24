@@ -75,6 +75,11 @@ module.exports = composePlugins(
       ...config.resolve,
       // Reduce resolve attempts
       symlinks: false,
+      // Add path aliases
+      alias: {
+        ...config.resolve?.alias,
+        '@zionix-formEngine/core': require('path').resolve(__dirname, 'src/pages/FormEngine/core'),
+      },
     };
 
     return config;
