@@ -1,5 +1,4 @@
 import {boolean, define, oneOf, string, useAriaAttributes, useComponentData} from '@zionix-formEngine/core'
-import {EyeInvisibleOutlined, EyeOutlined} from '@ant-design/icons'
 import {useCallback, useState} from 'react'
 import type {InputProps} from 'antd'
 import {Input} from 'antd'
@@ -55,7 +54,7 @@ const RsInput = ({style, className, label, passwordMask, showPasswordAriaLabel, 
         {...aria} 
         value={value ?? ''} 
         {...props}
-        iconRender={(visible) => (visible ? <EyeOutlined /> : <EyeInvisibleOutlined />)}
+        iconRender={(visible) => <i className={visible ? 'ri-eye-line' : 'ri-eye-off-line'} />}
       />
     : <Input id={id} {...aria} type={type} value={value ?? ''} {...props}/>
 

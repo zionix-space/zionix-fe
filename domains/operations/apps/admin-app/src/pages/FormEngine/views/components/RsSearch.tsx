@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import {boolean, define, string, useAriaAttributes, useComponentData} from '@zionix-formEngine/core'
-import {SearchOutlined, LoadingOutlined} from '@ant-design/icons'
 import type {ReactNode} from 'react'
 import {useCallback, useMemo} from 'react'
 import {Select} from 'antd'
@@ -99,13 +98,14 @@ const RsSearch = ({data, label, onLoadData, onSearch: onSearchProp, value = '', 
   }, [options?.length, loading])
 
   const onClear = useTouchOnEvent(props, 'onClear')
-  const Icon = loading ? LoadingOutlined : SearchOutlined
   const {id} = useComponentData()
   const aria = useAriaAttributes({labeled: !!label})
 
   const icon = useMemo(() => {
-    return !(props.allowClear && value) ? <Icon className={'search-icon'}/> : null
-  }, [Icon, props.allowClear, value])
+    if (props.allowClear && value) return null
+    const iconClass = loading ? 'ri-loader-4-line ri-spin' : 'ri-search-line'
+    return <i className={`${iconClass} search-icon`} />
+  }, [loading, props.allowClear, value])
 
   return (
     <Labeled label={label} className={className} passAriaToChildren={false}>
