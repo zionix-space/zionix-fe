@@ -5,7 +5,7 @@ export const useStyles = (token) => ({
     borderBottom: "none",
     boxShadow: "none",
     padding: "0 24px",
-    height: "48px",
+    height: "64px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -30,11 +30,12 @@ export const useStyles = (token) => ({
     userSelect: "none",
     position: "absolute",
     left: "24px",
+    height: "100%",
   },
 
   logoTextStyle: {
-    fontSize: "16px",
-    fontWeight: "500",
+    fontSize: "18px",
+    fontWeight: "600",
     color: token.colorText,
     letterSpacing: "0",
     userSelect: "none",

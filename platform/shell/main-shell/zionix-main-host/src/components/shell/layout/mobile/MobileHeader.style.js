@@ -1,187 +1,92 @@
 import { useMemo } from 'react';
 
 /**
- * Mobile Header Styles
- * Provides styling for the mobile header component with three sections:
- * - Left: Avatar profile details
- * - Center: Action icons (notification, search, settings)
- * - Right: Theme toggle
+ * Mobile Header Styles - EXACT Fintech Premium Feel
+ * Pixel-perfect matching of modern fintech apps
  */
 export const useStyles = (token) => {
   return useMemo(
     () => ({
-      // Main header container
+      // Main header container - exact fintech style
       headerStyle: {
-        position: 'sticky',
+        position: 'fixed',
         top: 0,
+        left: 0,
+        right: 0,
         zIndex: 1000,
         width: '100%',
-        height: 56,
+        height: 'calc(72px + env(safe-area-inset-top))',
+        paddingTop: 'calc(20px + env(safe-area-inset-top))',
+        paddingLeft: 24,
+        paddingRight: 24,
+        paddingBottom: 16,
         backgroundColor: token.colorBgContainer,
-
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: `0 ${token.paddingSM}px`,
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-        boxShadow: token.boxShadowTertiary,
+        justifyContent: 'flex-start',
+        boxShadow: 'none',
+        borderBottom: 'none',
       },
 
-      // Left section - Compact Avatar Only
-      leftSectionStyle: {
+      // Account container - exact spacing
+      accountContainerStyle: {
         display: 'flex',
         alignItems: 'center',
-        flex: '0 0 auto',
-        minWidth: 48,
+        gap: 12,
         cursor: 'pointer',
+        padding: 0,
+        borderRadius: 0,
+        transition: 'opacity 0.15s ease',
+        backgroundColor: 'transparent',
+        WebkitTapHighlightColor: 'transparent',
       },
 
-      // Center section - Action Icons with better spacing
-      centerSectionStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: '1 1 auto',
-        gap: 0, // Compact spacing between icons
-      },
-
-      // Right section - Theme switch only
-      rightSectionStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        flex: '0 0 auto',
-        minWidth: 48,
-      },
-
-      // Avatar Profile Styles
-      avatarProfileStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: token.paddingSM,
-        padding: `${token.paddingXS}px ${token.paddingSM}px`,
-        borderRadius: token.borderRadiusLG,
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          backgroundColor: token.colorBgTextHover,
-        },
-      },
-
+      // Avatar - exact size
       avatarStyle: {
-        width: 40,
-        height: 40,
+        width: 48,
+        height: 48,
         borderRadius: '50%',
         backgroundColor: token.colorPrimary,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         color: token.colorWhite,
-        fontSize: token.fontSizeSM,
+        fontSize: 18,
         fontWeight: 600,
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          transform: 'scale(1.05)',
-          boxShadow: `0 2px 8px ${token.colorPrimary}20`,
-        },
+        flexShrink: 0,
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
       },
 
-      profileDetailsStyle: {
-        display: 'flex',
-        flexDirection: 'column',
-        lineHeight: 1.2,
-      },
-
-      userNameStyle: {
-        fontSize: token.fontSizeSM,
-        fontWeight: 500,
-        color: token.colorText,
-        margin: 0,
-      },
-
-      userRoleStyle: {
-        fontSize: token.fontSizeXS,
-        color: token.colorTextSecondary,
-        margin: 0,
-      },
-
-      // Action Icons Styles
-      actionIconStyle: {
-        width: 48,
-        height: 48,
-        borderRadius: token.borderRadiusLG,
-        border: 'none',
-        backgroundColor: 'transparent',
+      // Account text container
+      accountTextContainerStyle: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        color: token.colorText,
+        gap: 6,
+      },
+
+      // Account text - exact font
+      accountTextStyle: {
+        fontSize: 17,
+        fontWeight: 600,
+        color: '#1F2937',
+        lineHeight: 1.2,
+        letterSpacing: '-0.02em',
+      },
+
+      // Dropdown icon - exact size
+      dropdownIconStyle: {
         fontSize: 20,
-        position: 'relative',
-        '&:hover': {
-          backgroundColor: token.colorBgTextHover,
-          transform: 'scale(1.05)',
-        },
-        '&:active': {
-          transform: 'scale(0.95)',
-        },
-      },
-
-      notificationIconStyle: {
-        position: 'relative',
-      },
-
-      notificationBadgeStyle: {
-        position: 'absolute',
-        top: 2,
-        right: 2,
-        width: 10,
-        height: 10,
-        borderRadius: '50%',
-        backgroundColor: '#ff4d4f', // Red color for visibility
-        border: `2px solid ${token.colorBgContainer}`,
-        display: 'block', // Ensure it's always visible
+        color: '#6B7280',
+        transition: 'transform 0.15s ease',
+        lineHeight: 1,
       },
     }),
     [token]
   );
 };
 
-// Animation variants for framer-motion
+// Animation variants
 export const headerVariants = {
-  hidden: {
-    opacity: 0,
-    y: -20,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: 'easeOut',
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-export const avatarVariants = {
-  hidden: {
-    opacity: 0,
-    x: -20,
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut',
-    },
-  },
-};
-
-export const centerIconsVariants = {
   hidden: {
     opacity: 0,
     y: -10,
@@ -190,25 +95,8 @@ export const centerIconsVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.3,
-      ease: 'easeOut',
-      delay: 0.1,
-    },
-  },
-};
-
-export const themeToggleVariants = {
-  hidden: {
-    opacity: 0,
-    x: 20,
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut',
-      delay: 0.2,
+      duration: 0.25,
+      ease: [0.4, 0, 0.2, 1],
     },
   },
 };

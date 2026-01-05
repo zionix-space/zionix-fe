@@ -366,7 +366,7 @@ const AppTopBar = () => {
       <div style={styles.leftSectionStyle}>
         <div style={styles.brandContainerStyle}>
           <ZionixLogo
-            size={48}
+            size={56}
             useThemeColors={true}
             style={{ marginRight: '16px' }}
           />

@@ -16,13 +16,13 @@ export const useStyles = (token) => {
       overflow: "hidden",
     },
 
-    // Main content area
+    // Main content area - exact fintech spacing
     mainContentStyle: {
       flex: 1,
       display: "flex",
       flexDirection: "column",
-      paddingBlockStart: token.controlHeightLG + 16, // Header height
-      paddingBlockEnd: token.controlHeightLG, // Bottom nav height
+      paddingBlockStart: 'calc(72px + env(safe-area-inset-top))',
+      paddingBlockEnd: 'calc(82px + env(safe-area-inset-bottom))',
       overflow: "hidden",
     },
 

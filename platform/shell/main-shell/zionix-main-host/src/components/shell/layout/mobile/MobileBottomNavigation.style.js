@@ -1,113 +1,97 @@
 import { useMemo } from "react";
 
 /**
- * Mobile Bottom Navigation Styles - Clean CSS-in-JS approach
- * Fixed styling issues and proper responsive design
+ * Mobile Bottom Navigation Styles - EXACT Fintech Premium Feel
+ * Pixel-perfect matching of modern fintech apps
  */
 export const useStyles = (token) => {
   return useMemo(() => ({
-    // Main navigation container - clean and properly sized
+    // Main navigation container - exact fintech style
     navigationContainerStyle: {
       position: 'fixed',
       bottom: 0,
       left: 0,
       right: 0,
-      height: '60px', // Fixed height for mobile
-      paddingBottom: '8px', // Safe area padding
+      height: 'calc(82px + env(safe-area-inset-bottom))',
+      paddingBottom: 'env(safe-area-inset-bottom)',
       backgroundColor: token.colorBgContainer,
-      borderTop: `1px solid ${token.colorBorderSecondary}`,
+      borderTop: 'none',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-around',
-      paddingTop: '8px',
-      paddingLeft: '8px',
-      paddingRight: '8px',
+      alignItems: 'flex-start',
+      justifyContent: 'space-evenly',
+      paddingTop: 12,
+      paddingLeft: 0,
+      paddingRight: 0,
       zIndex: 1000,
-      boxShadow: '0 -2px 8px rgba(0, 0, 0, 0.06)',
+      boxShadow: 'none',
     },
 
-    // Navigation item - clean layout
+    // Navigation item - exact spacing and sizing
     navItemStyle: {
-      flex: 1,
+      flex: '0 0 auto',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      padding: '4px 2px',
+      justifyContent: 'flex-start',
+      padding: '0',
       cursor: 'pointer',
-      borderRadius: token.borderRadiusSM,
-      transition: 'all 0.2s ease',
-      minHeight: '44px',
+      borderRadius: 0,
+      transition: 'all 0.15s ease',
+      minHeight: '60px',
+      minWidth: '70px',
+      position: 'relative',
+      WebkitTapHighlightColor: 'transparent',
+      gap: 6,
     },
 
-    // Icon container - simple and clean
+    // Icon container - exact sizing
     iconContainerStyle: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: '2px',
+      width: '24px',
+      height: '24px',
+      transition: 'all 0.15s ease',
     },
 
-    // Base icon styling
-    iconStyle: {
-      fontSize: '22px',
-      transition: 'all 0.2s ease',
-    },
-
-    // Active icon styling
+    // Active icon - filled, exact size
     activeIconStyle: {
-      fontSize: '22px',
+      fontSize: '24px',
       color: token.colorPrimary,
-      transition: 'all 0.2s ease',
+      transition: 'all 0.15s ease',
+      lineHeight: 1,
     },
 
-    // Inactive icon styling
+    // Inactive icon - outline, exact size
     inactiveIconStyle: {
-      fontSize: '22px',
-      color: token.colorTextSecondary,
-      transition: 'all 0.2s ease',
+      fontSize: '24px',
+      color: '#9CA3AF',
+      transition: 'all 0.15s ease',
+      lineHeight: 1,
     },
 
-    // Base label styling
-    labelStyle: {
-      fontSize: '10px',
-      textAlign: 'center',
-      lineHeight: '12px',
-      transition: 'all 0.2s ease',
-      fontFamily: token.fontFamily,
-      whiteSpace: 'nowrap',
-      marginTop: '1px',
-    },
-
-    // Active label styling
+    // Active label - exact font
     activeLabelStyle: {
-      fontSize: '10px',
-      textAlign: 'center',
-      lineHeight: '12px',
-      color: token.colorPrimary,
+      fontSize: '11px',
       fontWeight: 600,
-      transition: 'all 0.2s ease',
-      fontFamily: token.fontFamily,
-      whiteSpace: 'nowrap',
-      marginTop: '1px',
-    },
-
-    // Inactive label styling
-    inactiveLabelStyle: {
-      fontSize: '10px',
       textAlign: 'center',
-      lineHeight: '12px',
-      color: token.colorTextSecondary,
-      fontWeight: 400,
-      transition: 'all 0.2s ease',
-      fontFamily: token.fontFamily,
+      lineHeight: 1.2,
+      color: token.colorPrimary,
+      transition: 'all 0.15s ease',
       whiteSpace: 'nowrap',
-      marginTop: '1px',
+      letterSpacing: '-0.01em',
     },
 
-    // Hover state for nav items
-    navItemHoverStyle: {
-      backgroundColor: token.colorFillQuaternary,
+    // Inactive label - exact font
+    inactiveLabelStyle: {
+      fontSize: '11px',
+      fontWeight: 500,
+      textAlign: 'center',
+      lineHeight: 1.2,
+      color: '#9CA3AF',
+      transition: 'all 0.15s ease',
+      whiteSpace: 'nowrap',
+      letterSpacing: '-0.01em',
     },
   }), [token]);
 };

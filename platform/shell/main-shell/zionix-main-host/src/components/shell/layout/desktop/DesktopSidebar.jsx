@@ -122,20 +122,20 @@ const injectSidebarCSS = (token) => {
         color: ${token.colorText} !important;
       }
 
-      /* Collapsed sidebar - circular buttons inside capsules */
+      /* Collapsed sidebar - circular buttons inside capsules - Finora pixel-perfect sizing */
       .ant-layout-sider-collapsed .zx-host-menu-container {
-        padding: 6px !important;
-        margin: 0 8px 12px 8px !important;
+        padding: 8px !important;
+        margin: 0 12px 12px 12px !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
-        max-width: 36px !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
         border-radius: 50% !important;
         padding: 0 !important;
-        margin: 2px auto !important;
+        margin: 4px auto !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -161,11 +161,11 @@ const injectSidebarCSS = (token) => {
         margin: 0 auto !important;
       }
 
-      /* Icon styling - centered with flexbox */
+      /* Icon styling - centered with flexbox - Finora larger icons */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .anticon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item i {
-        font-size: 18px !important;
+        font-size: 22px !important;
         line-height: 1 !important;
         display: flex !important;
         align-items: center !important;
@@ -518,7 +518,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
           >
             <Avatar
               src={userData.avatar}
-              size={32}
+              size={40}
               style={{ cursor: 'pointer' }}
             />
           </Dropdown>
@@ -585,7 +585,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             <i
               className="ri-menu-line"
               style={{
-                fontSize: '16px',
+                fontSize: '20px',
                 ...styles.zxHostToggleIcon,
                 ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
               }}
@@ -594,7 +594,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             <i
               className="ri-menu-fold-line"
               style={{
-                fontSize: '16px',
+                fontSize: '20px',
                 ...styles.zxHostToggleIcon,
                 ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
               }}
@@ -618,7 +618,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     <Sider
       collapsed={collapsed}
       width={260}
-      collapsedWidth={64}
+      collapsedWidth={80}
       style={styles.zxHostSidebarContainer}
       theme="light"
       trigger={null}
@@ -646,7 +646,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   aria-label="Switch to light mode"
                   tabIndex={0}
                 >
-                  <i className="ri-sun-line" style={{ fontSize: '16px' }} />
+                  <i className="ri-sun-line" style={{ fontSize: '18px' }} />
                 </div>
               </Tooltip>
               <Tooltip title="Dark mode" placement="right">
@@ -660,7 +660,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   aria-label="Switch to dark mode"
                   tabIndex={0}
                 >
-                  <i className="ri-moon-line" style={{ fontSize: '16px' }} />
+                  <i className="ri-moon-line" style={{ fontSize: '18px' }} />
                 </div>
               </Tooltip>
               <Tooltip title="Change primary color" placement="right">
@@ -686,7 +686,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   ]}
                 >
                   <div style={styles.zxHostThemeButton}>
-                    <i className="ri-palette-line" style={{ fontSize: '16px' }} />
+                    <i className="ri-palette-line" style={{ fontSize: '18px' }} />
                   </div>
                 </ColorPicker>
               </Tooltip>

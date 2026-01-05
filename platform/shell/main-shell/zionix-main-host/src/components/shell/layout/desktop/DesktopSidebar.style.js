@@ -2,9 +2,9 @@
 export const useStyles = (token) => ({
   zxHostSidebarContainer: {
     background: token.colorBgLayout, // Same as page background - unified shell
-    height: 'calc(100vh - 48px)', // Match new topbar height
+    height: 'calc(100vh - 64px)', // Match new topbar height
     position: 'fixed',
-    top: '48px', // Match new topbar height
+    top: '64px', // Match new topbar height
     insetInlineStart: 0,
     overflow: 'hidden',
     display: 'flex',
@@ -18,7 +18,7 @@ export const useStyles = (token) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    minHeight: 'calc(100vh - 48px)', // Match new topbar height
+    minHeight: 'calc(100vh - 64px)', // Match new topbar height
     userSelect: 'none',
     overflow: 'hidden',
   },
@@ -84,8 +84,8 @@ export const useStyles = (token) => ({
   },
 
   zxHostThemeButton: {
-    width: '32px',
-    height: '32px',
+    width: '36px',
+    height: '36px',
     borderRadius: '50%', // Perfect circle
     backgroundColor: 'transparent',
     border: 'none',
@@ -108,8 +108,8 @@ export const useStyles = (token) => ({
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    width: '36px',
-    height: '36px',
+    width: '44px',
+    height: '44px',
     borderRadius: '50%',
     backgroundColor: token.colorBgContainer,
     border: 'none', // No borders - soft shadow only
@@ -250,6 +250,7 @@ export const useStyles = (token) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: '8px',
   },
 
   zxHostProfileExpanded: {
