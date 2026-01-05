@@ -1,122 +1,180 @@
-// AppTopBar styles - Enterprise SaaS Design (Senior UX Standards)
+// AppTopBar styles - 100% Finora Match
 export const useStyles = (token) => ({
   topBarStyle: {
-    background: token.colorBgContainer,
-    borderBottom: `1px solid ${token.colorBorder}`,
-    boxShadow: "0 1px 4px rgba(0, 0, 0, 0.08)",
+    background: token.colorBgLayout,
+    borderBottom: "none",
+    boxShadow: "none",
     padding: "0 24px",
-    height: "64px",
+    height: "48px",
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     position: "sticky",
     top: 0,
     zIndex: 1000,
-    userSelect: "none", // Prevent text selection on topbar
+    userSelect: "none",
   },
 
   leftSectionStyle: {
     display: "flex",
     alignItems: "center",
     flex: 1,
-    gap: "32px", // 8px grid: 4 * 8px
+    gap: "32px",
+    justifyContent: "center",
   },
 
   brandContainerStyle: {
     display: "flex",
     alignItems: "center",
     flexShrink: 0,
-    userSelect: "none", // Prevent text selection on brand
+    userSelect: "none",
+    position: "absolute",
+    left: "24px",
   },
 
   logoTextStyle: {
-    fontSize: "18px",
-    fontWeight: "600",
+    fontSize: "16px",
+    fontWeight: "500",
     color: token.colorText,
-    letterSpacing: "-0.01em",
+    letterSpacing: "0",
     userSelect: "none",
   },
 
   navigationContainerStyle: {
-    display: "flex",
+    display: "inline-flex",
     alignItems: "center",
-    flex: 1,
-    minWidth: 0, // Allow flex item to shrink
-    maxWidth: "calc(100vw - 400px)", // Reserve space for brand and actions
-    userSelect: "none", // Prevent text selection on navigation
+    flexShrink: 0,
+    userSelect: "none",
+    backgroundColor: token.colorBgContainer, // Match sidebar capsule
+    borderRadius: "30px",
+    padding: "3px",
+    border: "none", // No border like sidebar
+    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`, // Match sidebar shadow
+    height: "45px",
   },
 
   menuStyle: {
     background: "transparent",
-    border: "none",
-    fontSize: "14px",
-    fontWeight: 600,
-    flex: 1,
-    minWidth: 0, // Allow menu to shrink
-    "& .ant-menu-item": {
-      padding: "0 16px",
-      margin: "0 4px",
-      height: "32px",
-      lineHeight: "32px",
-      borderRadius: "6px",
-      transition: "all 0.2s ease",
-      color: token.colorTextSecondary,
-    },
-    "& .ant-menu-item:hover": {
-      backgroundColor: token.colorFillQuaternary,
-      color: token.colorText,
-    },
-    "& .ant-menu-item-selected": {
-      backgroundColor: token.colorPrimary,
-      color: token.colorWhite,
-      fontWeight: 600,
-    },
-    "& .ant-menu-item-selected::after": {
-      display: "none",
+    border: "none !important",
+    fontSize: "14px", // Increased from 13px
+    fontWeight: 500, // Increased from 400 - bolder
+    display: "inline-flex",
+    lineHeight: "normal",
+    "& .ant-menu-overflow": {
+      display: "flex !important",
+      border: "none !important",
     },
     "& .ant-menu-overflow-item": {
-      flex: "0 0 auto",
+      flex: "0 0 auto !important",
+      display: "inline-flex !important",
+    },
+    "& .ant-menu-item": {
+      padding: "0 16px !important", // Increased from 12px
+      margin: "0 2px !important",
+      height: "28px !important",
+      lineHeight: "28px !important",
+      borderRadius: "10px !important",
+      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important",
+      color: `${token.colorTextSecondary} !important`, // Lighter for unselected
+      border: "none !important",
+      borderBottom: "none !important",
+      background: "transparent !important",
+      position: "relative !important",
+      display: "inline-flex !important",
+      alignItems: "center !important",
+      whiteSpace: "nowrap !important",
+      fontWeight: "500 !important", // Bold
+    },
+    "& .ant-menu-item::before": {
+      display: "none !important",
+    },
+    "& .ant-menu-item::after": {
+      content: "'' !important",
+      display: "none !important",
+      border: "none !important",
+      borderBottom: "none !important",
+      height: "0 !important",
+      width: "0 !important",
+    },
+    "& .ant-menu-item:hover": {
+      backgroundColor: `${token.colorFillQuaternary} !important`,
+      color: `${token.colorText} !important`,
+      borderBottom: "none !important",
+    },
+    "& .ant-menu-item-selected": {
+      backgroundColor: `${token.colorPrimary} !important`,
+      color: `${token.colorWhite} !important`,
+      fontWeight: "600 !important", // Extra bold for selected
+      border: "none !important",
+      borderBottom: "none !important",
+      boxShadow: `0 2px 8px ${token.colorPrimary}50, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important`, // Stronger shadow
+      transform: "translateY(-1px) !important", // Slight lift for button feel
+    },
+    "& .ant-menu-item-selected::before": {
+      display: "none !important",
+    },
+    "& .ant-menu-item-selected::after": {
+      content: "'' !important",
+      display: "none !important",
+      border: "none !important",
+      borderBottom: "none !important",
+      height: "0 !important",
+      width: "0 !important",
+    },
+    "& .ant-menu-item-active::after": {
+      display: "none !important",
+      borderBottom: "none !important",
     },
     "& .ant-menu-submenu": {
       "& .ant-menu-submenu-title": {
-        padding: "0 16px",
-        margin: "0 4px",
-        height: "32px",
-        lineHeight: "32px",
-        borderRadius: "6px",
-        transition: "all 0.2s ease",
-        color: token.colorTextSecondary,
+        padding: "0 16px !important", // Increased from 12px
+        margin: "0 2px !important",
+        height: "28px !important",
+        lineHeight: "28px !important",
+        borderRadius: "10px !important",
+        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important",
+        color: `${token.colorTextSecondary} !important`,
+        fontWeight: "500 !important", // Bold
       },
       "&:hover .ant-menu-submenu-title": {
-        backgroundColor: token.colorFillQuaternary,
-        color: token.colorText,
+        backgroundColor: `${token.colorFillQuaternary} !important`,
+        color: `${token.colorText} !important`,
       },
     },
   },
 
   rightActionsStyle: {
-    display: "flex",
+    display: "inline-flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "3px",
     flexShrink: 0,
-    userSelect: "none", // Prevent text selection on actions
+    userSelect: "none",
+    backgroundColor: token.colorBgContainer, // Match sidebar capsule
+    borderRadius: "30px",
+    padding: "3px",
+    border: "none", // No border like sidebar
+    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`, // Match sidebar shadow
+    height: "45px",
+    position: "absolute",
+    right: "24px",
   },
 
   iconButtonStyle: {
     border: "none",
     background: "transparent",
-    color: token.colorTextSecondary,
-    fontSize: "16px",
-    width: "32px",
-    height: "32px",
+    color: token.colorTextTertiary, // Match sidebar text color
+    fontSize: "18px",
+    width: "28px",
+    height: "28px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: token.borderRadius,
-    transition: "all 0.2s ease",
-    userSelect: "none", // Prevent text selection on buttons
+    borderRadius: "10px",
+    transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+    userSelect: "none",
+    flexShrink: 0,
     "&:hover": {
-      backgroundColor: token.colorFillQuaternary,
+      backgroundColor: `${token.colorFillQuaternary}`, // Match sidebar hover
       color: token.colorText,
     },
   },
@@ -126,17 +184,18 @@ export const useStyles = (token) => ({
     border: "none",
     background: isRTL ? token.colorPrimary : "transparent",
     fontSize: "16px",
-    width: "32px",
-    height: "32px",
+    width: "28px",
+    height: "28px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: token.borderRadius,
-    transition: "all 0.2s ease",
-    color: isRTL ? token.colorWhite : token.colorTextSecondary,
-    userSelect: "none", // Prevent text selection on RTL toggle
+    borderRadius: "10px",
+    transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+    color: isRTL ? token.colorWhite : token.colorTextTertiary,
+    userSelect: "none",
+    flexShrink: 0,
     "&:hover": {
-      backgroundColor: isRTL ? token.colorPrimary : token.colorFillQuaternary,
+      backgroundColor: isRTL ? token.colorPrimary : `${token.colorPrimary}10`,
       color: isRTL ? token.colorWhite : token.colorText,
     },
   }),

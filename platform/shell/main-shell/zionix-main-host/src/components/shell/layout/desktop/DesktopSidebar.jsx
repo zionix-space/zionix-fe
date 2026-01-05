@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useLayoutEffect } from 'react';
 import {
   Layout,
   Input,
@@ -8,6 +8,7 @@ import {
   Dropdown,
   Tooltip,
   theme,
+  ColorPicker,
 } from 'antd';
 import { useTheme } from '@zionix/design-system';
 import { useMenuStore } from '../../../../data/stores/menu/useMenuStore';
@@ -16,10 +17,16 @@ import { useStyles } from './DesktopSidebar.style';
 // Inject CSS for webkit scrollbar styles and Ant Design component overrides
 const injectSidebarCSS = (token) => {
   const styleId = 'desktop-sidebar-styles';
-  if (!document.getElementById(styleId)) {
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
+
+  // Remove existing style if it exists to allow re-injection with new token values
+  const existingStyle = document.getElementById(styleId);
+  if (existingStyle) {
+    existingStyle.remove();
+  }
+
+  const style = document.createElement('style');
+  style.id = styleId;
+  style.textContent = `
       /* Webkit scrollbar styles */
       .zx-host-main-content::-webkit-scrollbar {
         width: 4px;
@@ -52,9 +59,136 @@ const injectSidebarCSS = (token) => {
         font-size: 14px;
       }
 
+      /* Premium sidebar menu items - Finora capsule style */
+      .zx-host-menu-container .ant-menu-inline,
+      .zx-host-menu-container .ant-menu-vertical {
+        border: none !important;
+        background: transparent !important;
+      }
+
+      .zx-host-menu-container .ant-menu-item {
+        border-radius: 12px !important;
+        margin: 2px 0 !important;
+        padding: 0 12px !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: ${token.colorTextSecondary} !important;
+      }
+
+      .zx-host-menu-container .ant-menu-item .ant-menu-title-content {
+        color: ${token.colorTextSecondary} !important;
+      }
+
+      .zx-host-menu-container .ant-menu-item:hover {
+        background: ${token.colorFillQuaternary} !important;
+        color: ${token.colorText} !important;
+      }
+
+      .zx-host-menu-container .ant-menu-item:hover .ant-menu-title-content {
+        color: ${token.colorText} !important;
+      }
+
+      .zx-host-menu-container .ant-menu-item-selected {
+        background: ${token.colorPrimary} !important;
+        color: ${token.colorWhite} !important;
+        box-shadow: 0 2px 6px ${token.colorPrimary}40, inset 0 1px 0 ${token.colorBgContainer}33 !important;
+      }
+
+      .zx-host-menu-container .ant-menu-item-selected .ant-menu-title-content,
+      .zx-host-menu-container .ant-menu-item-selected .anticon,
+      .zx-host-menu-container .ant-menu-item-selected i {
+        color: ${token.colorWhite} !important;
+      }
+
+      .zx-host-menu-container .ant-menu-submenu-title {
+        border-radius: 12px !important;
+        margin: 2px 0 !important;
+        padding: 0 12px !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: ${token.colorTextSecondary} !important;
+      }
+
+      .zx-host-menu-container .ant-menu-submenu-title:hover {
+        background: ${token.colorFillQuaternary} !important;
+        color: ${token.colorText} !important;
+      }
+
+      /* Collapsed sidebar - circular buttons inside capsules */
+      .ant-layout-sider-collapsed .zx-host-menu-container {
+        padding: 6px !important;
+        margin: 0 8px 12px 8px !important;
+      }
+
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        max-width: 36px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        margin: 2px auto !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+        overflow: visible !important;
+      }
+
+      /* Remove all default Ant Design spacing */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed > .ant-menu-item {
+        padding-inline-start: 0 !important;
+        padding-inline-end: 0 !important;
+      }
+
+      /* Center all children with flexbox */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item > * {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        margin: 0 auto !important;
+      }
+
+      /* Icon styling - centered with flexbox */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .anticon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item i {
+        font-size: 18px !important;
+        line-height: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
+      }
+
+      /* Hover and selected states */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item:hover {
+        background: ${token.colorFillQuaternary} !important;
+      }
+
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected {
+        background: ${token.colorPrimary} !important;
+        box-shadow: 0 2px 6px ${token.colorPrimary}40, inset 0 1px 0 ${token.colorBgContainer}33 !important;
+      }
+
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected .anticon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected i {
+        color: ${token.colorWhite} !important;
+      }
     `;
-    document.head.appendChild(style);
-  }
+  document.head.appendChild(style);
 };
 
 // Using Remix Icons CSS classes for optimal performance
@@ -64,7 +198,7 @@ const { useToken } = theme;
 
 const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const { token } = useToken();
-  const { isRTL } = useTheme();
+  const { isRTL, isDarkMode, toggleTheme, primaryColor, setPrimaryColor } = useTheme();
   const styles = useStyles(token);
   // Get sidebar menu data from Zustand store
   const {
@@ -187,8 +321,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [collapsed, onCollapse]);
 
-  // Inject sidebar CSS
-  useEffect(() => {
+  // Inject sidebar CSS - use useLayoutEffect for synchronous injection before paint
+  useLayoutEffect(() => {
     injectSidebarCSS(token);
   }, [token]);
 
@@ -352,6 +486,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             onOpenChange={handleOpenChange}
             onSelect={({ key }) => handleMenuSelect(key)}
             inlineCollapsed={collapsed}
+            inlineIndent={0}
             items={formatMenuItems(section.items)}
             style={{
               border: 'none',
@@ -484,18 +619,81 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       collapsed={collapsed}
       width={260}
       collapsedWidth={64}
-      style={{
-        ...styles.zxHostSidebarContainer,
-        [isRTL
-          ? 'borderLeft'
-          : 'borderRight']: `1px solid ${token.colorBorderSecondary}`,
-      }}
+      style={styles.zxHostSidebarContainer}
       theme="light"
       trigger={null}
     >
       <div style={styles.zxHostSidebarContent}>
-        {/* Header with Search and Toggle - Separated to prevent re-renders */}
-        <div style={styles.zxHostToggleContainer}>
+        {/* Header - Finora Style: Hamburger + Theme Toggle (side by side when expanded) */}
+        <div style={styles.zxHostTopSection}>
+          <div style={collapsed ? styles.zxHostControlsCollapsed : styles.zxHostControlsExpanded}>
+            {/* Hamburger Toggle Button */}
+            <ToggleButton />
+
+            {/* Theme Toggle Capsule - Finora Style */}
+            <div style={{
+              ...styles.zxHostThemeCapsule,
+              flexDirection: collapsed ? 'column' : 'row', // Vertical when collapsed, horizontal when expanded
+            }}>
+              <Tooltip title="Light mode" placement="right">
+                <div
+                  style={{
+                    ...styles.zxHostThemeButton,
+                    ...((!isDarkMode) ? styles.zxHostThemeButtonActive : {}),
+                  }}
+                  onClick={() => !isDarkMode || toggleTheme()}
+                  role="button"
+                  aria-label="Switch to light mode"
+                  tabIndex={0}
+                >
+                  <i className="ri-sun-line" style={{ fontSize: '16px' }} />
+                </div>
+              </Tooltip>
+              <Tooltip title="Dark mode" placement="right">
+                <div
+                  style={{
+                    ...styles.zxHostThemeButton,
+                    ...(isDarkMode ? styles.zxHostThemeButtonActive : {}),
+                  }}
+                  onClick={() => isDarkMode || toggleTheme()}
+                  role="button"
+                  aria-label="Switch to dark mode"
+                  tabIndex={0}
+                >
+                  <i className="ri-moon-line" style={{ fontSize: '16px' }} />
+                </div>
+              </Tooltip>
+              <Tooltip title="Change primary color" placement="right">
+                <ColorPicker
+                  value={primaryColor}
+                  onChange={(color) => setPrimaryColor(color.toHexString())}
+                  size="small"
+                  showText={false}
+                  presets={[
+                    {
+                      label: 'Recommended',
+                      colors: [
+                        token.colorPrimary || '#0050d8',
+                        '#0050d8',
+                        '#52c41a',
+                        '#fa8c16',
+                        '#ff4d4f',
+                        '#722ed1',
+                        '#13c2c2',
+                        '#eb2f96',
+                      ],
+                    },
+                  ]}
+                >
+                  <div style={styles.zxHostThemeButton}>
+                    <i className="ri-palette-line" style={{ fontSize: '16px' }} />
+                  </div>
+                </ColorPicker>
+              </Tooltip>
+            </div>
+          </div>
+
+          {/* Search Section */}
           {!collapsed && (
             <div style={styles.zxHostSearchContainer}>
               <Input
@@ -510,15 +708,14 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               />
             </div>
           )}
-          <ToggleButton />
         </div>
 
         {/* Scrollable Navigation Content */}
         <div style={styles.zxHostMainContent} className="zx-host-main-content">
           {/* Show "No results found" message when search has no results */}
           {searchQuery.trim() &&
-          navigationSections.length === 0 &&
-          !profileSection ? (
+            navigationSections.length === 0 &&
+            !profileSection ? (
             <div
               style={{
                 padding: '20px',

@@ -22,7 +22,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
 
   // Responsive sidebar behavior for tablet screens
   const isTabletSize = screenWidth >= 768 && screenWidth < 1024;
-  const sidebarWidth = sidebarCollapsed ? 80 : isTabletSize ? 200 : 256;
+  const sidebarWidth = sidebarCollapsed ? 64 : isTabletSize ? 200 : 256;
   const contentPadding = isTabletSize ? '16px' : '24px';
 
   return (
@@ -39,7 +39,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
 
       {/* Desktop Layout Container */}
       <Layout>
-        {/* Desktop Sidebar */}
+        {/* Desktop Sidebar - Expandable/Collapsible */}
         <DesktopSidebar
           collapsed={sidebarCollapsed}
           onCollapse={setSidebarCollapsed}
@@ -56,23 +56,13 @@ const DesktopLayout = ({ className = '', style = {} }) => {
             className="desktop-content"
             style={{
               padding: contentPadding,
-              backgroundColor: token?.colorBgLayout,
+              backgroundColor: token?.colorBgLayout, // Same as shell background - no wrapper
               overflow: 'auto',
               height: 'calc(100vh - 64px)',
             }}
           >
-            {/* Content Container */}
-            <div
-              style={{
-                backgroundColor: token?.colorBgContainer,
-                borderRadius: token?.borderRadiusLG,
-                padding: contentPadding,
-                minHeight: '100%',
-                boxShadow: `0 2px 8px ${token?.colorBorder}20`,
-              }}
-            >
-              <Outlet />
-            </div>
+            {/* Direct content - no wrapper container */}
+            <Outlet />
           </Content>
         </Layout>
       </Layout>

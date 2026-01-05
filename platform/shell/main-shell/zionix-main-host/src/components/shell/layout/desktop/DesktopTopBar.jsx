@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import {
   Layout,
   Menu,
@@ -31,6 +31,93 @@ const AppTopBar = () => {
     setPrimaryColor,
   } = useTheme();
   const styles = useStyles(token);
+
+  // Inject CSS to override Ant Design Menu default styles - use useLayoutEffect for instant application
+  useLayoutEffect(() => {
+    const styleId = 'topbar-menu-override';
+    // Remove existing style if it exists
+    const existingStyle = document.getElementById(styleId);
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    // Create new style with current token values
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+        /* Remove all borders and underlines from menu items */
+        .ant-menu-horizontal > .ant-menu-item::after,
+        .ant-menu-horizontal > .ant-menu-item-selected::after,
+        .ant-menu-horizontal > .ant-menu-item-active::after,
+        .ant-menu-horizontal > .ant-menu-submenu::after {
+          border-bottom: none !important;
+          display: none !important;
+          content: none !important;
+          height: 0 !important;
+          width: 0 !important;
+        }
+        
+        .ant-menu-horizontal > .ant-menu-item,
+        .ant-menu-horizontal > .ant-menu-item-selected,
+        .ant-menu-horizontal > .ant-menu-item-active,
+        .ant-menu-horizontal > .ant-menu-submenu {
+          border-bottom: none !important;
+        }
+
+        .ant-menu-horizontal::before,
+        .ant-menu-horizontal::after {
+          display: none !important;
+        }
+
+        .ant-menu-horizontal {
+          border-bottom: none !important;
+        }
+
+        /* Topbar menu selected item - force primary background */
+        .ant-menu-horizontal .ant-menu-item,
+        .ant-menu-horizontal > .ant-menu-item {
+          padding: 0 16px !important;
+          margin: 0 2px !important;
+          height: 28px !important;
+          line-height: 28px !important;
+          border-radius: 14px !important;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          font-size: 14px !important;
+          font-weight: 500 !important;
+        }
+
+        .ant-menu-horizontal .ant-menu-item-selected,
+        .ant-menu-horizontal > .ant-menu-item-selected,
+        .ant-menu.ant-menu-horizontal .ant-menu-item-selected {
+          background-color: ${token.colorPrimary} !important;
+          color: ${token.colorWhite} !important;
+          font-weight: 600 !important;
+          border-radius: 14px !important;
+          padding: 0 16px !important;
+          box-shadow: 0 2px 8px ${token.colorPrimary}30, inset 0 1px 0 ${token.colorBgContainer}26 !important;
+          transform: translateY(-1px) !important;
+        }
+
+        .ant-menu-horizontal .ant-menu-item-selected .ant-menu-title-content,
+        .ant-menu-horizontal > .ant-menu-item-selected .ant-menu-title-content {
+          color: ${token.colorWhite} !important;
+        }
+
+        /* Unselected items */
+        .ant-menu-horizontal .ant-menu-item:not(.ant-menu-item-selected) {
+          background-color: transparent !important;
+          color: ${token.colorTextSecondary} !important;
+          border-radius: 14px !important;
+        }
+
+        .ant-menu-horizontal .ant-menu-item:not(.ant-menu-item-selected):hover {
+          background-color: ${token.colorFillQuaternary} !important;
+          color: ${token.colorText} !important;
+          border-radius: 14px !important;
+        }
+      `;
+    document.head.appendChild(style);
+  }, [token]); // Re-run when token changes
 
   // Get menu data from Zustand store
   const {
@@ -292,9 +379,11 @@ const AppTopBar = () => {
             selectedKeys={selectedMainMenu ? [selectedMainMenu.key] : []}
             items={navigationItems}
             style={styles.menuStyle}
+            className="zx-topbar-menu"
             theme="light"
             onSelect={handleMainMenuSelect}
-            overflowedIndicator={<i className="ri-more-line" />}
+            overflowedIndicator={null}
+            disabledOverflow={true}
           />
         </div>
       </div>
@@ -346,7 +435,7 @@ const AppTopBar = () => {
           />
         )}
 
-        {/* Color Picker for Dynamic Theme Testing */}
+        {/* Color Picker moved to sidebar
         <Tooltip title="Change Primary Color">
           <ColorPicker
             value={primaryColor}
@@ -372,6 +461,7 @@ const AppTopBar = () => {
             ]}
           />
         </Tooltip>
+        */}
 
         {/* <Button
           type="text"
@@ -381,6 +471,7 @@ const AppTopBar = () => {
           title={isRTL ? 'Switch to LTR' : 'Switch to RTL'}
         /> */}
 
+        {/* Theme toggle moved to sidebar - keeping this commented for reference
         <Button
           type="text"
           icon={
@@ -394,6 +485,7 @@ const AppTopBar = () => {
           style={styles.iconButtonStyle}
           title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
         />
+        */}
 
         <NotificationDropdown
           onNotificationClick={handleNotificationClick}

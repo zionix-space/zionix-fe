@@ -1,25 +1,26 @@
 // CSS-in-JS styles with zx-host prefix for module federation isolation
 export const useStyles = (token) => ({
   zxHostSidebarContainer: {
-    background: token.colorBgContainer,
-    height: 'calc(100vh - 64px)',
+    background: token.colorBgLayout, // Same as page background - unified shell
+    height: 'calc(100vh - 48px)', // Match new topbar height
     position: 'fixed',
-    top: '64px',
+    top: '48px', // Match new topbar height
     insetInlineStart: 0,
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     zIndex: 999,
-    userSelect: 'none', // Prevent text selection on sidebar
+    userSelect: 'none',
+    borderRight: 'none', // No borders - premium feel
   },
 
   zxHostSidebarContent: {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    minHeight: 'calc(100vh - 64px)',
-    userSelect: 'none', // Prevent text selection on sidebar content
-    overflow: 'hidden', // Prevent the entire sidebar from scrolling
+    minHeight: 'calc(100vh - 48px)', // Match new topbar height
+    userSelect: 'none',
+    overflow: 'hidden',
   },
 
   zxHostMainContent: {
@@ -28,21 +29,78 @@ export const useStyles = (token) => ({
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
-    // Firefox scrollbar styling
     scrollbarWidth: 'thin',
     scrollbarColor: `${token.colorBorderSecondary} transparent`,
   },
 
   zxHostToggleContainer: {
-    borderBottom: `1px solid ${token.colorBorderSecondary}`,
+    borderBottom: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    userSelect: 'none', // Prevent text selection on toggle
+    userSelect: 'none',
     padding: `${token.paddingSM}px ${token.paddingSM}px`,
-    minHeight: '48px',
+    minHeight: '56px', // More breathing room
     gap: `${token.paddingSM}px`,
-    backgroundColor: token.colorFillQuaternary,
+    backgroundColor: 'transparent', // Same as shell background
+  },
+
+  // New Finora-style top section - compact spacing
+  zxHostTopSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px', // Reduced spacing
+    padding: `${token.paddingSM}px ${token.paddingSM}px`,
+    borderBottom: 'none',
+    userSelect: 'none',
+  },
+
+  // Controls layout - hamburger + theme toggle
+  zxHostControlsExpanded: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '8px',
+  },
+
+  zxHostControlsCollapsed: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '12px',
+  },
+
+  // Single capsule container for theme buttons - Finora style
+  // flexDirection is set dynamically: 'column' when collapsed, 'row' when expanded
+  zxHostThemeCapsule: {
+    display: 'flex',
+    gap: '4px',
+    justifyContent: 'center',
+    padding: '4px',
+    backgroundColor: token.colorBgContainer,
+    borderRadius: '12px',
+    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
+    width: 'fit-content',
+  },
+
+  zxHostThemeButton: {
+    width: '32px',
+    height: '32px',
+    borderRadius: '50%', // Perfect circle
+    backgroundColor: 'transparent',
+    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    color: token.colorTextSecondary,
+  },
+
+  zxHostThemeButtonActive: {
+    backgroundColor: token.colorPrimary,
+    color: token.colorWhite,
+    boxShadow: `0 2px 4px ${token.colorPrimary}30`,
   },
 
   zxHostToggleButton: {
@@ -50,18 +108,21 @@ export const useStyles = (token) => ({
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    width: '32px',
-    height: '32px',
-    borderRadius: token.borderRadius,
-    backgroundColor: 'transparent',
-    border: 'none',
-    transition: `background-color ${token.motionDurationMid} ${token.motionEaseInOut}`,
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    backgroundColor: token.colorBgContainer,
+    border: 'none', // No borders - soft shadow only
+    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
+    transition: `all ${token.motionDurationMid} cubic-bezier(0.4, 0, 0.2, 1)`,
     position: 'relative',
     flexShrink: 0,
   },
 
   zxHostToggleButtonHover: {
-    backgroundColor: token.colorFillSecondary,
+    backgroundColor: token.colorBgContainer,
+    transform: 'scale(1.05)',
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
   },
 
   zxHostToggleIcon: {
@@ -83,7 +144,7 @@ export const useStyles = (token) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    userSelect: 'none', // Prevent text selection on section headers
+    userSelect: 'none',
     marginTop: '8px',
   },
 
@@ -98,8 +159,14 @@ export const useStyles = (token) => ({
   },
 
   zxHostMenuContainer: {
-    userSelect: 'none', // Prevent text selection on menu container
-    marginBottom: '8px', // Minimal spacing between sections
+    userSelect: 'none',
+    marginBottom: '12px',
+    padding: '8px', // Capsule padding
+    backgroundColor: token.colorBgContainer, // Capsule background
+    borderRadius: '16px', // Soft rounded capsule
+    margin: '0 12px 12px 12px', // Spacing from edges
+    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`, // Soft shadow
+    border: 'none', // No borders
   },
 
   zxHostMenuItemBadge: {
@@ -120,7 +187,7 @@ export const useStyles = (token) => ({
     padding: `${token.paddingSM}px ${token.paddingSM}px`,
     borderTop: `1px solid ${token.colorBorderSecondary}`,
     backgroundColor: token.colorFillQuaternary,
-    userSelect: 'none', // Prevent text selection on profile container
+    userSelect: 'none',
   },
 
   zxHostProfileContainerCollapsed: {
@@ -132,8 +199,11 @@ export const useStyles = (token) => ({
     alignItems: 'center',
     cursor: 'pointer',
     padding: `${token.paddingXS}px ${token.paddingSM}px`,
-    borderRadius: token.borderRadius,
-    transition: `background-color ${token.motionDurationMid} ${token.motionEaseInOut}`,
+    borderRadius: '12px',
+    backgroundColor: token.colorBgContainer,
+    border: 'none', // No borders
+    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
+    transition: `all ${token.motionDurationMid} cubic-bezier(0.4, 0, 0.2, 1)`,
     justifyContent: 'flex-start',
   },
 
@@ -143,7 +213,9 @@ export const useStyles = (token) => ({
   },
 
   zxHostProfileContentHover: {
-    backgroundColor: token.colorFillSecondary,
+    backgroundColor: token.colorBgContainer,
+    transform: 'translateY(-1px)',
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
   },
 
   zxHostProfileInfo: {
@@ -173,8 +245,8 @@ export const useStyles = (token) => ({
 
   zxHostProfileCollapsed: {
     padding: `${token.paddingSM}px`,
-    borderTop: `1px solid ${token.colorBorderSecondary}`,
-    backgroundColor: token.colorFillQuaternary,
+    borderTop: 'none',
+    backgroundColor: 'transparent',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -182,8 +254,8 @@ export const useStyles = (token) => ({
 
   zxHostProfileExpanded: {
     padding: `${token.paddingSM}px`,
-    borderTop: `1px solid ${token.colorBorderSecondary}`,
-    backgroundColor: token.colorFillQuaternary,
+    borderTop: 'none',
+    backgroundColor: 'transparent',
   },
 
   zxHostSearchContainer: {
@@ -192,20 +264,20 @@ export const useStyles = (token) => ({
   },
 
   zxHostSearchInput: {
-    borderRadius: token.borderRadiusSM,
-    height: '28px',
+    borderRadius: '12px',
+    height: '36px',
     fontSize: '13px',
-    border: `1px solid ${token.colorBorderSecondary}`,
-    backgroundColor: token.colorFillQuaternary,
-    transition: 'all 0.2s ease',
+    border: 'none', // No borders
+    backgroundColor: token.colorBgContainer,
+    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
+    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      borderColor: token.colorBorder,
       backgroundColor: token.colorBgContainer,
+      boxShadow: `0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
     },
     '&:focus': {
-      borderColor: token.colorPrimary,
       backgroundColor: token.colorBgContainer,
-      boxShadow: `0 0 0 2px ${token.colorPrimary}10`,
+      boxShadow: `0 0 0 3px ${token.colorPrimary}15, 0 4px 12px rgba(0, 0, 0, 0.1)`,
     },
   },
 });
