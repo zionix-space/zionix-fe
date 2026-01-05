@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import { Spin } from 'antd';
 
 const MenuBuilder = React.lazy(() => import('../pages/MenuSetup'));
-const LowCodeViewer = React.lazy(() => import('../pages/FormEngine/Lowcode/LowcodeViewer'));
 
 export function DashboardAdmin() {
   return <b>Admin Dashboard</b>;
@@ -26,7 +25,6 @@ export function App() {
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
         <Route exact path="/menu-setup" element={<MenuBuilder />} />
-        <Route exact path="/lowcode" element={<LowCodeViewer />} />
       </Routes>
     </Suspense>
   );
