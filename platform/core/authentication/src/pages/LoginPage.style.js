@@ -25,18 +25,19 @@ export const useStyles = (token) => {
         minHeight: 'inherit',
       },
 
-      // Left column - Login form
+      // Left column - Mica-style subtle tinted background
       leftColumn: {
         height: '100vh',
         padding: 0,
-        backgroundColor: token.colorBgContainer,
+        // Subtle tint using theme colors - Windows 11 Mica style
+        backgroundColor: token.colorBgLayout,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: 'inherit',
       },
 
-      // Right column - Promotional content
+      // Right column - Theme-based gradient (not hardcoded blue)
       rightColumn: {
         height: '100vh',
         padding: 0,
@@ -46,11 +47,15 @@ export const useStyles = (token) => {
         minHeight: 'inherit',
       },
 
-      // Form container
+      // Form container - subtle card with minimal styling
       formContainer: {
         width: '100%',
         maxWidth: 'min(25rem, 90vw)',
         padding: 'clamp(1.5rem, 4vw, 2.5rem)',
+        backgroundColor: token.colorBgContainer,
+        borderRadius: '16px',
+        border: `1px solid ${token.colorBorderSecondary}`,
+        boxShadow: `0 1px 3px 0 rgba(0, 0, 0, 0.04)`,
       },
 
       // Logo section
@@ -165,21 +170,22 @@ export const useStyles = (token) => {
         marginBottom: '1rem',
       },
 
-      // Input field
+      // Input field - clean with subtle depth
       input: {
         height: 'clamp(2.5rem, 5vw, 3rem)',
-        borderRadius: 'clamp(0.25rem, 1vw, 0.5rem)',
+        borderRadius: '8px',
         border: `1px solid ${token.colorBorder}`,
+        backgroundColor: token.colorBgContainer,
         fontSize: 'clamp(0.875rem, 1.75vw, 1rem)',
         padding: 'clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         minHeight: '2.5rem',
       },
 
-      // Input focus state (to be applied via React state)
+      // Input focus state - clean accent ring
       inputFocus: {
         borderColor: token.colorPrimary,
-        boxShadow: `0 0 0 3px ${token.colorPrimaryBg}`,
+        boxShadow: `0 0 0 2px ${token.colorPrimaryBg}`,
       },
 
       // Input icon
@@ -218,7 +224,7 @@ export const useStyles = (token) => {
         textDecoration: 'underline',
       },
 
-      // Login button
+      // Login button - solid with subtle elevation
       loginButton: {
         width: '100%',
         height: '48px',
@@ -229,11 +235,11 @@ export const useStyles = (token) => {
         fontSize: '16px',
         fontWeight: 600,
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: `0 1px 2px 0 rgba(0, 0, 0, 0.05)`,
         '&:hover': {
           backgroundColor: token.colorPrimaryHover,
-          transform: 'translateY(-1px)',
-          boxShadow: `0 4px 12px ${token.colorPrimaryBg}`,
+          boxShadow: `0 2px 4px 0 rgba(0, 0, 0, 0.1)`,
         },
         '&:active': {
           transform: 'translateY(0)',
@@ -324,17 +330,19 @@ export const useStyles = (token) => {
         left: 'clamp(15%, 20%, 25%)',
       },
 
-      // Icon circle
+      // Icon circle - premium glow with better visibility
       iconCircle: {
         width: 'clamp(2rem, 6vw, 3.75rem)',
         height: 'clamp(2rem, 6vw, 3.75rem)',
         borderRadius: '50%',
         backgroundColor: `${token.colorWhite}33`, // 20% opacity
-        backdropFilter: 'blur(10px)',
+        backdropFilter: 'blur(16px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(16px) saturate(180%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         border: `1px solid ${token.colorWhite}4D`, // 30% opacity
+        boxShadow: `0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.1) inset`,
         animation: 'floatGentle 6s ease-in-out infinite',
         transition: 'all 0.3s ease',
       },
@@ -457,14 +465,14 @@ export const useStyles = (token) => {
         margin: '0 auto',
       },
 
-      // Promo title
+      // Promo title - clean with subtle depth
       promoTitle: {
         fontSize: 'clamp(2rem, 6vw, 3rem)',
         fontWeight: '700',
         color: token.colorWhite,
         marginBottom: 'clamp(0.75rem, 2vw, 1rem)',
         lineHeight: '1.1',
-        textShadow: `0 2px 4px ${token.colorBgLayout}`,
+        textShadow: `0 2px 8px rgba(0, 0, 0, 0.24)`,
       },
 
       // Promo subtitle
@@ -499,11 +507,11 @@ export const useStyles = (token) => {
         backgroundColor: `${token.colorWhite}66`, // 40% opacity
       },
 
-      // Mobile container
+      // Mobile container - clean background
       mobileContainer: {
         height: '100vh',
         width: '100vw',
-        backgroundColor: token.colorBgContainer,
+        backgroundColor: token.colorBgLayout,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -511,10 +519,15 @@ export const useStyles = (token) => {
         minHeight: '100vh',
       },
 
-      // Mobile form container
+      // Mobile form container - subtle card
       mobileFormContainer: {
         width: '100%',
         maxWidth: 'min(25rem, 95vw)',
+        backgroundColor: token.colorBgContainer,
+        borderRadius: '16px',
+        padding: 'clamp(1.5rem, 4vw, 2rem)',
+        border: `1px solid ${token.colorBorderSecondary}`,
+        boxShadow: `0 1px 3px 0 rgba(0, 0, 0, 0.04)`,
       },
 
       // Mobile logo
@@ -596,18 +609,19 @@ export const useStyles = (token) => {
         zIndex: 2,
       },
 
-      // Slide main icon
+      // Slide main icon - premium glass with depth
       slideMainIcon: {
         width: 'clamp(6rem, 12vw, 7.5rem)',
         height: 'clamp(6rem, 12vw, 7.5rem)',
         borderRadius: '50%',
         backgroundColor: `${token.colorWhite}33`, // 20% opacity
-        backdropFilter: 'blur(20px)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         border: `2px solid ${token.colorWhite}4D`, // 30% opacity
-        boxShadow: `0 20px 40px ${token.colorBgLayout}`,
+        boxShadow: `0 16px 48px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.1) inset`,
         fontSize: 'clamp(2rem, 5vw, 3rem)',
         color: token.colorWhite,
       },
@@ -623,18 +637,20 @@ export const useStyles = (token) => {
         pointerEvents: 'none',
       },
 
-      // Feature icon
+      // Feature icon - subtle glass effect
       featureIcon: {
         position: 'absolute',
         width: 'clamp(2rem, 4vw, 2.5rem)',
         height: 'clamp(2rem, 4vw, 2.5rem)',
         borderRadius: '50%',
         backgroundColor: `${token.colorWhite}26`, // 15% opacity
-        backdropFilter: 'blur(10px)',
+        backdropFilter: 'blur(12px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(12px) saturate(180%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         border: `1px solid ${token.colorWhite}33`, // 20% opacity
+        boxShadow: `0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.08) inset`,
         fontSize: 'clamp(0.75rem, 1.5vw, 1rem)',
         color: token.colorWhite,
       },
@@ -662,14 +678,14 @@ export const useStyles = (token) => {
         margin: '0 auto',
       },
 
-      // Slide title
+      // Slide title - clean with subtle depth
       slideTitle: {
         fontSize: 'clamp(1.5rem, 4vw, 2rem)',
         fontWeight: '700',
         color: token.colorWhite,
         marginBottom: 'clamp(0.75rem, 2vw, 1rem)',
         lineHeight: '1.2',
-        textShadow: `0 2px 4px ${token.colorBgLayout}`,
+        textShadow: `0 2px 8px rgba(0, 0, 0, 0.24)`,
       },
 
       // Slide description
@@ -678,6 +694,16 @@ export const useStyles = (token) => {
         color: `${token.colorWhite}E6`, // 90% opacity
         lineHeight: '1.6',
         maxWidth: '100%',
+      },
+
+      // Learn more button
+      learnMoreButton: {
+        color: token.colorWhite,
+        fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+        fontWeight: 500,
+        padding: 0,
+        height: 'auto',
+        marginTop: 'clamp(0.5rem, 1.5vw, 1rem)',
       },
     }),
     [token]

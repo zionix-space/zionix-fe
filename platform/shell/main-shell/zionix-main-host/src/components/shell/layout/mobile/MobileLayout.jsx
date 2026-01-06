@@ -3,7 +3,6 @@ import { theme } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import MobileHeader from './MobileHeader';
-import MobileBottomNavigation from './MobileBottomNavigation';
 import { useStyles } from './MobileLayout.style';
 
 const { useToken } = theme;
@@ -17,7 +16,7 @@ const { useToken } = theme;
 const MobileLayout = ({ className = '', style = {} }) => {
   const { token } = useToken();
   const styles = useStyles(token);
-  
+
   const { deviceType } = useResponsiveLayout();
 
   // Only render on mobile devices
@@ -26,7 +25,7 @@ const MobileLayout = ({ className = '', style = {} }) => {
   }
 
   return (
-    <div 
+    <div
       className={`mobile-layout ${className}`}
       style={{
         ...styles.layoutContainerStyle,
@@ -46,8 +45,7 @@ const MobileLayout = ({ className = '', style = {} }) => {
         </div>
       </main>
 
-      {/* Mobile Bottom Navigation */}
-      <MobileBottomNavigation />
+
     </div>
   );
 };

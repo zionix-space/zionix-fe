@@ -454,23 +454,67 @@ export const useTheme = () => {
  * ```
  */
 const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isRTL, setIsRTL] = useState(false);
-  const [primaryColor, setPrimaryColor] = useState('#001968'); // Dynamic primary color state
+  // Load persisted theme preferences from localStorage
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('zionix-theme-mode');
+      return saved === 'dark';
+    }
+    return false;
+  });
+
+  const [isRTL, setIsRTL] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('zionix-theme-direction');
+      return saved === 'rtl';
+    }
+    return false;
+  });
+
+  const [primaryColor, setPrimaryColor] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('zionix-theme-primary-color');
+      return saved || '#001968';
+    }
+    return '#001968';
+  });
+
   const { deviceType, isMobile, isDesktop } = useDeviceDetection();
 
   /**
    * Toggle between light and dark themes
    */
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode((prev) => {
+      const newValue = !prev;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('zionix-theme-mode', newValue ? 'dark' : 'light');
+      }
+      return newValue;
+    });
   };
 
   /**
    * Toggle between LTR and RTL directions
    */
   const toggleRTL = () => {
-    setIsRTL(!isRTL);
+    setIsRTL((prev) => {
+      const newValue = !prev;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('zionix-theme-direction', newValue ? 'rtl' : 'ltr');
+      }
+      return newValue;
+    });
+  };
+
+  /**
+   * Update primary color and persist to localStorage
+   */
+  const updatePrimaryColor = (color) => {
+    setPrimaryColor(color);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('zionix-theme-primary-color', color);
+    }
   };
 
   // Set HTML document direction when RTL changes
@@ -625,7 +669,7 @@ const ThemeProvider = ({ children }) => {
     isMobile,
     isDesktop,
     primaryColor,
-    setPrimaryColor,
+    setPrimaryColor: updatePrimaryColor, // Use the persisting version
   };
 
   return (
