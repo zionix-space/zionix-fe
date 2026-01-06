@@ -31,40 +31,80 @@ const AppWithLoader = () => {
   }, []);
 
   if (isLoading) {
+    // Get theme settings from localStorage
+    const primaryColor = typeof window !== 'undefined'
+      ? (localStorage.getItem('zionix-theme-primary-color') || '#001968')
+      : '#001968';
+    const isDarkMode = typeof window !== 'undefined'
+      ? (localStorage.getItem('zionix-theme-mode') === 'dark')
+      : false;
+
+    // Theme-aware colors
+    const bgColor = isDarkMode ? '#141414' : '#ffffff';
+    const textColor = isDarkMode ? '#e0e0e0' : '#444444';
+    const barBgColor = isDarkMode ? '#2a2a2a' : '#e0e0e0';
+
     return (
       <div style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
+        inset: 0,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: 'clamp(1rem, 5vw, 2rem)',
+        textAlign: 'center',
+        background: bgColor,
         zIndex: 9999,
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        fontFamily: "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
       }}>
         <div style={{
-          width: '40px',
-          height: '40px',
-          border: '3px solid #f0f0f0',
-          borderTop: '3px solid #1890ff',
+          width: 'clamp(48px, 15vw, 80px)',
+          height: 'clamp(48px, 15vw, 80px)',
+          border: 'clamp(5px, 1.5vw, 8px) solid transparent',
+          borderTop: `clamp(5px, 1.5vw, 8px) solid`,
+          borderImage: `linear-gradient(90deg, ${primaryColor}, ${primaryColor}dd) 1`,
           borderRadius: '50%',
+          marginBottom: 'clamp(1rem, 4vw, 2rem)',
           animation: 'spin 1s linear infinite',
-          marginBottom: '16px'
+          boxShadow: `0 0 clamp(8px, 2vw, 12px) ${primaryColor}33`,
+          willChange: 'transform'
         }}></div>
         <div style={{
-          color: '#666',
-          fontSize: '14px',
-          fontWeight: 500,
-          textAlign: 'center'
-        }}>Initializing Application...</div>
+          width: 'clamp(200px, 80vw, 400px)',
+          height: 'clamp(4px, 1vw, 5px)',
+          background: barBgColor,
+          borderRadius: 'clamp(2px, 0.5vw, 4px)',
+          position: 'relative',
+          overflow: 'hidden',
+          marginBottom: 'clamp(0.25rem, 1vw, 0.5rem)'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: '40%',
+            background: `linear-gradient(90deg, ${primaryColor}, ${primaryColor}dd)`,
+            borderRadius: 'clamp(2px, 0.5vw, 4px)',
+            animation: 'shimmer 1.2s linear infinite',
+            filter: 'blur(1px)'
+          }}></div>
+        </div>
+        <div style={{
+          marginTop: 'clamp(1rem, 3vw, 1.5rem)',
+          fontSize: 'clamp(0.875rem, 2.5vw, 1.1rem)',
+          color: textColor,
+          letterSpacing: '0.3px'
+        }}>Initializing Application…</div>
         <style>{`
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+          }
+          @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(250%); }
           }
         `}</style>
       </div>

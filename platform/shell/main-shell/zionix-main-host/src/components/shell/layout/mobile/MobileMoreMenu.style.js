@@ -72,8 +72,6 @@ export const useStyles = (token) => ({
     overflowY: 'auto',
     overflowX: 'hidden',
     WebkitOverflowScrolling: 'touch',
-    scrollbarWidth: 'none',
-    msOverflowStyle: 'none',
   },
 
   // Menu styling
@@ -100,8 +98,29 @@ export const useStyles = (token) => ({
 
 // Generate dynamic CSS for menu items
 export const generateMenuItemCSS = (token) => `
+  /* Theme-based scrollbar styling with very mild opacity */
   .mobile-more-menu-container::-webkit-scrollbar {
-    display: none;
+    width: 6px;
+  }
+  
+  .mobile-more-menu-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .mobile-more-menu-container::-webkit-scrollbar-thumb {
+    background-color: ${token?.colorText}08;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .mobile-more-menu-container::-webkit-scrollbar-thumb:hover {
+    background-color: ${token?.colorText}12;
+  }
+  
+  /* Firefox scrollbar styling */
+  .mobile-more-menu-container {
+    scrollbar-width: thin;
+    scrollbar-color: ${token?.colorText}08 transparent;
   }
   
   .mobile-more-menu-container .ant-menu-inline .ant-menu-item,
@@ -187,22 +206,22 @@ export const generateMenuItemCSS = (token) => `
 // Animation variants for framer-motion
 export const backdropVariants = {
   initial: { opacity: 0 },
-  animate: { 
+  animate: {
     opacity: 1,
     transition: { duration: 0.3, ease: "easeOut" }
   },
-  exit: { 
+  exit: {
     opacity: 0,
     transition: { duration: 0.2, ease: "easeIn" }
   }
 };
 
 export const menuVariants = {
-  initial: { 
+  initial: {
     y: "100%",
     opacity: 0
   },
-  animate: { 
+  animate: {
     y: 0,
     opacity: 1,
     transition: {
@@ -212,10 +231,10 @@ export const menuVariants = {
       duration: 0.5
     }
   },
-  exit: { 
+  exit: {
     y: "100%",
     opacity: 0,
-    transition: { 
+    transition: {
       duration: 0.3,
       ease: "easeIn"
     }
@@ -224,13 +243,13 @@ export const menuVariants = {
 
 export const handleBarVariants = {
   initial: { scaleX: 0.8, opacity: 0 },
-  animate: { 
-    scaleX: 1, 
+  animate: {
+    scaleX: 1,
     opacity: 1,
     transition: { delay: 0.2, duration: 0.3 }
   },
-  exit: { 
-    scaleX: 0.8, 
+  exit: {
+    scaleX: 0.8,
     opacity: 0,
     transition: { duration: 0.2 }
   }
@@ -238,13 +257,13 @@ export const handleBarVariants = {
 
 export const headerVariants = {
   initial: { y: -20, opacity: 0 },
-  animate: { 
-    y: 0, 
+  animate: {
+    y: 0,
     opacity: 1,
     transition: { delay: 0.1, duration: 0.4 }
   },
-  exit: { 
-    y: -20, 
+  exit: {
+    y: -20,
     opacity: 0,
     transition: { duration: 0.2 }
   }
@@ -252,17 +271,17 @@ export const headerVariants = {
 
 export const contentVariants = {
   initial: { y: 20, opacity: 0 },
-  animate: { 
-    y: 0, 
+  animate: {
+    y: 0,
     opacity: 1,
-    transition: { 
-      delay: 0.2, 
+    transition: {
+      delay: 0.2,
       duration: 0.4,
       staggerChildren: 0.05
     }
   },
-  exit: { 
-    y: 20, 
+  exit: {
+    y: 20,
     opacity: 0,
     transition: { duration: 0.2 }
   }
@@ -275,7 +294,7 @@ export const handleBarHoverVariants = {
 
 export const safeAreaVariants = {
   initial: { opacity: 0 },
-  animate: { 
+  animate: {
     opacity: 1,
     transition: { delay: 0.3 }
   }
