@@ -8,11 +8,11 @@
  */
 
 // === MENU HOOKS ===
-// Menu hooks will be added here when needed
+export { useMenuQuery } from './menu/useMenuQuery';
 
 /**
  * @example
  * ```js
- * import { useMenuPageData } from '@/data/hooks';
+ * import { useMenuQuery } from '@/data/hooks';
  * ```
  */

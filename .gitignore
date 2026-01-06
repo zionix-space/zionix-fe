@@ -8,6 +8,11 @@ tmp
 # dependencies
 node_modules
 
+# Environment variables (use .env-cmdrc for all environments)
+.env
+.env.local
+.env.*.local
+
 # IDEs and editors
 /.idea
 .project

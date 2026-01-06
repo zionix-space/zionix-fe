@@ -15,7 +15,7 @@ function commonRulesRsPack(config, isDevelopment = false) {
       filename: isDevelopment ? 'assets/[name][ext]' : 'assets/[name].[contenthash:8][ext]',
     },
   });
-  
+
   module.rules.push({
     test: /\.(woff|woff2|eot|ttf|otf)$/,
     type: 'asset/resource',
@@ -101,7 +101,7 @@ function commonRulesRsPack(config, isDevelopment = false) {
         '@': 'src',
       },
     };
-    
+
     // Optimize chunk splitting for development
     config.optimization = {
       ...config.optimization,
@@ -119,7 +119,7 @@ function commonRulesRsPack(config, isDevelopment = false) {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     })
   );
-  
+
   return config;
 }
 

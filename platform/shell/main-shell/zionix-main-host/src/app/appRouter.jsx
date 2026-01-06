@@ -1,8 +1,11 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
 import availableApps from 'tools/deployment/zionix-main.modules.json';
 import HostAppLayout from '../components/shell/layout/HostAppLayout';
+import AppsRedirect from '../components/shell/layout/AppsRedirect';
+import NotFoundPage from '../components/NotFoundPage';
 const AuthApp = React.lazy(() => import('authApp/Module'));
 
 const PageTransition = ({ children }) => {
@@ -23,6 +26,8 @@ const RouteWithTransition = ({ element }) => {
 };
 
 export function AppRouter() {
+  const { isAuthenticated } = useAuthStore();
+
   function getModuleComponent(moduleName) {
     let ModuleComponent;
 
@@ -30,61 +35,6 @@ export function AppRouter() {
       case 'adminApp':
         ModuleComponent = React.lazy(() => import('adminApp/Module'));
         break;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -101,14 +51,34 @@ export function AppRouter() {
       <AnimatePresence mode="popLayout">
         <div>
           <Routes>
+            {/* Root path - redirect based on auth status */}
             <Route
-              path="/"
-              element={<RouteWithTransition element={<AuthApp />} />}
+              path="/*"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/apps" replace />
+                ) : (
+                  <RouteWithTransition element={<AuthApp />} />
+                )
+              }
             />
 
-            <Route path="/*" element={<HostAppLayout />}>
+            {/* Apps routes - protected */}
+            <Route
+              path="/apps"
+              element={
+                isAuthenticated ? (
+                  <HostAppLayout />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            >
+              {/* Default /apps route - redirect to first menu */}
+              <Route index element={<AppsRedirect />} />
+
               {availableApps
-                .filter((moduleName) => moduleName !== excludedModule) // Exclude mainAuthApp
+                .filter((moduleName) => moduleName !== excludedModule)
                 .map((moduleName) => {
                   const ModuleComponent = getModuleComponent(moduleName);
 
@@ -120,8 +90,11 @@ export function AppRouter() {
                     />
                   );
                 })}
-              <Route path="*" element={<div>App does not exist</div>} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
+
+            {/* Catch all - redirect to root */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </AnimatePresence>

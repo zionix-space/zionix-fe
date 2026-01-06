@@ -9,12 +9,13 @@ import {
   theme,
   ColorPicker,
   Tooltip,
+  Spin,
 } from 'antd';
 // Using Remix Icons CSS classes for better performance
 import { useTheme, ZionixLogo } from '@zionix/design-system';
 import { useStyles } from './DesktopTopBar.style';
 import { useMenuStore } from '../../../../data/stores/menu/useMenuStore';
-import { fetchMenuData } from '../../../../data/dummy/menuData';
+import { useMenuQuery } from '../../../../data/hooks/menu/useMenuQuery';
 import { NotificationDropdown } from '../shared/NotificationDropdown';
 
 const { Header } = Layout;
@@ -125,49 +126,19 @@ const AppTopBar = () => {
     selectedMainMenu,
     setSelectedMainMenu,
     initializeMenus,
-    shouldUpdateMenuData,
-    setMenuVersion,
-    menuVersion,
   } = useMenuStore();
 
-  // Initialize menu data on component mount
+  // Initialize menu data on component mount using React Query
+  const { data: menuData, isLoading: isMenuLoading, isError } = useMenuQuery();
+
   useEffect(() => {
-    const loadMenuData = async () => {
-      try {
-        // Fetch menu data with current version for comparison
-        const menuData = await fetchMenuData(menuVersion);
-
-        // Check if we need to update based on version
-        if (shouldUpdateMenuData(menuData)) {
-          // Update menu version first
-          setMenuVersion(menuData.config.version);
-
-          // Only initialize if we don't have menu data yet
-          // This preserves persisted state after page refresh
-          if (mainMenus.length === 0) {
-            initializeMenus(menuData);
-          } else {
-            // If we have persisted mainMenus but no completeMenuData,
-            // just update the completeMenuData without changing selections
-            const { completeMenuData } = useMenuStore.getState();
-            if (!completeMenuData) {
-              useMenuStore.setState({ completeMenuData: menuData });
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Failed to load menu data:', error);
+    if (menuData && !isMenuLoading && !isError) {
+      // Only initialize if we don't have menu data yet
+      if (mainMenus.length === 0) {
+        initializeMenus(menuData);
       }
-    };
-
-    loadMenuData();
-  }, [
-    mainMenus.length,
-    initializeMenus,
-    menuVersion,
-    shouldUpdateMenuData,
-    setMenuVersion,
-  ]);
+    }
+  }, [menuData, isMenuLoading, isError, mainMenus.length, initializeMenus]);
 
   // Filter out admin-app from regular navigation and convert to navigation items
   const navigationItems = mainMenus
@@ -362,80 +333,86 @@ const AppTopBar = () => {
 
   return (
     <Header style={styles.topBarStyle}>
-      {/* Left Section - Brand + Navigation */}
-      <div style={styles.leftSectionStyle}>
-        <div style={styles.brandContainerStyle}>
-          <ZionixLogo
-            size={56}
-            useThemeColors={true}
-            style={{ marginRight: '16px' }}
-          />
-          <span style={styles.logoTextStyle}>Zionix</span>
+      {isMenuLoading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          <Spin size="small" />
         </div>
+      ) : (
+        <>
+          {/* Left Section - Brand + Navigation */}
+          <div style={styles.leftSectionStyle}>
+            <div style={styles.brandContainerStyle}>
+              <ZionixLogo
+                size={56}
+                useThemeColors={true}
+                style={{ marginRight: '16px' }}
+              />
+              <span style={styles.logoTextStyle}>Zionix</span>
+            </div>
 
-        <div style={styles.navigationContainerStyle}>
-          <Menu
-            mode="horizontal"
-            selectedKeys={selectedMainMenu ? [selectedMainMenu.key] : []}
-            items={navigationItems}
-            style={styles.menuStyle}
-            className="zx-topbar-menu"
-            theme="light"
-            onSelect={handleMainMenuSelect}
-            overflowedIndicator={null}
-            disabledOverflow={true}
-          />
-        </div>
-      </div>
+            <div style={styles.navigationContainerStyle}>
+              <Menu
+                mode="horizontal"
+                selectedKeys={selectedMainMenu ? [selectedMainMenu.key] : []}
+                items={navigationItems}
+                style={styles.menuStyle}
+                className="zx-topbar-menu"
+                theme="light"
+                onSelect={handleMainMenuSelect}
+                overflowedIndicator={null}
+                disabledOverflow={true}
+              />
+            </div>
+          </div>
 
-      {/* Right Section - Actions */}
-      <Space style={styles.rightActionsStyle}>
-        {/* Admin Button */}
-        {adminMenu && (
-          <Button
-            type="text"
-            icon={<i className="ri-settings-3-line" />}
-            onClick={() => setSelectedMainMenu(adminMenu)}
-            style={{
-              ...styles.iconButtonStyle,
-              color:
-                selectedMainMenu?.key === 'admin-app'
-                  ? token.colorPrimary
-                  : undefined,
-              backgroundColor:
-                selectedMainMenu?.key === 'admin-app'
-                  ? token.colorPrimaryBg
-                  : undefined,
-            }}
-            title="Admin Settings"
-          />
-        )}
+          {/* Right Section - Actions */}
+          <Space style={styles.rightActionsStyle}>
+            {/* Admin Button */}
+            {adminMenu && (
+              <Button
+                type="text"
+                icon={<i className="ri-settings-3-line" />}
+                onClick={() => setSelectedMainMenu(adminMenu)}
+                style={{
+                  ...styles.iconButtonStyle,
+                  color:
+                    selectedMainMenu?.key === 'admin-app'
+                      ? token.colorPrimary
+                      : undefined,
+                  backgroundColor:
+                    selectedMainMenu?.key === 'admin-app'
+                      ? token.colorPrimaryBg
+                      : undefined,
+                }}
+                title="Admin Settings"
+              />
+            )}
 
-        {/* Fullscreen Toggle Button */}
-        {isFullscreenSupported() && (
-          <Button
-            type="text"
-            icon={
-              isFullscreen ? (
-                <i className="ri-fullscreen-exit-line" />
-              ) : (
-                <i className="ri-fullscreen-line" />
-              )
-            }
-            onClick={toggleFullscreen}
-            style={{
-              ...styles.iconButtonStyle,
-              color: isFullscreen ? token.colorPrimary : undefined,
-              backgroundColor: isFullscreen ? token.colorPrimaryBg : undefined,
-            }}
-            title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-            aria-label={
-              isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'
-            }
-          />
-        )}
+            {/* Fullscreen Toggle Button */}
+            {isFullscreenSupported() && (
+              <Button
+                type="text"
+                icon={
+                  isFullscreen ? (
+                    <i className="ri-fullscreen-exit-line" />
+                  ) : (
+                    <i className="ri-fullscreen-line" />
+                  )
+                }
+                onClick={toggleFullscreen}
+                style={{
+                  ...styles.iconButtonStyle,
+                  color: isFullscreen ? token.colorPrimary : undefined,
+                  backgroundColor: isFullscreen ? token.colorPrimaryBg : undefined,
+                }}
+                title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                aria-label={
+                  isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'
+                }
+              />
+            )}
 
-        {/* Color Picker moved to sidebar
+            {/* Color Picker moved to sidebar
         <Tooltip title="Change Primary Color">
           <ColorPicker
             value={primaryColor}
@@ -463,7 +440,7 @@ const AppTopBar = () => {
         </Tooltip>
         */}
 
-        {/* <Button
+            {/* <Button
           type="text"
           icon={<i className="ri-arrow-left-right-line" />}
           onClick={toggleRTL}
@@ -471,7 +448,7 @@ const AppTopBar = () => {
           title={isRTL ? 'Switch to LTR' : 'Switch to RTL'}
         /> */}
 
-        {/* Theme toggle moved to sidebar - keeping this commented for reference
+            {/* Theme toggle moved to sidebar - keeping this commented for reference
         <Button
           type="text"
           icon={
@@ -487,11 +464,13 @@ const AppTopBar = () => {
         />
         */}
 
-        <NotificationDropdown
-          onNotificationClick={handleNotificationClick}
-          buttonStyle={styles.iconButtonStyle}
-        />
-      </Space>
+            <NotificationDropdown
+              onNotificationClick={handleNotificationClick}
+              buttonStyle={styles.iconButtonStyle}
+            />
+          </Space>
+        </>
+      )}
     </Header>
   );
 };

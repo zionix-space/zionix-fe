@@ -31,7 +31,7 @@ export const useFormValidation = (initialValues = {}, validationRules = {}, opti
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(false); // Start as false until validated
 
   /**
    * Validates a single field
@@ -116,7 +116,7 @@ export const useFormValidation = (initialValues = {}, validationRules = {}, opti
    * @param {Event} event - Form submit event
    */
   const handleSubmit = useCallback(async (event) => {
-    if (event) {
+    if (event && event.preventDefault) {
       event.preventDefault();
     }
 
@@ -219,10 +219,20 @@ export const useFormValidation = (initialValues = {}, validationRules = {}, opti
     return values[fieldName] || '';
   }, [values]);
 
-  // Update isValid when errors change
+  // Update isValid when values or errors change
   useEffect(() => {
-    setIsValid(!hasFormErrors(errors));
-  }, [errors]);
+    // Check if all required fields have values
+    const allFieldsFilled = Object.keys(validationRules).every(fieldName => {
+      const value = values[fieldName];
+      return value && value.toString().trim() !== '';
+    });
+
+    // Check if there are no errors (filter out null/undefined errors)
+    const actualErrors = Object.keys(errors).filter(key => errors[key] !== null && errors[key] !== undefined);
+    const noErrors = actualErrors.length === 0;
+
+    setIsValid(allFieldsFilled && noErrors);
+  }, [errors, values, validationRules]);
 
   return {
     // Form state

@@ -5,6 +5,9 @@
   "scripts": {
     "start": "env-cmd -f .env-cmdrc -e dev nx run zionix-main-host:serve",
     "start-zionix-main": "node tools/deployment/zionix-main.script.config.js",
+    "build:dev": "env-cmd -f .env-cmdrc -e dev nx run-many --target=build --configuration=production",
+    "build:qa": "env-cmd -f .env-cmdrc -e qa nx run-many --target=build --configuration=production",
+    "build:prod": "env-cmd -f .env-cmdrc -e production nx run-many --target=build --configuration=production",
     "lint": "nx run-many --target=lint",
     "lint:fix": "nx run-many --target=lint --fix",
     "eslint": "eslint --ext .js,.ts,.jsx,.tsx apps/",

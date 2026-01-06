@@ -17,6 +17,7 @@ import AuthRouter from '../components/AuthRouter';
  * Features:
  * - React Router integration for SPA navigation (provided by host)
  * - Zionix design system theme provider
+ * - Shared Zustand store for cross-microfrontend auth state
  * - Ant Design configuration provider
  * - Responsive design support
  * - Dark/light theme support
@@ -24,6 +25,7 @@ import AuthRouter from '../components/AuthRouter';
  *
  * Note: BrowserRouter is provided by the host application (main-shell).
  * This app uses the router context from the host.
+ * Authentication state is managed via shared Zustand store accessible by all microfrontends.
  *
  * @returns {JSX.Element} Main authentication app component
  */

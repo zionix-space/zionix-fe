@@ -16,18 +16,14 @@ import {
   Button,
   Checkbox,
   Typography,
-  Space,
   Divider,
   message,
   Row,
   Col,
   Carousel,
 } from 'antd';
-// Using Remix Icons CSS classes for better performance
 import { motion } from 'framer-motion';
 import { useTheme, ZionixLogo } from '@zionix/design-system';
-import { useFormValidation } from '../hooks/useFormValidation';
-import { validateEmail, validatePassword } from '../utils/validation';
 import {
   useStyles,
   containerVariants,
@@ -90,72 +86,28 @@ const carouselSlides = [
 const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
   const { token, isMobile } = useTheme();
   const styles = useStyles(token);
-  const [rememberMe, setRememberMe] = useState(false);
-
-  // Form validation setup
-  const validationRules = {
-    email: [(value) => validateEmail(value, true)],
-    password: [
-      (value) => validatePassword(value, true, false), // Don't check strength for login
-    ],
-  };
-
-  const {
-    values,
-    errors,
-    isSubmitting,
-    isValid,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    getFieldError,
-    hasFieldError,
-    getFieldValue,
-  } = useFormValidation({ email: '', password: '' }, validationRules, {
-    onSubmit: async (formData) => {
-      try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        if (onLogin) {
-          await onLogin({ ...formData, rememberMe });
-        }
-
-        message.success('Login successful!');
-      } catch (error) {
-        message.error('Login failed. Please check your credentials.');
-        throw error;
-      }
-    },
-  });
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
   /**
-   * Handle social login
+   * Handle form submission
    */
-  const handleSocialLogin = (provider) => async () => {
+  const handleSubmit = async (values) => {
+    setLoading(true);
     try {
-      if (onSocialLogin) {
-        await onSocialLogin(provider);
+      if (onLogin) {
+        await onLogin({
+          email: values.email,
+          password: values.password,
+          rememberMe: values.remember || false,
+        });
       }
-      message.success(`${provider} login initiated`);
     } catch (error) {
-      message.error(`${provider} login failed`);
+      const errorMessage = error.message || 'Login failed. Please check your credentials.';
+      message.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  /**
-   * Handle input changes with validation
-   */
-  const handleInputChange = (fieldName) => (e) => {
-    const value = e.target.value;
-    handleChange(fieldName, value);
-  };
-
-  /**
-   * Handle input blur events
-   */
-  const handleInputBlur = (fieldName) => () => {
-    handleBlur(fieldName);
   };
 
   /**
@@ -213,11 +165,19 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
             </Divider>
 
             {/* Login Form */}
-            <Form layout="vertical" onFinish={handleSubmit} autoComplete="off">
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={handleSubmit}
+              autoComplete="off"
+            >
               {/* Email Field */}
               <Form.Item
-                validateStatus={hasFieldError('email') ? 'error' : ''}
-                help={getFieldError('email')}
+                name="email"
+                rules={[
+                  { required: true, message: 'Please enter your email' },
+                  { type: 'email', message: 'Please enter a valid email' },
+                ]}
                 style={styles.formItem}
               >
                 <Input
@@ -225,9 +185,6 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     <i className="ri-mail-line" style={styles.inputIcon} />
                   }
                   placeholder="Email"
-                  value={getFieldValue('email')}
-                  onChange={handleInputChange('email')}
-                  onBlur={handleInputBlur('email')}
                   style={styles.input}
                   autoComplete="email"
                 />
@@ -235,8 +192,10 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
               {/* Password Field */}
               <Form.Item
-                validateStatus={hasFieldError('password') ? 'error' : ''}
-                help={getFieldError('password')}
+                name="password"
+                rules={[
+                  { required: true, message: 'Please enter your password' },
+                ]}
                 style={styles.formItem}
               >
                 <Input.Password
@@ -244,9 +203,6 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     <i className="ri-lock-line" style={styles.inputIcon} />
                   }
                   placeholder="Password"
-                  value={getFieldValue('password')}
-                  onChange={handleInputChange('password')}
-                  onBlur={handleInputBlur('password')}
                   style={styles.input}
                   iconRender={(visible) =>
                     visible ? (
@@ -261,13 +217,9 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
               {/* Remember Me & Forgot Password */}
               <div style={styles.rememberForgotContainer}>
-                <Checkbox
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  style={styles.checkbox}
-                >
-                  Remember me
-                </Checkbox>
+                <Form.Item name="remember" valuePropName="checked" noStyle>
+                  <Checkbox style={styles.checkbox}>Remember me</Checkbox>
+                </Form.Item>
                 <Link
                   onClick={handleForgotPasswordClick}
                   style={styles.forgotLink}
@@ -280,8 +232,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
               <Button
                 type="primary"
                 htmlType="submit"
-                loading={isSubmitting}
-                disabled={!isValid || isSubmitting}
+                loading={loading}
                 style={styles.loginButton}
                 block
               >
@@ -342,14 +293,18 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
                 {/* Login Form */}
                 <Form
+                  form={form}
                   layout="vertical"
                   onFinish={handleSubmit}
                   autoComplete="off"
                 >
                   {/* Email Field */}
                   <Form.Item
-                    validateStatus={hasFieldError('email') ? 'error' : ''}
-                    help={getFieldError('email')}
+                    name="email"
+                    rules={[
+                      { required: true, message: 'Please enter your email' },
+                      { type: 'email', message: 'Please enter a valid email' },
+                    ]}
                     style={styles.formItem}
                   >
                     <Input
@@ -357,9 +312,6 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                         <i className="ri-mail-line" style={styles.inputIcon} />
                       }
                       placeholder="Email"
-                      value={getFieldValue('email')}
-                      onChange={handleInputChange('email')}
-                      onBlur={handleInputBlur('email')}
                       style={styles.input}
                       autoComplete="email"
                     />
@@ -367,8 +319,10 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
                   {/* Password Field */}
                   <Form.Item
-                    validateStatus={hasFieldError('password') ? 'error' : ''}
-                    help={getFieldError('password')}
+                    name="password"
+                    rules={[
+                      { required: true, message: 'Please enter your password' },
+                    ]}
                     style={styles.formItem}
                   >
                     <Input.Password
@@ -376,9 +330,6 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                         <i className="ri-lock-line" style={styles.inputIcon} />
                       }
                       placeholder="Password"
-                      value={getFieldValue('password')}
-                      onChange={handleInputChange('password')}
-                      onBlur={handleInputBlur('password')}
                       style={styles.input}
                       iconRender={(visible) =>
                         visible ? (
@@ -393,13 +344,9 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
                   {/* Remember Me & Forgot Password */}
                   <div style={styles.rememberForgotContainer}>
-                    <Checkbox
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      style={styles.checkbox}
-                    >
-                      Remember me
-                    </Checkbox>
+                    <Form.Item name="remember" valuePropName="checked" noStyle>
+                      <Checkbox style={styles.checkbox}>Remember me</Checkbox>
+                    </Form.Item>
                     <Link
                       onClick={handleForgotPasswordClick}
                       style={styles.forgotLink}
@@ -412,8 +359,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                   <Button
                     type="primary"
                     htmlType="submit"
-                    loading={isSubmitting}
-                    disabled={!isValid || isSubmitting}
+                    loading={loading}
                     style={styles.loginButton}
                     block
                   >

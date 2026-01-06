@@ -20,7 +20,7 @@ module.exports = composePlugins(
   withModuleFederation(config),
   (config) => {
     commonRulesRsPack(config);
-    
+
     // Performance optimizations for adminApp
     config.optimization = {
       ...config.optimization,
@@ -78,6 +78,9 @@ module.exports = composePlugins(
       // Add path aliases
       alias: {
         ...config.resolve?.alias,
+        '@zionix/shared-utilities': require('path').resolve(__dirname, '../../../../platform/core/shared-utilities'),
+        '@zionix/apiCore': require('path').resolve(__dirname, '../../../../platform/core/shared-utilities/shared/middleware/axiosCore.js'),
+        '@zionix/design-system': require('path').resolve(__dirname, '../../../../platform/core/design-system'),
         '@zionix-formEngine/core': require('path').resolve(__dirname, 'src/pages/FormEngine/core'),
       },
     };

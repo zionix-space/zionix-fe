@@ -22,12 +22,21 @@ module.exports = composePlugins(
   withModuleFederation(config),
   (config) => {
     commonRulesRsPack(config, isDevelopment);
-    
+
+    // Add path aliases from tsconfig.base.json
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@zionix/shared-utilities': require('path').resolve(__dirname, '../../../platform/core/shared-utilities'),
+      '@zionix/apiCore': require('path').resolve(__dirname, '../../../platform/core/shared-utilities/shared/middleware/axiosCore.js'),
+      '@zionix/design-system': require('path').resolve(__dirname, '../../../platform/core/design-system'),
+    };
+
     // Development-specific optimizations
     if (isDevelopment) {
       // Enable faster source maps for development
       config.devtool = 'eval-cheap-module-source-map';
-      
+
       // Disable optimization in development for faster builds
       config.optimization = {
         ...config.optimization,
@@ -36,20 +45,20 @@ module.exports = composePlugins(
         removeEmptyChunks: false,
         splitChunks: false,
       };
-      
+
       // Enable caching for faster rebuilds (Rspack expects boolean)
       config.cache = true;
-      
+
       // Optimize module resolution for faster lookups (only supported options)
       config.resolve = {
         ...config.resolve,
         symlinks: false,
       };
-      
+
       // Reduce bundle analysis overhead
       config.stats = 'errors-warnings';
     }
-    
+
     return config;
   }
 );

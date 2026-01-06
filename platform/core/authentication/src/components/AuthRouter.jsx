@@ -18,9 +18,12 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { message } from 'antd';
 import LoginPage from '../pages/LoginPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import ChangePasswordPage from '../pages/ChangePasswordPage';
+import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
+import { login as loginService, forgotPassword, changePassword } from '../services/auth';
 
 /**
  * Authentication Router Component
@@ -35,30 +38,53 @@ import ChangePasswordPage from '../pages/ChangePasswordPage';
  * - Programmatic navigation between pages
  * - URL-based routing for deep linking
  * - Fallback redirect to login for unknown routes
+ * - Integrated with shared Zustand store for cross-microfrontend auth
  *
  * @returns {JSX.Element} Authentication router component
  */
 const AuthRouter = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { setAuth, setLoading, isPasswordChangeRequired } = useAuthStore();
 
   /**
    * Handle login form submission
-   * @param {Object} loginData - Login form data
-   * @param {string} loginData.email - User email
-   * @param {string} loginData.password - User password
-   * @param {boolean} loginData.rememberMe - Remember me flag
    */
   const handleLogin = async (loginData) => {
-    // TODO: Implement actual authentication logic
-    console.log('Login attempt:', {
-      email: loginData.email,
-      rememberMe: loginData.rememberMe,
-    });
+    try {
+      setLoading(true);
 
-    // Simulate successful login - in real app, this would redirect to dashboard
-    // For now, we'll just log the success
-    console.log('Login successful!');
+      const result = await loginService({
+        email: loginData.email,
+        password: loginData.password,
+        remember_me: loginData.rememberMe,
+        device_fingerprint: '',
+      });
+
+      // Store auth data in shared Zustand store
+      setAuth({
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+        sessionId: result.sessionId,
+        user: result.user,
+        expiresIn: result.expiresIn,
+        isPasswordChange: result.isPasswordChange,
+      });
+
+      // Check if password change is required
+      if (result.isPasswordChange) {
+        message.warning('Password change required');
+        navigate('/change-password');
+      } else {
+        message.success('Login successful!');
+        // Main router will automatically redirect to /apps via <Navigate>
+        // when isAuthenticated becomes true in the shared Zustand store
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   /**
@@ -67,11 +93,17 @@ const AuthRouter = () => {
    * @param {string} forgotPasswordData.email - User email
    */
   const handleForgotPassword = async (forgotPasswordData) => {
-    // TODO: Implement actual forgot password logic
-    console.log('Forgot password request:', forgotPasswordData);
+    try {
+      await forgotPassword(forgotPasswordData.email);
+      message.success('Password reset email sent successfully!');
 
-    // Simulate successful email sending
-    console.log('Password reset email sent!');
+      // Navigate back to login after a delay
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (error) {
+      throw error; // Let the ForgotPasswordPage handle the error display
+    }
   };
 
   /**
@@ -81,14 +113,19 @@ const AuthRouter = () => {
    * @param {string} changePasswordData.newPassword - New password
    */
   const handleChangePassword = async (changePasswordData) => {
-    // TODO: Implement actual change password logic
-    console.log('Change password request:', {
-      hasCurrentPassword: !!changePasswordData.currentPassword,
-      hasNewPassword: !!changePasswordData.newPassword,
-    });
+    try {
+      await changePassword({
+        currentPassword: changePasswordData.currentPassword,
+        newPassword: changePasswordData.newPassword,
+      });
 
-    // Simulate successful password change
-    console.log('Password changed successfully!');
+      message.success('Password changed successfully!');
+
+      // The main app router will automatically redirect to /apps
+      // when the auth store updates
+    } catch (error) {
+      throw error; // Let the ChangePasswordPage handle the error display
+    }
   };
 
   /**
