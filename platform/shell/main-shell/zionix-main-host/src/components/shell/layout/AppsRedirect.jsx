@@ -53,7 +53,8 @@ const AppsRedirect = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '100vh'
+            height: '100%',
+            width: '100%'
         }}>
             <Spin size="large" tip="Loading menus..." />
         </div>

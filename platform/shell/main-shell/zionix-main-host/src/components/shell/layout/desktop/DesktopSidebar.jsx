@@ -669,6 +669,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   onChange={(color) => setPrimaryColor(color.toHexString())}
                   size="small"
                   showText={false}
+                  disabledAlpha={true}
                   presets={[
                     {
                       label: 'Recommended',
