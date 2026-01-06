@@ -1,9 +1,11 @@
-// AppTopBar styles - 100% Finora Match
+// AppTopBar styles - Premium glassmorphism
 export const useStyles = (token) => ({
   topBarStyle: {
-    background: token.colorBgLayout,
-    borderBottom: "none",
-    boxShadow: "none",
+    background: 'transparent', // Transparent to show through the main background
+    backdropFilter: 'none', // No blur - unified with background
+    WebkitBackdropFilter: 'none',
+    borderBottom: 'none', // No border for seamless look
+    boxShadow: 'none', // No shadow
     padding: "0 24px",
     height: "64px",
     display: "flex",
@@ -46,11 +48,13 @@ export const useStyles = (token) => ({
     alignItems: "center",
     flexShrink: 0,
     userSelect: "none",
-    backgroundColor: token.colorBgContainer, // Match sidebar capsule
+    background: `linear-gradient(135deg, ${token.colorBgContainer} 0%, ${token.colorBgElevated} 100%)`,
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
     borderRadius: "30px",
     padding: "3px",
-    border: "none", // No border like sidebar
-    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`, // Match sidebar shadow
+    border: `1px solid ${token.colorBorderSecondary}30`,
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
     height: "45px",
   },
 

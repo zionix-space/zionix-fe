@@ -9,7 +9,7 @@
  * @version 1.0.0
  */
 
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryCache, MutationCache } from '@tanstack/react-query';
 
 /**
  * Creates and configures a QueryClient instance with platform-optimized settings
@@ -18,48 +18,105 @@ import { QueryClient } from '@tanstack/react-query';
  */
 export const createQueryClient = () => {
   return new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        // Log errors in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Query Error:', {
+            queryKey: query.queryKey,
+            error,
+          });
+        }
+
+        // TODO: Send to monitoring service (Sentry, LogRocket, etc.)
+        // Example: logErrorToService(error, { queryKey: query.queryKey });
+      },
+    }),
+
+    mutationCache: new MutationCache({
+      onError: (error, _variables, _context, mutation) => {
+        // Log mutation errors in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Mutation Error:', {
+            mutationKey: mutation.options.mutationKey,
+            error,
+          });
+        }
+
+        // TODO: Send to monitoring service
+      },
+    }),
+
     defaultOptions: {
       queries: {
         // Cache data for 5 minutes by default
         staleTime: 5 * 60 * 1000, // 5 minutes
-        
+
         // Keep data in cache for 10 minutes after component unmount
         gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
-        
-        // Retry failed requests 3 times with exponential backoff
+
+        // Smart retry logic based on error type
         retry: (failureCount, error) => {
-          // Don't retry on 4xx errors (client errors)
-          if (error?.response?.status >= 400 && error?.response?.status < 500) {
+          // Don't retry if request was cancelled
+          if (error?.cancelled) {
             return false;
           }
-          // Retry up to 3 times for other errors
+
+          // Don't retry on 4xx errors (client errors)
+          if (error?.isClientError) {
+            return false;
+          }
+
+          // Don't retry on rate limiting
+          if (error?.status === 429) {
+            return false;
+          }
+
+          // Retry up to 3 times for server errors and network issues
           return failureCount < 3;
         },
-        
+
         // Retry delay with exponential backoff
         retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-        
+
         // Refetch on window focus for better UX
         refetchOnWindowFocus: true,
-        
-        // Don't refetch on reconnect by default (can be overridden per query)
+
+        // Refetch on reconnect
         refetchOnReconnect: 'always',
-        
+
         // Don't refetch on mount if data is fresh
         refetchOnMount: true,
-        
+
         // Network mode - fail fast on network errors
         networkMode: 'online',
+
+        // Throw errors to error boundaries
+        useErrorBoundary: (error) => {
+          // Use error boundary for server errors (5xx)
+          return error?.isServerError || false;
+        },
       },
       mutations: {
-        // Retry mutations once on failure
-        retry: 1,
-        
+        // Retry mutations once on failure (only for network errors)
+        retry: (failureCount, error) => {
+          // Only retry network errors, not client/server errors
+          if (error?.isNetworkError && failureCount < 1) {
+            return true;
+          }
+          return false;
+        },
+
         // Retry delay for mutations
         retryDelay: 1000,
-        
+
         // Network mode for mutations
         networkMode: 'online',
+
+        // Throw mutation errors to error boundaries for server errors
+        useErrorBoundary: (error) => {
+          return error?.isServerError || false;
+        },
       },
     },
   });

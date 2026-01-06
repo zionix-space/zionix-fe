@@ -50,7 +50,30 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
   (res) => res.data,
   async (err) => {
+    // Handle request cancellation
+    if (axios.isCancel(err)) {
+      console.log('Request cancelled:', err.message);
+      return Promise.reject({ cancelled: true, message: err.message });
+    }
+
     const originalRequest = err.config;
+
+    // Handle 429 Rate Limiting
+    if (err.response?.status === 429) {
+      const retryAfter = err.response.headers['retry-after'] || 5;
+      console.warn(`Rate limited. Retry after ${retryAfter} seconds`);
+
+      // Dispatch rate limit event for UI notification
+      window.dispatchEvent(new CustomEvent('api:rate-limited', {
+        detail: { retryAfter }
+      }));
+
+      return Promise.reject({
+        status: 429,
+        message: `Too many requests. Please try again in ${retryAfter} seconds.`,
+        retryAfter
+      });
+    }
 
     // Handle 401 Unauthorized - Token expired
     if (err.response?.status === 401 && !originalRequest._retry) {
@@ -99,7 +122,18 @@ axiosClient.interceptors.response.use(
       }
     }
 
-    return Promise.reject(err);
+    // Normalize error response for consistent handling
+    const normalizedError = {
+      status: err.response?.status,
+      message: err.response?.data?.message || err.message || 'An error occurred',
+      code: err.code,
+      data: err.response?.data,
+      isNetworkError: !err.response && err.request,
+      isServerError: err.response?.status >= 500,
+      isClientError: err.response?.status >= 400 && err.response?.status < 500,
+    };
+
+    return Promise.reject(normalizedError);
   }
 );
 

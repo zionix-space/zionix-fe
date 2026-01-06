@@ -208,6 +208,43 @@ const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
 };
 
 /**
+ * Primary Color CSS Variables Component
+ * Injects CSS variables for primary color RGB values for glassmorphism effects
+ * @private
+ */
+const PrimaryCSSVariables = ({ primaryColor }) => {
+  useEffect(() => {
+    // Convert hex to RGB
+    const hexToRgb = (hex) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result
+        ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+        : { r: 0, g: 80, b: 216 }; // Default blue
+    };
+
+    const rgb = hexToRgb(primaryColor);
+
+    // Set CSS variables on root
+    document.documentElement.style.setProperty('--primary-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+    document.documentElement.style.setProperty('--ant-primary-color', primaryColor);
+
+    // Calculate hover color (slightly lighter/darker)
+    const hoverRgb = {
+      r: Math.min(255, rgb.r + 20),
+      g: Math.min(255, rgb.g + 20),
+      b: Math.min(255, rgb.b + 20),
+    };
+    document.documentElement.style.setProperty('--ant-primary-color-hover', `rgb(${hoverRgb.r}, ${hoverRgb.g}, ${hoverRgb.b})`);
+  }, [primaryColor]);
+
+  return null;
+};
+
+/**
  * Theme context for managing global theme state
  * @private
  */
@@ -678,6 +715,7 @@ const ThemeProvider = ({ children }) => {
         themeTokens={currentTheme.token}
         isDarkMode={isDarkMode}
       />
+      <PrimaryCSSVariables primaryColor={primaryColor} />
       <ConfigProvider direction={isRTL ? 'rtl' : 'ltr'} theme={currentTheme}>
         {children}
       </ConfigProvider>

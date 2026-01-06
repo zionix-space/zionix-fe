@@ -1,17 +1,20 @@
 // CSS-in-JS styles with zx-host prefix for module federation isolation
 export const useStyles = (token) => ({
   zxHostSidebarContainer: {
-    background: token.colorBgLayout, // Same as page background - unified shell
-    height: 'calc(100vh - 64px)', // Match new topbar height
+    background: 'transparent', // Transparent to show through the main background
+    backdropFilter: 'none', // No blur - unified with background
+    WebkitBackdropFilter: 'none',
+    height: 'calc(100vh - 64px)',
     position: 'fixed',
-    top: '64px', // Match new topbar height
+    top: '64px',
     insetInlineStart: 0,
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     zIndex: 999,
     userSelect: 'none',
-    borderRight: 'none', // No borders - premium feel
+    borderRight: 'none', // No border for seamless look
+    boxShadow: 'none', // No shadow
   },
 
   zxHostSidebarContent: {
@@ -70,7 +73,7 @@ export const useStyles = (token) => ({
     gap: '12px',
   },
 
-  // Single capsule container for theme buttons - Finora style
+  // Single capsule container for theme buttons - Premium style
   // flexDirection is set dynamically: 'column' when collapsed, 'row' when expanded
   zxHostThemeCapsule: {
     display: 'flex',
@@ -79,28 +82,30 @@ export const useStyles = (token) => ({
     padding: '4px',
     backgroundColor: token.colorBgContainer,
     borderRadius: '12px',
-    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
     width: 'fit-content',
+    border: `1px solid ${token.colorBorderSecondary}20`,
   },
 
   zxHostThemeButton: {
-    width: '36px',
-    height: '36px',
-    borderRadius: '50%', // Perfect circle
+    width: '40px',
+    height: '40px',
+    borderRadius: '10px',
     backgroundColor: 'transparent',
     border: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
     color: token.colorTextSecondary,
   },
 
   zxHostThemeButtonActive: {
     backgroundColor: token.colorPrimary,
     color: token.colorWhite,
-    boxShadow: `0 2px 4px ${token.colorPrimary}30`,
+    boxShadow: `0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
+    transform: 'scale(1.05)',
   },
 
   zxHostToggleButton: {
@@ -108,12 +113,12 @@ export const useStyles = (token) => ({
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    width: '44px',
-    height: '44px',
-    borderRadius: '50%',
+    width: '40px',
+    height: '40px',
+    borderRadius: '12px',
     backgroundColor: token.colorBgContainer,
-    border: 'none', // No borders - soft shadow only
-    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
+    border: `1px solid ${token.colorBorderSecondary}20`,
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
     transition: `all ${token.motionDurationMid} cubic-bezier(0.4, 0, 0.2, 1)`,
     position: 'relative',
     flexShrink: 0,
@@ -122,7 +127,7 @@ export const useStyles = (token) => ({
   zxHostToggleButtonHover: {
     backgroundColor: token.colorBgContainer,
     transform: 'scale(1.05)',
-    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
+    boxShadow: `0 6px 16px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
   },
 
   zxHostToggleIcon: {
@@ -135,17 +140,17 @@ export const useStyles = (token) => ({
   },
 
   zxHostSectionHeader: {
-    padding: '12px 16px 6px 16px',
+    padding: '16px 20px 8px 20px',
     fontSize: '11px',
-    fontWeight: 500,
+    fontWeight: 600,
     color: token.colorTextTertiary,
     textTransform: 'uppercase',
-    letterSpacing: '0.5px',
+    letterSpacing: '0.8px',
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
     userSelect: 'none',
-    marginTop: '8px',
+    marginTop: '12px',
   },
 
   zxHostSectionHeaderCollapsed: {
@@ -160,13 +165,13 @@ export const useStyles = (token) => ({
 
   zxHostMenuContainer: {
     userSelect: 'none',
-    marginBottom: '12px',
-    padding: '8px', // Capsule padding
-    backgroundColor: token.colorBgContainer, // Capsule background
-    borderRadius: '16px', // Soft rounded capsule
-    margin: '0 12px 12px 12px', // Spacing from edges
-    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`, // Soft shadow
-    border: 'none', // No borders
+    marginBottom: '8px',
+    padding: '4px',
+    backgroundColor: token.colorBgContainer,
+    borderRadius: '16px',
+    margin: '0 12px 12px 12px',
+    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
+    border: `1px solid ${token.colorBorderSecondary}20`,
   },
 
   zxHostMenuItemBadge: {

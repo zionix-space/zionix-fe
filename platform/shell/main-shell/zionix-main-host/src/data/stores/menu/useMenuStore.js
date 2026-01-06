@@ -15,48 +15,37 @@ import { devtools } from 'zustand/middleware';
 /**
  * Enhanced Menu store interface
  * @typedef {Object} MenuStore
- * @property {Array} mainMenus - Main menu items for topbar
- * @property {Object|null} selectedMainMenu - Currently selected main menu
- * @property {Array} sidebarMenus - Children of selected main menu for sidebar
+ * @property {string} selectedMainMenuKey - Key of currently selected main menu
  * @property {string} selectedSidebarKey - Selected sidebar menu key
  * @property {Array} openSidebarKeys - Open sidebar menu keys
  * @property {boolean} isMenuCollapsed - Menu collapse state
- * @property {boolean} isLoading - Loading state for menu data
- * @property {Function} setMainMenus - Set main menu list
- * @property {Function} setSelectedMainMenu - Set selected main menu
- * @property {Function} setSidebarMenus - Set sidebar menu items
+ * @property {Function} setSelectedMainMenuKey - Set selected main menu key
  * @property {Function} setSelectedSidebarKey - Set selected sidebar key
  * @property {Function} setOpenSidebarKeys - Set open sidebar keys
  * @property {Function} toggleMenuCollapse - Toggle menu collapse state
- * @property {Function} initializeMenus - Initialize menus with auto-selection
- * @property {Function} selectMainMenuByIndex - Select main menu by index
- * @property {Function} clearMenuData - Clear all menu data
+ * @property {Function} setMenuCollapse - Set menu collapse state
+ * @property {Function} clearMenuState - Clear all menu UI state
  */
 
 /**
- * Enhanced Zustand store for dynamic menu management
+ * Optimized Zustand store for menu UI state only
+ * Menu data is now managed by React Query - this store only handles UI state
  *
  * @example
  * ```js
  * import { useMenuStore } from '@/data/stores/menu/useMenuStore';
  *
- * const { mainMenus, selectedMainMenu, sidebarMenus, setSelectedMainMenu } = useMenuStore();
+ * const { selectedMainMenuKey, setSelectedMainMenuKey } = useMenuStore();
  * ```
  */
 export const useMenuStore = create(
   devtools(
     persist(
       (set, get) => ({
-        // --- STATE ---
+        // --- UI STATE ONLY ---
 
-        /** @type {Array} Main menu items for topbar */
-        mainMenus: [],
-
-        /** @type {Object|null} Currently selected main menu */
-        selectedMainMenu: null,
-
-        /** @type {Array} Children of selected main menu for sidebar */
-        sidebarMenus: [],
+        /** @type {string} Key of currently selected main menu */
+        selectedMainMenuKey: '',
 
         /** @type {string} Selected sidebar menu key */
         selectedSidebarKey: '',
@@ -67,62 +56,17 @@ export const useMenuStore = create(
         /** @type {boolean} Menu collapse state for responsive design */
         isMenuCollapsed: false,
 
-        /** @type {boolean} Loading state for menu data */
-        isLoading: false,
-
-        /** @type {Object|null} Complete menu data including profileSection */
-        completeMenuData: null,
-
-        /** @type {string|null} Current menu data version for cache invalidation */
-        menuVersion: null,
-
-        /** @type {number|null} Last sync timestamp for cache management */
-        lastSyncTime: null,
-
         // --- ACTIONS ---
 
         /**
-         * Set the main menu list for topbar
-         * @param {Array} data - Main menu list data
+         * Set the selected main menu key
+         * @param {string} key - Main menu key
          */
-        setMainMenus: (data) =>
+        setSelectedMainMenuKey: (key) =>
           set(
-            { mainMenus: Array.isArray(data) ? data : [] },
+            { selectedMainMenuKey: String(key || '') },
             false,
-            'setMainMenus'
-          ),
-
-        /**
-         * Set the selected main menu and update sidebar
-         * @param {Object|null} menu - Main menu item object
-         */
-        setSelectedMainMenu: (menu) => {
-          const sidebarMenus = menu?.children || [];
-          const firstSidebarKey =
-            sidebarMenus.length > 0 ? sidebarMenus[0].key : '';
-
-          set(
-            {
-              selectedMainMenu: menu,
-              sidebarMenus,
-              selectedSidebarKey: firstSidebarKey,
-              openSidebarKeys:
-                sidebarMenus.length > 0 ? [sidebarMenus[0].key] : [],
-            },
-            false,
-            'setSelectedMainMenu'
-          );
-        },
-
-        /**
-         * Set sidebar menu items
-         * @param {Array} data - Sidebar menu items
-         */
-        setSidebarMenus: (data) =>
-          set(
-            { sidebarMenus: Array.isArray(data) ? data : [] },
-            false,
-            'setSidebarMenus'
+            'setSelectedMainMenuKey'
           ),
 
         /**
@@ -169,198 +113,37 @@ export const useMenuStore = create(
           ),
 
         /**
-         * Set loading state
-         * @param {boolean} loading - Loading state
+         * Clear all menu UI state
          */
-        setLoading: (loading) =>
-          set({ isLoading: Boolean(loading) }, false, 'setLoading'),
-
-        /**
-         * Initialize menus with comprehensive menu data structure
-         * @param {Object} menuData - Complete menu data object with mainNavigation, profileSection
-         */
-        initializeMenus: (menuData) => {
-          // Handle both old array format and new object format for backward compatibility
-          let mainMenus = [];
-
-          if (Array.isArray(menuData)) {
-            // Old format - direct array
-            mainMenus = menuData;
-          } else if (menuData && menuData.mainNavigation) {
-            // New format - object with mainNavigation property
-            mainMenus = menuData.mainNavigation;
-          }
-
-          const firstMainMenu = mainMenus.length > 0 ? mainMenus[0] : null;
-          const sidebarMenus = firstMainMenu?.children || [];
-          const firstSidebarKey =
-            sidebarMenus.length > 0 ? sidebarMenus[0].key : '';
-
+        clearMenuState: () =>
           set(
             {
-              mainMenus,
-              selectedMainMenu: firstMainMenu,
-              sidebarMenus,
-              selectedSidebarKey: firstSidebarKey,
-              openSidebarKeys:
-                sidebarMenus.length > 0 ? [sidebarMenus[0].key] : [],
-              isLoading: false,
-              // Store the complete menu data for access to profileSection
-              completeMenuData: menuData,
-            },
-            false,
-            'initializeMenus'
-          );
-        },
-
-        /**
-         * Select main menu by index
-         * @param {number} index - Index of main menu to select
-         */
-        selectMainMenuByIndex: (index) => {
-          const state = get();
-          const menu = state.mainMenus[index];
-          if (menu) {
-            const sidebarMenus = menu.children || [];
-            const firstSidebarKey =
-              sidebarMenus.length > 0 ? sidebarMenus[0].key : '';
-
-            set(
-              {
-                selectedMainMenu: menu,
-                sidebarMenus,
-                selectedSidebarKey: firstSidebarKey,
-                openSidebarKeys:
-                  sidebarMenus.length > 0 ? [sidebarMenus[0].key] : [],
-              },
-              false,
-              'selectMainMenuByIndex'
-            );
-          }
-        },
-
-        /**
-         * Check if menu data needs to be refreshed based on version
-         * @param {Object} newMenuData - New menu data from API
-         * @returns {boolean} Whether data should be updated
-         */
-        shouldUpdateMenuData: (newMenuData) => {
-          const state = get();
-          const currentVersion = state.menuVersion;
-          const newVersion = newMenuData?.config?.version;
-          
-          // Update if no current version or versions differ
-          return !currentVersion || currentVersion !== newVersion;
-        },
-
-        /**
-         * Update menu version tracking
-         * @param {string} version - New version
-         */
-        setMenuVersion: (version) => 
-          set({ menuVersion: version, lastSyncTime: Date.now() }, false, 'setMenuVersion'),
-
-        /**
-         * Clear all menu data
-         */
-        clearMenuData: () =>
-          set(
-            {
-              mainMenus: [],
-              selectedMainMenu: null,
-              sidebarMenus: [],
+              selectedMainMenuKey: '',
               selectedSidebarKey: '',
               openSidebarKeys: [],
-              isLoading: false,
-              completeMenuData: null,
-              menuVersion: null,
-              lastSyncTime: null,
             },
             false,
-            'clearMenuData'
+            'clearMenuState'
           ),
-
-        // --- COMPUTED/GETTERS ---
-
-        /**
-         * Get main menu by key
-         * @param {string} key - Main menu key
-         * @returns {Object|undefined} Main menu item or undefined
-         */
-        getMainMenuByKey: (key) => {
-          const state = get();
-          return state.mainMenus.find((item) => item.key === key);
-        },
-
-        /**
-         * Get sidebar menu by key
-         * @param {string} key - Sidebar menu key
-         * @returns {Object|undefined} Sidebar menu item or undefined
-         */
-        getSidebarMenuByKey: (key) => {
-          const state = get();
-          const findInMenus = (menus) => {
-            for (const menu of menus) {
-              if (menu.key === key) return menu;
-              if (menu.children) {
-                const found = findInMenus(menu.children);
-                if (found) return found;
-              }
-            }
-            return undefined;
-          };
-          return findInMenus(state.sidebarMenus);
-        },
-
-        /**
-         * Get current selected main menu
-         * @returns {Object|null} Selected main menu or null
-         */
-        getCurrentMainMenu: () => {
-          const state = get();
-          return state.selectedMainMenu;
-        },
-
-        /**
-         * Get current sidebar menus
-         * @returns {Array} Current sidebar menu items
-         */
-        getCurrentSidebarMenus: () => {
-          const state = get();
-          return state.sidebarMenus;
-        },
       }),
       {
-        name: 'menu-store', // localStorage key
+        name: 'menu-ui-store', // localStorage key
         storage: createJSONStorage(() => localStorage),
 
-        // Only persist essential data
+        // Only persist UI state
         partialize: (state) => ({
-          mainMenus: state.mainMenus,
-          selectedMainMenu: state.selectedMainMenu,
-          sidebarMenus: state.sidebarMenus,
-          isMenuCollapsed: state.isMenuCollapsed,
+          selectedMainMenuKey: state.selectedMainMenuKey,
           selectedSidebarKey: state.selectedSidebarKey,
           openSidebarKeys: state.openSidebarKeys,
-          completeMenuData: state.completeMenuData,
-          menuVersion: state.menuVersion,
-          lastSyncTime: state.lastSyncTime,
+          isMenuCollapsed: state.isMenuCollapsed,
         }),
 
-        // Ensure sidebarMenus is populated from selectedMainMenu after rehydration
-        onRehydrateStorage: () => (state) => {
-          // Ensure sidebarMenus is populated from selectedMainMenu after rehydration
-          if (state && state.selectedMainMenu && (!state.sidebarMenus || state.sidebarMenus.length === 0)) {
-            state.sidebarMenus = state.selectedMainMenu.children || [];
-          }
-        },
-
         // Version for migration support
-        version: 2,
+        version: 3, // Incremented version for breaking change
       }
     ),
     {
-      name: 'menu-store', // DevTools name
+      name: 'menu-ui-store', // DevTools name
     }
   )
 );

@@ -11,7 +11,7 @@ import {
   ColorPicker,
 } from 'antd';
 import { useTheme } from '@zionix/design-system';
-import { useMenuStore } from '../../../../data/stores/menu/useMenuStore';
+import { useMenuData } from '../../../../data/hooks/menu';
 import { useStyles } from './DesktopSidebar.style';
 
 // Inject CSS for webkit scrollbar styles and Ant Design component overrides
@@ -59,7 +59,7 @@ const injectSidebarCSS = (token) => {
         font-size: 14px;
       }
 
-      /* Premium sidebar menu items - Finora capsule style */
+      /* Premium sidebar menu items - Apple/macOS style */
       .zx-host-menu-container .ant-menu-inline,
       .zx-host-menu-container .ant-menu-vertical {
         border: none !important;
@@ -67,35 +67,55 @@ const injectSidebarCSS = (token) => {
       }
 
       .zx-host-menu-container .ant-menu-item {
-        border-radius: 12px !important;
-        margin: 2px 0 !important;
-        padding: 0 12px !important;
-        height: 38px !important;
-        line-height: 38px !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border-radius: 10px !important;
+        margin: 3px 8px !important;
+        padding: 0 14px !important;
+        height: 40px !important;
+        line-height: 40px !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
-        color: ${token.colorTextSecondary} !important;
+        color: ${token.colorText} !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        letter-spacing: -0.011em !important;
       }
 
       .zx-host-menu-container .ant-menu-item .ant-menu-title-content {
+        color: ${token.colorText} !important;
+        font-weight: 500 !important;
+      }
+
+      .zx-host-menu-container .ant-menu-item .anticon,
+      .zx-host-menu-container .ant-menu-item i {
+        font-size: 18px !important;
+        margin-right: 12px !important;
         color: ${token.colorTextSecondary} !important;
+        transition: color 0.25s ease !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover {
-        background: ${token.colorFillQuaternary} !important;
+        background: ${token.colorFillQuaternary}80 !important;
         color: ${token.colorText} !important;
+        transform: translateX(2px) !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover .ant-menu-title-content {
         color: ${token.colorText} !important;
       }
 
+      .zx-host-menu-container .ant-menu-item:hover .anticon,
+      .zx-host-menu-container .ant-menu-item:hover i {
+        color: ${token.colorPrimary} !important;
+      }
+
       .zx-host-menu-container .ant-menu-item-selected {
-        background: ${token.colorPrimary} !important;
+        background: linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%) !important;
         color: ${token.colorWhite} !important;
-        box-shadow: 0 2px 6px ${token.colorPrimary}40, inset 0 1px 0 ${token.colorBgContainer}33 !important;
+        box-shadow: 0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        font-weight: 600 !important;
+        transform: translateX(0) !important;
       }
 
       .zx-host-menu-container .ant-menu-item-selected .ant-menu-title-content,
@@ -105,37 +125,70 @@ const injectSidebarCSS = (token) => {
       }
 
       .zx-host-menu-container .ant-menu-submenu-title {
-        border-radius: 12px !important;
-        margin: 2px 0 !important;
-        padding: 0 12px !important;
-        height: 38px !important;
-        line-height: 38px !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border-radius: 10px !important;
+        margin: 3px 8px !important;
+        padding: 0 14px !important;
+        height: 40px !important;
+        line-height: 40px !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
+        color: ${token.colorText} !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.011em !important;
+      }
+
+      .zx-host-menu-container .ant-menu-submenu-title .anticon,
+      .zx-host-menu-container .ant-menu-submenu-title i {
+        font-size: 18px !important;
+        margin-right: 12px !important;
         color: ${token.colorTextSecondary} !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title:hover {
-        background: ${token.colorFillQuaternary} !important;
+        background: ${token.colorFillQuaternary}80 !important;
         color: ${token.colorText} !important;
+        transform: translateX(2px) !important;
       }
 
-      /* Collapsed sidebar - circular buttons inside capsules - Finora pixel-perfect sizing */
+      .zx-host-menu-container .ant-menu-submenu-title:hover .anticon,
+      .zx-host-menu-container .ant-menu-submenu-title:hover i {
+        color: ${token.colorPrimary} !important;
+      }
+
+      /* Submenu items - slightly indented */
+      .zx-host-menu-container .ant-menu-sub .ant-menu-item {
+        padding-left: 46px !important;
+        font-size: 13px !important;
+        height: 36px !important;
+        line-height: 36px !important;
+      }
+
+      /* Collapsed sidebar - perfectly centered circular buttons */
       .ant-layout-sider-collapsed .zx-host-menu-container {
-        padding: 8px !important;
-        margin: 0 12px 12px 12px !important;
+        padding: 3px !important;
+        margin: 0 16px 12px 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 4px !important;
+      }
+
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu {
+        width: 100% !important;
+        margin-right:20px !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item {
-        width: 44px !important;
-        height: 44px !important;
-        min-width: 44px !important;
-        max-width: 44px !important;
-        border-radius: 50% !important;
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        max-width: 48px !important;
+        border-radius: 12px !important;
         padding: 0 !important;
-        margin: 4px auto !important;
+        margin: 0 auto 4px auto !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -146,22 +199,20 @@ const injectSidebarCSS = (token) => {
         overflow: visible !important;
       }
 
-      /* Remove all default Ant Design spacing */
+      /* CRITICAL: Center icons in collapsed mode - user tested this exact value */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed > .ant-menu-item {
-        padding-inline-start: 0 !important;
-        padding-inline-end: 0 !important;
+        margin-right: 20px !important;
       }
 
-      /* Center all children with flexbox */
-      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item > * {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        flex-shrink: 0 !important;
-        margin: 0 auto !important;
+      /* Override Ant Design's icon margin and positioning */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon {
+        margin-inline-end: 0 !important;
+        margin-inline-start: 0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
       }
 
-      /* Icon styling - centered with flexbox - Finora larger icons */
+      /* Icon styling - perfectly centered */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .anticon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item i {
@@ -171,21 +222,203 @@ const injectSidebarCSS = (token) => {
         align-items: center !important;
         justify-content: center !important;
         margin: 0 !important;
+        padding: 0 !important;
       }
 
       /* Hover and selected states */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item:hover {
-        background: ${token.colorFillQuaternary} !important;
+        background: ${token.colorFillQuaternary}80 !important;
+        transform: scale(1.05) !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected {
-        background: ${token.colorPrimary} !important;
-        box-shadow: 0 2px 6px ${token.colorPrimary}40, inset 0 1px 0 ${token.colorBgContainer}33 !important;
+        background: linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%) !important;
+        box-shadow: 0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected .anticon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected i {
         color: ${token.colorWhite} !important;
+      }
+
+      /* Submenu items - remove empty spaces */
+      .zx-host-menu-container .ant-menu-sub {
+        background: transparent !important;
+      }
+
+      .zx-host-menu-container .ant-menu-sub .ant-menu-item {
+        margin: 2px 8px !important;
+        padding: 0 14px !important;
+      }
+
+      /* Remove empty space from submenu */
+      .zx-host-menu-container .ant-menu-submenu > .ant-menu {
+        background: transparent !important;
+      }
+
+      .zx-host-menu-container .ant-menu-submenu-open > .ant-menu-submenu-title {
+        background: ${token.colorFillQuaternary}60 !important;
+      }
+
+      /* Collapsed sidebar dropdown menu styling - GLOBAL selectors for portal-rendered menus */
+      /* Target the popup menu container */
+      .ant-menu-submenu-popup.ant-menu-submenu-placement-rightTop,
+      .ant-menu-submenu-popup.ant-menu-submenu-placement-rightBottom {
+        margin-left: 8px !important;
+      }
+
+      /* Dropdown menu container styling - WIDER to prevent text cutoff */
+      .ant-menu-submenu-popup .ant-menu-vertical {
+        border-radius: 12px !important;
+        padding: 6px !important;
+        min-width: 200px !important;
+        width: auto !important;
+        background: ${token.colorBgElevated} !important;
+        box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
+        backdrop-filter: blur(20px) !important;
+      }
+
+      /* CRITICAL: Override ALL Ant Design menu item styles in popup */
+      .ant-menu-submenu-popup .ant-menu-vertical > .ant-menu-item,
+      .ant-menu-submenu-popup .ant-menu-vertical .ant-menu-item {
+        border-radius: 8px !important;
+        margin: 2px 0 !important;
+        margin-bottom: 2px !important;
+        padding: 0 12px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        height: 36px !important;
+        max-height: 36px !important;
+        min-height: 36px !important;
+        line-height: 36px !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: transparent !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        letter-spacing: -0.011em !important;
+        display: flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+      }
+
+      /* Override Ant Design's margin-block styles */
+      .ant-menu-submenu-popup .ant-menu-vertical .ant-menu-item {
+        margin-block: 2px !important;
+        margin-inline: 0 !important;
+      }
+
+      /* Title content - NO text cutoff, allow full width */
+      .ant-menu-submenu-popup .ant-menu-item .ant-menu-title-content {
+        flex: 1 !important;
+        overflow: visible !important;
+        white-space: nowrap !important;
+        line-height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        min-width: 0 !important;
+      }
+
+      /* Icons - fixed size */
+      .ant-menu-submenu-popup .ant-menu-item .ant-menu-item-icon,
+      .ant-menu-submenu-popup .ant-menu-item .anticon,
+      .ant-menu-submenu-popup .ant-menu-item i {
+        font-size: 16px !important;
+        margin-right: 10px !important;
+        margin-inline-end: 10px !important;
+        color: ${token.colorTextSecondary} !important;
+        flex-shrink: 0 !important;
+        line-height: 1 !important;
+      }
+
+      /* Badge wrapper - inline and no extra space */
+      .ant-menu-submenu-popup .ant-menu-item .ant-menu-title-content > div {
+        display: flex !important;
+        align-items: center !important;
+        line-height: 36px !important;
+        width: 100% !important;
+        gap: 8px !important;
+      }
+
+      /* Badge itself */
+      .ant-menu-submenu-popup .ant-menu-item .ant-badge {
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+      }
+
+      /* Hover state */
+      .ant-menu-submenu-popup .ant-menu-item:hover {
+        background: ${token.colorFillQuaternary}80 !important;
+        color: ${token.colorText} !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-item:hover .anticon,
+      .ant-menu-submenu-popup .ant-menu-item:hover i {
+        color: ${token.colorPrimary} !important;
+      }
+
+      /* Selected state - PREMIUM GRADIENT like sidebar */
+      .ant-menu-submenu-popup .ant-menu-item-selected,
+      .ant-menu-submenu-popup .ant-menu-item.ant-menu-item-selected {
+        background: linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%) !important;
+        color: ${token.colorWhite} !important;
+        box-shadow: 0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        font-weight: 600 !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-item-selected .ant-menu-item-icon,
+      .ant-menu-submenu-popup .ant-menu-item-selected .anticon,
+      .ant-menu-submenu-popup .ant-menu-item-selected i,
+      .ant-menu-submenu-popup .ant-menu-item-selected .ant-menu-title-content,
+      .ant-menu-submenu-popup .ant-menu-item-selected .ant-menu-title-content span {
+        color: ${token.colorWhite} !important;
+      }
+
+      /* Submenu title in dropdown */
+      .ant-menu-submenu-popup .ant-menu-submenu-title {
+        border-radius: 8px !important;
+        margin: 2px 0 !important;
+        margin-block: 2px !important;
+        padding: 0 12px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        height: 36px !important;
+        max-height: 36px !important;
+        min-height: 36px !important;
+        line-height: 36px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.011em !important;
+        display: flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-submenu-title .anticon,
+      .ant-menu-submenu-popup .ant-menu-submenu-title i {
+        font-size: 16px !important;
+        margin-right: 10px !important;
+        flex-shrink: 0 !important;
+        line-height: 1 !important;
+      }
+
+      /* Nested submenu items */
+      .ant-menu-submenu-popup .ant-menu-sub .ant-menu-item {
+        padding-left: 32px !important;
+        font-size: 13px !important;
+        height: 32px !important;
+        max-height: 32px !important;
+        min-height: 32px !important;
+        line-height: 32px !important;
+        margin-block: 2px !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-sub .ant-menu-item .ant-menu-title-content {
+        line-height: 32px !important;
       }
     `;
   document.head.appendChild(style);
@@ -200,7 +433,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const { token } = useToken();
   const { isRTL, isDarkMode, toggleTheme, primaryColor, setPrimaryColor } = useTheme();
   const styles = useStyles(token);
-  // Get sidebar menu data from Zustand store
+
+  // Get menu data and UI state from the unified hook
   const {
     sidebarMenus,
     selectedMainMenu,
@@ -208,8 +442,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     setSelectedSidebarKey,
     openSidebarKeys,
     setOpenSidebarKeys,
-    completeMenuData,
-  } = useMenuStore();
+    profileSection: profileSectionData,
+  } = useMenuData();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   const [isToggleHovered, setIsToggleHovered] = useState(false);
@@ -392,11 +626,11 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       });
     }
 
-    // Profile section - direct access from completeMenuData
-    if (completeMenuData?.profileSection) {
+    // Profile section - direct access from profileSectionData
+    if (profileSectionData) {
       sections.push({
-        ...completeMenuData.profileSection,
-        items: completeMenuData.profileSection.menuItems || [], // Ensure it's always an array
+        ...profileSectionData,
+        items: profileSectionData.menuItems || [], // Ensure it's always an array
       });
     }
     return sections;

@@ -14,9 +14,9 @@ import {
 // Using Remix Icons CSS classes for better performance
 import { useTheme, ZionixLogo } from '@zionix/design-system';
 import { useStyles } from './DesktopTopBar.style';
-import { useMenuStore } from '../../../../data/stores/menu/useMenuStore';
-import { useMenuQuery } from '../../../../data/hooks/menu/useMenuQuery';
+import { useMenuData } from '../../../../data/hooks/menu';
 import { NotificationDropdown } from '../shared/NotificationDropdown';
+import { QueryErrorFallback } from '../../../common/QueryErrorBoundary';
 
 const { Header } = Layout;
 const { useToken } = theme;
@@ -120,25 +120,20 @@ const AppTopBar = () => {
     document.head.appendChild(style);
   }, [token]); // Re-run when token changes
 
-  // Get menu data from Zustand store
+  // Get menu data using the new unified hook
   const {
     mainMenus,
     selectedMainMenu,
-    setSelectedMainMenu,
-    initializeMenus,
-  } = useMenuStore();
+    isLoading: isMenuLoading,
+    isError,
+    error,
+    selectMainMenu,
+  } = useMenuData();
 
-  // Initialize menu data on component mount using React Query
-  const { data: menuData, isLoading: isMenuLoading, isError } = useMenuQuery();
-
-  useEffect(() => {
-    if (menuData && !isMenuLoading && !isError) {
-      // Only initialize if we don't have menu data yet
-      if (mainMenus.length === 0) {
-        initializeMenus(menuData);
-      }
-    }
-  }, [menuData, isMenuLoading, isError, mainMenus.length, initializeMenus]);
+  // Show error fallback if menu loading failed
+  if (isError) {
+    return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
+  }
 
   // Filter out admin-app from regular navigation and convert to navigation items
   const navigationItems = mainMenus
@@ -154,10 +149,7 @@ const AppTopBar = () => {
 
   // Handle main menu selection
   const handleMainMenuSelect = ({ key }) => {
-    const selectedMenu = mainMenus.find((menu) => menu.key === key);
-    if (selectedMenu) {
-      setSelectedMainMenu(selectedMenu);
-    }
+    selectMainMenu(key);
   };
 
   // Notification handler
@@ -372,7 +364,7 @@ const AppTopBar = () => {
               <Button
                 type="text"
                 icon={<i className="ri-settings-3-line" />}
-                onClick={() => setSelectedMainMenu(adminMenu)}
+                onClick={() => selectMainMenu(adminMenu.key)}
                 style={{
                   ...styles.iconButtonStyle,
                   color:

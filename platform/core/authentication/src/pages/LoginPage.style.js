@@ -231,7 +231,6 @@ export const useStyles = (token) => {
         backgroundColor: token.colorPrimary,
         color: token.colorWhite,
         border: 'none',
-        borderRadius: '8px',
         fontSize: '16px',
         fontWeight: 600,
         cursor: 'pointer',

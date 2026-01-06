@@ -360,6 +360,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     type="primary"
                     htmlType="submit"
                     loading={loading}
+                    shape='round'
                     style={styles.loginButton}
                     block
                   >
@@ -368,14 +369,14 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                 </Form>
 
                 {/* Sign Up Link */}
-                <div style={styles.signUpContainer}>
+                {/* <div style={styles.signUpContainer}>
                   <Text style={styles.signUpText}>
                     Don't have an account?{' '}
                     <Link onClick={handleSignUpClick} style={styles.signUpLink}>
                       Create an account
                     </Link>
                   </Text>
-                </div>
+                </div> */}
               </div>
             </motion.div>
           </Col>

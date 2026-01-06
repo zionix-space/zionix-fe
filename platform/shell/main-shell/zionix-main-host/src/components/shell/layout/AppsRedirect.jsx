@@ -11,8 +11,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Spin } from 'antd';
-import { useMenuStore } from '../../../data/stores/menu/useMenuStore';
-import { useMenuQuery } from '../../../data/hooks/menu/useMenuQuery';
+import { useMenuData } from '../../../data/hooks/menu';
 
 /**
  * Component that redirects to the first available menu page
@@ -20,19 +19,11 @@ import { useMenuQuery } from '../../../data/hooks/menu/useMenuQuery';
  */
 const AppsRedirect = () => {
     const navigate = useNavigate();
-    const { mainMenus, initializeMenus } = useMenuStore();
-    const { data: menuData, isLoading, isError } = useMenuQuery();
-
-    useEffect(() => {
-        // Initialize menus if not already loaded
-        if (menuData && !isLoading && !isError && mainMenus.length === 0) {
-            initializeMenus(menuData);
-        }
-    }, [menuData, isLoading, isError, mainMenus.length, initializeMenus]);
+    const { mainMenus, isLoading } = useMenuData();
 
     useEffect(() => {
         // Once menus are loaded, redirect to first menu's first page
-        if (mainMenus.length > 0) {
+        if (!isLoading && mainMenus.length > 0) {
             const firstMenu = mainMenus[0];
 
             // Navigate to first menu's first child page
@@ -45,7 +36,7 @@ const AppsRedirect = () => {
                 navigate(`/apps/${firstMenu.key}`, { replace: true });
             }
         }
-    }, [mainMenus, navigate]);
+    }, [mainMenus, isLoading, navigate]);
 
     // Show loading spinner while fetching menus
     return (
