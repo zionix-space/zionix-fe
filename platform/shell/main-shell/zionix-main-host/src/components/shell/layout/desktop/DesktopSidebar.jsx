@@ -10,9 +10,12 @@ import {
   theme,
   ColorPicker,
 } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@zionix/design-system';
 import { useMenuData } from '../../../../data/hooks/menu';
 import { useStyles } from './DesktopSidebar.style';
+import { logout } from '@zionix/authentication';
+import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
 
 // Inject CSS for webkit scrollbar styles and Ant Design component overrides
 const injectSidebarCSS = (token) => {
@@ -433,6 +436,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const { token } = useToken();
   const { isRTL, isDarkMode, toggleTheme, primaryColor, setPrimaryColor } = useTheme();
   const styles = useStyles(token);
+  const navigate = useNavigate();
+  const { clearAuth } = useAuthStore();
 
   // Get menu data and UI state from the unified hook
   const {
@@ -450,9 +455,27 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Menu selection handlers
-  const handleMenuSelect = (key) => {
+  const handleMenuSelect = async (key) => {
     setSelectedSidebarKey(key);
     console.log('Selected menu item:', key);
+
+    // Handle logout action
+    if (key === 'logout') {
+      try {
+        // Clear auth store (this also clears localStorage)
+        clearAuth();
+
+        // Dispatch logout event for all microfrontends
+        window.dispatchEvent(new CustomEvent('auth:logout'));
+
+        // Navigate to login page
+        navigate('/login');
+      } catch (error) {
+        console.error('Logout error:', error);
+        // Ensure navigation happens even if there's an error
+        navigate('/login');
+      }
+    }
   };
 
   const handleOpenChange = (keys) => {
@@ -608,22 +631,43 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     );
   };
 
-  // Create menu sections directly from menu data - simple and clean!
+  // Create menu sections directly from menu data - supports multiple sections per parent menu
+  // Create menu sections directly from menu data - supports multiple sections per parent menu
   const createMenuSections = () => {
     const sections = [];
 
-    // Main navigation section with children of selected main menu
+    // Main navigation - create separate sections for each child with sectionTitle
     if (sidebarMenus.length > 0) {
-      // Get section title from selected main menu, with fallback
-      const sectionTitle = selectedMainMenu?.sectionTitle || 'Navigation Menu';
+      if (collapsed) {
+        // In collapsed mode: Show parent items (the ones with sectionTitle and icons) as menu items
+        // This way users see icons for each section
+        const itemsWithIcons = sidebarMenus.filter(item => item.icon);
+        if (itemsWithIcons.length > 0) {
+          sections.push({
+            type: 'section',
+            id: 'navigation-collapsed',
+            title: selectedMainMenu?.sectionTitle || 'Navigation',
+            accentColor: token.colorPrimary,
+            items: itemsWithIcons, // Show the section parents as items
+          });
+        }
+      } else {
+        // In expanded mode: Show sections with their children
+        sidebarMenus.forEach((menuItem, index) => {
+          const sectionTitle = menuItem.sectionTitle || selectedMainMenu?.sectionTitle || 'Navigation Menu';
+          const items = menuItem.children || [];
 
-      sections.push({
-        type: 'section',
-        id: 'navigation',
-        title: sectionTitle,
-        accentColor: token.colorPrimary,
-        items: sidebarMenus,
-      });
+          if (items.length > 0) {
+            sections.push({
+              type: 'section',
+              id: `navigation-${menuItem.key || index}`,
+              title: sectionTitle,
+              accentColor: token.colorPrimary,
+              items: items,
+            });
+          }
+        });
+      }
     }
 
     // Profile section - direct access from profileSectionData
@@ -635,6 +679,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     }
     return sections;
   };
+
 
   const backendMenuSections = createMenuSections();
 

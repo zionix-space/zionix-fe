@@ -23,7 +23,7 @@ export const dummyMenuData = {
       icon: '',
       description: 'Manage applications and configurations',
       badge: null,
-      sectionTitle: 'Application Configuration',
+      sectionTitle: 'Application section',
       children: [
         {
           key: 'app-management',
@@ -31,7 +31,7 @@ export const dummyMenuData = {
           icon: 'ri-apps-2-line',
           description: 'Manage applications and configurations',
           badge: null,
-          sectionTitle: 'Application Configuration',
+          sectionTitle: 'Application dfdf',
           children: [
             {
               key: 'domains', label: 'Domains', icon: null, description: 'Manage domain configurations', badge: null, children: [
@@ -134,9 +134,24 @@ export const dummyMenuData = {
           icon: 'ri-file-chart-line',
           description: 'Generate and view reports',
           badge: null,
+          sectionTitle: 'Reports',
           children: [
             { key: 'analytics', label: 'Analytics', icon: null, badge: null, children: [] },
             { key: 'dashboards', label: 'Dashboards', icon: null, badge: { count: 7, color: 'purple' }, children: [] },
+          ],
+        },
+
+
+        {
+          key: 'report',
+          label: 'Finance',
+          icon: 'ri-file-chart-line',
+          description: 'Generate and view reports',
+          badge: null,
+          sectionTitle: 'Finance',
+          children: [
+            { key: 'fdf', label: 'dfdfdf', icon: null, badge: null, children: [] },
+            { key: 'dfd', label: 'dfdf', icon: null, badge: { count: 7, color: 'purple' }, children: [] },
           ],
         },
       ],
