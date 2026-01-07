@@ -367,36 +367,51 @@ const injectSidebarCSS = (token) => {
         background: ${token.colorFillQuaternary}60 !important;
       }
 
-      /* Premium Apple-style Profile Dropdown - Glassmorphism */
+      /* Premium Apple-style Profile Dropdown - True Glassmorphism */
       .ant-dropdown {
         z-index: 1050 !important;
       }
 
-      /* Profile dropdown menu container - Premium glassmorphism */
+      /* Profile dropdown menu container - Theme-based Apple glassmorphism */
       .ant-dropdown .ant-dropdown-menu {
-        border-radius: 16px !important;
-        padding: 8px !important;
+        border-radius: 18px !important;
+        padding: 6px !important;
         min-width: 220px !important;
-        background: ${token.colorBgElevated}F5 !important;
-        backdrop-filter: blur(60px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
-        border: 1px solid ${token.colorBorder}50 !important;
+        background: ${token.colorBgElevated}B8 !important;
+        backdrop-filter: blur(60px) saturate(180%) brightness(1.05) !important;
+        -webkit-backdrop-filter: blur(60px) saturate(180%) brightness(1.05) !important;
+        border: 0.5px solid ${token.colorBorder}99 !important;
         box-shadow: 
-          0 12px 40px 0 rgba(0, 0, 0, 0.15),
-          0 6px 20px 0 rgba(0, 0, 0, 0.12),
-          0 2px 8px 0 rgba(0, 0, 0, 0.08),
+          0 12px 48px rgba(0, 0, 0, 0.12),
+          0 6px 24px rgba(0, 0, 0, 0.08),
+          0 2px 12px rgba(0, 0, 0, 0.04),
           inset 0 0 0 1px ${token.colorBgElevated}80,
-          inset 0 1px 0 0 rgba(255, 255, 255, 0.5) !important;
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.8) !important;
+        overflow: hidden !important;
       }
 
-      /* Profile dropdown menu items */
+      /* Dark mode dropdown - theme-based translucent dark glass */
+      [data-theme="dark"] .ant-dropdown .ant-dropdown-menu {
+        background: ${token.colorBgElevated}C8 !important;
+        backdrop-filter: blur(60px) saturate(180%) brightness(0.95) !important;
+        -webkit-backdrop-filter: blur(60px) saturate(180%) brightness(0.95) !important;
+        border: 0.5px solid ${token.colorBorder}2E !important;
+        box-shadow: 
+          0 12px 48px rgba(0, 0, 0, 0.4),
+          0 6px 24px rgba(0, 0, 0, 0.3),
+          0 2px 12px rgba(0, 0, 0, 0.2),
+          inset 0 0 0 1px ${token.colorBgElevated}14,
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.12) !important;
+      }
+
+      /* Profile dropdown menu items - Clean and readable */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         margin-block: 2px !important;
         margin-inline: 0 !important;
-        padding: 10px 14px !important;
+        padding: 10px 12px !important;
         height: auto !important;
-        min-height: 40px !important;
+        min-height: 38px !important;
         line-height: 1.4 !important;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         background: transparent !important;
@@ -406,58 +421,67 @@ const injectSidebarCSS = (token) => {
         display: flex !important;
         align-items: center !important;
         gap: 12px !important;
+        position: relative !important;
       }
 
-      /* Profile dropdown icons */
+      /* Profile dropdown icons - Clear and visible */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item .anticon,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item i {
         font-size: 18px !important;
         color: ${token.colorTextSecondary} !important;
-        transition: all 0.3s ease !important;
+        transition: all 0.2s ease !important;
         flex-shrink: 0 !important;
+        opacity: 0.8 !important;
       }
 
-      /* Profile dropdown hover state */
+      /* Profile dropdown hover state - Subtle Apple-style highlight */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover {
-        background: ${token.colorFillQuaternary}B3 !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        transform: translateX(2px) !important;
+        background: rgba(0, 0, 0, 0.04) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        transform: scale(1.01) !important;
+      }
+
+      [data-theme="dark"] .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
       }
 
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover .anticon,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover i {
         color: ${token.colorPrimary} !important;
         transform: scale(1.1) !important;
+        opacity: 1 !important;
       }
 
-      /* Profile dropdown selected/active state */
+      /* Profile dropdown selected/active state - Clean primary color */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-selected,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:active {
-        background: linear-gradient(135deg, ${token.colorPrimary}F0 0%, ${token.colorPrimaryHover}F0 100%) !important;
-        color: ${token.colorWhite} !important;
+        background: ${token.colorPrimary}15 !important;
+        color: ${token.colorPrimary} !important;
         font-weight: 600 !important;
-        box-shadow: 
-          0 4px 12px ${token.colorPrimary}40,
-          0 2px 6px ${token.colorPrimary}30,
-          inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
       }
 
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-selected .anticon,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-selected i,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:active .anticon,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:active i {
-        color: ${token.colorWhite} !important;
+        color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
       }
 
-      /* Profile dropdown divider */
+      /* Profile dropdown divider - Subtle and clean */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-divider {
         margin-block: 6px !important;
         margin-inline: 0 !important;
-        background: ${token.colorBorderSecondary}40 !important;
+        background: rgba(0, 0, 0, 0.06) !important;
+        height: 0.5px !important;
       }
 
-      /* Danger item (logout) styling */
+      [data-theme="dark"] .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-divider {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      /* Danger item (logout) styling - Clean red accent */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger {
         color: ${token.colorError} !important;
       }
@@ -465,16 +489,18 @@ const injectSidebarCSS = (token) => {
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger .anticon,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger i {
         color: ${token.colorError} !important;
+        opacity: 0.85 !important;
       }
 
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger:hover {
-        background: ${token.colorErrorBg}B3 !important;
+        background: ${token.colorError}10 !important;
         color: ${token.colorError} !important;
       }
 
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger:hover .anticon,
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger:hover i {
         color: ${token.colorError} !important;
+        opacity: 1 !important;
       }
 
       /* Collapsed sidebar dropdown menu styling - GLOBAL selectors for portal-rendered menus */

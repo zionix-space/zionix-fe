@@ -49,7 +49,7 @@ export const useStyles = (token) => ({
     backgroundColor: 'transparent',
   },
 
-  // New Finora-style top section - compact spacing with consistent padding
+  // top section - compact spacing with consistent padding
   zxHostTopSection: {
     display: 'flex',
     flexDirection: 'column',
@@ -119,7 +119,8 @@ export const useStyles = (token) => ({
   },
 
   zxHostThemeButtonActive: {
-    background: `linear-gradient(135deg, ${token.colorPrimary}F0 0%, ${token.colorPrimaryHover}F0 100%)`,
+    backgroundImage: `linear-gradient(135deg, ${token.colorPrimary}F0 0%, ${token.colorPrimaryHover}F0 100%)`,
+    backgroundColor: token.colorPrimary,
     color: token.colorWhite,
     opacity: 1,
     boxShadow: `
