@@ -48,14 +48,19 @@ export const useStyles = (token) => ({
     alignItems: "center",
     flexShrink: 0,
     userSelect: "none",
-    background: `linear-gradient(135deg, ${token.colorBgContainer} 0%, ${token.colorBgElevated} 100%)`,
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    borderRadius: "30px",
-    padding: "3px",
-    border: `1px solid ${token.colorBorderSecondary}30`,
-    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
-    height: "45px",
+    background: `${token.colorBgContainer}B3`,
+    backdropFilter: 'blur(40px) saturate(200%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+    borderRadius: "18px",
+    padding: "6px",
+    border: `1px solid ${token.colorBorder}30`,
+    boxShadow: `
+      0 4px 12px 0 rgba(0, 0, 0, 0.12),
+      0 1px 3px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px ${token.colorBorder}40,
+      inset 0 1px 0 0 ${token.colorBgElevated}60
+    `,
+    height: "52px",
   },
 
   menuStyle: {
@@ -74,13 +79,13 @@ export const useStyles = (token) => ({
       display: "inline-flex !important",
     },
     "& .ant-menu-item": {
-      padding: "0 16px !important", // Increased from 12px
-      margin: "0 2px !important",
-      height: "28px !important",
-      lineHeight: "28px !important",
-      borderRadius: "10px !important",
-      transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important",
-      color: `${token.colorTextSecondary} !important`, // Lighter for unselected
+      padding: "0 18px !important",
+      margin: "0 3px !important",
+      height: "36px !important",
+      lineHeight: "36px !important",
+      borderRadius: "14px !important",
+      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important",
+      color: `${token.colorText} !important`,
       border: "none !important",
       borderBottom: "none !important",
       background: "transparent !important",
@@ -88,7 +93,8 @@ export const useStyles = (token) => ({
       display: "inline-flex !important",
       alignItems: "center !important",
       whiteSpace: "nowrap !important",
-      fontWeight: "500 !important", // Bold
+      fontWeight: "500 !important",
+      fontSize: "14px !important",
     },
     "& .ant-menu-item::before": {
       display: "none !important",
@@ -132,14 +138,14 @@ export const useStyles = (token) => ({
     },
     "& .ant-menu-submenu": {
       "& .ant-menu-submenu-title": {
-        padding: "0 16px !important", // Increased from 12px
+        padding: "0 16px !important",
         margin: "0 2px !important",
-        height: "28px !important",
-        lineHeight: "28px !important",
-        borderRadius: "10px !important",
+        height: "32px !important",
+        lineHeight: "32px !important",
+        borderRadius: "12px !important",
         transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important",
         color: `${token.colorTextSecondary} !important`,
-        fontWeight: "500 !important", // Bold
+        fontWeight: "500 !important",
       },
       "&:hover .ant-menu-submenu-title": {
         backgroundColor: `${token.colorFillQuaternary} !important`,
@@ -151,15 +157,22 @@ export const useStyles = (token) => ({
   rightActionsStyle: {
     display: "inline-flex",
     alignItems: "center",
-    gap: "3px",
+    gap: "6px",
     flexShrink: 0,
     userSelect: "none",
-    backgroundColor: token.colorBgContainer, // Match sidebar capsule
-    borderRadius: "30px",
-    padding: "3px",
-    border: "none", // No border like sidebar
-    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`, // Match sidebar shadow
-    height: "45px",
+    background: `${token.colorBgContainer}B3`,
+    backdropFilter: 'blur(40px) saturate(200%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+    borderRadius: "18px",
+    padding: "6px",
+    border: `1px solid ${token.colorBorder}30`,
+    boxShadow: `
+      0 4px 12px 0 rgba(0, 0, 0, 0.12),
+      0 1px 3px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px ${token.colorBorder}40,
+      inset 0 1px 0 0 ${token.colorBgElevated}60
+    `,
+    height: "52px",
     position: "absolute",
     right: "24px",
   },
@@ -167,20 +180,24 @@ export const useStyles = (token) => ({
   iconButtonStyle: {
     border: "none",
     background: "transparent",
-    color: token.colorTextTertiary, // Match sidebar text color
-    fontSize: "18px",
-    width: "28px",
-    height: "28px",
+    color: token.colorText,
+    fontSize: "22px",
+    fontWeight: 600,
+    opacity: 0.65,
+    width: "40px",
+    height: "40px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "10px",
-    transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+    borderRadius: "14px",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     userSelect: "none",
     flexShrink: 0,
     "&:hover": {
-      backgroundColor: `${token.colorFillQuaternary}`, // Match sidebar hover
-      color: token.colorText,
+      backgroundColor: token.colorFillQuaternary,
+      color: token.colorPrimary,
+      transform: "scale(1.08)",
+      opacity: 1,
     },
   },
 
@@ -189,12 +206,12 @@ export const useStyles = (token) => ({
     border: "none",
     background: isRTL ? token.colorPrimary : "transparent",
     fontSize: "16px",
-    width: "28px",
-    height: "28px",
+    width: "32px",
+    height: "32px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "10px",
+    borderRadius: "12px",
     transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
     color: isRTL ? token.colorWhite : token.colorTextTertiary,
     userSelect: "none",

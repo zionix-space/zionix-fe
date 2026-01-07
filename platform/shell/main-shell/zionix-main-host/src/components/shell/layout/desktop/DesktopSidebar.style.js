@@ -32,8 +32,11 @@ export const useStyles = (token) => ({
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
-    scrollbarWidth: 'thin',
-    scrollbarColor: `${token.colorBorderSecondary} transparent`,
+    scrollbarWidth: 'none', // Hide scrollbar for Firefox
+    msOverflowStyle: 'none', // Hide scrollbar for IE/Edge
+    '&::-webkit-scrollbar': {
+      display: 'none', // Hide scrollbar for Chrome/Safari
+    },
   },
 
   zxHostToggleContainer: {
@@ -42,18 +45,18 @@ export const useStyles = (token) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     userSelect: 'none',
-    padding: `${token.paddingSM}px ${token.paddingSM}px`,
-    minHeight: '56px', // More breathing room
+    padding: `${token.paddingSM}px 12px`,
+    minHeight: '56px',
     gap: `${token.paddingSM}px`,
-    backgroundColor: 'transparent', // Same as shell background
+    backgroundColor: 'transparent',
   },
 
-  // New Finora-style top section - compact spacing
+  // New Finora-style top section - compact spacing with consistent padding
   zxHostTopSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px', // Reduced spacing
-    padding: `${token.paddingSM}px ${token.paddingSM}px`,
+    gap: '12px',
+    padding: '12px',
     borderBottom: 'none',
     userSelect: 'none',
   },
@@ -73,38 +76,60 @@ export const useStyles = (token) => ({
     gap: '12px',
   },
 
-  // Single capsule container for theme buttons - Premium style
+  // Premium Apple-style glassmorphism capsule for theme buttons
   // flexDirection is set dynamically: 'column' when collapsed, 'row' when expanded
   zxHostThemeCapsule: {
     display: 'flex',
-    gap: '4px',
+    gap: '6px',
     justifyContent: 'center',
-    padding: '4px',
-    backgroundColor: token.colorBgContainer,
-    borderRadius: '12px',
-    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
+    padding: '6px',
+    background: `${token.colorBgContainer}B3`,
+    backdropFilter: 'blur(40px) saturate(200%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+    borderRadius: '18px',
+    boxShadow: `
+      0 4px 12px 0 rgba(0, 0, 0, 0.12),
+      0 1px 3px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px ${token.colorBorder}40,
+      inset 0 1px 0 0 ${token.colorBgElevated}60
+    `,
     width: 'fit-content',
-    border: `1px solid ${token.colorBorderSecondary}20`,
+    border: `1px solid ${token.colorBorder}30`,
   },
 
   zxHostThemeButton: {
     width: '40px',
     height: '40px',
-    borderRadius: '10px',
+    borderRadius: '14px',
     backgroundColor: 'transparent',
     border: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-    color: token.colorTextSecondary,
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    color: token.colorText,
+    fontSize: '22px',
+    fontWeight: 600,
+    opacity: 0.65,
+    position: 'relative',
+    '&:hover': {
+      backgroundColor: token.colorFillQuaternary,
+      transform: 'scale(1.08)',
+      opacity: 1,
+    },
   },
 
   zxHostThemeButtonActive: {
-    backgroundColor: token.colorPrimary,
+    background: `linear-gradient(135deg, ${token.colorPrimary}F0 0%, ${token.colorPrimaryHover}F0 100%)`,
     color: token.colorWhite,
-    boxShadow: `0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
+    opacity: 1,
+    boxShadow: `
+      0 4px 12px ${token.colorPrimary}35,
+      0 2px 6px ${token.colorPrimary}25,
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1)
+    `,
     transform: 'scale(1.05)',
   },
 
@@ -122,16 +147,19 @@ export const useStyles = (token) => ({
     transition: `all ${token.motionDurationMid} cubic-bezier(0.4, 0, 0.2, 1)`,
     position: 'relative',
     flexShrink: 0,
+    opacity: 0.65,
   },
 
   zxHostToggleButtonHover: {
     backgroundColor: token.colorBgContainer,
     transform: 'scale(1.05)',
     boxShadow: `0 6px 16px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
+    opacity: 1,
   },
 
   zxHostToggleIcon: {
-    fontSize: '16px',
+    fontSize: '20px',
+    fontWeight: 600,
     color: token.colorText,
   },
 
@@ -140,17 +168,18 @@ export const useStyles = (token) => ({
   },
 
   zxHostSectionHeader: {
-    padding: '16px 20px 8px 20px',
+    padding: '20px 20px 8px 20px',
     fontSize: '11px',
     fontWeight: 600,
-    color: token.colorTextTertiary,
+    color: token.colorTextSecondary,
     textTransform: 'uppercase',
-    letterSpacing: '0.8px',
+    letterSpacing: '0.5px',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '12px',
     userSelect: 'none',
-    marginTop: '12px',
+    marginTop: '0px',
+    opacity: 0.75,
   },
 
   zxHostSectionHeaderCollapsed: {
@@ -161,17 +190,25 @@ export const useStyles = (token) => ({
   zxHostSectionDivider: {
     flex: 1,
     height: '1px',
+    opacity: 0,
   },
 
   zxHostMenuContainer: {
     userSelect: 'none',
-    marginBottom: '8px',
-    padding: '4px',
-    backgroundColor: token.colorBgContainer,
-    borderRadius: '16px',
-    margin: '0 12px 12px 12px',
-    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
-    border: `1px solid ${token.colorBorderSecondary}20`,
+    marginBottom: '4px',
+    padding: '8px',
+    background: `${token.colorBgContainer}B3`,
+    backdropFilter: 'blur(40px) saturate(200%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+    borderRadius: '18px',
+    margin: '0 12px 8px 12px',
+    boxShadow: `
+      0 4px 12px 0 rgba(0, 0, 0, 0.12),
+      0 1px 3px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px ${token.colorBorder}40,
+      inset 0 1px 0 0 ${token.colorBgElevated}60
+    `,
+    border: `1px solid ${token.colorBorder}30`,
   },
 
   zxHostMenuItemBadge: {
@@ -186,41 +223,6 @@ export const useStyles = (token) => ({
     marginTop: 'auto',
     position: 'relative',
     zIndex: 1,
-  },
-
-  zxHostProfileContainer: {
-    padding: `${token.paddingSM}px ${token.paddingSM}px`,
-    borderTop: `1px solid ${token.colorBorderSecondary}`,
-    backgroundColor: token.colorFillQuaternary,
-    userSelect: 'none',
-  },
-
-  zxHostProfileContainerCollapsed: {
-    padding: `${token.paddingSM}px ${token.paddingXS}px`,
-  },
-
-  zxHostProfileContent: {
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    padding: `${token.paddingXS}px ${token.paddingSM}px`,
-    borderRadius: '12px',
-    backgroundColor: token.colorBgContainer,
-    border: 'none', // No borders
-    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
-    transition: `all ${token.motionDurationMid} cubic-bezier(0.4, 0, 0.2, 1)`,
-    justifyContent: 'flex-start',
-  },
-
-  zxHostProfileContentCollapsed: {
-    padding: token.paddingXS,
-    justifyContent: 'center',
-  },
-
-  zxHostProfileContentHover: {
-    backgroundColor: token.colorBgContainer,
-    transform: 'translateY(-1px)',
-    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
   },
 
   zxHostProfileInfo: {
@@ -249,23 +251,56 @@ export const useStyles = (token) => ({
   },
 
   zxHostProfileCollapsed: {
-    padding: `${token.paddingSM}px`,
+    padding: '0',
     borderTop: 'none',
     backgroundColor: 'transparent',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '8px',
+    marginBottom: '12px',
+    margin: '0 12px 12px 12px',
   },
 
   zxHostProfileExpanded: {
-    padding: `${token.paddingSM}px`,
+    padding: '0',
     borderTop: 'none',
     backgroundColor: 'transparent',
+    margin: '0 12px 12px 12px',
+  },
+
+  zxHostProfileContent: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    padding: `${token.paddingXS + 2}px ${token.paddingSM}px`,
+    borderRadius: '18px',
+    background: `${token.colorBgContainer}B3`,
+    backdropFilter: 'blur(40px) saturate(200%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+    border: `1px solid ${token.colorBorder}30`,
+    boxShadow: `
+      0 4px 12px 0 rgba(0, 0, 0, 0.12),
+      0 1px 3px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 1px ${token.colorBorder}40,
+      inset 0 1px 0 0 ${token.colorBgElevated}60
+    `,
+    transition: `all 0.15s cubic-bezier(0.4, 0, 0.2, 1)`,
+    justifyContent: 'flex-start',
+    '&:hover': {
+      backgroundColor: token.colorFillQuaternary,
+      transform: 'scale(1.02)',
+    },
+  },
+
+  zxHostProfileContentCollapsed: {
+    padding: token.paddingXS + 4,
+    justifyContent: 'center',
+    width: '52px',
+    height: '52px',
   },
 
   zxHostSearchContainer: {
-    padding: `0 ${token.paddingXS}px`,
+    padding: '0',
     flex: 1,
   },
 
@@ -273,17 +308,14 @@ export const useStyles = (token) => ({
     borderRadius: '12px',
     height: '36px',
     fontSize: '13px',
-    border: 'none', // No borders
-    backgroundColor: token.colorBgContainer,
-    boxShadow: `0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1)`,
+    border: 'none',
+    boxShadow: `0 2px 4px rgba(0, 0, 0, 0.08)`,
     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      backgroundColor: token.colorBgContainer,
-      boxShadow: `0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
+      boxShadow: `0 4px 8px rgba(0, 0, 0, 0.12)`,
     },
     '&:focus': {
-      backgroundColor: token.colorBgContainer,
-      boxShadow: `0 0 0 3px ${token.colorPrimary}15, 0 4px 12px rgba(0, 0, 0, 0.1)`,
+      boxShadow: `0 4px 12px ${token.colorPrimary}20`,
     },
   },
 });

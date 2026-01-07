@@ -30,20 +30,35 @@ const injectSidebarCSS = (token) => {
   const style = document.createElement('style');
   style.id = styleId;
   style.textContent = `
-      /* Webkit scrollbar styles */
+      /* Webkit scrollbar styles - Apple-like minimal and theme-aware */
+      /* Hide scrollbar by default */
       .zx-host-main-content::-webkit-scrollbar {
-        width: 4px;
+        width: 6px;
       }
       .zx-host-main-content::-webkit-scrollbar-track {
         background: transparent;
       }
       .zx-host-main-content::-webkit-scrollbar-thumb {
-        background: ${token.colorBorderSecondary};
-        border-radius: ${token.borderRadiusSM}px;
+        background: transparent;
+        border-radius: 3px;
         transition: background 0.2s ease;
       }
-      .zx-host-main-content::-webkit-scrollbar-thumb:hover {
-        background: ${token.colorBorder};
+      
+      /* Show scrollbar only when hovering over the sidebar content area */
+      .zx-host-main-content:hover::-webkit-scrollbar-thumb {
+        background: ${token.colorTextQuaternary}40;
+      }
+      .zx-host-main-content:hover::-webkit-scrollbar-thumb:hover {
+        background: ${token.colorTextTertiary}60;
+      }
+
+      /* Firefox - hide scrollbar by default, show on hover */
+      .zx-host-main-content {
+        scrollbar-width: none;
+      }
+      .zx-host-main-content:hover {
+        scrollbar-width: thin;
+        scrollbar-color: ${token.colorTextQuaternary}40 transparent;
       }
 
       /* Ant Design Input Clear Icon Styling */
@@ -62,7 +77,44 @@ const injectSidebarCSS = (token) => {
         font-size: 14px;
       }
 
-      /* Premium sidebar menu items - Apple/macOS style */
+      /* Search input proper theme-aware background */
+      .zx-host-search-input.ant-input-affix-wrapper,
+      .zx-host-search-input.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) {
+        background: rgba(255, 255, 255, 0.5) !important;
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        border: 1px solid ${token.colorBorder}30 !important;
+        color: ${token.colorText} !important;
+      }
+
+      /* Dark mode search input */
+      [data-theme="dark"] .zx-host-search-input.ant-input-affix-wrapper,
+      [data-theme="dark"] .zx-host-search-input.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) {
+        background: rgba(30, 30, 30, 0.5) !important;
+      }
+
+      .zx-host-search-input.ant-input-affix-wrapper:hover {
+        background: rgba(255, 255, 255, 0.7) !important;
+      }
+
+      [data-theme="dark"] .zx-host-search-input.ant-input-affix-wrapper:hover {
+        background: rgba(30, 30, 30, 0.7) !important;
+      }
+
+      .zx-host-search-input.ant-input-affix-wrapper input {
+        background: transparent !important;
+        color: ${token.colorText} !important;
+      }
+
+      .zx-host-search-input.ant-input-affix-wrapper input::placeholder {
+        color: ${token.colorTextPlaceholder} !important;
+      }
+
+      .zx-host-search-input.ant-input-affix-wrapper .ant-input-prefix {
+        color: ${token.colorTextSecondary} !important;
+      }
+
+      /* Premium sidebar menu items - Apple glassmorphism with excellent readability */
       .zx-host-menu-container .ant-menu-inline,
       .zx-host-menu-container .ant-menu-vertical {
         border: none !important;
@@ -70,19 +122,21 @@ const injectSidebarCSS = (token) => {
       }
 
       .zx-host-menu-container .ant-menu-item {
-        border-radius: 10px !important;
-        margin: 3px 8px !important;
+        border-radius: 0 !important;
+        margin: 2px 6px !important;
         padding: 0 14px !important;
-        height: 40px !important;
-        line-height: 40px !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
         color: ${token.colorText} !important;
         font-size: 14px !important;
         font-weight: 500 !important;
-        letter-spacing: -0.011em !important;
+        letter-spacing: -0.01em !important;
+        position: relative !important;
+        border-left: 3px solid transparent !important;
       }
 
       .zx-host-menu-container .ant-menu-item .ant-menu-title-content {
@@ -92,16 +146,18 @@ const injectSidebarCSS = (token) => {
 
       .zx-host-menu-container .ant-menu-item .anticon,
       .zx-host-menu-container .ant-menu-item i {
-        font-size: 18px !important;
-        margin-right: 12px !important;
-        color: ${token.colorTextSecondary} !important;
-        transition: color 0.25s ease !important;
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        margin-right: 14px !important;
+        color: ${token.colorText} !important;
+        transition: all 0.3s ease !important;
+        opacity: 0.65 !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover {
-        background: ${token.colorFillQuaternary}80 !important;
+        background: rgba(0, 0, 0, 0.04) !important;
         color: ${token.colorText} !important;
-        transform: translateX(2px) !important;
+        transform: translateX(3px) scale(1.01) !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover .ant-menu-title-content {
@@ -111,87 +167,109 @@ const injectSidebarCSS = (token) => {
       .zx-host-menu-container .ant-menu-item:hover .anticon,
       .zx-host-menu-container .ant-menu-item:hover i {
         color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
+        transform: scale(1.15) !important;
       }
 
       .zx-host-menu-container .ant-menu-item-selected {
-        background: linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%) !important;
-        color: ${token.colorWhite} !important;
-        box-shadow: 0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        background: ${token.colorPrimaryBg} !important;
+        color: ${token.colorPrimary} !important;
         font-weight: 600 !important;
-        transform: translateX(0) !important;
+        border-left: 3px solid ${token.colorPrimary} !important;
+        box-shadow: none !important;
       }
 
-      .zx-host-menu-container .ant-menu-item-selected .ant-menu-title-content,
+      .zx-host-menu-container .ant-menu-item-selected .ant-menu-title-content {
+        color: ${token.colorPrimary} !important;
+        font-weight: 600 !important;
+      }
+
       .zx-host-menu-container .ant-menu-item-selected .anticon,
       .zx-host-menu-container .ant-menu-item-selected i {
-        color: ${token.colorWhite} !important;
+        color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title {
-        border-radius: 10px !important;
-        margin: 3px 8px !important;
-        padding: 0 14px !important;
-        height: 40px !important;
-        line-height: 40px !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border-radius: 0 !important;
+        margin: 2px 6px !important;
+        padding: 0 10px !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
         color: ${token.colorText} !important;
         font-size: 14px !important;
         font-weight: 600 !important;
-        letter-spacing: -0.011em !important;
+        letter-spacing: -0.01em !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title .anticon,
       .zx-host-menu-container .ant-menu-submenu-title i {
-        font-size: 18px !important;
-        margin-right: 12px !important;
-        color: ${token.colorTextSecondary} !important;
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        margin-right: 14px !important;
+        color: ${token.colorText} !important;
+        opacity: 0.65 !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title:hover {
-        background: ${token.colorFillQuaternary}80 !important;
+        background: rgba(0, 0, 0, 0.04) !important;
         color: ${token.colorText} !important;
-        transform: translateX(2px) !important;
+        transform: translateX(3px) scale(1.01) !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title:hover .anticon,
       .zx-host-menu-container .ant-menu-submenu-title:hover i {
         color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
+        transform: scale(1.15) !important;
       }
 
       /* Submenu items - slightly indented */
       .zx-host-menu-container .ant-menu-sub .ant-menu-item {
-        padding-left: 46px !important;
+        padding-left: 48px !important;
         font-size: 13px !important;
-        height: 36px !important;
-        line-height: 36px !important;
+        height: 34px !important;
+        line-height: 34px !important;
+        margin: 1px 6px !important;
       }
 
-      /* Collapsed sidebar - perfectly centered circular buttons */
+      /* Collapsed sidebar - premium Apple glassmorphism */
       .ant-layout-sider-collapsed .zx-host-menu-container {
-        padding: 3px !important;
-        margin: 0 16px 12px 16px !important;
+        padding: 8px !important;
+        margin: 0 12px 12px 12px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 4px !important;
+        gap: 8px !important;
+        background: ${token.colorBgContainer}B3 !important;
+        backdropFilter: blur(40px) saturate(200%) !important;
+        WebkitBackdropFilter: blur(40px) saturate(200%) !important;
+        borderRadius: 18px !important;
+        boxShadow: 
+          0 4px 12px 0 rgba(0, 0, 0, 0.12),
+          0 1px 3px 0 rgba(0, 0, 0, 0.08),
+          inset 0 0 0 1px ${token.colorBorder}40,
+          inset 0 1px 0 0 ${token.colorBgElevated}60 !important;
+        border: 1px solid ${token.colorBorder}30 !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu {
         width: 100% !important;
-        margin-right:20px !important;
+        margin-right: 20px !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item {
-        width: 48px !important;
-        height: 48px !important;
-        min-width: 48px !important;
-        max-width: 48px !important;
-        border-radius: 12px !important;
+        width: 52px !important;
+        height: 52px !important;
+        min-width: 52px !important;
+        max-width: 52px !important;
+        border-radius: 14px !important;
         padding: 0 !important;
-        margin: 0 auto 4px auto !important;
+        margin: 0 auto 6px auto !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -200,12 +278,21 @@ const injectSidebarCSS = (token) => {
         justify-content: center !important;
         position: relative !important;
         overflow: visible !important;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
       }
 
-      /* CRITICAL: Center icons in collapsed mode - user tested this exact value */
+      /* CRITICAL: Center icons in collapsed mode */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed > .ant-menu-item {
         margin-right: 20px !important;
       }
+
+      /* Hide submenu arrows in collapsed mode */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-submenu-arrow,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-submenu-expand-icon {
+        display: none !important;
+      }
+
+      /* CRITICAL: Disable Ant Design's default popup menu in collapsed mode - REMOVED to enable tooltips */
 
       /* Override Ant Design's icon margin and positioning */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon {
@@ -215,33 +302,57 @@ const injectSidebarCSS = (token) => {
         margin-left: 0 !important;
       }
 
-      /* Icon styling - perfectly centered */
+      /* Icon styling - perfectly centered with vibrant colors */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .anticon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item i {
-        font-size: 22px !important;
+        font-size: 24px !important;
+        font-weight: 600 !important;
         line-height: 1 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         margin: 0 !important;
         padding: 0 !important;
+        color: ${token.colorText} !important;
+        opacity: 0.65 !important;
+        transition: all 0.3s ease !important;
       }
 
-      /* Hover and selected states */
+      /* Hover and selected states with premium effects */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item:hover {
-        background: ${token.colorFillQuaternary}80 !important;
-        transform: scale(1.05) !important;
+        background: rgba(0, 0, 0, 0.04) !important;
+        transform: scale(1.08) !important;
+      }
+
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item:hover .anticon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item:hover i {
+        color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
+        transform: scale(1.15) !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected {
-        background: linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%) !important;
-        box-shadow: 0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        background: ${token.colorPrimaryBg} !important;
+        box-shadow: none !important;
+      }
+
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected::before {
+        content: '' !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 3px !important;
+        height: 60% !important;
+        background: ${token.colorPrimary} !important;
+        border-radius: 0 3px 3px 0 !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected .anticon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected i {
-        color: ${token.colorWhite} !important;
+        color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
       }
 
       /* Submenu items - remove empty spaces */
@@ -261,6 +372,114 @@ const injectSidebarCSS = (token) => {
 
       .zx-host-menu-container .ant-menu-submenu-open > .ant-menu-submenu-title {
         background: ${token.colorFillQuaternary}60 !important;
+      }
+
+      /* Premium Apple-style Profile Dropdown - Glassmorphism */
+      .ant-dropdown {
+        z-index: 1050 !important;
+      }
+
+      /* Profile dropdown menu container - Premium glassmorphism */
+      .ant-dropdown .ant-dropdown-menu {
+        border-radius: 16px !important;
+        padding: 8px !important;
+        min-width: 220px !important;
+        background: ${token.colorBgElevated}F5 !important;
+        backdrop-filter: blur(60px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
+        border: 1px solid ${token.colorBorder}50 !important;
+        box-shadow: 
+          0 12px 40px 0 rgba(0, 0, 0, 0.15),
+          0 6px 20px 0 rgba(0, 0, 0, 0.12),
+          0 2px 8px 0 rgba(0, 0, 0, 0.08),
+          inset 0 0 0 1px ${token.colorBgElevated}80,
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.5) !important;
+      }
+
+      /* Profile dropdown menu items */
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
+        border-radius: 10px !important;
+        margin: 2px 0 !important;
+        padding: 10px 14px !important;
+        height: auto !important;
+        min-height: 40px !important;
+        line-height: 1.4 !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: transparent !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: ${token.colorText} !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+      }
+
+      /* Profile dropdown icons */
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item .anticon,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item i {
+        font-size: 18px !important;
+        color: ${token.colorTextSecondary} !important;
+        transition: all 0.3s ease !important;
+        flex-shrink: 0 !important;
+      }
+
+      /* Profile dropdown hover state */
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover {
+        background: ${token.colorFillQuaternary}B3 !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        transform: translateX(2px) !important;
+      }
+
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover .anticon,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover i {
+        color: ${token.colorPrimary} !important;
+        transform: scale(1.1) !important;
+      }
+
+      /* Profile dropdown selected/active state */
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-selected,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:active {
+        background: linear-gradient(135deg, ${token.colorPrimary}F0 0%, ${token.colorPrimaryHover}F0 100%) !important;
+        color: ${token.colorWhite} !important;
+        font-weight: 600 !important;
+        box-shadow: 
+          0 4px 12px ${token.colorPrimary}40,
+          0 2px 6px ${token.colorPrimary}30,
+          inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+      }
+
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-selected .anticon,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-selected i,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:active .anticon,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:active i {
+        color: ${token.colorWhite} !important;
+      }
+
+      /* Profile dropdown divider */
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-divider {
+        margin: 6px 0 !important;
+        background: ${token.colorBorderSecondary}40 !important;
+      }
+
+      /* Danger item (logout) styling */
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger {
+        color: ${token.colorError} !important;
+      }
+
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger .anticon,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger i {
+        color: ${token.colorError} !important;
+      }
+
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger:hover {
+        background: ${token.colorErrorBg}B3 !important;
+        color: ${token.colorError} !important;
+      }
+
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger:hover .anticon,
+      .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-danger:hover i {
+        color: ${token.colorError} !important;
       }
 
       /* Collapsed sidebar dropdown menu styling - GLOBAL selectors for portal-rendered menus */
@@ -451,8 +670,12 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   } = useMenuData();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
-  const [isToggleHovered, setIsToggleHovered] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Handle toggle button click
+  const handleToggleClick = () => {
+    onCollapse(!collapsed);
+  };
 
   // Menu selection handlers
   const handleMenuSelect = async (key) => {
@@ -468,12 +691,12 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         // Dispatch logout event for all microfrontends
         window.dispatchEvent(new CustomEvent('auth:logout'));
 
-        // Navigate to login page
-        navigate('/login');
+        // Navigate to root path
+        navigate('/');
       } catch (error) {
         console.error('Logout error:', error);
         // Ensure navigation happens even if there's an error
-        navigate('/login');
+        navigate('/');
       }
     }
   };
@@ -551,11 +774,14 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       .filter((section) => section.hasResults);
   };
 
-  // Load collapsed state from localStorage
+  // Load collapsed state from localStorage - default to collapsed
   useEffect(() => {
     const savedCollapsed = localStorage.getItem('sidebar-collapsed');
     if (savedCollapsed !== null) {
       onCollapse(JSON.parse(savedCollapsed));
+    } else {
+      // Default to collapsed on first load
+      onCollapse(true);
     }
   }, [onCollapse]);
 
@@ -564,19 +790,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     localStorage.setItem('sidebar-collapsed', JSON.stringify(collapsed));
   }, [collapsed]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      // Ctrl+B or Cmd+B to toggle sidebar
-      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
-        event.preventDefault();
-        onCollapse(!collapsed);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [collapsed, onCollapse]);
+  // Remove keyboard shortcuts for manual toggle since we're using hover
+  // Keyboard shortcuts removed - hover-based expand/collapse only
 
   // Inject sidebar CSS - use useLayoutEffect for synchronous injection before paint
   useLayoutEffect(() => {
@@ -767,6 +982,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
             inlineCollapsed={collapsed}
             inlineIndent={0}
             items={formatMenuItems(section.items)}
+            triggerSubMenuAction={collapsed ? "hover" : "click"}
             style={{
               border: 'none',
               backgroundColor: 'transparent',
@@ -831,58 +1047,6 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     );
   };
 
-  // Simple Toggle Button Component - No memoization needed
-  const ToggleButton = () => {
-    const toggleTooltip = collapsed
-      ? `Expand sidebar (Ctrl+B)`
-      : `Collapse sidebar (Ctrl+B)`;
-
-    return (
-      <Tooltip
-        title={toggleTooltip}
-        placement={collapsed ? 'right' : 'bottom'}
-      >
-        <div
-          style={{
-            ...styles.zxHostToggleButton,
-            ...(isToggleHovered ? styles.zxHostToggleButtonHover : {}),
-          }}
-          onClick={() => onCollapse(!collapsed)}
-          onMouseEnter={() => setIsToggleHovered(true)}
-          onMouseLeave={() => setIsToggleHovered(false)}
-          role="button"
-          aria-label={toggleTooltip}
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              onCollapse(!collapsed);
-            }
-          }}
-        >
-          {collapsed ? (
-            <i
-              className="ri-menu-line"
-              style={{
-                fontSize: '20px',
-                ...styles.zxHostToggleIcon,
-                ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
-              }}
-            />
-          ) : (
-            <i
-              className="ri-menu-fold-line"
-              style={{
-                fontSize: '20px',
-                ...styles.zxHostToggleIcon,
-                ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
-              }}
-            />
-          )}
-        </div>
-      </Tooltip>
-    );
-  };
 
   // Get filtered sections based on search query
   const filteredSections = getFilteredSections(backendMenuSections);
@@ -903,11 +1067,24 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       trigger={null}
     >
       <div style={styles.zxHostSidebarContent}>
-        {/* Header - Finora Style: Hamburger + Theme Toggle (side by side when expanded) */}
+        {/* Header - Theme Toggle Controls */}
         <div style={styles.zxHostTopSection}>
           <div style={collapsed ? styles.zxHostControlsCollapsed : styles.zxHostControlsExpanded}>
-            {/* Hamburger Toggle Button */}
-            <ToggleButton />
+            {/* Toggle Button */}
+            <Tooltip title={collapsed ? "Expand sidebar" : "Collapse sidebar"} placement="right">
+              <div
+                style={styles.zxHostToggleButton}
+                onClick={handleToggleClick}
+                role="button"
+                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                tabIndex={0}
+              >
+                <i
+                  className={collapsed ? "ri-menu-unfold-line" : "ri-menu-fold-line"}
+                  style={styles.zxHostToggleIcon}
+                />
+              </div>
+            </Tooltip>
 
             {/* Theme Toggle Capsule - Finora Style */}
             <div style={{
@@ -925,7 +1102,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   aria-label="Switch to light mode"
                   tabIndex={0}
                 >
-                  <i className="ri-sun-line" style={{ fontSize: '18px' }} />
+                  <i className="ri-sun-line" style={{ fontSize: '20px', fontWeight: 600 }} />
                 </div>
               </Tooltip>
               <Tooltip title="Dark mode" placement="right">
@@ -939,7 +1116,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   aria-label="Switch to dark mode"
                   tabIndex={0}
                 >
-                  <i className="ri-moon-line" style={{ fontSize: '18px' }} />
+                  <i className="ri-moon-line" style={{ fontSize: '20px', fontWeight: 600 }} />
                 </div>
               </Tooltip>
               <Tooltip title="Change primary color" placement="right">
@@ -966,7 +1143,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   ]}
                 >
                   <div style={styles.zxHostThemeButton}>
-                    <i className="ri-palette-line" style={{ fontSize: '18px' }} />
+                    <i className="ri-palette-line" style={{ fontSize: '20px', fontWeight: 600 }} />
                   </div>
                 </ColorPicker>
               </Tooltip>

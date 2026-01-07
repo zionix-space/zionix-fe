@@ -35,8 +35,240 @@ import { generateLightTokens } from './lightTokens';
 import { generateDarkTokens } from './darkTokens';
 
 /**
+ * Global Glassmorphism Styles Component
+ * Injects premium Apple-style glassmorphism for all Ant Design components
+ * @private
+ */
+const GlobalGlassmorphismStyles = ({ isDarkMode }) => {
+  useEffect(() => {
+    const existingStyle = document.getElementById('zionix-glassmorphism-styles');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    const style = document.createElement('style');
+    style.id = 'zionix-glassmorphism-styles';
+    style.textContent = `
+      /* Premium Apple Glassmorphism for All Ant Design Components */
+      
+      /* Global Premium Apple Icon Styling - Bold stroke weight for all icons */
+      i[class*="ri-"],
+      .anticon,
+      [class*="icon-"] {
+        font-weight: 600 !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+      }
+
+      /* Ensure Remix Icons have proper rendering */
+      i[class*="ri-"] {
+        font-style: normal !important;
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      /* Input Components - NO glassmorphism, solid backgrounds for readability */
+      .ant-input,
+      .ant-input-number,
+      .ant-input-affix-wrapper,
+      .ant-picker,
+      .ant-select-selector,
+      .ant-cascader-input,
+      .ant-input-textarea textarea {
+        box-shadow: 
+          0 2px 8px rgba(0, 0, 0, ${isDarkMode ? '0.15' : '0.08'}),
+          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.05' : '0.3'}) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      .ant-input:hover,
+      .ant-input-number:hover,
+      .ant-input-affix-wrapper:hover,
+      .ant-picker:hover,
+      .ant-select-selector:hover,
+      .ant-cascader-input:hover {
+        box-shadow: 
+          0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.12'}),
+          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.08' : '0.4'}) !important;
+      }
+
+      .ant-input:focus,
+      .ant-input-number:focus,
+      .ant-input-affix-wrapper:focus,
+      .ant-input-affix-wrapper-focused,
+      .ant-picker:focus,
+      .ant-picker-focused,
+      .ant-select-focused .ant-select-selector,
+      .ant-cascader-input:focus {
+        box-shadow: 
+          0 4px 16px rgba(var(--primary-rgb), 0.25),
+          0 2px 8px rgba(var(--primary-rgb), 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.1' : '0.5'}) !important;
+      }
+
+      /* Card Components - Keep glassmorphism */
+      .ant-card {
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        box-shadow: 
+          0 4px 16px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.08'}),
+          0 2px 8px rgba(0, 0, 0, ${isDarkMode ? '0.15' : '0.04'}),
+          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.1' : '0.5'}) !important;
+      }
+
+      /* Modal & Drawer */
+      .ant-modal-content,
+      .ant-drawer-content {
+        backdrop-filter: blur(60px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
+        box-shadow: 
+          0 12px 40px rgba(0, 0, 0, ${isDarkMode ? '0.3' : '0.15'}),
+          0 6px 20px rgba(0, 0, 0, ${isDarkMode ? '0.25' : '0.1'}),
+          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.15' : '0.6'}) !important;
+      }
+
+      /* Dropdown & Popover */
+      .ant-dropdown,
+      .ant-popover-inner,
+      .ant-select-dropdown,
+      .ant-picker-dropdown,
+      .ant-cascader-dropdown {
+        backdrop-filter: blur(60px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
+        box-shadow: 
+          0 8px 24px rgba(0, 0, 0, ${isDarkMode ? '0.25' : '0.12'}),
+          0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.08'}),
+          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.12' : '0.5'}) !important;
+      }
+
+      /* Table */
+      .ant-table {
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      }
+
+      .ant-table-thead > tr > th {
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      }
+
+      /* Tabs */
+      .ant-tabs-nav {
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      }
+
+      /* Message & Notification */
+      .ant-message-notice-content,
+      .ant-notification-notice {
+        backdrop-filter: blur(60px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
+        box-shadow: 
+          0 8px 24px rgba(0, 0, 0, ${isDarkMode ? '0.25' : '0.12'}),
+          0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.08'}),
+          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.12' : '0.5'}) !important;
+      }
+
+      /* Tooltip */
+      .ant-tooltip-inner {
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+      }
+
+      /* Button hover effects */
+      .ant-btn:not(.ant-btn-primary):not(.ant-btn-text):not(.ant-btn-link) {
+        backdrop-filter: blur(20px) saturate(150%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      .ant-btn:not(.ant-btn-primary):not(.ant-btn-text):not(.ant-btn-link):hover {
+        backdrop-filter: blur(30px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.12'}) !important;
+      }
+
+      /* Primary button premium gradient */
+      .ant-btn-primary {
+        background: linear-gradient(135deg, var(--ant-primary-color) 0%, var(--ant-primary-color-hover) 100%) !important;
+        box-shadow: 
+          0 4px 12px rgba(var(--primary-rgb), 0.35),
+          0 2px 6px rgba(var(--primary-rgb), 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      .ant-btn-primary:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 
+          0 6px 16px rgba(var(--primary-rgb), 0.4),
+          0 3px 8px rgba(var(--primary-rgb), 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+      }
+
+      /* Ensure text is visible in all themes - STRONG colors */
+      .ant-input,
+      .ant-input-number-input,
+      .ant-picker-input > input,
+      .ant-select-selection-search-input,
+      .ant-cascader-input input,
+      .ant-input-affix-wrapper input,
+      .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) input,
+      .ant-input:not(:focus),
+      .ant-input-number-input:not(:focus) {
+        color: ${isDarkMode ? '#FFFFFF' : '#000000'} !important;
+        font-weight: 500 !important;
+        -webkit-text-fill-color: ${isDarkMode ? '#FFFFFF' : '#000000'} !important;
+        opacity: 1 !important;
+      }
+
+      .ant-input::placeholder,
+      .ant-input-number-input::placeholder,
+      .ant-picker-input > input::placeholder,
+      .ant-select-selection-placeholder,
+      .ant-cascader-input input::placeholder,
+      .ant-input-affix-wrapper input::placeholder {
+        color: ${isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'} !important;
+        font-weight: 400 !important;
+        -webkit-text-fill-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'} !important;
+        opacity: 1 !important;
+      }
+
+      /* Prefix icons in inputs */
+      .ant-input-prefix,
+      .ant-input-suffix {
+        color: ${isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'} !important;
+        opacity: 1 !important;
+      }
+
+      /* Disabled state */
+      .ant-input:disabled,
+      .ant-input-disabled,
+      .ant-input[disabled] {
+        color: ${isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)'} !important;
+      }
+    `;
+
+    document.head.appendChild(style);
+
+    return () => {
+      const styleToRemove = document.getElementById('zionix-glassmorphism-styles');
+      if (styleToRemove) {
+        styleToRemove.remove();
+      }
+    };
+  }, [isDarkMode]);
+
+  return null;
+};
+
+/**
  * Global Scrollbar Styles Component
  * Injects clean, professional scrollbar styling using current theme tokens
+ * Hidden by default, shows on hover
  * @private
  */
 const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
@@ -51,14 +283,11 @@ const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
     const style = document.createElement('style');
     style.id = 'zionix-scrollbar-styles';
     style.textContent = `
-      /* Clean SaaS Scrollbar Styling */
+      /* Clean SaaS Scrollbar Styling - Hidden by default, shows on hover */
       :root {
         --scrollbar-width: 8px;
-        --scrollbar-track-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'
-      };
-        --scrollbar-thumb-color: ${themeTokens.colorBorderSecondary ||
-      (isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)')
-      };
+        --scrollbar-track-color: transparent;
+        --scrollbar-thumb-color: transparent;
         --scrollbar-thumb-hover-color: ${themeTokens.colorBorder ||
       (isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)')
       };
@@ -66,7 +295,7 @@ const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
       };
       }
 
-      /* Webkit Scrollbars (Chrome, Safari, Edge) */
+      /* Webkit Scrollbars (Chrome, Safari, Edge) - Hidden by default */
       ::-webkit-scrollbar {
         width: var(--scrollbar-width);
         height: var(--scrollbar-width);
@@ -83,6 +312,11 @@ const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
         transition: background-color 0.2s ease, box-shadow 0.2s ease;
       }
 
+      /* Show scrollbar on hover */
+      *:hover::-webkit-scrollbar-thumb {
+        background: ${isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)'};
+      }
+
       ::-webkit-scrollbar-thumb:hover {
         background: var(--scrollbar-thumb-hover-color);
         box-shadow: 0 0 0 1px var(--scrollbar-thumb-hover-color);
@@ -96,10 +330,14 @@ const GlobalScrollbarStyles = ({ themeTokens, isDarkMode }) => {
         background: var(--scrollbar-track-color);
       }
 
-      /* Firefox Scrollbars */
+      /* Firefox Scrollbars - Hidden by default */
       * {
+        scrollbar-width: none;
+      }
+      
+      *:hover {
         scrollbar-width: thin;
-        scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+        scrollbar-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)'} transparent;
       }
 
       /* Enhanced scrollbar for specific containers */
@@ -578,99 +816,201 @@ const ThemeProvider = ({ children }) => {
   /**
    * Component-specific token configuration to ensure consistent sizing
    * This overrides responsive tokens for specific components
+   * PREMIUM APPLE GLASSMORPHISM STYLING
    */
-  const getComponentTokens = (isDark) => ({
-    Select: {
-      // Ensure consistent Select component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16, // Consistent caret size
-      sizeUnit: 4,
-      borderRadius: 6,
-      // Override responsive tokens for Select specifically
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-    },
-    Input: {
-      // Consistent Input component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16,
-      sizeUnit: 4,
-      borderRadius: 6,
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-    },
-    Button: {
-      // Consistent Button component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16,
-      sizeUnit: 4,
-      // ROUNDED BUTTON STYLING - Calculate border radius based on button height for perfect rounded appearance
-      borderRadius: 16, // Half of controlHeight (32/2) for perfectly rounded default buttons
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-      // Rounded styling for different button sizes
-      borderRadiusSM: 12, // Half of controlHeightSM (24/2) for perfectly rounded small buttons
-      borderRadiusLG: 20, // Half of controlHeightLG (40/2) for perfectly rounded large buttons
-      // CRITICAL: Explicit text colors for buttons
-      colorText: isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.88)',
-      colorTextDisabled: isDark
-        ? 'rgba(255, 255, 255, 0.25)'
-        : 'rgba(0, 0, 0, 0.25)',
-    },
-    DatePicker: {
-      // Consistent DatePicker component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16,
-      sizeUnit: 4,
-      borderRadius: 6,
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-    },
-    TreeSelect: {
-      // Consistent TreeSelect component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16,
-      sizeUnit: 4,
-      borderRadius: 6,
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-    },
-    Cascader: {
-      // Consistent Cascader component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16,
-      sizeUnit: 4,
-      borderRadius: 6,
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-    },
-    AutoComplete: {
-      // Consistent AutoComplete component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16,
-      sizeUnit: 4,
-      borderRadius: 6,
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-    },
-    TimePicker: {
-      // Consistent TimePicker component sizing
-      controlHeight: 32,
-      fontSize: 14,
-      fontSizeIcon: 16,
-      sizeUnit: 4,
-      borderRadius: 6,
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-    },
-  });
+  const getComponentTokens = (isDark) => {
+    // Solid backgrounds for better readability - NO glassmorphism for inputs
+    const solidBackground = isDark
+      ? 'rgba(30, 30, 30, 1)'
+      : 'rgba(255, 255, 255, 1)';
+    const glassBorder = isDark
+      ? 'rgba(255, 255, 255, 0.1)'
+      : 'rgba(0, 0, 0, 0.08)';
+    const textColor = isDark
+      ? 'rgba(255, 255, 255, 0.95)'
+      : 'rgba(0, 0, 0, 0.95)';
+    const placeholderColor = isDark
+      ? 'rgba(255, 255, 255, 0.5)'
+      : 'rgba(0, 0, 0, 0.5)';
+
+    return {
+      Select: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        // Solid background for readability
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      Input: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        // Solid background for readability
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      InputNumber: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      Button: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 16,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        borderRadiusSM: 12,
+        borderRadiusLG: 20,
+        colorText: textColor,
+        colorTextDisabled: isDark
+          ? 'rgba(255, 255, 255, 0.25)'
+          : 'rgba(0, 0, 0, 0.25)',
+      },
+      DatePicker: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      TreeSelect: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      Cascader: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      AutoComplete: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      TimePicker: {
+        controlHeight: 32,
+        fontSize: 14,
+        fontSizeIcon: 16,
+        sizeUnit: 4,
+        borderRadius: 12,
+        controlHeightSM: 24,
+        controlHeightLG: 40,
+        colorBgContainer: solidBackground,
+        colorBorder: glassBorder,
+        colorText: textColor,
+        colorTextPlaceholder: placeholderColor,
+      },
+      Card: {
+        borderRadius: 16,
+        colorBgContainer: isDark ? 'rgba(30, 30, 30, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        colorBorder: glassBorder,
+      },
+      Modal: {
+        borderRadius: 16,
+        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorText: textColor,
+      },
+      Drawer: {
+        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorText: textColor,
+      },
+      Dropdown: {
+        borderRadius: 12,
+        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorText: textColor,
+      },
+      Popover: {
+        borderRadius: 12,
+        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorText: textColor,
+      },
+      Tooltip: {
+        borderRadius: 8,
+        colorBgSpotlight: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(50, 50, 50, 0.95)',
+        colorTextLightSolid: 'rgba(255, 255, 255, 0.95)',
+      },
+      Table: {
+        borderRadius: 12,
+        colorBgContainer: isDark ? 'rgba(30, 30, 30, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        colorText: textColor,
+      },
+      Tabs: {
+        borderRadius: 12,
+        colorText: textColor,
+      },
+      Form: {
+        colorText: textColor,
+      },
+      Checkbox: {
+        borderRadius: 4,
+        colorText: textColor,
+      },
+      Radio: {
+        colorText: textColor,
+      },
+      Switch: {
+        borderRadius: 100,
+      },
+      Slider: {
+        borderRadius: 100,
+      },
+    };
+  };
 
   /**
    * Light theme configuration with responsive tokens and component overrides
@@ -711,6 +1051,7 @@ const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
+      <GlobalGlassmorphismStyles isDarkMode={isDarkMode} />
       <GlobalScrollbarStyles
         themeTokens={currentTheme.token}
         isDarkMode={isDarkMode}
