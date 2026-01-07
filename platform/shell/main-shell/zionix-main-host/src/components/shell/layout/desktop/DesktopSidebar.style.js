@@ -171,15 +171,15 @@ export const useStyles = (token) => ({
     padding: '20px 20px 8px 20px',
     fontSize: '11px',
     fontWeight: 600,
-    color: token.colorTextSecondary,
+    color: token.colorTextTertiary,
     textTransform: 'uppercase',
-    letterSpacing: '0.5px',
+    letterSpacing: '0.8px',
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
     userSelect: 'none',
     marginTop: '0px',
-    opacity: 0.75,
+    opacity: 0.45,
   },
 
   zxHostSectionHeaderCollapsed: {
@@ -236,12 +236,14 @@ export const useStyles = (token) => ({
     fontSize: token.fontSizeSM,
     lineHeight: 1.3,
     marginBottom: '1px',
+    opacity: 0.85,
   },
 
   zxHostProfileEmail: {
     color: token.colorTextSecondary,
     fontSize: token.fontSizeSM,
     lineHeight: 1.2,
+    opacity: 0.6,
   },
 
   zxHostProfileMore: {

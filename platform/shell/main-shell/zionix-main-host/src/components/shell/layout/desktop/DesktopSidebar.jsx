@@ -137,11 +137,13 @@ const injectSidebarCSS = (token) => {
         letter-spacing: -0.01em !important;
         position: relative !important;
         border-left: 3px solid transparent !important;
+        opacity: 0.75 !important;
       }
 
       .zx-host-menu-container .ant-menu-item .ant-menu-title-content {
         color: ${token.colorText} !important;
         font-weight: 500 !important;
+        opacity: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-item .anticon,
@@ -151,17 +153,19 @@ const injectSidebarCSS = (token) => {
         margin-right: 14px !important;
         color: ${token.colorText} !important;
         transition: all 0.3s ease !important;
-        opacity: 0.65 !important;
+        opacity: 0.5 !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover {
         background: rgba(0, 0, 0, 0.04) !important;
         color: ${token.colorText} !important;
         transform: translateX(3px) scale(1.01) !important;
+        opacity: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover .ant-menu-title-content {
         color: ${token.colorText} !important;
+        opacity: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover .anticon,
@@ -177,11 +181,13 @@ const injectSidebarCSS = (token) => {
         font-weight: 600 !important;
         border-left: 3px solid ${token.colorPrimary} !important;
         box-shadow: none !important;
+        opacity: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-item-selected .ant-menu-title-content {
         color: ${token.colorPrimary} !important;
         font-weight: 600 !important;
+        opacity: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-item-selected .anticon,
@@ -204,6 +210,7 @@ const injectSidebarCSS = (token) => {
         font-size: 14px !important;
         font-weight: 600 !important;
         letter-spacing: -0.01em !important;
+        opacity: 0.75 !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title .anticon,
@@ -212,13 +219,14 @@ const injectSidebarCSS = (token) => {
         font-weight: 600 !important;
         margin-right: 14px !important;
         color: ${token.colorText} !important;
-        opacity: 0.65 !important;
+        opacity: 0.5 !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title:hover {
         background: rgba(0, 0, 0, 0.04) !important;
         color: ${token.colorText} !important;
         transform: translateX(3px) scale(1.01) !important;
+        opacity: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title:hover .anticon,
@@ -235,6 +243,11 @@ const injectSidebarCSS = (token) => {
         height: 34px !important;
         line-height: 34px !important;
         margin: 1px 6px !important;
+        opacity: 0.7 !important;
+      }
+      
+      .zx-host-menu-container .ant-menu-sub .ant-menu-item:hover {
+        opacity: 1 !important;
       }
 
       /* Collapsed sidebar - premium Apple glassmorphism */
