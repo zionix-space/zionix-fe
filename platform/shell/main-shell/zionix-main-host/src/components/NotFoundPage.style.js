@@ -138,6 +138,7 @@ export const useStyles = (token) => {
                 color: token.colorText,
                 marginBottom: '16px',
                 lineHeight: token.lineHeightHeading2,
+                opacity: 0.9,
             },
 
             highlight: {
@@ -150,6 +151,7 @@ export const useStyles = (token) => {
                 color: token.colorTextSecondary,
                 marginBottom: '32px',
                 display: 'block',
+                opacity: 0.7,
             },
 
             button: {

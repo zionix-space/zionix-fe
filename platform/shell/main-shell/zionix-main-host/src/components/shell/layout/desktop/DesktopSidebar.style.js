@@ -34,9 +34,7 @@ export const useStyles = (token) => ({
     flexDirection: 'column',
     scrollbarWidth: 'none', // Hide scrollbar for Firefox
     msOverflowStyle: 'none', // Hide scrollbar for IE/Edge
-    '&::-webkit-scrollbar': {
-      display: 'none', // Hide scrollbar for Chrome/Safari
-    },
+    // Note: Webkit scrollbar styling is handled in injected CSS
   },
 
   zxHostToggleContainer: {
@@ -184,7 +182,10 @@ export const useStyles = (token) => ({
 
   zxHostSectionHeaderCollapsed: {
     height: token.padding,
-    margin: `${token.paddingSM}px 0`,
+    marginTop: token.paddingSM,
+    marginBottom: token.paddingSM,
+    marginLeft: 0,
+    marginRight: 0,
   },
 
   zxHostSectionDivider: {
@@ -195,13 +196,15 @@ export const useStyles = (token) => ({
 
   zxHostMenuContainer: {
     userSelect: 'none',
-    marginBottom: '4px',
     padding: '8px',
     background: `${token.colorBgContainer}B3`,
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     borderRadius: '18px',
-    margin: '0 12px 8px 12px',
+    marginTop: 0,
+    marginBottom: '8px',
+    marginLeft: '12px',
+    marginRight: '12px',
     boxShadow: `
       0 4px 12px 0 rgba(0, 0, 0, 0.12),
       0 1px 3px 0 rgba(0, 0, 0, 0.08),
@@ -259,15 +262,20 @@ export const useStyles = (token) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 0,
     marginBottom: '12px',
-    margin: '0 12px 12px 12px',
+    marginLeft: '12px',
+    marginRight: '12px',
   },
 
   zxHostProfileExpanded: {
     padding: '0',
     borderTop: 'none',
     backgroundColor: 'transparent',
-    margin: '0 12px 12px 12px',
+    marginTop: 0,
+    marginBottom: '12px',
+    marginLeft: '12px',
+    marginRight: '12px',
   },
 
   zxHostProfileContent: {

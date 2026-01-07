@@ -41,6 +41,7 @@ export const useStyles = (token) => ({
     color: token.colorText,
     letterSpacing: "0",
     userSelect: "none",
+    opacity: 0.85,
   },
 
   navigationContainerStyle: {
@@ -66,92 +67,11 @@ export const useStyles = (token) => ({
   menuStyle: {
     background: "transparent",
     border: "none !important",
-    fontSize: "14px", // Increased from 13px
-    fontWeight: 500, // Increased from 400 - bolder
+    fontSize: "14px",
+    fontWeight: 500,
     display: "inline-flex",
     lineHeight: "normal",
-    "& .ant-menu-overflow": {
-      display: "flex !important",
-      border: "none !important",
-    },
-    "& .ant-menu-overflow-item": {
-      flex: "0 0 auto !important",
-      display: "inline-flex !important",
-    },
-    "& .ant-menu-item": {
-      padding: "0 18px !important",
-      margin: "0 3px !important",
-      height: "36px !important",
-      lineHeight: "36px !important",
-      borderRadius: "14px !important",
-      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important",
-      color: `${token.colorText} !important`,
-      border: "none !important",
-      borderBottom: "none !important",
-      background: "transparent !important",
-      position: "relative !important",
-      display: "inline-flex !important",
-      alignItems: "center !important",
-      whiteSpace: "nowrap !important",
-      fontWeight: "500 !important",
-      fontSize: "14px !important",
-    },
-    "& .ant-menu-item::before": {
-      display: "none !important",
-    },
-    "& .ant-menu-item::after": {
-      content: "'' !important",
-      display: "none !important",
-      border: "none !important",
-      borderBottom: "none !important",
-      height: "0 !important",
-      width: "0 !important",
-    },
-    "& .ant-menu-item:hover": {
-      backgroundColor: `${token.colorFillQuaternary} !important`,
-      color: `${token.colorText} !important`,
-      borderBottom: "none !important",
-    },
-    "& .ant-menu-item-selected": {
-      backgroundColor: `${token.colorPrimary} !important`,
-      color: `${token.colorWhite} !important`,
-      fontWeight: "600 !important", // Extra bold for selected
-      border: "none !important",
-      borderBottom: "none !important",
-      boxShadow: `0 2px 8px ${token.colorPrimary}50, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important`, // Stronger shadow
-      transform: "translateY(-1px) !important", // Slight lift for button feel
-    },
-    "& .ant-menu-item-selected::before": {
-      display: "none !important",
-    },
-    "& .ant-menu-item-selected::after": {
-      content: "'' !important",
-      display: "none !important",
-      border: "none !important",
-      borderBottom: "none !important",
-      height: "0 !important",
-      width: "0 !important",
-    },
-    "& .ant-menu-item-active::after": {
-      display: "none !important",
-      borderBottom: "none !important",
-    },
-    "& .ant-menu-submenu": {
-      "& .ant-menu-submenu-title": {
-        padding: "0 16px !important",
-        margin: "0 2px !important",
-        height: "32px !important",
-        lineHeight: "32px !important",
-        borderRadius: "12px !important",
-        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important",
-        color: `${token.colorTextSecondary} !important`,
-        fontWeight: "500 !important",
-      },
-      "&:hover .ant-menu-submenu-title": {
-        backgroundColor: `${token.colorFillQuaternary} !important`,
-        color: `${token.colorText} !important`,
-      },
-    },
+    // Note: All menu item styling is handled in injected CSS in DesktopTopBar.jsx
   },
 
   rightActionsStyle: {

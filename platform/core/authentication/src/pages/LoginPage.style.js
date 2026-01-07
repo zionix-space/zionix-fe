@@ -174,8 +174,7 @@ export const useStyles = (token) => {
       input: {
         height: 'clamp(2.5rem, 5vw, 3rem)',
         borderRadius: '8px',
-        border: `1px solid ${token.colorBorder}`,
-        backgroundColor: token.colorBgContainer,
+
         fontSize: 'clamp(0.875rem, 1.75vw, 1rem)',
         padding: 'clamp(0.5rem, 1.5vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',

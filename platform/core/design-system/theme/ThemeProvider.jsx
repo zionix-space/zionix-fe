@@ -69,45 +69,7 @@ const GlobalGlassmorphismStyles = ({ isDarkMode }) => {
         justify-content: center !important;
       }
 
-      /* Input Components - NO glassmorphism, solid backgrounds for readability */
-      .ant-input,
-      .ant-input-number,
-      .ant-input-affix-wrapper,
-      .ant-picker,
-      .ant-select-selector,
-      .ant-cascader-input,
-      .ant-input-textarea textarea {
-        box-shadow: 
-          0 2px 8px rgba(0, 0, 0, ${isDarkMode ? '0.15' : '0.08'}),
-          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.05' : '0.3'}) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-      .ant-input:hover,
-      .ant-input-number:hover,
-      .ant-input-affix-wrapper:hover,
-      .ant-picker:hover,
-      .ant-select-selector:hover,
-      .ant-cascader-input:hover {
-        box-shadow: 
-          0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.12'}),
-          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.08' : '0.4'}) !important;
-      }
-
-      .ant-input:focus,
-      .ant-input-number:focus,
-      .ant-input-affix-wrapper:focus,
-      .ant-input-affix-wrapper-focused,
-      .ant-picker:focus,
-      .ant-picker-focused,
-      .ant-select-focused .ant-select-selector,
-      .ant-cascader-input:focus {
-        box-shadow: 
-          0 4px 16px rgba(var(--primary-rgb), 0.25),
-          0 2px 8px rgba(var(--primary-rgb), 0.15),
-          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.1' : '0.5'}) !important;
-      }
-
+   
       /* Card Components - Keep glassmorphism */
       .ant-card {
         backdrop-filter: blur(40px) saturate(180%) !important;
@@ -209,34 +171,7 @@ const GlobalGlassmorphismStyles = ({ isDarkMode }) => {
           inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
       }
 
-      /* Ensure text is visible in all themes - STRONG colors */
-      .ant-input,
-      .ant-input-number-input,
-      .ant-picker-input > input,
-      .ant-select-selection-search-input,
-      .ant-cascader-input input,
-      .ant-input-affix-wrapper input,
-      .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) input,
-      .ant-input:not(:focus),
-      .ant-input-number-input:not(:focus) {
-        color: ${isDarkMode ? '#FFFFFF' : '#000000'} !important;
-        font-weight: 500 !important;
-        -webkit-text-fill-color: ${isDarkMode ? '#FFFFFF' : '#000000'} !important;
-        opacity: 1 !important;
-      }
-
-      .ant-input::placeholder,
-      .ant-input-number-input::placeholder,
-      .ant-picker-input > input::placeholder,
-      .ant-select-selection-placeholder,
-      .ant-cascader-input input::placeholder,
-      .ant-input-affix-wrapper input::placeholder {
-        color: ${isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'} !important;
-        font-weight: 400 !important;
-        -webkit-text-fill-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'} !important;
-        opacity: 1 !important;
-      }
-
+   
       /* Prefix icons in inputs */
       .ant-input-prefix,
       .ant-input-suffix {

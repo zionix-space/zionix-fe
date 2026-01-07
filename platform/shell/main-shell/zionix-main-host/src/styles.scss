@@ -117,7 +117,7 @@ p, span, div, a, button, input, textarea, select {
 [data-theme="light"] .ant-input-number,
 [data-theme="light"] .ant-select-selector,
 [data-theme="light"] .ant-picker {
-  background-color: rgba(255, 255, 255, 0.8) !important;
+  // background-color: rgba(255, 255, 255, 0.8) !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -125,7 +125,7 @@ p, span, div, a, button, input, textarea, select {
 [data-theme="dark"] .ant-input-number,
 [data-theme="dark"] .ant-select-selector,
 [data-theme="dark"] .ant-picker {
-  background-color: rgba(255, 255, 255, 0.08) !important;
+  // background-color: rgba(255, 255, 255, 0.08) !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
 

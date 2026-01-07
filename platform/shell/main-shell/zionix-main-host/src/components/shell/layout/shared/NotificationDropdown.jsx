@@ -205,17 +205,17 @@ const getPriorityColor = (priority, token) => {
 
 // Animation variants
 const dropdownVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: -10, 
+  hidden: {
+    opacity: 0,
+    y: -10,
     scale: 0.95,
     transition: { duration: 0.2 }
   },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
+  visible: {
+    opacity: 1,
+    y: 0,
     scale: 1,
-    transition: { 
+    transition: {
       duration: 0.3,
       type: "spring",
       stiffness: 300,
@@ -243,13 +243,13 @@ const listItemVariants = {
   }
 };
 
-export const NotificationDropdown = ({ 
-  trigger, 
+export const NotificationDropdown = ({
+  trigger,
   placement = 'bottomRight',
   isMobile = false,
   onNotificationClick,
   className,
-  buttonStyle 
+  buttonStyle
 }) => {
   const { token } = useTheme();
   const [notifications, setNotifications] = useState(generateNotificationData());
@@ -262,18 +262,18 @@ export const NotificationDropdown = ({
   // Handlers
   const handleNotificationAction = (notificationId, actionType) => {
     console.log(`Action "${actionType}" clicked for notification ${notificationId}`);
-    
+
     if (actionType === 'dismiss') {
       markAsRead(notificationId);
     }
-    
+
     if (onNotificationClick) {
       onNotificationClick(notificationId, actionType);
     }
   };
 
   const markAsRead = (notificationId) => {
-    setNotifications(prev => 
+    setNotifications(prev =>
       prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
     );
   };
@@ -351,7 +351,7 @@ export const NotificationDropdown = ({
       {/* Header */}
       <div style={headerStyles}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <Title level={4} style={{ margin: 0, color: token.colorText, fontWeight: 600 }}>
+          <Title level={4} style={{ margin: 0, color: token.colorText, fontWeight: 600, opacity: 0.85 }}>
             Notifications
           </Title>
           <Space>
@@ -374,24 +374,24 @@ export const NotificationDropdown = ({
             )}
           </Space>
         </div>
-        
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Space>
-            <Badge 
-              count={unreadCount} 
-              size="small" 
+            <Badge
+              count={unreadCount}
+              size="small"
               style={{ backgroundColor: token.colorPrimary }}
             />
-            <Text type="secondary" style={{ fontSize: 13 }}>
+            <Text type="secondary" style={{ fontSize: 13, opacity: 0.65 }}>
               {unreadCount} unread
             </Text>
           </Space>
           {unreadCount > 0 && (
-            <Button 
-              type="link" 
-              size="small" 
+            <Button
+              type="link"
+              size="small"
               onClick={markAllAsRead}
-              style={{ padding: 0, height: 'auto', fontSize: 12, fontWeight: 500 }}
+              style={{ padding: 0, height: 'auto', fontSize: 12, fontWeight: 500, opacity: 0.75 }}
             >
               Mark all read
             </Button>
@@ -407,7 +407,7 @@ export const NotificationDropdown = ({
           </div>
         ) : notifications.length === 0 ? (
           <div style={{ padding: 40 }}>
-            <Empty 
+            <Empty
               description="No notifications"
               image={Empty.PRESENTED_IMAGE_SIMPLE}
             />
@@ -415,23 +415,23 @@ export const NotificationDropdown = ({
         ) : (
           Object.entries(groupedNotifications).map(([date, dateNotifications]) => (
             <div key={date}>
-              <div style={{ 
-                padding: '12px 24px 8px', 
+              <div style={{
+                padding: '12px 24px 8px',
                 backgroundColor: token.colorFillAlter,
                 borderBottom: `1px solid ${token.colorBorderSecondary}`
               }}>
-                <Text strong style={{ fontSize: 12, color: token.colorTextSecondary, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                  {new Date(date).toDateString() === new Date().toDateString() ? 'Today' : 
-                   new Date(date).toDateString() === new Date(Date.now() - 24*60*60*1000).toDateString() ? 'Yesterday' :
-                   new Date(date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                <Text strong style={{ fontSize: 12, color: token.colorTextSecondary, textTransform: 'uppercase', letterSpacing: 0.5, opacity: 0.5 }}>
+                  {new Date(date).toDateString() === new Date().toDateString() ? 'Today' :
+                    new Date(date).toDateString() === new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString() ? 'Yesterday' :
+                      new Date(date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
                 </Text>
               </div>
-              
+
               <List
                 dataSource={dateNotifications}
                 renderItem={(notification, index) => {
                   const typeConfig = getNotificationTypeConfig(notification.type, token);
-                  
+
                   return (
                     <motion.div
                       variants={listItemVariants}
@@ -466,10 +466,10 @@ export const NotificationDropdown = ({
                         <List.Item.Meta
                           avatar={
                             <div style={{ position: 'relative' }}>
-                              <Avatar 
+                              <Avatar
                                 src={notification.avatar}
                                 size={44}
-                                style={{ 
+                                style={{
                                   border: `2px solid ${typeConfig.borderColor}`,
                                   backgroundColor: typeConfig.bgColor
                                 }}
@@ -488,10 +488,10 @@ export const NotificationDropdown = ({
                                 border: `2px solid ${token.colorBgElevated}`,
                                 boxShadow: token.boxShadowTertiary
                               }}>
-                                <i 
+                                <i
                                   className={typeConfig.icon}
-                                  style={{ 
-                                    fontSize: 10, 
+                                  style={{
+                                    fontSize: 10,
                                     color: 'white',
                                     lineHeight: 1
                                   }}
@@ -502,19 +502,20 @@ export const NotificationDropdown = ({
                           title={
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
                               <div style={{ flex: 1, marginRight: 12 }}>
-                                <Text strong style={{ 
+                                <Text strong style={{
                                   color: token.colorText,
                                   fontSize: 14,
                                   lineHeight: '20px',
-                                  display: 'block'
+                                  display: 'block',
+                                  opacity: 0.85
                                 }}>
                                   {notification.title}
                                 </Text>
                                 <Space size={4} style={{ marginTop: 2 }}>
-                                  <Tag 
-                                    color={typeConfig.color} 
-                                    style={{ 
-                                      fontSize: 10, 
+                                  <Tag
+                                    color={typeConfig.color}
+                                    style={{
+                                      fontSize: 10,
                                       padding: '0 6px',
                                       lineHeight: '16px',
                                       border: 'none',
@@ -540,7 +541,7 @@ export const NotificationDropdown = ({
                                     boxShadow: `0 0 0 2px ${token.colorPrimaryBg}`
                                   }} />
                                 )}
-                                <Text type="secondary" style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
+                                <Text type="secondary" style={{ fontSize: 11, whiteSpace: 'nowrap', opacity: 0.6 }}>
                                   {formatTimestamp(notification.timestamp)}
                                 </Text>
                               </div>
@@ -548,21 +549,22 @@ export const NotificationDropdown = ({
                           }
                           description={
                             <div style={{ marginTop: 6 }}>
-                              <Text 
-                                type="secondary" 
-                                style={{ 
+                              <Text
+                                type="secondary"
+                                style={{
                                   fontSize: 13,
                                   lineHeight: '18px',
                                   display: '-webkit-box',
                                   WebkitLineClamp: 2,
                                   WebkitBoxOrient: 'vertical',
                                   overflow: 'hidden',
-                                  marginBottom: 8
+                                  marginBottom: 8,
+                                  opacity: 0.7
                                 }}
                               >
                                 {notification.message}
                               </Text>
-                              
+
                               {notification.actions && (
                                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                   {notification.actions.map((action, actionIndex) => (
@@ -574,7 +576,7 @@ export const NotificationDropdown = ({
                                         e.stopPropagation();
                                         handleNotificationAction(notification.id, action.action);
                                       }}
-                                      style={{ 
+                                      style={{
                                         fontSize: 11,
                                         height: 26,
                                         padding: '0 12px',
@@ -602,10 +604,10 @@ export const NotificationDropdown = ({
       {/* Footer */}
       <div style={footerStyles}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Button 
-            type="link" 
+          <Button
+            type="link"
             size="small"
-            style={{ fontSize: 13, padding: 0, fontWeight: 500 }}
+            style={{ fontSize: 13, padding: 0, fontWeight: 500, opacity: 0.75 }}
             onClick={() => {
               setOpen(false);
               console.log('View all notifications clicked');
@@ -613,11 +615,11 @@ export const NotificationDropdown = ({
           >
             View All Notifications
           </Button>
-          <Button 
-            type="text" 
+          <Button
+            type="text"
             size="small"
             icon={<i className="ri-settings-3-line" />}
-            style={{ fontSize: 13, color: token.colorTextSecondary }}
+            style={{ fontSize: 13, color: token.colorTextSecondary, opacity: 0.7 }}
             onClick={() => {
               setOpen(false);
               console.log('Notification settings clicked');
@@ -648,7 +650,7 @@ export const NotificationDropdown = ({
 
   return (
     <Dropdown
-      overlay={notificationContent}
+      popupRender={() => notificationContent}
       trigger={['click']}
       open={open}
       onOpenChange={setOpen}

@@ -77,42 +77,7 @@ const injectSidebarCSS = (token) => {
         font-size: 14px;
       }
 
-      /* Search input proper theme-aware background */
-      .zx-host-search-input.ant-input-affix-wrapper,
-      .zx-host-search-input.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) {
-        background: rgba(255, 255, 255, 0.5) !important;
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-        border: 1px solid ${token.colorBorder}30 !important;
-        color: ${token.colorText} !important;
-      }
-
-      /* Dark mode search input */
-      [data-theme="dark"] .zx-host-search-input.ant-input-affix-wrapper,
-      [data-theme="dark"] .zx-host-search-input.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-focused) {
-        background: rgba(30, 30, 30, 0.5) !important;
-      }
-
-      .zx-host-search-input.ant-input-affix-wrapper:hover {
-        background: rgba(255, 255, 255, 0.7) !important;
-      }
-
-      [data-theme="dark"] .zx-host-search-input.ant-input-affix-wrapper:hover {
-        background: rgba(30, 30, 30, 0.7) !important;
-      }
-
-      .zx-host-search-input.ant-input-affix-wrapper input {
-        background: transparent !important;
-        color: ${token.colorText} !important;
-      }
-
-      .zx-host-search-input.ant-input-affix-wrapper input::placeholder {
-        color: ${token.colorTextPlaceholder} !important;
-      }
-
-      .zx-host-search-input.ant-input-affix-wrapper .ant-input-prefix {
-        color: ${token.colorTextSecondary} !important;
-      }
+  
 
       /* Premium sidebar menu items - Apple glassmorphism with excellent readability */
       .zx-host-menu-container .ant-menu-inline,
@@ -123,7 +88,8 @@ const injectSidebarCSS = (token) => {
 
       .zx-host-menu-container .ant-menu-item {
         border-radius: 0 !important;
-        margin: 2px 6px !important;
+        margin-block: 2px !important;
+        margin-inline: 6px !important;
         padding: 0 14px !important;
         height: 38px !important;
         line-height: 38px !important;
@@ -198,7 +164,8 @@ const injectSidebarCSS = (token) => {
 
       .zx-host-menu-container .ant-menu-submenu-title {
         border-radius: 0 !important;
-        margin: 2px 6px !important;
+        margin-block: 2px !important;
+        margin-inline: 6px !important;
         padding: 0 10px !important;
         height: 38px !important;
         line-height: 38px !important;
@@ -242,7 +209,8 @@ const injectSidebarCSS = (token) => {
         font-size: 13px !important;
         height: 34px !important;
         line-height: 34px !important;
-        margin: 1px 6px !important;
+        margin-block: 1px !important;
+        margin-inline: 6px !important;
         opacity: 0.7 !important;
       }
       
@@ -253,7 +221,10 @@ const injectSidebarCSS = (token) => {
       /* Collapsed sidebar - premium Apple glassmorphism */
       .ant-layout-sider-collapsed .zx-host-menu-container {
         padding: 8px !important;
-        margin: 0 12px 12px 12px !important;
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+        margin-left: 12px !important;
+        margin-right: 12px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -282,7 +253,10 @@ const injectSidebarCSS = (token) => {
         max-width: 52px !important;
         border-radius: 14px !important;
         padding: 0 !important;
-        margin: 0 auto 6px auto !important;
+        margin-top: 0 !important;
+        margin-bottom: 6px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -313,9 +287,11 @@ const injectSidebarCSS = (token) => {
         margin-inline-start: 0 !important;
         margin-right: 0 !important;
         margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
       }
 
-      /* Icon styling - perfectly centered with vibrant colors */
+      /* Icon styling - perfectly centered with same opacity as theme buttons */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .anticon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item i {
@@ -325,10 +301,13 @@ const injectSidebarCSS = (token) => {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        margin: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
         padding: 0 !important;
         color: ${token.colorText} !important;
-        opacity: 0.65 !important;
+        opacity: 1 !important;
         transition: all 0.3s ease !important;
       }
 
@@ -374,7 +353,8 @@ const injectSidebarCSS = (token) => {
       }
 
       .zx-host-menu-container .ant-menu-sub .ant-menu-item {
-        margin: 2px 8px !important;
+        margin-block: 2px !important;
+        margin-inline: 8px !important;
         padding: 0 14px !important;
       }
 
@@ -412,7 +392,8 @@ const injectSidebarCSS = (token) => {
       /* Profile dropdown menu items */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
         border-radius: 10px !important;
-        margin: 2px 0 !important;
+        margin-block: 2px !important;
+        margin-inline: 0 !important;
         padding: 10px 14px !important;
         height: auto !important;
         min-height: 40px !important;
@@ -471,7 +452,8 @@ const injectSidebarCSS = (token) => {
 
       /* Profile dropdown divider */
       .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-divider {
-        margin: 6px 0 !important;
+        margin-block: 6px !important;
+        margin-inline: 0 !important;
         background: ${token.colorBorderSecondary}40 !important;
       }
 
@@ -502,75 +484,87 @@ const injectSidebarCSS = (token) => {
         margin-left: 8px !important;
       }
 
-      /* Dropdown menu container styling - WIDER to prevent text cutoff */
+      /* Dropdown menu container styling - Match expanded sidebar glassmorphism */
       .ant-menu-submenu-popup .ant-menu-vertical {
-        border-radius: 12px !important;
-        padding: 6px !important;
-        min-width: 200px !important;
+        border-radius: 18px !important;
+        padding: 8px !important;
+        min-width: 220px !important;
         width: auto !important;
-        background: ${token.colorBgElevated} !important;
-        box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
-        backdrop-filter: blur(20px) !important;
+        background: ${token.colorBgContainer}B3 !important;
+        backdrop-filter: blur(40px) saturate(200%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+        box-shadow: 
+          0 4px 12px 0 rgba(0, 0, 0, 0.12),
+          0 1px 3px 0 rgba(0, 0, 0, 0.08),
+          inset 0 0 0 1px ${token.colorBorder}40,
+          inset 0 1px 0 0 ${token.colorBgElevated}60 !important;
+        border: 1px solid ${token.colorBorder}30 !important;
       }
 
-      /* CRITICAL: Override ALL Ant Design menu item styles in popup */
+      /* CRITICAL: Override ALL Ant Design menu item styles in popup - Match expanded sidebar exactly */
       .ant-menu-submenu-popup .ant-menu-vertical > .ant-menu-item,
       .ant-menu-submenu-popup .ant-menu-vertical .ant-menu-item {
-        border-radius: 8px !important;
-        margin: 2px 0 !important;
-        margin-bottom: 2px !important;
-        padding: 0 12px !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        height: 36px !important;
-        max-height: 36px !important;
-        min-height: 36px !important;
-        line-height: 36px !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border-radius: 0 !important;
+        margin-block: 2px !important;
+        margin-inline: 6px !important;
+        padding: 0 14px !important;
+        height: 38px !important;
+        max-height: 38px !important;
+        min-height: 38px !important;
+        line-height: 38px !important;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
         background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: ${token.colorText} !important;
         font-size: 14px !important;
         font-weight: 500 !important;
-        letter-spacing: -0.011em !important;
+        letter-spacing: -0.01em !important;
+        position: relative !important;
+        border-left: 3px solid transparent !important;
+        opacity: 0.75 !important;
         display: flex !important;
         align-items: center !important;
         white-space: nowrap !important;
         overflow: visible !important;
       }
 
-      /* Override Ant Design's margin-block styles */
-      .ant-menu-submenu-popup .ant-menu-vertical .ant-menu-item {
-        margin-block: 2px !important;
-        margin-inline: 0 !important;
-      }
+      /* Override Ant Design's margin-block styles - REMOVED duplicate */
 
       /* Title content - NO text cutoff, allow full width */
       .ant-menu-submenu-popup .ant-menu-item .ant-menu-title-content {
         flex: 1 !important;
         overflow: visible !important;
         white-space: nowrap !important;
-        line-height: 36px !important;
+        line-height: 38px !important;
         display: flex !important;
         align-items: center !important;
         min-width: 0 !important;
+        color: ${token.colorText} !important;
+        font-weight: 500 !important;
+        opacity: 1 !important;
       }
 
-      /* Icons - fixed size */
+      /* Icons - Match expanded sidebar exactly */
       .ant-menu-submenu-popup .ant-menu-item .ant-menu-item-icon,
       .ant-menu-submenu-popup .ant-menu-item .anticon,
       .ant-menu-submenu-popup .ant-menu-item i {
-        font-size: 16px !important;
-        margin-right: 10px !important;
-        margin-inline-end: 10px !important;
-        color: ${token.colorTextSecondary} !important;
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        margin-right: 14px !important;
+        margin-inline-end: 14px !important;
+        color: ${token.colorText} !important;
         flex-shrink: 0 !important;
         line-height: 1 !important;
+        transition: all 0.3s ease !important;
+        opacity: 0.5 !important;
       }
 
       /* Badge wrapper - inline and no extra space */
       .ant-menu-submenu-popup .ant-menu-item .ant-menu-title-content > div {
         display: flex !important;
         align-items: center !important;
-        line-height: 36px !important;
+        line-height: 38px !important;
         width: 100% !important;
         gap: 8px !important;
       }
@@ -584,76 +578,119 @@ const injectSidebarCSS = (token) => {
         flex-shrink: 0 !important;
       }
 
-      /* Hover state */
+      /* Hover state - Match expanded sidebar exactly */
       .ant-menu-submenu-popup .ant-menu-item:hover {
-        background: ${token.colorFillQuaternary}80 !important;
+        background: rgba(0, 0, 0, 0.04) !important;
         color: ${token.colorText} !important;
+        transform: translateX(3px) scale(1.01) !important;
+        opacity: 1 !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-item:hover .ant-menu-title-content {
+        color: ${token.colorText} !important;
+        opacity: 1 !important;
       }
 
       .ant-menu-submenu-popup .ant-menu-item:hover .anticon,
       .ant-menu-submenu-popup .ant-menu-item:hover i {
         color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
+        transform: scale(1.15) !important;
       }
 
-      /* Selected state - PREMIUM GRADIENT like sidebar */
+      /* Selected state - Match expanded sidebar exactly */
       .ant-menu-submenu-popup .ant-menu-item-selected,
       .ant-menu-submenu-popup .ant-menu-item.ant-menu-item-selected {
-        background: linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%) !important;
-        color: ${token.colorWhite} !important;
-        box-shadow: 0 4px 12px ${token.colorPrimary}35, inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        background: ${token.colorPrimaryBg} !important;
+        color: ${token.colorPrimary} !important;
         font-weight: 600 !important;
+        border-left: 3px solid ${token.colorPrimary} !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-item-selected .ant-menu-title-content {
+        color: ${token.colorPrimary} !important;
+        font-weight: 600 !important;
+        opacity: 1 !important;
       }
 
       .ant-menu-submenu-popup .ant-menu-item-selected .ant-menu-item-icon,
       .ant-menu-submenu-popup .ant-menu-item-selected .anticon,
-      .ant-menu-submenu-popup .ant-menu-item-selected i,
-      .ant-menu-submenu-popup .ant-menu-item-selected .ant-menu-title-content,
-      .ant-menu-submenu-popup .ant-menu-item-selected .ant-menu-title-content span {
-        color: ${token.colorWhite} !important;
+      .ant-menu-submenu-popup .ant-menu-item-selected i {
+        color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
       }
 
-      /* Submenu title in dropdown */
+      /* Submenu title in dropdown - Match expanded sidebar */
       .ant-menu-submenu-popup .ant-menu-submenu-title {
-        border-radius: 8px !important;
-        margin: 2px 0 !important;
+        border-radius: 0 !important;
         margin-block: 2px !important;
-        padding: 0 12px !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        height: 36px !important;
-        max-height: 36px !important;
-        min-height: 36px !important;
-        line-height: 36px !important;
+        margin-inline: 6px !important;
+        padding: 0 10px !important;
+        height: 38px !important;
+        max-height: 38px !important;
+        min-height: 38px !important;
+        line-height: 38px !important;
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: ${token.colorText} !important;
         font-size: 14px !important;
         font-weight: 600 !important;
-        letter-spacing: -0.011em !important;
+        letter-spacing: -0.01em !important;
         display: flex !important;
         align-items: center !important;
         white-space: nowrap !important;
         overflow: visible !important;
+        opacity: 0.75 !important;
       }
 
       .ant-menu-submenu-popup .ant-menu-submenu-title .anticon,
       .ant-menu-submenu-popup .ant-menu-submenu-title i {
-        font-size: 16px !important;
-        margin-right: 10px !important;
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        margin-right: 14px !important;
         flex-shrink: 0 !important;
         line-height: 1 !important;
+        color: ${token.colorText} !important;
+        opacity: 0.5 !important;
       }
 
-      /* Nested submenu items */
+      .ant-menu-submenu-popup .ant-menu-submenu-title:hover {
+        background: rgba(0, 0, 0, 0.04) !important;
+        color: ${token.colorText} !important;
+        transform: translateX(3px) scale(1.01) !important;
+        opacity: 1 !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-submenu-title:hover .anticon,
+      .ant-menu-submenu-popup .ant-menu-submenu-title:hover i {
+        color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
+        transform: scale(1.15) !important;
+      }
+
+      /* Nested submenu items - Match expanded sidebar */
       .ant-menu-submenu-popup .ant-menu-sub .ant-menu-item {
-        padding-left: 32px !important;
+        padding-left: 48px !important;
         font-size: 13px !important;
-        height: 32px !important;
-        max-height: 32px !important;
-        min-height: 32px !important;
-        line-height: 32px !important;
-        margin-block: 2px !important;
+        height: 34px !important;
+        max-height: 34px !important;
+        min-height: 34px !important;
+        line-height: 34px !important;
+        margin-block: 1px !important;
+        margin-inline: 6px !important;
+        opacity: 0.7 !important;
+      }
+
+      .ant-menu-submenu-popup .ant-menu-sub .ant-menu-item:hover {
+        opacity: 1 !important;
       }
 
       .ant-menu-submenu-popup .ant-menu-sub .ant-menu-item .ant-menu-title-content {
-        line-height: 32px !important;
+        line-height: 34px !important;
       }
     `;
   document.head.appendChild(style);
