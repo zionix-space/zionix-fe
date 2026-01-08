@@ -243,7 +243,7 @@ const injectSidebarCSS = (token, isDarkMode) => {
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu {
         width: 100% !important;
-        margin-right: 20px !important;
+        margin-right: 13px !important;
       }
 
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item {
@@ -257,9 +257,9 @@ const injectSidebarCSS = (token, isDarkMode) => {
         margin-bottom: 6px !important;
         margin-left: auto !important;
         margin-right: auto !important;
-        background: transparent !important;
+        background: transparent;
         border: none !important;
-        box-shadow: none !important;
+        box-shadow: none;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -279,8 +279,6 @@ const injectSidebarCSS = (token, isDarkMode) => {
         display: none !important;
       }
 
-      /* CRITICAL: Disable Ant Design's default popup menu in collapsed mode - REMOVED to enable tooltips */
-
       /* Override Ant Design's icon margin and positioning */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon {
         margin-inline-end: 0 !important;
@@ -291,7 +289,7 @@ const injectSidebarCSS = (token, isDarkMode) => {
         margin-bottom: 0 !important;
       }
 
-      /* Icon styling - perfectly centered with same opacity as theme buttons */
+      /* Icon styling - perfectly centered - NO color here, let selected state override */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .ant-menu-item-icon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item .anticon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item i {
@@ -306,14 +304,14 @@ const injectSidebarCSS = (token, isDarkMode) => {
         margin-left: 0 !important;
         margin-right: 0 !important;
         padding: 0 !important;
-        color: ${token.colorText} !important;
+        color: ${token.colorText};
         opacity: 1 !important;
         transition: all 0.3s ease !important;
       }
 
-      /* Hover and selected states with premium effects */
+      /* Hover state */
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item:hover {
-        background: rgba(0, 0, 0, 0.04) !important;
+        background: ${isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'} !important;
         transform: scale(1.08) !important;
       }
 
@@ -324,12 +322,20 @@ const injectSidebarCSS = (token, isDarkMode) => {
         transform: scale(1.15) !important;
       }
 
-      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected {
+      /* CRITICAL: Selected state MUST come last to override everything above */
+      /* Match expanded sidebar style: light background + left border (NOT full primary) */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed .ant-menu-item-selected,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-selected,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-submenu.ant-menu-submenu-selected > .ant-menu-submenu-title {
         background: ${token.colorPrimaryBg} !important;
         box-shadow: none !important;
       }
 
-      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected::before {
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected::before,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed .ant-menu-item-selected::before,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-selected::before,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-submenu.ant-menu-submenu-selected > .ant-menu-submenu-title::before {
         content: '' !important;
         position: absolute !important;
         left: 0 !important;
@@ -341,8 +347,18 @@ const injectSidebarCSS = (token, isDarkMode) => {
         border-radius: 0 3px 3px 0 !important;
       }
 
+      /* Selected state icon color - primary color (NOT white) */
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected .ant-menu-item-icon,
       .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected .anticon,
-      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected i {
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-item-selected i,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed .ant-menu-item-selected .ant-menu-item-icon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed .ant-menu-item-selected .anticon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-inline-collapsed .ant-menu-item-selected i,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-selected .ant-menu-item-icon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-selected .anticon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-selected i,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-submenu.ant-menu-submenu-selected > .ant-menu-submenu-title .anticon,
+      .ant-layout-sider-collapsed .zx-host-menu-container .ant-menu-submenu.ant-menu-submenu-selected > .ant-menu-submenu-title i {
         color: ${token.colorPrimary} !important;
         opacity: 1 !important;
       }

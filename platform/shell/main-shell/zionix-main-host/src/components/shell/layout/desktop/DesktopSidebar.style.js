@@ -119,17 +119,24 @@ export const useStyles = (token, isDarkMode = false) => ({
   },
 
   zxHostThemeButtonActive: {
-    backgroundImage: `linear-gradient(135deg, ${token.colorPrimary}F0 0%, ${token.colorPrimaryHover}F0 100%)`,
-    backgroundColor: token.colorPrimary,
-    color: token.colorWhite,
+    backgroundImage: 'none',
+    backgroundColor: token.colorPrimaryBg,
+    color: token.colorPrimary,
     opacity: 1,
-    boxShadow: `
-      0 4px 12px ${token.colorPrimary}35,
-      0 2px 6px ${token.colorPrimary}25,
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.1)
-    `,
+    boxShadow: 'none',
     transform: 'scale(1.05)',
+    position: 'relative',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '3px',
+      height: '60%',
+      background: token.colorPrimary,
+      borderRadius: '0 3px 3px 0',
+    },
   },
 
   zxHostToggleButton: {
