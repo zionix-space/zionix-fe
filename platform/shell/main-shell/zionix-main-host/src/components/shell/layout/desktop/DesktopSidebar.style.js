@@ -109,7 +109,7 @@ export const useStyles = (token) => ({
     color: token.colorText,
     fontSize: '22px',
     fontWeight: 600,
-    opacity: 0.65,
+    opacity: 0.75,
     position: 'relative',
     '&:hover': {
       backgroundColor: token.colorFillQuaternary,
@@ -146,7 +146,7 @@ export const useStyles = (token) => ({
     transition: `all ${token.motionDurationMid} cubic-bezier(0.4, 0, 0.2, 1)`,
     position: 'relative',
     flexShrink: 0,
-    opacity: 0.65,
+    opacity: 0.75,
   },
 
   zxHostToggleButtonHover: {
@@ -178,7 +178,7 @@ export const useStyles = (token) => ({
     gap: '12px',
     userSelect: 'none',
     marginTop: '0px',
-    opacity: 0.45,
+    opacity: 0.55,
   },
 
   zxHostSectionHeaderCollapsed: {

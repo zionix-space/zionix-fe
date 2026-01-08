@@ -119,7 +119,7 @@ const injectSidebarCSS = (token) => {
         margin-right: 14px !important;
         color: ${token.colorText} !important;
         transition: all 0.3s ease !important;
-        opacity: 0.5 !important;
+        opacity: 0.9 !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover {
@@ -186,7 +186,7 @@ const injectSidebarCSS = (token) => {
         font-weight: 600 !important;
         margin-right: 14px !important;
         color: ${token.colorText} !important;
-        opacity: 0.5 !important;
+        opacity: 0.9 !important;
       }
 
       .zx-host-menu-container .ant-menu-submenu-title:hover {
@@ -431,7 +431,7 @@ const injectSidebarCSS = (token) => {
         color: ${token.colorTextSecondary} !important;
         transition: all 0.2s ease !important;
         flex-shrink: 0 !important;
-        opacity: 0.8 !important;
+        opacity: 0.9 !important;
       }
 
       /* Profile dropdown hover state - Subtle Apple-style highlight */
@@ -583,7 +583,7 @@ const injectSidebarCSS = (token) => {
         flex-shrink: 0 !important;
         line-height: 1 !important;
         transition: all 0.3s ease !important;
-        opacity: 0.5 !important;
+        opacity: 0.9 !important;
       }
 
       /* Badge wrapper - inline and no extra space */
@@ -681,7 +681,7 @@ const injectSidebarCSS = (token) => {
         flex-shrink: 0 !important;
         line-height: 1 !important;
         color: ${token.colorText} !important;
-        opacity: 0.5 !important;
+        opacity: 0.9 !important;
       }
 
       .ant-menu-submenu-popup .ant-menu-submenu-title:hover {
