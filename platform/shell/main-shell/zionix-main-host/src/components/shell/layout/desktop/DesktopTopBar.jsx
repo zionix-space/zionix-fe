@@ -31,7 +31,7 @@ const AppTopBar = () => {
     primaryColor,
     setPrimaryColor,
   } = useTheme();
-  const styles = useStyles(token);
+  const styles = useStyles(token, isDarkMode);
 
   // Inject CSS to override Ant Design Menu default styles - use useLayoutEffect for instant application
   useLayoutEffect(() => {
@@ -90,18 +90,19 @@ const AppTopBar = () => {
         .ant-menu-horizontal .ant-menu-item-selected,
         .ant-menu-horizontal > .ant-menu-item-selected,
         .ant-menu.ant-menu-horizontal .ant-menu-item-selected {
-          background-color: ${token.colorPrimary} !important;
-          color: ${token.colorWhite} !important;
+          background-color: ${token.colorPrimaryBg} !important;
+          color: ${token.colorPrimary} !important;
           font-weight: 600 !important;
-          border-radius: 14px !important;
+          border-radius: 0 !important;
           padding: 0 16px !important;
-          box-shadow: 0 2px 8px ${token.colorPrimary}30, inset 0 1px 0 ${token.colorBgContainer}26 !important;
-          transform: translateY(-1px) !important;
+          border-left: 3px solid ${token.colorPrimary} !important;
+          box-shadow: none !important;
+          transform: none !important;
         }
 
         .ant-menu-horizontal .ant-menu-item-selected .ant-menu-title-content,
         .ant-menu-horizontal > .ant-menu-item-selected .ant-menu-title-content {
-          color: ${token.colorWhite} !important;
+          color: ${token.colorPrimary} !important;
         }
 
         /* Unselected items */

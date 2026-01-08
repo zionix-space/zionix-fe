@@ -18,7 +18,7 @@ import { logout } from '@zionix/authentication';
 import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
 
 // Inject CSS for webkit scrollbar styles and Ant Design component overrides
-const injectSidebarCSS = (token) => {
+const injectSidebarCSS = (token, isDarkMode) => {
   const styleId = 'desktop-sidebar-styles';
 
   // Remove existing style if it exists to allow re-injection with new token values
@@ -229,7 +229,7 @@ const injectSidebarCSS = (token) => {
         flex-direction: column !important;
         align-items: center !important;
         gap: 8px !important;
-        background: ${token.colorBgContainer}B3 !important;
+        background: ${isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'} !important;
         backdropFilter: blur(40px) saturate(200%) !important;
         WebkitBackdropFilter: blur(40px) saturate(200%) !important;
         borderRadius: 18px !important;
@@ -730,7 +730,7 @@ const { useToken } = theme;
 const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const { token } = useToken();
   const { isRTL, isDarkMode, toggleTheme, primaryColor, setPrimaryColor } = useTheme();
-  const styles = useStyles(token);
+  const styles = useStyles(token, isDarkMode);
   const navigate = useNavigate();
   const { clearAuth } = useAuthStore();
 
@@ -871,8 +871,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
 
   // Inject sidebar CSS - use useLayoutEffect for synchronous injection before paint
   useLayoutEffect(() => {
-    injectSidebarCSS(token);
-  }, [token]);
+    injectSidebarCSS(token, isDarkMode);
+  }, [token, isDarkMode]);
 
   // Responsive behavior
   useEffect(() => {

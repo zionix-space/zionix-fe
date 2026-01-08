@@ -1,7 +1,7 @@
 // CSS-in-JS styles with zx-host prefix for module federation isolation
-export const useStyles = (token) => ({
+export const useStyles = (token, isDarkMode = false) => ({
   zxHostSidebarContainer: {
-    background: 'transparent', // Transparent to show through the main background
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.01)' : 'rgba(0, 0, 0, 0.01)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'none', // No blur - unified with background
     WebkitBackdropFilter: 'none',
     height: 'calc(100vh - 64px)',
@@ -81,7 +81,7 @@ export const useStyles = (token) => ({
     gap: '6px',
     justifyContent: 'center',
     padding: '6px',
-    background: `${token.colorBgContainer}B3`,
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     borderRadius: '18px',
@@ -198,7 +198,7 @@ export const useStyles = (token) => ({
   zxHostMenuContainer: {
     userSelect: 'none',
     padding: '8px',
-    background: `${token.colorBgContainer}B3`,
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     borderRadius: '18px',
@@ -285,7 +285,7 @@ export const useStyles = (token) => ({
     cursor: 'pointer',
     padding: `${token.paddingXS + 2}px ${token.paddingSM}px`,
     borderRadius: '18px',
-    background: `${token.colorBgContainer}B3`,
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     border: `1px solid ${token.colorBorder}30`,

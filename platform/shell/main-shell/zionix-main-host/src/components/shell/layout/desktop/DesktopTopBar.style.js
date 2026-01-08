@@ -1,5 +1,5 @@
 // AppTopBar styles - Premium glassmorphism
-export const useStyles = (token) => ({
+export const useStyles = (token, isDarkMode = false) => ({
   topBarStyle: {
     background: 'transparent', // Transparent to show through the main background
     backdropFilter: 'none', // No blur - unified with background
@@ -49,7 +49,7 @@ export const useStyles = (token) => ({
     alignItems: "center",
     flexShrink: 0,
     userSelect: "none",
-    background: `${token.colorBgContainer}B3`,
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     borderRadius: "18px",
@@ -80,7 +80,7 @@ export const useStyles = (token) => ({
     gap: "6px",
     flexShrink: 0,
     userSelect: "none",
-    background: `${token.colorBgContainer}B3`,
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     borderRadius: "18px",

@@ -38,10 +38,10 @@ export const generateLightTokens = (primaryColor) => {
     colorFill: colorUtils.addAlpha('#000000', 0.08), // Standard fill
 
     // Dynamic background colors with subtle primary tint
-    colorBgContainer: colorUtils.mix(primaryColor, '#ffffff', 0.98), // Very subtle primary tint (2% primary + 98% white)
-    colorBgLayout: colorUtils.mix(primaryColor, '#ffffff', 0.95), // Slightly more primary tint (5% primary + 95% white)
+    colorBgContainer: colorUtils.mix(primaryColor, '#ffffff', 0.99), // Very subtle primary tint (1% primary + 99% white)
+    colorBgLayout: colorUtils.mix(primaryColor, '#ffffff', 0.98), // Slightly more primary tint (2% primary + 98% white)
     colorBgElevated: '#ffffff', // Pure white for elevated surfaces
-    colorBgSpotlight: colorUtils.mix(primaryColor, '#ffffff', 0.97), // Subtle highlight with primary tint
+    colorBgSpotlight: colorUtils.mix(primaryColor, '#ffffff', 0.985), // Subtle highlight with primary tint
     colorBgMask: colorUtils.addAlpha('#000000', 0.45), // Overlay backgrounds
 
     // Essential text colors for light theme

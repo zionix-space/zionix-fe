@@ -38,10 +38,10 @@ export const generateDarkTokens = (primaryColor) => {
     colorFill: colorUtils.addAlpha('#ffffff', 0.08), // Standard fill
 
     // Dynamic background colors with subtle primary tint (dark theme)
-    colorBgContainer: colorUtils.mix(primaryColor, '#1f1f1f', 0.95), // Very subtle primary tint (5% primary + 95% dark)
-    colorBgLayout: colorUtils.mix(primaryColor, '#141414', 0.92), // Slightly more primary tint (8% primary + 92% darker)
-    colorBgElevated: colorUtils.mix(primaryColor, '#262626', 0.97), // Elevated surfaces with subtle tint
-    colorBgSpotlight: colorUtils.mix(primaryColor, '#1a1a1a', 0.94), // Highlighted areas with primary tint
+    colorBgContainer: colorUtils.mix(primaryColor, '#1f1f1f', 0.97), // Very subtle primary tint (3% primary + 97% dark)
+    colorBgLayout: colorUtils.mix(primaryColor, '#141414', 0.96), // Slightly more primary tint (4% primary + 96% darker)
+    colorBgElevated: colorUtils.mix(primaryColor, '#262626', 0.98), // Elevated surfaces with subtle tint
+    colorBgSpotlight: colorUtils.mix(primaryColor, '#1a1a1a', 0.97), // Highlighted areas with primary tint
     colorBgMask: colorUtils.addAlpha('#000000', 0.65), // Overlay backgrounds
 
     // Essential text colors for dark theme
