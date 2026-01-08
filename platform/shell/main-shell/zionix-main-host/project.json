@@ -17,21 +17,7 @@
         "rspackConfig": "platform/shell/main-shell/zionix-main-host/rspack.config.js",
         "assets": [
           "platform/shell/main-shell/zionix-main-host/src/favicon.ico",
-          {
-            "input": "platform/shell/main-shell/zionix-main-host/src/assets",
-            "glob": "**/*",
-            "output": "assets"
-          },
-          {
-            "input": "platform/shell/main-shell/zionix-main-host/src",
-            "glob": "service-worker.js",
-            "output": "."
-          },
-          {
-            "input": "platform/shell/main-shell/zionix-main-host",
-            "glob": "vercel.json",
-            "output": "."
-          }
+          "platform/shell/main-shell/zionix-main-host/src/assets"
         ]
       },
       "configurations": {

@@ -2,7 +2,6 @@ const { composePlugins, withNx, withReact } = require("@nx/rspack");
 const { withModuleFederation } = require("@nx/rspack/module-federation");
 const commonRulesRsPack = require("../../../../tools/deployment/rspack.common");
 const baseConfig = require("./module-federation.config");
-const path = require('path');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -30,9 +29,6 @@ module.exports = composePlugins(
       '@zionix/apiCore': require('path').resolve(__dirname, '../../../../platform/core/shared-utilities/shared/middleware/axiosCore.js'),
       '@zionix/design-system': require('path').resolve(__dirname, '../../../../platform/core/design-system'),
     };
-
-    // PWA Configuration - Service worker will be copied via project.json assets config
-    // No need for CopyRspackPlugin as Nx handles assets automatically
 
     // Development-specific optimizations
     if (isDevelopment) {
