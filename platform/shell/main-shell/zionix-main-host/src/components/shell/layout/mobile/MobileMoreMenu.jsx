@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import { Badge, Menu, theme } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@zionix/design-system';
-import { 
-  useStyles, 
-  backdropVariants, 
-  menuVariants, 
-  handleBarVariants, 
+import {
+  useStyles,
+  backdropVariants,
+  menuVariants,
+  handleBarVariants,
   headerVariants,
   contentVariants,
-  generateMenuItemCSS 
+  generateMenuItemCSS
 } from './MobileMoreMenu.style';
 
 const { useToken } = theme;
@@ -25,18 +25,18 @@ const { useToken } = theme;
  * @param {Array} [props.openKeys] - Array of open submenu keys
  * @param {Function} [props.onOpenChange] - Function called when submenu open state changes
  */
-const MobileMoreMenu = ({ 
-  isOpen, 
-  onClose, 
-  menuItems, 
-  selectedKey, 
+const MobileMoreMenu = ({
+  isOpen,
+  onClose,
+  menuItems,
+  selectedKey,
   onItemSelect,
   openKeys,
-  onOpenChange 
+  onOpenChange
 }) => {
   const { token } = useToken();
   const styles = useStyles(token);
-  
+
   const menuRef = useRef(null);
 
   // Handle escape key
@@ -63,7 +63,7 @@ const MobileMoreMenu = ({
     } else {
       document.body.style.overflow = '';
     }
-    
+
     return () => {
       document.body.style.overflow = '';
     };
@@ -74,30 +74,6 @@ const MobileMoreMenu = ({
     onClose();
   };
 
-  // Filter out main navigation items that are already in the bottom navigation
-  const mainNavigationKeys = ['dashboard', 'products', 'calendar', 'my-tasks', 'more'];
-  
-  const filterMainNavigationItems = (items) => {
-    if (!items || !Array.isArray(items)) {
-      return [];
-    }
-    return items.filter(item => {
-      // Exclude main navigation items
-      if (mainNavigationKeys.includes(item.key)) {
-        return false;
-      }
-      
-      // For items with children, filter their children recursively
-      if (item.children && item.children.length > 0) {
-        item.children = filterMainNavigationItems(item.children);
-        // Keep parent if it has remaining children
-        return item.children.length > 0;
-      }
-      
-      return true;
-    });
-  };
-
   // Convert menu items to Ant Design Menu format
   const formatMenuItems = (items) => {
     if (!items || !Array.isArray(items)) {
@@ -106,16 +82,16 @@ const MobileMoreMenu = ({
     return items.map(item => {
       const badgeCount = getBadgeCount(item.badge);
       const badgeColor = getBadgeColor(item.badge);
-      
+
       const menuItem = {
         key: item.key,
         icon: item.icon ? <i className={item.icon} /> : null,
         label: badgeCount ? (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <span>{item.label}</span>
-            <Badge 
-              count={badgeCount} 
-              size="small" 
+            <Badge
+              count={badgeCount}
+              size="small"
               color={badgeColor}
             />
           </div>
@@ -129,8 +105,6 @@ const MobileMoreMenu = ({
       return menuItem;
     });
   };
-
-
 
   // Helper function to get badge count from badge object or string
   const getBadgeCount = (badge) => {
@@ -149,14 +123,11 @@ const MobileMoreMenu = ({
     return badge.color || undefined;
   };
 
-  // Filter and format menu items for the More menu
-  const filteredMenuItems = filterMainNavigationItems(menuItems || []);
-  const formattedMenuItems = [
-    ...formatMenuItems(filteredMenuItems)
-  ];
+  // Format ALL menu items for the More menu (no filtering)
+  const formattedMenuItems = formatMenuItems(menuItems || []);
 
   const handleMenuSelect = ({ key }) => {
-    // Find the selected item in the filtered menu structure
+    // Find the selected item in the menu structure
     const findMenuItem = (items, targetKey) => {
       for (const item of items) {
         if (item.key === targetKey) {
@@ -170,7 +141,7 @@ const MobileMoreMenu = ({
       return null;
     };
 
-    const selectedItem = findMenuItem(filteredMenuItems, key);
+    const selectedItem = findMenuItem(menuItems || [], key);
     if (selectedItem) {
       handleItemClick(selectedItem);
     }
@@ -196,6 +167,7 @@ const MobileMoreMenu = ({
           {/* Menu Container with native iOS styling and smooth animations */}
           <motion.div
             ref={menuRef}
+            className="mobile-more-menu-container-wrapper"
             variants={menuVariants}
             initial="initial"
             animate="animate"
@@ -232,7 +204,7 @@ const MobileMoreMenu = ({
               <h3
                 style={styles.headerTitleStyle}
               >
-                More
+                All Apps
               </h3>
             </motion.div>
 
@@ -255,7 +227,7 @@ const MobileMoreMenu = ({
                   style={styles.menuStyle}
                   theme="light"
                   expandIcon={({ isOpen }) => (
-                    <motion.i 
+                    <motion.i
                       className={`ri-arrow-${isOpen ? 'down' : 'right'}-s-line`}
                       animate={{ rotate: isOpen ? 0 : 0 }}
                       transition={{ duration: 0.2 }}
@@ -264,7 +236,7 @@ const MobileMoreMenu = ({
                   )}
                 />
               </div>
-              
+
               <style dangerouslySetInnerHTML={{
                 __html: generateMenuItemCSS(token)
               }} />

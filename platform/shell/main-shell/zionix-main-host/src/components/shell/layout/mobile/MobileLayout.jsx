@@ -3,12 +3,14 @@ import { theme } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import MobileHeader from './MobileHeader';
+import MobileBottomNavigation from './MobileBottomNavigation';
 import { useStyles } from './MobileLayout.style';
 
 const { useToken } = theme;
 
 /**
  * Mobile Layout Component - Clean and simple mobile layout
+ * Unified solid background matching header
  * @param {Object} props - Component props
  * @param {string} [props.className=''] - Additional CSS class
  * @param {Object} [props.style={}] - Additional inline styles
@@ -45,7 +47,8 @@ const MobileLayout = ({ className = '', style = {} }) => {
         </div>
       </main>
 
-
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNavigation />
     </div>
   );
 };

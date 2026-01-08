@@ -1,27 +1,35 @@
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "@zionix/design-system";
-import { useStyles, dropdownVariants, backdropVariants } from "./MobileProfileDropdown.style";
+import { useStyles, dropdownVariants, backdropVariants, injectProfileDropdownCSS } from "./MobileProfileDropdown.style";
+import { logout } from '@zionix/authentication';
+import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
 
 /**
- * Mobile Profile Dropdown Component - Replicates desktop sidebar profile functionality
+ * Mobile Profile Dropdown Component - Premium Apple-style profile menu
  * @param {Object} props - Component props
  * @param {boolean} props.isOpen - Whether the dropdown is open
  * @param {Function} props.onClose - Callback function to close the dropdown
  * @param {Object} props.userData - User data object with name, email, avatar
  * @param {Array} props.menuItems - Array of menu items to display
- * @param {Function} [props.onMenuItemClick] - Callback function when menu item is clicked
  */
-export const MobileProfileDropdown = ({ 
-  isOpen, 
-  onClose, 
+export const MobileProfileDropdown = ({
+  isOpen,
+  onClose,
   userData,
   menuItems,
-  onMenuItemClick 
 }) => {
   const { token } = useTheme();
   const styles = useStyles(token);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const { clearAuth } = useAuthStore();
+
+  // Inject CSS for hover effects
+  useEffect(() => {
+    injectProfileDropdownCSS(token);
+  }, [token]);
 
   // Handle escape key to close dropdown
   useEffect(() => {
@@ -51,11 +59,30 @@ export const MobileProfileDropdown = ({
   };
 
   // Handle menu item click
-  const handleMenuItemClick = (item) => {
+  const handleMenuItemClick = async (item) => {
     console.log("Profile menu item clicked:", item.key);
-    if (onMenuItemClick) {
-      onMenuItemClick(item);
+
+    // Handle logout action
+    if (item.key === 'logout') {
+      try {
+        // Clear auth store (this also clears localStorage)
+        clearAuth();
+
+        // Dispatch logout event for all microfrontends
+        window.dispatchEvent(new CustomEvent('auth:logout'));
+
+        // Navigate to root path
+        navigate('/');
+      } catch (error) {
+        console.error('Logout error:', error);
+        // Ensure navigation happens even if there's an error
+        navigate('/');
+      }
+    } else if (item.path) {
+      // Navigate to the item's path
+      navigate(item.path);
     }
+
     onClose();
   };
 
@@ -67,10 +94,16 @@ export const MobileProfileDropdown = ({
       );
     }
 
+    const isDanger = item.key === 'logout';
+
     return (
       <div
         key={item.key}
-        style={styles.menuItemStyle}
+        className="mobile-profile-menu-item"
+        style={{
+          ...styles.menuItemStyle,
+          ...(isDanger && { color: token.colorError }),
+        }}
         onClick={() => handleMenuItemClick(item)}
         role="button"
         tabIndex={0}
@@ -81,10 +114,21 @@ export const MobileProfileDropdown = ({
           }
         }}
       >
-        <div style={styles.menuItemIconStyle}>
+        <div
+          className="mobile-profile-menu-icon"
+          style={{
+            ...styles.menuItemIconStyle,
+            ...(isDanger && { color: token.colorError }),
+          }}
+        >
           {item.icon ? <i className={item.icon} /> : null}
         </div>
-        <span style={styles.menuItemLabelStyle}>
+        <span
+          style={{
+            ...styles.menuItemLabelStyle,
+            ...(isDanger && { color: token.colorError }),
+          }}
+        >
           {item.label}
         </span>
       </div>
@@ -114,6 +158,7 @@ export const MobileProfileDropdown = ({
           {/* Profile Dropdown */}
           <motion.div
             ref={dropdownRef}
+            className="mobile-profile-dropdown"
             style={styles.dropdownStyle}
             variants={dropdownVariants}
             initial="hidden"
@@ -124,32 +169,43 @@ export const MobileProfileDropdown = ({
             {/* Profile Header */}
             <div style={styles.profileHeaderStyle}>
               <div style={styles.avatarContainerStyle}>
-                <img
-                  src={userData.avatar}
-                  alt={userData.name}
-                  style={styles.avatarImageStyle}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-                <div style={{...styles.avatarFallbackStyle, display: 'none'}}>
+                {userData.avatar ? (
+                  <img
+                    src={userData.avatar}
+                    alt={userData.name}
+                    style={styles.avatarImageStyle}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div style={{
+                  ...styles.avatarFallbackStyle,
+                  display: userData.avatar ? 'none' : 'flex'
+                }}>
                   {userData.name ? userData.name.charAt(0).toUpperCase() : "U"}
                 </div>
               </div>
               <div style={styles.profileInfoStyle}>
                 <div style={styles.profileNameStyle}>
-                  {userData.name}
+                  {userData.name || 'User'}
                 </div>
                 <div style={styles.profileEmailStyle}>
-                  {userData.email}
+                  {userData.email || 'user@example.com'}
                 </div>
               </div>
             </div>
 
             {/* Menu Items */}
             <div style={styles.menuContainerStyle}>
-              {menuItems.map((item, index) => renderMenuItem(item, index))}
+              {menuItems && menuItems.length > 0 ? (
+                menuItems.map((item, index) => renderMenuItem(item, index))
+              ) : (
+                <div style={{ padding: '20px', textAlign: 'center', color: token.colorTextSecondary }}>
+                  No menu items available
+                </div>
+              )}
             </div>
           </motion.div>
         </motion.div>
