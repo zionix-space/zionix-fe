@@ -1,0 +1,23 @@
+# PWA Icons Directory
+
+Place your PWA icons here or generate them using:
+```
+node tools/deployment/generate-pwa-icons.js
+```
+
+Required icons:
+- icon-72x72.png
+- icon-96x96.png
+- icon-128x128.png
+- icon-144x144.png
+- icon-152x152.png
+- icon-192x192.png
+- icon-384x384.png
+- icon-512x512.png
+- icon-192x192-maskable.png
+- icon-512x512-maskable.png
+
+You can also generate icons manually at: https://www.pwabuilder.com/imageGenerator
+
+Note: This folder is in src/assets/ which is the correct location for Nx monorepos.
+The build process will automatically copy these to the dist output.
