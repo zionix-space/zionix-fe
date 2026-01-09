@@ -131,63 +131,8 @@ const AppTopBar = () => {
     selectMainMenu,
   } = useMenuData();
 
-  // Show error fallback if menu loading failed
-  if (isError) {
-    return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
-  }
-
-  // Filter out admin-app from regular navigation and convert to navigation items
-  const navigationItems = mainMenus
-    .filter((menu) => menu.key !== 'admin-app')
-    .map((menu) => ({
-      key: menu.key,
-      label: menu.label,
-      icon: menu.icon ? <i className={menu.icon} /> : null,
-    }));
-
-  // Get admin menu for the admin button
-  const adminMenu = mainMenus.find((menu) => menu.key === 'admin-app');
-
-  // Handle main menu selection
-  const handleMainMenuSelect = ({ key }) => {
-    selectMainMenu(key);
-  };
-
-  // Notification handler
-  const handleNotificationClick = (notificationId, actionType) => {
-    console.log(
-      `Notification action: ${actionType} for notification ${notificationId}`
-    );
-    // Handle notification actions here
-  };
-
   // Fullscreen state management
   const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // Enhanced cross-browser fullscreen API support detection
-  const isFullscreenSupported = () => {
-    const doc = document;
-    const docEl = document.documentElement;
-
-    return !!(
-      // Standard API
-      (
-        (doc.fullscreenEnabled !== undefined && doc.fullscreenEnabled) ||
-        // WebKit (Safari, Chrome)
-        (doc.webkitFullscreenEnabled !== undefined &&
-          doc.webkitFullscreenEnabled) ||
-        // Mozilla (Firefox)
-        (doc.mozFullScreenEnabled !== undefined && doc.mozFullScreenEnabled) ||
-        // Microsoft (IE/Edge)
-        (doc.msFullscreenEnabled !== undefined && doc.msFullscreenEnabled) ||
-        // Fallback: check if methods exist
-        docEl.requestFullscreen ||
-        docEl.webkitRequestFullscreen ||
-        docEl.mozRequestFullScreen ||
-        docEl.msRequestFullscreen
-      )
-    );
-  };
 
   // Get current fullscreen element across browsers
   const getFullscreenElement = () => {
@@ -231,6 +176,61 @@ const AppTopBar = () => {
       });
     };
   }, []);
+
+  // Show error fallback if menu loading failed
+  if (isError) {
+    return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
+  }
+
+  // Filter out admin-app from regular navigation and convert to navigation items
+  const navigationItems = mainMenus
+    .filter((menu) => menu.key !== 'admin-app')
+    .map((menu) => ({
+      key: menu.key,
+      label: menu.label,
+      icon: menu.icon ? <i className={menu.icon} /> : null,
+    }));
+
+  // Get admin menu for the admin button
+  const adminMenu = mainMenus.find((menu) => menu.key === 'admin-app');
+
+  // Handle main menu selection
+  const handleMainMenuSelect = ({ key }) => {
+    selectMainMenu(key);
+  };
+
+  // Notification handler
+  const handleNotificationClick = (notificationId, actionType) => {
+    console.log(
+      `Notification action: ${actionType} for notification ${notificationId}`
+    );
+    // Handle notification actions here
+  };
+
+  // Enhanced cross-browser fullscreen API support detection
+  const isFullscreenSupported = () => {
+    const doc = document;
+    const docEl = document.documentElement;
+
+    return !!(
+      // Standard API
+      (
+        (doc.fullscreenEnabled !== undefined && doc.fullscreenEnabled) ||
+        // WebKit (Safari, Chrome)
+        (doc.webkitFullscreenEnabled !== undefined &&
+          doc.webkitFullscreenEnabled) ||
+        // Mozilla (Firefox)
+        (doc.mozFullScreenEnabled !== undefined && doc.mozFullScreenEnabled) ||
+        // Microsoft (IE/Edge)
+        (doc.msFullscreenEnabled !== undefined && doc.msFullscreenEnabled) ||
+        // Fallback: check if methods exist
+        docEl.requestFullscreen ||
+        docEl.webkitRequestFullscreen ||
+        docEl.mozRequestFullScreen ||
+        docEl.msRequestFullscreen
+      )
+    );
+  };
 
   // Enhanced fullscreen enter function with comprehensive browser support
   const enterFullscreen = async () => {

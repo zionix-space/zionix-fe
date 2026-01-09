@@ -1,7 +1,7 @@
 // CSS-in-JS styles with zx-host prefix for module federation isolation
 export const useStyles = (token, isDarkMode = false) => ({
   zxHostSidebarContainer: {
-    background: isDarkMode ? 'rgba(255, 255, 255, 0.01)' : 'rgba(0, 0, 0, 0.01)', // Theme-aware: white for dark mode, black for light mode
+    background: 'transparent', // Transparent to match topbar
     backdropFilter: 'none', // No blur - unified with background
     WebkitBackdropFilter: 'none',
     height: 'calc(100vh - 64px)',
