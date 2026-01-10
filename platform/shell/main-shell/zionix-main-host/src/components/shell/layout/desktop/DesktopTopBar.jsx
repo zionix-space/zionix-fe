@@ -343,19 +343,22 @@ const AppTopBar = () => {
               <span style={styles.logoTextStyle}>Zionix</span>
             </div>
 
-            <div style={styles.navigationContainerStyle}>
-              <Menu
-                mode="horizontal"
-                selectedKeys={selectedMainMenu ? [selectedMainMenu.key] : []}
-                items={navigationItems}
-                style={styles.menuStyle}
-                className="zx-topbar-menu"
-                theme="light"
-                onSelect={handleMainMenuSelect}
-                overflowedIndicator={null}
-                disabledOverflow={true}
-              />
-            </div>
+            {/* Only show navigation container if there are navigation items */}
+            {navigationItems.length > 0 && (
+              <div style={styles.navigationContainerStyle}>
+                <Menu
+                  mode="horizontal"
+                  selectedKeys={selectedMainMenu ? [selectedMainMenu.key] : []}
+                  items={navigationItems}
+                  style={styles.menuStyle}
+                  className="zx-topbar-menu"
+                  theme="light"
+                  onSelect={handleMainMenuSelect}
+                  overflowedIndicator={null}
+                  disabledOverflow={true}
+                />
+              </div>
+            )}
           </div>
 
           {/* Right Section - Actions */}
