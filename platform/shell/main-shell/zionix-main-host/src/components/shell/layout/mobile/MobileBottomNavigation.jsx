@@ -95,9 +95,10 @@ const MobileBottomNavigation = ({ className = '', style = {} }) => {
             setSelectedSidebarKey(item.key);
         }
 
-        // Navigate if path exists
-        if (item.path) {
-            navigate(item.path);
+        // Navigate if route exists
+        if (item.route) {
+            const route = item.route.startsWith('/') ? item.route : `/${item.route}`;
+            navigate(route);
         }
 
         setIsMoreMenuOpen(false);

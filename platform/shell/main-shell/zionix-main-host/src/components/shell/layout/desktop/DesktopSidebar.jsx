@@ -745,7 +745,7 @@ const { useToken } = theme;
 
 const AppSidebar = ({ collapsed = false, onCollapse }) => {
   const { token } = useToken();
-  const { isRTL, isDarkMode, toggleTheme, primaryColor, setPrimaryColor } = useTheme();
+  const { isRTL, isDarkMode, toggleTheme, toggleRTL, primaryColor, setPrimaryColor } = useTheme();
   const styles = useStyles(token, isDarkMode);
   const navigate = useNavigate();
   const { clearAuth } = useAuthStore();
@@ -755,10 +755,11 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     sidebarMenus,
     selectedMainMenu,
     selectedSidebarKey,
-    setSelectedSidebarKey,
+    selectSidebarMenu,
     openSidebarKeys,
     setOpenSidebarKeys,
     profileSection: profileSectionData,
+    getMenuRoute,
   } = useMenuData();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -771,7 +772,8 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
 
   // Menu selection handlers
   const handleMenuSelect = async (key) => {
-    setSelectedSidebarKey(key);
+    // Use the smart selection function that handles parent expansion
+    selectSidebarMenu(key);
     console.log('Selected menu item:', key);
 
     // Handle logout action
@@ -790,6 +792,16 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
         // Ensure navigation happens even if there's an error
         navigate('/');
       }
+      return;
+    }
+
+    // Build and navigate to the menu's route
+    const route = getMenuRoute(key);
+    if (route) {
+      console.log('Navigating to:', route);
+      navigate(route);
+    } else {
+      console.warn('No route found for menu key:', key);
     }
   };
 
@@ -939,7 +951,6 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
   };
 
   // Create menu sections directly from menu data - supports multiple sections per parent menu
-  // Create menu sections directly from menu data - supports multiple sections per parent menu
   const createMenuSections = () => {
     const sections = [];
 
@@ -961,7 +972,7 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       } else {
         // In expanded mode: Show sections with their children
         sidebarMenus.forEach((menuItem, index) => {
-          const sectionTitle = menuItem.sectionTitle || selectedMainMenu?.sectionTitle || 'Navigation Menu';
+          const sectionTitle = menuItem.sectionTitle || menuItem.label || selectedMainMenu?.sectionTitle || 'Navigation Menu';
           const items = menuItem.children || [];
 
           if (items.length > 0) {
@@ -971,6 +982,15 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
               title: sectionTitle,
               accentColor: token.colorPrimary,
               items: items,
+            });
+          } else {
+            // If no children, show the item itself
+            sections.push({
+              type: 'section',
+              id: `navigation-${menuItem.key || index}`,
+              title: sectionTitle,
+              accentColor: token.colorPrimary,
+              items: [menuItem],
             });
           }
         });
@@ -1209,6 +1229,20 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                   tabIndex={0}
                 >
                   <i className="ri-moon-line" style={{ fontSize: '20px', fontWeight: 600 }} />
+                </div>
+              </Tooltip>
+              <Tooltip title={isRTL ? "Switch to LTR" : "Switch to RTL"} placement="right">
+                <div
+                  style={{
+                    ...styles.zxHostThemeButton,
+                    ...(isRTL ? styles.zxHostThemeButtonActive : {}),
+                  }}
+                  onClick={toggleRTL}
+                  role="button"
+                  aria-label={isRTL ? "Switch to LTR" : "Switch to RTL"}
+                  tabIndex={0}
+                >
+                  <i className="ri-text-direction-r" style={{ fontSize: '20px', fontWeight: 600 }} />
                 </div>
               </Tooltip>
               <Tooltip title="Change primary color" placement="right">

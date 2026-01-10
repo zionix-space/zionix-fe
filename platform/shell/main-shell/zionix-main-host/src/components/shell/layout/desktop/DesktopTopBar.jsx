@@ -11,6 +11,7 @@ import {
   Tooltip,
   Spin,
 } from 'antd';
+import { useNavigate } from 'react-router-dom';
 // Using Remix Icons CSS classes for better performance
 import { useTheme, ZionixLogo } from '@zionix/design-system';
 import { useStyles } from './DesktopTopBar.style';
@@ -134,6 +135,8 @@ const AppTopBar = () => {
   // Fullscreen state management
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  const navigate = useNavigate();
+
   // Get current fullscreen element across browsers
   const getFullscreenElement = () => {
     return (
@@ -197,6 +200,36 @@ const AppTopBar = () => {
   // Handle main menu selection
   const handleMainMenuSelect = ({ key }) => {
     selectMainMenu(key);
+
+    // Find the selected menu to get its route
+    const selectedMenu = mainMenus.find(menu => menu.key === key);
+    if (selectedMenu) {
+      // If menu has children, navigate to first child's route
+      if (selectedMenu.children && selectedMenu.children.length > 0) {
+        const firstChild = selectedMenu.children[0];
+        // Check if first child has children (nested structure)
+        if (firstChild.children && firstChild.children.length > 0) {
+          const firstNestedChild = firstChild.children[0];
+          if (firstNestedChild.route) {
+            const route = firstNestedChild.route.startsWith('/')
+              ? firstNestedChild.route
+              : `/${firstNestedChild.route}`;
+            navigate(route);
+          }
+        } else if (firstChild.route) {
+          const route = firstChild.route.startsWith('/')
+            ? firstChild.route
+            : `/${firstChild.route}`;
+          navigate(route);
+        }
+      } else if (selectedMenu.route) {
+        // Navigate to menu's own route if no children
+        const route = selectedMenu.route.startsWith('/')
+          ? selectedMenu.route
+          : `/${selectedMenu.route}`;
+        navigate(route);
+      }
+    }
   };
 
   // Notification handler
