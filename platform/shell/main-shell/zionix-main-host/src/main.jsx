@@ -29,7 +29,7 @@ const showInitialLoader = () => {
       text-align: center;
       background: ${bgColor};
       z-index: 9999;
-      font-family:"'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
+      font-family:"-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif";
     ">
       <div class="loader-spinner" style="
         width: clamp(48px, 15vw, 80px);

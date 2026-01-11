@@ -8,9 +8,22 @@
  * @version 1.0.0
  */
 
-import React from 'react';
 import { Button, Result, Alert } from 'antd';
-import { ErrorContainer, ErrorContent, DevErrorAlert } from './QueryErrorBoundary.style';
+import {
+    errorContainerStyles,
+    errorContentStyles,
+    errorCardStyles,
+    iconContainerStyles,
+    iconStyles,
+    titleStyles,
+    messageStyles,
+    buttonContainerStyles,
+    primaryButtonStyles,
+    secondaryButtonStyles,
+    devErrorAlertStyles,
+    devAlertStyles,
+    devAlertDescriptionStyles
+} from './QueryErrorBoundary.style';
 
 /**
  * Query Error Fallback Component
@@ -21,7 +34,7 @@ export const QueryErrorFallback = ({ error, resetErrorBoundary }) => {
     const getErrorInfo = () => {
         if (error?.isNetworkError) {
             return {
-                status: 'warning',
+                icon: '⚠️',
                 title: 'Network Connection Issue',
                 message: 'Unable to connect to the server. Please check your internet connection.',
             };
@@ -29,7 +42,7 @@ export const QueryErrorFallback = ({ error, resetErrorBoundary }) => {
 
         if (error?.status === 429) {
             return {
-                status: 'warning',
+                icon: '⏱️',
                 title: 'Too Many Requests',
                 message: `Please wait ${error.retryAfter || 'a few'} seconds before trying again.`,
             };
@@ -37,7 +50,7 @@ export const QueryErrorFallback = ({ error, resetErrorBoundary }) => {
 
         if (error?.isServerError) {
             return {
-                status: 'error',
+                icon: '🔧',
                 title: 'Server Error',
                 message: 'Our servers are experiencing issues. Please try again in a moment.',
             };
@@ -45,7 +58,7 @@ export const QueryErrorFallback = ({ error, resetErrorBoundary }) => {
 
         if (error?.status === 403) {
             return {
-                status: 'warning',
+                icon: '🔒',
                 title: 'Access Denied',
                 message: 'You don\'t have permission to access this resource.',
             };
@@ -53,7 +66,7 @@ export const QueryErrorFallback = ({ error, resetErrorBoundary }) => {
 
         if (error?.status === 404) {
             return {
-                status: '404',
+                icon: '🔍',
                 title: 'Not Found',
                 message: 'The requested resource could not be found.',
             };
@@ -61,7 +74,7 @@ export const QueryErrorFallback = ({ error, resetErrorBoundary }) => {
 
         // Default error
         return {
-            status: 'error',
+            icon: '⚠️',
             title: 'Something Went Wrong',
             message: error?.message || 'An unexpected error occurred. Please try again.',
         };
@@ -70,51 +83,59 @@ export const QueryErrorFallback = ({ error, resetErrorBoundary }) => {
     const errorInfo = getErrorInfo();
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: '300px',
-                padding: '24px',
-            }}
-        >
-            <Result
-                status={errorInfo.status}
-                title={errorInfo.title}
-                subTitle={errorInfo.message}
-                extra={[
-                    <Button type="primary" key="retry" onClick={resetErrorBoundary}>
-                        Try Again
-                    </Button>,
-                    <Button key="home" onClick={() => (window.location.href = '/')}>
-                        Go Home
-                    </Button>,
-                ]}
-            >
-                {process.env.NODE_ENV === 'development' && error && (
-                    <Alert
-                        message="Development Error Details"
-                        description={
-                            <div style={{ textAlign: 'left', fontSize: '12px' }}>
-                                <strong>Status:</strong> {error.status || 'N/A'}
-                                <br />
-                                <strong>Message:</strong> {error.message}
-                                <br />
-                                {error.code && (
-                                    <>
-                                        <strong>Code:</strong> {error.code}
-                                        <br />
-                                    </>
-                                )}
-                            </div>
-                        }
-                        type="info"
-                        closable
-                        style={{ marginTop: '16px', maxWidth: '500px' }}
-                    />
-                )}
-            </Result>
+        <div style={errorContainerStyles}>
+            <div style={errorContentStyles}>
+                <div style={errorCardStyles}>
+                    {/* Icon */}
+                    <div style={iconContainerStyles}>
+                        <span style={iconStyles}>{errorInfo.icon}</span>
+                    </div>
+
+                    {/* Title */}
+                    <h1 style={titleStyles}>{errorInfo.title}</h1>
+
+                    {/* Message */}
+                    <p style={messageStyles}>{errorInfo.message}</p>
+
+                    {/* Buttons */}
+                    <div style={buttonContainerStyles}>
+                        <Button
+                            type="primary"
+                            onClick={resetErrorBoundary}
+                            style={primaryButtonStyles}
+                        >
+                            Try Again
+                        </Button>
+                        <Button
+                            onClick={() => (window.location.href = '/')}
+                            style={secondaryButtonStyles}
+                        >
+                            Go Home
+                        </Button>
+                    </div>
+
+                    {/* Development Error Details */}
+                    {process.env.NODE_ENV === 'development' && error && (
+                        <div style={devErrorAlertStyles}>
+                            <Alert
+                                message="Development Error Details"
+                                description={
+                                    <div style={devAlertDescriptionStyles}>
+                                        <div><strong>Status:</strong> {error.status || 'N/A'}</div>
+                                        <div><strong>Message:</strong> {error.message}</div>
+                                        {error.code && (
+                                            <div><strong>Code:</strong> {error.code}</div>
+                                        )}
+                                    </div>
+                                }
+                                type="info"
+                                closable
+                                style={devAlertStyles}
+                            />
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

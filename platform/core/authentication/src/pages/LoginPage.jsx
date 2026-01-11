@@ -29,6 +29,11 @@ import {
   containerVariants,
   formVariants,
   promoVariants,
+  logoVariants,
+  titleVariants,
+  inputVariants,
+  buttonVariants,
+  securityIconVariants,
   carouselCustomCSS,
 } from './LoginPage.style';
 
@@ -152,7 +157,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
           {/* Mobile Form Content */}
           <div style={styles.mobileFormContent}>
-            <Title level={2} style={styles.mobileTitle}>
+            <Title level={5} style={styles.mobileTitle}>
               Log in to your Account
             </Title>
             {/* <Text style={styles.mobileSubtitle}>
@@ -270,26 +275,40 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
               animate="animate"
             >
               {/* Logo */}
-              <div style={styles.logo}>
+              <motion.div
+                style={styles.logo}
+                variants={logoVariants}
+              >
                 <div style={styles.dotworkLogo}>
-                  <div style={styles.logoIcon}>
+                  <motion.div
+                    style={styles.logoIcon}
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
                     <ZionixLogo />
-                  </div>
+                  </motion.div>
                   <span style={styles.logoText}>Zionix</span>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Form Content */}
               <div style={styles.formContent}>
-                <Title level={1} style={styles.title}>
-                  Log in to your Account
-                </Title>
-                {/* <Text style={styles.subtitle}>Welcome back!</Text> */}
+                <motion.div variants={titleVariants}>
+                  <Title level={1} style={styles.title}>
+                    Log in to your Account
+                  </Title>
+                </motion.div>
 
                 {/* Divider */}
-                <Divider style={styles.divider}>
-                  <Text style={styles.dividerText}>Continue with email</Text>
-                </Divider>
+                <motion.div
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={{ opacity: 1, scaleX: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <Divider style={styles.divider}>
+                    <Text style={styles.dividerText}>Continue with email</Text>
+                  </Divider>
+                </motion.div>
 
                 {/* Login Form */}
                 <Form
@@ -299,84 +318,111 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                   autoComplete="off"
                 >
                   {/* Email Field */}
-                  <Form.Item
-                    name="email"
-                    rules={[
-                      { required: true, message: 'Please enter your email' },
-                      { type: 'email', message: 'Please enter a valid email' },
-                    ]}
-                    style={styles.formItem}
+                  <motion.div
+                    custom={0}
+                    variants={inputVariants}
+                    initial="initial"
+                    animate="animate"
                   >
-                    <Input
-                      prefix={
-                        <i className="ri-mail-line" style={styles.inputIcon} />
-                      }
-                      placeholder="Email"
-                      style={styles.input}
-                      autoComplete="email"
-                    />
-                  </Form.Item>
+                    <Form.Item
+                      name="email"
+                      rules={[
+                        { required: true, message: 'Please enter your email' },
+                        { type: 'email', message: 'Please enter a valid email' },
+                      ]}
+                      style={styles.formItem}
+                    >
+                      <Input
+                        prefix={
+                          <i className="ri-mail-line" style={styles.inputIcon} />
+                        }
+                        placeholder="Email"
+                        style={styles.input}
+                        autoComplete="email"
+                      />
+                    </Form.Item>
+                  </motion.div>
 
                   {/* Password Field */}
-                  <Form.Item
-                    name="password"
-                    rules={[
-                      { required: true, message: 'Please enter your password' },
-                    ]}
-                    style={styles.formItem}
+                  <motion.div
+                    custom={1}
+                    variants={inputVariants}
+                    initial="initial"
+                    animate="animate"
                   >
-                    <Input.Password
-                      prefix={
-                        <i className="ri-lock-line" style={styles.inputIcon} />
-                      }
-                      placeholder="Password"
-                      style={styles.input}
-                      iconRender={(visible) =>
-                        visible ? (
-                          <i className="ri-eye-line" />
-                        ) : (
-                          <i className="ri-eye-off-line" />
-                        )
-                      }
-                      autoComplete="current-password"
-                    />
-                  </Form.Item>
+                    <Form.Item
+                      name="password"
+                      rules={[
+                        { required: true, message: 'Please enter your password' },
+                      ]}
+                      style={styles.formItem}
+                    >
+                      <Input.Password
+                        prefix={
+                          <motion.i
+                            className="ri-lock-line"
+                            style={styles.inputIcon}
+                            animate={{ rotate: [0, -5, 5, 0] }}
+                            transition={{ duration: 0.5, delay: 0.7 }}
+                          />
+                        }
+                        placeholder="Password"
+                        style={styles.input}
+                        iconRender={(visible) =>
+                          visible ? (
+                            <i className="ri-eye-line" />
+                          ) : (
+                            <i className="ri-eye-off-line" />
+                          )
+                        }
+                        autoComplete="current-password"
+                      />
+                    </Form.Item>
+                  </motion.div>
 
                   {/* Remember Me & Forgot Password */}
-                  <div style={styles.rememberForgotContainer}>
+                  <motion.div
+                    style={styles.rememberForgotContainer}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.8 }}
+                  >
                     <Form.Item name="remember" valuePropName="checked" noStyle>
                       <Checkbox style={styles.checkbox}>Remember me</Checkbox>
                     </Form.Item>
-                    <Link
-                      onClick={handleForgotPasswordClick}
-                      style={styles.forgotLink}
+                    <motion.div
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      Forgot Password?
-                    </Link>
-                  </div>
+                      <Link
+                        onClick={handleForgotPasswordClick}
+                        style={styles.forgotLink}
+                      >
+                        Forgot Password?
+                      </Link>
+                    </motion.div>
+                  </motion.div>
 
                   {/* Login Button */}
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    loading={loading}
-                    shape='round'
-                    style={styles.loginButton}
-                    block
+                  <motion.div
+                    variants={buttonVariants}
+                    initial="initial"
+                    animate="animate"
+                    whileHover="hover"
+                    whileTap="tap"
                   >
-                    Log In
-                  </Button>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={loading}
+                      shape='round'
+                      style={styles.loginButton}
+                      block
+                    >
+                      Log In
+                    </Button>
+                  </motion.div>
                 </Form>
-
-                {/* Sign Up Link */}
-                {/* <div style={styles.signUpContainer}>
-                  <Text style={styles.signUpText}>
-                    Don't have an account?{' '}
-                    <Link onClick={handleSignUpClick} style={styles.signUpLink}>
-                      Create an account
-                    </Link>
-                  </Text>
-                </div> */}
               </div>
             </motion.div>
           </Col>
@@ -392,34 +438,54 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
               {/* Floating UI Elements Background */}
               <div style={styles.floatingElements}>
                 {/* Security Shield Icon */}
-                <div style={styles.floatingIcon1}>
+                <motion.div
+                  style={styles.floatingIcon1}
+                  variants={securityIconVariants}
+                  initial="initial"
+                  animate="animate"
+                  whileHover="hover"
+                >
                   <div style={styles.iconCircle} className="icon-circle">
                     <i
                       className="ri-shield-check-fill"
                       style={styles.floatingIconContent}
                     />
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Lock/Encryption Icon */}
-                <div style={styles.floatingIcon2}>
+                <motion.div
+                  style={styles.floatingIcon2}
+                  variants={securityIconVariants}
+                  initial="initial"
+                  animate="animate"
+                  whileHover="hover"
+                  transition={{ delay: 0.2 }}
+                >
                   <div style={styles.iconCircle} className="icon-circle">
                     <i
                       className="ri-lock-2-fill"
                       style={styles.floatingIconContent}
                     />
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Certificate/Verification Icon */}
-                <div style={styles.floatingIcon3}>
+                <motion.div
+                  style={styles.floatingIcon3}
+                  variants={securityIconVariants}
+                  initial="initial"
+                  animate="animate"
+                  whileHover="hover"
+                  transition={{ delay: 0.4 }}
+                >
                   <div style={styles.iconCircle} className="icon-circle">
                     <i
                       className="ri-verified-badge-fill"
                       style={styles.floatingIconContent}
                     />
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Carousel Content */}

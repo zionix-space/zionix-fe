@@ -70,8 +70,9 @@ export const generateDarkTokens = (primaryColor) => {
     colorErrorBg: '#2a1215', // Dark red background
     colorErrorBorder: '#58181c', // Dark red border
 
-    // Typography
+    // Typography - Apple-inspired font stack
     fontFamily:
-      "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif",
+      "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+    fontFamilyCode: "'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace",
   };
 };

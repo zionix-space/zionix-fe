@@ -14,6 +14,57 @@ import * as ReactDOM from "react-dom/client";
 import App from "./app/app";
 import { initializeWarningSuppression } from "./utils/suppressWarnings";
 
+// Inject global Apple-inspired font styles
+const injectGlobalFontStyles = () => {
+  const styleId = 'zionix-global-fonts';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      
+      body,
+      html,
+      #main-module,
+      .ant-app,
+      .ant-layout,
+      .ant-menu,
+      .ant-btn,
+      .ant-input,
+      .ant-select,
+      .ant-table,
+      .ant-modal,
+      .ant-drawer,
+      .ant-dropdown,
+      .ant-tooltip,
+      .ant-popover,
+      .ant-notification,
+      .ant-message,
+      .ant-alert,
+      .ant-card,
+      .ant-form,
+      .ant-typography {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+      }
+      
+      code,
+      pre,
+      .ant-typography-code,
+      .ant-input-textarea {
+        font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+};
+
+// Inject fonts immediately
+injectGlobalFontStyles();
+
 // Initialize warning suppression for known Ant Design issues
 initializeWarningSuppression();
 
