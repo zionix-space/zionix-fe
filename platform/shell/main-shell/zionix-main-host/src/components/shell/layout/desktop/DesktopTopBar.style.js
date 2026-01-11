@@ -6,8 +6,8 @@ export const useStyles = (token, isDarkMode = false) => ({
     WebkitBackdropFilter: 'none',
     borderBottom: 'none', // No border for seamless look
     boxShadow: 'none', // No shadow
-    padding: "0 24px",
-    height: "64px",
+    padding: "0 20px",
+    height: "52px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -21,7 +21,7 @@ export const useStyles = (token, isDarkMode = false) => ({
     display: "flex",
     alignItems: "center",
     flex: 1,
-    gap: "32px",
+    gap: "24px",
     justifyContent: "center",
   },
 
@@ -31,12 +31,12 @@ export const useStyles = (token, isDarkMode = false) => ({
     flexShrink: 0,
     userSelect: "none",
     position: "absolute",
-    left: "24px",
+    left: "20px",
     height: "100%",
   },
 
   logoTextStyle: {
-    fontSize: "18px",
+    fontSize: "16px",
     fontWeight: "600",
     color: token.colorText,
     letterSpacing: "0",
@@ -52,16 +52,11 @@ export const useStyles = (token, isDarkMode = false) => ({
     background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-    borderRadius: "18px",
-    padding: "6px",
+    borderRadius: "8px",
+    padding: "2px",
     border: `1px solid ${token.colorBorder}30`,
-    boxShadow: `
-      0 4px 12px 0 rgba(0, 0, 0, 0.12),
-      0 1px 3px 0 rgba(0, 0, 0, 0.08),
-      inset 0 0 0 1px ${token.colorBorder}40,
-      inset 0 1px 0 0 ${token.colorBgElevated}60
-    `,
-    height: "52px",
+    boxShadow: 'none',
+    height: "32px",
   },
 
   menuStyle: {
@@ -77,47 +72,41 @@ export const useStyles = (token, isDarkMode = false) => ({
   rightActionsStyle: {
     display: "inline-flex",
     alignItems: "center",
-    gap: "6px",
+    gap: "2px",
     flexShrink: 0,
     userSelect: "none",
     background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-    borderRadius: "18px",
-    padding: "6px",
+    borderRadius: "8px",
+    padding: "2px",
     border: `1px solid ${token.colorBorder}30`,
-    boxShadow: `
-      0 4px 12px 0 rgba(0, 0, 0, 0.12),
-      0 1px 3px 0 rgba(0, 0, 0, 0.08),
-      inset 0 0 0 1px ${token.colorBorder}40,
-      inset 0 1px 0 0 ${token.colorBgElevated}60
-    `,
-    height: "52px",
+    boxShadow: 'none',
+    height: "32px",
     position: "absolute",
-    right: "24px",
+    right: "20px",
   },
 
   iconButtonStyle: {
     border: "none",
     background: "transparent",
     color: token.colorText,
-    fontSize: "22px",
-    fontWeight: 600,
-    opacity: 0.65,
-    width: "40px",
-    height: "40px",
+    fontSize: "15px",
+    fontWeight: 500,
+    opacity: 0.6,
+    width: "28px",
+    height: "28px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "14px",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    borderRadius: "6px",
+    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
     userSelect: "none",
     flexShrink: 0,
     "&:hover": {
-      backgroundColor: token.colorFillQuaternary,
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)',
       color: token.colorPrimary,
-      transform: "scale(1.08)",
-      opacity: 1,
+      opacity: 0.9,
     },
   },
 

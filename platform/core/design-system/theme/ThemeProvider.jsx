@@ -49,7 +49,7 @@ const GlobalGlassmorphismStyles = ({ isDarkMode }) => {
     const style = document.createElement('style');
     style.id = 'zionix-glassmorphism-styles';
     style.textContent = `
-      /* Premium Apple Glassmorphism for All Ant Design Components */
+      /* Clean SaaS Styling - NO glassmorphism, solid backgrounds for readability */
       
       /* Global Premium Apple Icon Styling - Bold stroke weight for all icons */
       i[class*="ri-"],
@@ -69,106 +69,78 @@ const GlobalGlassmorphismStyles = ({ isDarkMode }) => {
         justify-content: center !important;
       }
 
-   
-      /* Card Components - Keep glassmorphism */
+      /* Card Components - Solid backgrounds, no glassmorphism */
       .ant-card {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-        box-shadow: 
-          0 4px 16px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.08'}),
-          0 2px 8px rgba(0, 0, 0, ${isDarkMode ? '0.15' : '0.04'}),
-          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.1' : '0.5'}) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
       }
 
-      /* Modal & Drawer */
+      /* Modal & Drawer - Solid backgrounds for readability */
       .ant-modal-content,
       .ant-drawer-content {
-        backdrop-filter: blur(60px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
-        box-shadow: 
-          0 12px 40px rgba(0, 0, 0, ${isDarkMode ? '0.3' : '0.15'}),
-          0 6px 20px rgba(0, 0, 0, ${isDarkMode ? '0.25' : '0.1'}),
-          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.15' : '0.6'}) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
       }
 
-      /* Dropdown & Popover */
+      /* Dropdown & Popover - Solid backgrounds for readability */
       .ant-dropdown,
       .ant-popover-inner,
       .ant-select-dropdown,
       .ant-picker-dropdown,
       .ant-cascader-dropdown {
-        backdrop-filter: blur(60px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
-        box-shadow: 
-          0 8px 24px rgba(0, 0, 0, ${isDarkMode ? '0.25' : '0.12'}),
-          0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.08'}),
-          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.12' : '0.5'}) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
       }
 
-      /* Table */
+      /* Table - Solid backgrounds */
       .ant-table {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
 
       .ant-table-thead > tr > th {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
 
-      /* Tabs */
+      /* Tabs - Solid backgrounds */
       .ant-tabs-nav {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
 
-      /* Message & Notification */
+      /* Message & Notification - Solid backgrounds for readability */
       .ant-message-notice-content,
       .ant-notification-notice {
-        backdrop-filter: blur(60px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(60px) saturate(180%) !important;
-        box-shadow: 
-          0 8px 24px rgba(0, 0, 0, ${isDarkMode ? '0.25' : '0.12'}),
-          0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.08'}),
-          inset 0 1px 0 rgba(255, 255, 255, ${isDarkMode ? '0.12' : '0.5'}) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
       }
 
-      /* Tooltip */
+      /* Tooltip - Keep minimal styling */
       .ant-tooltip-inner {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
 
-      /* Button hover effects */
+      /* Button hover effects - NO SHADOWS */
       .ant-btn:not(.ant-btn-primary):not(.ant-btn-text):not(.ant-btn-link) {
-        backdrop-filter: blur(20px) saturate(150%) !important;
-        -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
       }
 
       .ant-btn:not(.ant-btn-primary):not(.ant-btn-text):not(.ant-btn-link):hover {
-        backdrop-filter: blur(30px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, ${isDarkMode ? '0.2' : '0.12'}) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
 
-      /* Primary button premium gradient */
+      /* Primary button - NO SHADOWS, use Ant Design defaults */
       .ant-btn-primary {
-        background: linear-gradient(135deg, var(--ant-primary-color) 0%, var(--ant-primary-color-hover) 100%) !important;
-        box-shadow: 
-          0 4px 12px rgba(var(--primary-rgb), 0.35),
-          0 2px 6px rgba(var(--primary-rgb), 0.25),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-      .ant-btn-primary:hover {
-        transform: translateY(-1px) !important;
-        box-shadow: 
-          0 6px 16px rgba(var(--primary-rgb), 0.4),
-          0 3px 8px rgba(var(--primary-rgb), 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
       }
 
    
@@ -892,36 +864,36 @@ const ThemeProvider = ({ children }) => {
       },
       Card: {
         borderRadius: 16,
-        colorBgContainer: isDark ? 'rgba(30, 30, 30, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        colorBgContainer: solidBackground,
         colorBorder: glassBorder,
       },
       Modal: {
         borderRadius: 16,
-        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorBgElevated: solidBackground,
         colorText: textColor,
       },
       Drawer: {
-        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorBgElevated: solidBackground,
         colorText: textColor,
       },
       Dropdown: {
         borderRadius: 12,
-        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorBgElevated: solidBackground,
         colorText: textColor,
       },
       Popover: {
         borderRadius: 12,
-        colorBgElevated: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        colorBgElevated: solidBackground,
         colorText: textColor,
       },
       Tooltip: {
         borderRadius: 8,
-        colorBgSpotlight: isDark ? 'rgba(30, 30, 30, 0.95)' : 'rgba(50, 50, 50, 0.95)',
+        colorBgSpotlight: isDark ? 'rgba(30, 30, 30, 1)' : 'rgba(50, 50, 50, 1)',
         colorTextLightSolid: 'rgba(255, 255, 255, 0.95)',
       },
       Table: {
         borderRadius: 12,
-        colorBgContainer: isDark ? 'rgba(30, 30, 30, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        colorBgContainer: solidBackground,
         colorText: textColor,
       },
       Tabs: {

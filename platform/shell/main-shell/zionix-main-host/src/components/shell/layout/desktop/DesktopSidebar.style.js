@@ -4,9 +4,9 @@ export const useStyles = (token, isDarkMode = false) => ({
     background: 'transparent', // Transparent to match topbar
     backdropFilter: 'none', // No blur - unified with background
     WebkitBackdropFilter: 'none',
-    height: 'calc(100vh - 64px)',
+    height: 'calc(100vh - 52px)',
     position: 'fixed',
-    top: '64px',
+    top: '52px',
     insetInlineStart: 0,
     overflow: 'hidden',
     display: 'flex',
@@ -21,7 +21,7 @@ export const useStyles = (token, isDarkMode = false) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    minHeight: 'calc(100vh - 64px)', // Match new topbar height
+    minHeight: 'calc(100vh - 52px)', // Match new topbar height
     userSelect: 'none',
     overflow: 'hidden',
   },

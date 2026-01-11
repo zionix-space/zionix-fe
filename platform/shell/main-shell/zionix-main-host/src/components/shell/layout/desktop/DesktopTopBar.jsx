@@ -78,13 +78,13 @@ const AppTopBar = () => {
         /* Topbar menu selected item - force primary background */
         .ant-menu-horizontal .ant-menu-item,
         .ant-menu-horizontal > .ant-menu-item {
-          padding: 0 16px !important;
-          margin: 0 2px !important;
+          padding: 0 10px !important;
+          margin: 0 1px !important;
           height: 28px !important;
           line-height: 28px !important;
-          border-radius: 14px !important;
+          border-radius: 6px !important;
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-          font-size: 14px !important;
+          font-size: 13px !important;
           font-weight: 500 !important;
         }
 
@@ -95,7 +95,7 @@ const AppTopBar = () => {
           color: ${token.colorPrimary} !important;
           font-weight: 600 !important;
           border-radius: 0 !important;
-          padding: 0 16px !important;
+          padding: 0 10px 0 7px !important;
           border-left: 3px solid ${token.colorPrimary} !important;
           box-shadow: none !important;
           transform: none !important;
@@ -110,13 +110,13 @@ const AppTopBar = () => {
         .ant-menu-horizontal .ant-menu-item:not(.ant-menu-item-selected) {
           background-color: transparent !important;
           color: ${token.colorTextSecondary} !important;
-          border-radius: 14px !important;
+          border-radius: 6px !important;
         }
 
         .ant-menu-horizontal .ant-menu-item:not(.ant-menu-item-selected):hover {
-          background-color: ${token.colorFillQuaternary} !important;
+          background-color: ${isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)'} !important;
           color: ${token.colorText} !important;
-          border-radius: 14px !important;
+          border-radius: 6px !important;
         }
       `;
     document.head.appendChild(style);
@@ -362,9 +362,9 @@ const AppTopBar = () => {
           <div style={styles.leftSectionStyle}>
             <div style={styles.brandContainerStyle}>
               <ZionixLogo
-                size={56}
+                size={48}
                 useThemeColors={true}
-                style={{ marginRight: '16px' }}
+                style={{ marginRight: '12px' }}
               />
               <span style={styles.logoTextStyle}>Zionix</span>
             </div>
