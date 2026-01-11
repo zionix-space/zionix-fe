@@ -49,39 +49,56 @@ export const useStyles = (token, isDarkMode = false) => ({
     backgroundColor: 'transparent',
   },
 
-  // top section - compact spacing with consistent padding
+  // top section - ultra-compact Apple premium design
   zxHostTopSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
-    padding: '12px',
+    gap: '8px',
+    padding: '8px 12px',
     borderBottom: 'none',
     userSelect: 'none',
   },
 
-  // Controls layout - hamburger + theme toggle
+  // Controls layout - hamburger + theme toggle in single row
   zxHostControlsExpanded: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '8px',
+    gap: '6px',
   },
 
   zxHostControlsCollapsed: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '12px',
+    gap: '8px',
   },
 
-  // Premium Apple-style glassmorphism capsule for theme buttons
-  // flexDirection is set dynamically: 'column' when collapsed, 'row' when expanded
+  // Compact theme capsule for EXPANDED mode only
   zxHostThemeCapsule: {
+    display: 'flex',
+    gap: '2px',
+    justifyContent: 'center',
+    padding: '3px',
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)',
+    backdropFilter: 'blur(20px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+    borderRadius: '10px',
+    boxShadow: `
+      0 1px 3px 0 rgba(0, 0, 0, 0.08),
+      inset 0 0 0 0.5px ${token.colorBorder}20
+    `,
+    width: 'fit-content',
+    border: `0.5px solid ${token.colorBorder}15`,
+  },
+
+  // Larger theme capsule for COLLAPSED mode - maintains original size
+  zxHostThemeCapsuleCollapsed: {
     display: 'flex',
     gap: '6px',
     justifyContent: 'center',
     padding: '6px',
-    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
+    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     borderRadius: '18px',
@@ -95,7 +112,31 @@ export const useStyles = (token, isDarkMode = false) => ({
     border: `1px solid ${token.colorBorder}30`,
   },
 
+  // Compact button for EXPANDED mode
   zxHostThemeButton: {
+    width: '28px',
+    height: '28px',
+    borderRadius: '8px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    color: token.colorTextSecondary,
+    fontSize: '16px',
+    fontWeight: 500,
+    opacity: 0.6,
+    position: 'relative',
+    '&:hover': {
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)',
+      opacity: 0.9,
+    },
+  },
+
+  // Larger button for COLLAPSED mode - maintains original size
+  zxHostThemeButtonCollapsed: {
     width: '40px',
     height: '40px',
     borderRadius: '14px',
@@ -119,6 +160,13 @@ export const useStyles = (token, isDarkMode = false) => ({
   },
 
   zxHostThemeButtonActive: {
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : token.colorPrimaryBg,
+    color: isDarkMode ? token.colorBgContainer : token.colorPrimary,
+    opacity: 1,
+    boxShadow: `0 1px 2px rgba(0, 0, 0, 0.1)`,
+  },
+
+  zxHostThemeButtonActiveCollapsed: {
     backgroundImage: 'none',
     backgroundColor: token.colorPrimaryBg,
     color: token.colorPrimary,
@@ -139,38 +187,55 @@ export const useStyles = (token, isDarkMode = false) => ({
     },
   },
 
+  // Premium Apple-style hamburger toggle - macOS inspired
   zxHostToggleButton: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    width: '40px',
-    height: '40px',
-    borderRadius: '12px',
-    backgroundColor: token.colorBgContainer,
-    border: `1px solid ${token.colorBorderSecondary}20`,
-    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15)`,
-    transition: `all ${token.motionDurationMid} cubic-bezier(0.4, 0, 0.2, 1)`,
+    width: '32px',
+    height: '32px',
+    borderRadius: '8px',
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)',
+    backdropFilter: 'blur(20px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+    border: `0.5px solid ${token.colorBorder}20`,
+    boxShadow: `
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      inset 0 0.5px 0 rgba(255, 255, 255, ${isDarkMode ? '0.1' : '0.5'})
+    `,
+    transition: `all 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
     position: 'relative',
     flexShrink: 0,
-    opacity: 0.75,
+    '&:hover': {
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
+      boxShadow: `
+        0 2px 6px rgba(0, 0, 0, 0.12),
+        inset 0 0.5px 0 rgba(255, 255, 255, ${isDarkMode ? '0.15' : '0.6'})
+      `,
+      transform: 'scale(1.05)',
+    },
+    '&:active': {
+      transform: 'scale(0.98)',
+    },
   },
 
   zxHostToggleButtonHover: {
-    backgroundColor: token.colorBgContainer,
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
     transform: 'scale(1.05)',
-    boxShadow: `0 6px 16px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2)`,
-    opacity: 1,
   },
 
   zxHostToggleIcon: {
-    fontSize: '20px',
-    fontWeight: 600,
+    fontSize: '18px',
+    fontWeight: 500,
     color: token.colorText,
+    opacity: 0.75,
+    transition: 'all 0.2s ease',
   },
 
   zxHostToggleIconHover: {
-    color: token.colorPrimary,
+    color: token.colorText,
+    opacity: 1,
   },
 
   zxHostSectionHeader: {
@@ -322,18 +387,21 @@ export const useStyles = (token, isDarkMode = false) => ({
     flex: 1,
   },
 
+  // Ultra-compact search - Apple Spotlight style
   zxHostSearchInput: {
-    borderRadius: '12px',
-    height: '36px',
+    borderRadius: '8px',
+    height: '32px',
     fontSize: '13px',
     border: 'none',
-    boxShadow: `0 2px 4px rgba(0, 0, 0, 0.08)`,
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)',
+    boxShadow: 'none',
     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      boxShadow: `0 4px 8px rgba(0, 0, 0, 0.12)`,
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
     },
     '&:focus': {
-      boxShadow: `0 4px 12px ${token.colorPrimary}20`,
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : token.colorBgContainer,
+      boxShadow: `0 0 0 2px ${token.colorPrimary}20`,
     },
   },
 });

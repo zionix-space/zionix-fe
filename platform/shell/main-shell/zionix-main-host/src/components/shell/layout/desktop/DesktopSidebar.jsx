@@ -9,6 +9,7 @@ import {
   Tooltip,
   theme,
   ColorPicker,
+  Spin,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@zionix/design-system';
@@ -61,20 +62,32 @@ const injectSidebarCSS = (token, isDarkMode) => {
         scrollbar-color: ${token.colorTextQuaternary}40 transparent;
       }
 
-      /* Ant Design Input Clear Icon Styling */
+      /* Ant Design Input Clear Icon Styling - Minimal Apple style */
       .zx-host-search-input .ant-input-clear-icon {
-        font-size: 14px;
+        font-size: 12px;
         color: ${token.colorTextTertiary};
-        right: 8px;
+        right: 6px;
         transition: color 0.2s ease;
+        opacity: 0.5;
       }
       
       .zx-host-search-input .ant-input-clear-icon:hover {
         color: ${token.colorText};
+        opacity: 0.8;
       }
       
       .zx-host-search-input .ant-input-clear-icon .anticon {
-        font-size: 14px;
+        font-size: 12px;
+      }
+
+      /* Search input prefix icon */
+      .zx-host-search-input .ant-input-prefix {
+        margin-right: 6px;
+      }
+
+      .zx-host-search-input .ant-input-prefix i {
+        color: ${token.colorTextTertiary};
+        opacity: 0.5;
       }
 
   
@@ -104,12 +117,16 @@ const injectSidebarCSS = (token, isDarkMode) => {
         position: relative !important;
         border-left: 3px solid transparent !important;
         opacity: 0.75 !important;
+        text-align: left !important;
+        justify-content: flex-start !important;
       }
 
       .zx-host-menu-container .ant-menu-item .ant-menu-title-content {
         color: ${token.colorText} !important;
         font-weight: 500 !important;
         opacity: 1 !important;
+        text-align: left !important;
+        flex: 1 !important;
       }
 
       .zx-host-menu-container .ant-menu-item .anticon,
@@ -120,6 +137,22 @@ const injectSidebarCSS = (token, isDarkMode) => {
         color: ${token.colorText} !important;
         transition: all 0.3s ease !important;
         opacity: 0.9 !important;
+        flex-shrink: 0 !important;
+      }
+
+      /* Menu items without icons - ensure left alignment */
+      .zx-host-menu-container .ant-menu-item:not(:has(.anticon)):not(:has(i)) .ant-menu-title-content {
+        padding-left: 0 !important;
+        text-align: left !important;
+        margin-left: 0 !important;
+      }
+
+      /* Force left alignment for all menu item content */
+      .zx-host-menu-container .ant-menu-item > span {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
       }
 
       .zx-host-menu-container .ant-menu-item:hover {
@@ -148,12 +181,15 @@ const injectSidebarCSS = (token, isDarkMode) => {
         border-left: 3px solid ${token.colorPrimary} !important;
         box-shadow: none !important;
         opacity: 1 !important;
+        text-align: left !important;
+        justify-content: flex-start !important;
       }
 
       .zx-host-menu-container .ant-menu-item-selected .ant-menu-title-content {
         color: ${token.colorPrimary} !important;
         font-weight: 600 !important;
         opacity: 1 !important;
+        text-align: left !important;
       }
 
       .zx-host-menu-container .ant-menu-item-selected .anticon,
@@ -760,11 +796,13 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     setOpenSidebarKeys,
     profileSection: profileSectionData,
     getMenuRoute,
+    isLoading: isMenuLoading,
+    isError: isMenuError,
   } = useMenuData();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [isToggleHovered, setIsToggleHovered] = useState(false);
   // Handle toggle button click
   const handleToggleClick = () => {
     onCollapse(!collapsed);
@@ -957,16 +995,17 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
     // Main navigation - create separate sections for each child with sectionTitle
     if (sidebarMenus.length > 0) {
       if (collapsed) {
-        // In collapsed mode: Show parent items (the ones with sectionTitle and icons) as menu items
-        // This way users see icons for each section
+        // In collapsed mode: Show all items that have icons
+        // This includes both sections (with children) and standalone items (without children)
         const itemsWithIcons = sidebarMenus.filter(item => item.icon);
+
         if (itemsWithIcons.length > 0) {
           sections.push({
             type: 'section',
             id: 'navigation-collapsed',
             title: selectedMainMenu?.sectionTitle || 'Navigation',
             accentColor: token.colorPrimary,
-            items: itemsWithIcons, // Show the section parents as items
+            items: itemsWithIcons, // Show all items with icons
           });
         }
       } else {
@@ -1179,155 +1218,308 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       trigger={null}
     >
       <div style={styles.zxHostSidebarContent}>
-        {/* Header - Theme Toggle Controls */}
+        {/* Header - Ultra-Compact Apple Premium Design */}
         <div style={styles.zxHostTopSection}>
-          <div style={collapsed ? styles.zxHostControlsCollapsed : styles.zxHostControlsExpanded}>
-            {/* Toggle Button */}
-            <Tooltip title={collapsed ? "Expand sidebar" : "Collapse sidebar"} placement="right">
-              <div
-                style={styles.zxHostToggleButton}
-                onClick={handleToggleClick}
-                role="button"
-                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                tabIndex={0}
-              >
-                <i
-                  className={collapsed ? "ri-menu-unfold-line" : "ri-menu-fold-line"}
-                  style={styles.zxHostToggleIcon}
-                />
-              </div>
-            </Tooltip>
-
-            {/* Theme Toggle Capsule - Finora Style */}
-            <div style={{
-              ...styles.zxHostThemeCapsule,
-              flexDirection: collapsed ? 'column' : 'row', // Vertical when collapsed, horizontal when expanded
-            }}>
-              <Tooltip title="Light mode" placement="right">
+          {isMenuLoading && !isMenuError ? (
+            /* Loading State - Only show hamburger */
+            <div style={collapsed ? styles.zxHostControlsCollapsed : styles.zxHostControlsExpanded}>
+              <Tooltip title={collapsed ? "Expand" : "Collapse"} placement="right">
                 <div
                   style={{
-                    ...styles.zxHostThemeButton,
-                    ...((!isDarkMode) ? styles.zxHostThemeButtonActive : {}),
+                    ...styles.zxHostToggleButton,
+                    ...(isToggleHovered ? styles.zxHostToggleButtonHover : {}),
                   }}
-                  onClick={() => !isDarkMode || toggleTheme()}
+                  onClick={handleToggleClick}
+                  onMouseEnter={() => setIsToggleHovered(true)}
+                  onMouseLeave={() => setIsToggleHovered(false)}
                   role="button"
-                  aria-label="Switch to light mode"
+                  aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                   tabIndex={0}
                 >
-                  <i className="ri-sun-line" style={{ fontSize: '20px', fontWeight: 600 }} />
+                  <i
+                    className={collapsed ? "ri-menu-unfold-line" : "ri-menu-fold-line"}
+                    style={{
+                      ...styles.zxHostToggleIcon,
+                      ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
+                    }}
+                  />
                 </div>
               </Tooltip>
-              <Tooltip title="Dark mode" placement="right">
-                <div
-                  style={{
-                    ...styles.zxHostThemeButton,
-                    ...(isDarkMode ? styles.zxHostThemeButtonActive : {}),
-                  }}
-                  onClick={() => isDarkMode || toggleTheme()}
-                  role="button"
-                  aria-label="Switch to dark mode"
-                  tabIndex={0}
-                >
-                  <i className="ri-moon-line" style={{ fontSize: '20px', fontWeight: 600 }} />
-                </div>
-              </Tooltip>
-              <Tooltip title={isRTL ? "Switch to LTR" : "Switch to RTL"} placement="right">
-                <div
-                  style={{
-                    ...styles.zxHostThemeButton,
-                    ...(isRTL ? styles.zxHostThemeButtonActive : {}),
-                  }}
-                  onClick={toggleRTL}
-                  role="button"
-                  aria-label={isRTL ? "Switch to LTR" : "Switch to RTL"}
-                  tabIndex={0}
-                >
-                  <i className="ri-text-direction-r" style={{ fontSize: '20px', fontWeight: 600 }} />
-                </div>
-              </Tooltip>
-              <Tooltip title="Change primary color" placement="right">
-                <ColorPicker
-                  value={primaryColor}
-                  onChange={(color) => setPrimaryColor(color.toHexString())}
-                  size="small"
-                  showText={false}
-                  disabledAlpha={true}
-                  presets={[
-                    {
-                      label: 'Recommended',
-                      colors: [
-                        token.colorPrimary || '#0050d8',
-                        '#0050d8',
-                        '#52c41a',
-                        '#fa8c16',
-                        '#ff4d4f',
-                        '#722ed1',
-                        '#13c2c2',
-                        '#eb2f96',
-                      ],
-                    },
-                  ]}
-                >
-                  <div style={styles.zxHostThemeButton}>
-                    <i className="ri-palette-line" style={{ fontSize: '20px', fontWeight: 600 }} />
-                  </div>
-                </ColorPicker>
-              </Tooltip>
-            </div>
-          </div>
-
-          {/* Search Section */}
-          {!collapsed && (
-            <div style={styles.zxHostSearchContainer}>
-              <Input
-                placeholder="Search..."
-                prefix={<i className="ri-search-line" />}
-                style={styles.zxHostSearchInput}
-                className="zx-host-search-input"
-                size="middle"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                allowClear
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Scrollable Navigation Content */}
-        <div style={styles.zxHostMainContent} className="zx-host-main-content">
-          {/* Show "No results found" message when search has no results */}
-          {searchQuery.trim() &&
-            navigationSections.length === 0 &&
-            !profileSection ? (
-            <div
-              style={{
-                padding: '20px',
-                textAlign: 'center',
-                color: token.colorTextSecondary,
-                fontSize: '14px',
-              }}
-            >
-              <i
-                className="ri-search-line"
-                style={{
-                  fontSize: '24px',
-                  marginBottom: '8px',
-                  display: 'block',
-                }}
-              />
-              No results found for {searchQuery}
             </div>
           ) : (
-            /* Dynamic Navigation Sections Rendering (excluding profile) */
-            navigationSections.map((section, index) =>
-              renderSection(section, index)
-            )
+            /* Full Header - After Loading */
+            <>
+              {/* Single Row: Hamburger + Theme Capsule + Search */}
+              {!collapsed ? (
+                <>
+                  <div style={styles.zxHostControlsExpanded}>
+                    {/* Premium Hamburger Toggle */}
+                    <Tooltip title="Collapse" placement="right">
+                      <div
+                        style={{
+                          ...styles.zxHostToggleButton,
+                          ...(isToggleHovered ? styles.zxHostToggleButtonHover : {}),
+                        }}
+                        onClick={handleToggleClick}
+                        onMouseEnter={() => setIsToggleHovered(true)}
+                        onMouseLeave={() => setIsToggleHovered(false)}
+                        role="button"
+                        aria-label="Collapse sidebar"
+                        tabIndex={0}
+                      >
+                        <i
+                          className="ri-menu-fold-line"
+                          style={{
+                            ...styles.zxHostToggleIcon,
+                            ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
+                          }}
+                        />
+                      </div>
+                    </Tooltip>
+
+                    {/* Ultra-Compact Theme Capsule */}
+                    <div style={styles.zxHostThemeCapsule}>
+                      <Tooltip title="Light" placement="top">
+                        <div
+                          style={{
+                            ...styles.zxHostThemeButton,
+                            ...((!isDarkMode) ? styles.zxHostThemeButtonActive : {}),
+                          }}
+                          onClick={() => !isDarkMode || toggleTheme()}
+                          role="button"
+                          aria-label="Light mode"
+                          tabIndex={0}
+                        >
+                          <i className="ri-sun-line" style={{ fontSize: '14px' }} />
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Dark" placement="top">
+                        <div
+                          style={{
+                            ...styles.zxHostThemeButton,
+                            ...(isDarkMode ? styles.zxHostThemeButtonActive : {}),
+                          }}
+                          onClick={() => isDarkMode || toggleTheme()}
+                          role="button"
+                          aria-label="Dark mode"
+                          tabIndex={0}
+                        >
+                          <i className="ri-moon-line" style={{ fontSize: '14px' }} />
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="RTL" placement="top">
+                        <div
+                          style={{
+                            ...styles.zxHostThemeButton,
+                            ...(isRTL ? styles.zxHostThemeButtonActive : {}),
+                          }}
+                          onClick={toggleRTL}
+                          role="button"
+                          aria-label="Toggle RTL"
+                          tabIndex={0}
+                        >
+                          <i className="ri-text-direction-r" style={{ fontSize: '14px' }} />
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Color" placement="top">
+                        <ColorPicker
+                          value={primaryColor}
+                          onChange={(color) => setPrimaryColor(color.toHexString())}
+                          size="small"
+                          showText={false}
+                          disabledAlpha={true}
+                          presets={[
+                            {
+                              label: 'Recommended',
+                              colors: [
+                                token.colorPrimary || '#0050d8',
+                                '#0050d8',
+                                '#52c41a',
+                                '#fa8c16',
+                                '#ff4d4f',
+                                '#722ed1',
+                                '#13c2c2',
+                                '#eb2f96',
+                              ],
+                            },
+                          ]}
+                        >
+                          <div style={styles.zxHostThemeButton}>
+                            <i className="ri-palette-line" style={{ fontSize: '14px' }} />
+                          </div>
+                        </ColorPicker>
+                      </Tooltip>
+                    </div>
+                  </div>
+
+                  {/* Compact Search Bar */}
+                  <div style={styles.zxHostSearchContainer}>
+                    <Input
+                      placeholder="Search..."
+                      prefix={<i className="ri-search-line" style={{ fontSize: '14px', opacity: 0.5 }} />}
+                      style={styles.zxHostSearchInput}
+                      className="zx-host-search-input"
+                      size="small"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      allowClear
+                    />
+                  </div>
+                </>
+              ) : (
+                /* Collapsed State - Vertical Layout with LARGER buttons */
+                <div style={styles.zxHostControlsCollapsed}>
+                  <Tooltip title="Expand" placement="right">
+                    <div
+                      style={{
+                        ...styles.zxHostToggleButton,
+                        ...(isToggleHovered ? styles.zxHostToggleButtonHover : {}),
+                      }}
+                      onClick={handleToggleClick}
+                      onMouseEnter={() => setIsToggleHovered(true)}
+                      onMouseLeave={() => setIsToggleHovered(false)}
+                      role="button"
+                      aria-label="Expand sidebar"
+                      tabIndex={0}
+                    >
+                      <i
+                        className="ri-menu-unfold-line"
+                        style={{
+                          ...styles.zxHostToggleIcon,
+                          ...(isToggleHovered ? styles.zxHostToggleIconHover : {}),
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+
+                  <div style={{ ...styles.zxHostThemeCapsuleCollapsed, flexDirection: 'column' }}>
+                    <Tooltip title="Light" placement="right">
+                      <div
+                        style={{
+                          ...styles.zxHostThemeButtonCollapsed,
+                          ...((!isDarkMode) ? styles.zxHostThemeButtonActiveCollapsed : {}),
+                        }}
+                        onClick={() => !isDarkMode || toggleTheme()}
+                        role="button"
+                        aria-label="Light mode"
+                        tabIndex={0}
+                      >
+                        <i className="ri-sun-line" style={{ fontSize: '20px', fontWeight: 600 }} />
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Dark" placement="right">
+                      <div
+                        style={{
+                          ...styles.zxHostThemeButtonCollapsed,
+                          ...(isDarkMode ? styles.zxHostThemeButtonActiveCollapsed : {}),
+                        }}
+                        onClick={() => isDarkMode || toggleTheme()}
+                        role="button"
+                        aria-label="Dark mode"
+                        tabIndex={0}
+                      >
+                        <i className="ri-moon-line" style={{ fontSize: '20px', fontWeight: 600 }} />
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="RTL" placement="right">
+                      <div
+                        style={{
+                          ...styles.zxHostThemeButtonCollapsed,
+                          ...(isRTL ? styles.zxHostThemeButtonActiveCollapsed : {}),
+                        }}
+                        onClick={toggleRTL}
+                        role="button"
+                        aria-label="Toggle RTL"
+                        tabIndex={0}
+                      >
+                        <i className="ri-text-direction-r" style={{ fontSize: '20px', fontWeight: 600 }} />
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Color" placement="right">
+                      <ColorPicker
+                        value={primaryColor}
+                        onChange={(color) => setPrimaryColor(color.toHexString())}
+                        size="small"
+                        showText={false}
+                        disabledAlpha={true}
+                        presets={[
+                          {
+                            label: 'Recommended',
+                            colors: [
+                              token.colorPrimary || '#0050d8',
+                              '#0050d8',
+                              '#52c41a',
+                              '#fa8c16',
+                              '#ff4d4f',
+                              '#722ed1',
+                              '#13c2c2',
+                              '#eb2f96',
+                            ],
+                          },
+                        ]}
+                      >
+                        <div style={styles.zxHostThemeButtonCollapsed}>
+                          <i className="ri-palette-line" style={{ fontSize: '20px', fontWeight: 600 }} />
+                        </div>
+                      </ColorPicker>
+                    </Tooltip>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
 
-        {/* Fixed Profile Section at Bottom */}
-        {profileSection &&
-          renderSection(profileSection, backendMenuSections.length - 1)}
+        {/* Loading State or Content */}
+        {isMenuLoading && !isMenuError ? (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flex: 1,
+            padding: '40px 20px'
+          }}>
+            <Spin size="small" />
+          </div>
+        ) : (
+          <>
+            {/* Scrollable Navigation Content */}
+            <div style={styles.zxHostMainContent} className="zx-host-main-content">
+              {/* Show "No results found" message when search has no results */}
+              {searchQuery.trim() &&
+                navigationSections.length === 0 &&
+                !profileSection ? (
+                <div
+                  style={{
+                    padding: '20px',
+                    textAlign: 'center',
+                    color: token.colorTextSecondary,
+                    fontSize: '14px',
+                  }}
+                >
+                  <i
+                    className="ri-search-line"
+                    style={{
+                      fontSize: '24px',
+                      marginBottom: '8px',
+                      display: 'block',
+                    }}
+                  />
+                  No results found for {searchQuery}
+                </div>
+              ) : (
+                /* Dynamic Navigation Sections Rendering (excluding profile) */
+                navigationSections.map((section, index) =>
+                  renderSection(section, index)
+                )
+              )}
+            </div>
+
+            {/* Fixed Profile Section at Bottom */}
+            {profileSection &&
+              renderSection(profileSection, backendMenuSections.length - 1)}
+          </>
+        )}
       </div>
     </Sider>
   );

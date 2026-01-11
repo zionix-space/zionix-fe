@@ -2,6 +2,8 @@ import React from 'react';
 import { theme } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
+import { useMenuData } from '../../../../data/hooks/menu';
+import { QueryErrorFallback } from '../../../common/QueryErrorBoundary';
 import MobileHeader from './MobileHeader';
 import MobileBottomNavigation from './MobileBottomNavigation';
 import { useStyles } from './MobileLayout.style';
@@ -20,10 +22,16 @@ const MobileLayout = ({ className = '', style = {} }) => {
   const styles = useStyles(token);
 
   const { deviceType } = useResponsiveLayout();
+  const { isError, error } = useMenuData();
 
   // Only render on mobile devices
   if (deviceType !== 'mobile') {
     return null;
+  }
+
+  // Show error fallback if menu loading failed
+  if (isError) {
+    return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
   }
 
   return (

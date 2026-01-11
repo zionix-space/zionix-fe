@@ -19,11 +19,11 @@ import { useMenuData } from '../../../data/hooks/menu';
  */
 const AppsRedirect = () => {
     const navigate = useNavigate();
-    const { mainMenus, isLoading } = useMenuData();
+    const { mainMenus, isLoading, isError } = useMenuData();
 
     useEffect(() => {
         // Once menus are loaded, redirect to first menu's first page
-        if (!isLoading && mainMenus.length > 0) {
+        if (!isLoading && !isError && mainMenus.length > 0) {
             const firstMenu = mainMenus[0];
 
             // Navigate to first menu's first child page
@@ -36,7 +36,12 @@ const AppsRedirect = () => {
                 navigate(`/apps/${firstMenu.key}`, { replace: true });
             }
         }
-    }, [mainMenus, isLoading, navigate]);
+    }, [mainMenus, isLoading, isError, navigate]);
+
+    // Don't show loader if there's an error (error is handled by layout)
+    if (isError) {
+        return null;
+    }
 
     // Show loading spinner while fetching menus
     return (
@@ -47,7 +52,9 @@ const AppsRedirect = () => {
             height: '100%',
             width: '100%'
         }}>
-            <Spin size="large" tip="Loading menus..." />
+            <Spin size="large">
+                <div style={{ padding: '50px' }} />
+            </Spin>
         </div>
     );
 };

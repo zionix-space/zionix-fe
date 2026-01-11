@@ -3,8 +3,11 @@ import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { useTheme } from '@zionix/design-system';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
+import { useMenuData } from '../../../../data/hooks/menu';
+import { QueryErrorFallback } from '../../../common/QueryErrorBoundary';
 import DesktopTopBar from './DesktopTopBar';
 import DesktopSidebar from './DesktopSidebar';
+import TopLoadingBar from '../../../common/loaders/TopLoadingBar';
 
 const { Content } = Layout;
 
@@ -16,9 +19,15 @@ const { Content } = Layout;
  */
 const DesktopLayout = ({ className = '', style = {} }) => {
   const { token } = useTheme();
+  const { isError, error } = useMenuData();
 
   const { sidebarCollapsed, setSidebarCollapsed, screenWidth } =
     useResponsiveLayout();
+
+  // Show error fallback if menu loading failed - full screen takeover
+  if (isError) {
+    return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
+  }
 
   // Responsive sidebar behavior for tablet screens
   const isTabletSize = screenWidth >= 768 && screenWidth < 1024;
@@ -26,47 +35,52 @@ const DesktopLayout = ({ className = '', style = {} }) => {
   const contentPadding = isTabletSize ? '16px' : '24px';
 
   return (
-    <Layout
-      className={`desktop-layout ${className}`}
-      style={{
-        height: '100vh',
-        overflow: 'hidden',
-        ...style,
-      }}
-    >
-      {/* Desktop Top Bar */}
-      <DesktopTopBar />
+    <>
+      {/* Global Top Loading Bar */}
+      <TopLoadingBar />
 
-      {/* Desktop Layout Container */}
-      <Layout>
-        {/* Desktop Sidebar - Expandable/Collapsible */}
-        <DesktopSidebar
-          collapsed={sidebarCollapsed}
-          onCollapse={setSidebarCollapsed}
-        />
+      <Layout
+        className={`desktop-layout ${className}`}
+        style={{
+          height: '100vh',
+          overflow: 'hidden',
+          ...style,
+        }}
+      >
+        {/* Desktop Top Bar */}
+        <DesktopTopBar />
 
-        {/* Desktop Main Content */}
-        <Layout
-          style={{
-            marginInlineStart: `${sidebarWidth}px`,
-            transition: 'margin-inline-start 0.3s ease',
-          }}
-        >
-          <Content
-            className="desktop-content"
+        {/* Desktop Layout Container */}
+        <Layout>
+          {/* Desktop Sidebar - Expandable/Collapsible */}
+          <DesktopSidebar
+            collapsed={sidebarCollapsed}
+            onCollapse={setSidebarCollapsed}
+          />
+
+          {/* Desktop Main Content */}
+          <Layout
             style={{
-              padding: contentPadding,
-              backgroundColor: token?.colorBgLayout, // Same as shell background - no wrapper
-              overflow: 'auto',
-              height: 'calc(100vh - 64px)',
+              marginInlineStart: `${sidebarWidth}px`,
+              transition: 'margin-inline-start 0.3s ease',
             }}
           >
-            {/* Direct content - no wrapper container */}
-            <Outlet />
-          </Content>
+            <Content
+              className="desktop-content"
+              style={{
+                padding: contentPadding,
+                backgroundColor: token?.colorBgLayout, // Same as shell background - no wrapper
+                overflow: 'auto',
+                height: 'calc(100vh - 64px)',
+              }}
+            >
+              {/* Direct content - no wrapper container */}
+              <Outlet />
+            </Content>
+          </Layout>
         </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 };
 

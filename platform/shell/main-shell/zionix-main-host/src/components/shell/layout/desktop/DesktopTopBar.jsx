@@ -127,8 +127,6 @@ const AppTopBar = () => {
     mainMenus,
     selectedMainMenu,
     isLoading: isMenuLoading,
-    isError,
-    error,
     selectMainMenu,
   } = useMenuData();
 
@@ -179,11 +177,6 @@ const AppTopBar = () => {
       });
     };
   }, []);
-
-  // Show error fallback if menu loading failed
-  if (isError) {
-    return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
-  }
 
   // Filter out admin-app from regular navigation and convert to navigation items
   const navigationItems = mainMenus

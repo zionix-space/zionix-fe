@@ -10,6 +10,7 @@
 
 import React from 'react';
 import { Button, Result, Alert } from 'antd';
+import { ErrorContainer, ErrorContent, DevErrorAlert } from './QueryErrorBoundary.style';
 
 /**
  * Query Error Fallback Component
