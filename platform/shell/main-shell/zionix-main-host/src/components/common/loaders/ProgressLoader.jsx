@@ -98,7 +98,7 @@ export const StepProgress = ({
                     percent={index < current ? 100 : index === current ? 50 : 0}
                     showInfo={false}
                     status={index < current ? 'success' : 'active'}
-                    strokeWidth={4}
+                    size={[null, 4]}
                     style={{ width: '100%' }}
                 />
             </div>

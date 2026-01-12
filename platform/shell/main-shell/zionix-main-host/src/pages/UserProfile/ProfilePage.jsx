@@ -94,7 +94,7 @@ const ProfilePage = () => {
             <Row gutter={[24, 24]}>
                 {/* Left Sidebar - Profile Card */}
                 <Col xs={24} sm={24} md={8} lg={6}>
-                    <Card style={styles.profileCard} bordered={false}>
+                    <Card style={styles.profileCard} variant="borderless">
                         {/* Avatar with gradient border */}
                         <div style={styles.avatarContainer}>
                             <div style={styles.avatarGradientBorder}>
@@ -120,7 +120,7 @@ const ProfilePage = () => {
                                     '100%': '#4CAF50',
                                 }}
                                 trailColor={isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)'}
-                                strokeWidth={6}
+                                size={[null, 6]}
                                 showInfo={false}
                             />
                             <p style={styles.progressLabel}>Fullness of your profile</p>
@@ -139,7 +139,7 @@ const ProfilePage = () => {
 
                 {/* Right Content - Form */}
                 <Col xs={24} sm={24} md={16} lg={18}>
-                    <Card style={styles.contentCard} bordered={false}>
+                    <Card style={styles.contentCard} variant="borderless">
                         {activeMenu === 'personal-info' && (
                             <Form
                                 form={form}
@@ -183,7 +183,7 @@ const ProfilePage = () => {
                                             <Select
                                                 placeholder="Select"
                                                 suffixIcon={<i className="ri-arrow-down-s-line" />}
-                                               
+
                                             >
                                                 <Select.Option value="male">
                                                     <i className="ri-men-line" style={{ marginRight: 8 }} />
@@ -207,7 +207,7 @@ const ProfilePage = () => {
                                                 format="MM/DD/YYYY"
                                                 placeholder="01/26/2022"
                                                 suffixIcon={<i className="ri-calendar-line" />}
-                                               
+
                                             />
                                         </Form.Item>
                                     </Col>
@@ -216,7 +216,7 @@ const ProfilePage = () => {
                                             <Select
                                                 placeholder="Select"
                                                 suffixIcon={<i className="ri-arrow-down-s-line" />}
-                                               
+
                                             >
                                                 <Select.Option value="english">
                                                     <span style={{ marginRight: 8 }}>🇬🇧</span>
@@ -249,7 +249,7 @@ const ProfilePage = () => {
                                             <Input
                                                 placeholder="chrisjohnson@afterbe.com"
                                                 prefix={<i className="ri-mail-line" />}
-                                               
+
                                                 suffix={
                                                     userData.emailVerified && (
                                                         <span style={styles.verifiedBadge}>
@@ -273,7 +273,7 @@ const ProfilePage = () => {
                                                 placeholder="Select"
                                                 showSearch
                                                 suffixIcon={<i className="ri-arrow-down-s-line" />}
-                                               
+
                                             >
                                                 <Select.Option value="United Kingdom of Great Britain and Northern Ireland">
                                                     <span style={{ marginRight: 8 }}>🇬🇧</span>
@@ -310,7 +310,7 @@ const ProfilePage = () => {
                                 <div style={styles.actionButtons}>
                                     <Button
                                         type="default"
-                                       
+
                                         onClick={() => form.resetFields()}
                                         style={styles.cancelButton}
                                     >
@@ -318,7 +318,7 @@ const ProfilePage = () => {
                                     </Button>
                                     <Button
                                         type="primary"
-                                       
+
                                         htmlType="submit"
                                         style={styles.saveButton}
                                     >

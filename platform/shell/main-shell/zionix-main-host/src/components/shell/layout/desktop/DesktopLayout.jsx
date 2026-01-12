@@ -18,7 +18,7 @@ const { Content } = Layout;
  * @param {Object} [props.style={}] - Additional inline styles
  */
 const DesktopLayout = ({ className = '', style = {} }) => {
-  const { token } = useTheme();
+  const { token, isDarkMode } = useTheme();
   const { isError, error } = useMenuData();
 
   const { sidebarCollapsed, setSidebarCollapsed, screenWidth } =
@@ -31,8 +31,15 @@ const DesktopLayout = ({ className = '', style = {} }) => {
 
   // Responsive sidebar behavior for tablet screens
   const isTabletSize = screenWidth >= 768 && screenWidth < 1024;
-  const sidebarWidth = sidebarCollapsed ? 64 : isTabletSize ? 200 : 256;
+  // Use fixed sidebar widths that match DesktopSidebar component (260px expanded, 80px collapsed)
+  // This ensures curve stays aligned even when zooming
+  const sidebarWidth = sidebarCollapsed ? 80 : 260;
   const contentPadding = isTabletSize ? '16px' : '24px';
+
+  // Match topbar background color
+  const topbarColor = isDarkMode
+    ? 'rgba(255, 255, 255, 0.015)'
+    : 'rgba(0, 0, 0, 0.015)';
 
   return (
     <>
@@ -51,7 +58,50 @@ const DesktopLayout = ({ className = '', style = {} }) => {
         <DesktopTopBar />
 
         {/* Desktop Layout Container */}
-        <Layout>
+        <Layout style={{ position: 'relative' }}>
+          {/* Curved Junction Element - creates inverse radius cutout where sidebar meets topbar */}
+          <div
+            style={{
+              position: 'fixed',
+              top: '52px',
+              transform: "rotate(270deg)",
+              insetInlineStart: `${sidebarWidth}px`,
+              width: '32px',
+              height: '32px',
+              pointerEvents: 'none',
+              zIndex: 1001,
+              transition: 'inset-inline-start 0.2s ease',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Create inverse curved cutout using radial gradient - bottom left curve */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '0',
+                insetInlineStart: '0',
+                width: '32px',
+                height: '32px',
+                background: `radial-gradient(circle at bottom left, transparent 32px, ${topbarColor} 32px)`,
+                backdropFilter: 'blur(40px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+                WebkitMaskImage: 'radial-gradient(circle at bottom left, transparent 32px, black 32px)',
+                maskImage: 'radial-gradient(circle at bottom left, transparent 32px, black 32px)',
+              }}
+            />
+            {/* Add subtle border for visibility in dark mode */}
+            {/* <div
+              style={{
+                position: 'absolute',
+                top: '0',
+                insetInlineStart: '0',
+                width: '32px',
+                height: '32px',
+                background: `radial-gradient(circle at bottom left, transparent 30px, ${isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)'} 30px, transparent 32px)`,
+              }}
+            /> */}
+          </div>
+
           {/* Desktop Sidebar - Expandable/Collapsible */}
           <DesktopSidebar
             collapsed={sidebarCollapsed}
