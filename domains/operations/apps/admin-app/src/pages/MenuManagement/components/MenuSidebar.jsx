@@ -120,15 +120,6 @@ const MenuSidebar = ({ collapsed, onCollapse }) => {
     (token.colorBgContainer && token.colorBgContainer.startsWith('#') &&
       parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
 
-  // Debug: Log theme values to console
-  console.log('MenuSidebar Theme Debug:', {
-    isDarkMode,
-    colorBgBase: token.colorBgBase,
-    colorBgContainer: token.colorBgContainer,
-    colorBgElevated: token.colorBgElevated,
-    colorText: token.colorText,
-  });
-
   const styles = useStyles(token, isDarkMode);
 
   // Inject CSS on mount and theme change

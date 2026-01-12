@@ -8,6 +8,7 @@ import { QueryErrorFallback } from '../../../common/QueryErrorBoundary';
 import DesktopTopBar from './DesktopTopBar';
 import DesktopSidebar from './DesktopSidebar';
 import TopLoadingBar from '../../../common/loaders/TopLoadingBar';
+import { DynamicBreadcrumb } from '../../../Breadcrumb';
 
 const { Content } = Layout;
 
@@ -118,15 +119,19 @@ const DesktopLayout = ({ className = '', style = {} }) => {
             <Content
               className="desktop-content"
               style={{
-                padding: contentPadding,
                 backgroundColor: token?.colorBgContainer, // Clean, bright background for readability
                 overflow: 'auto',
                 height: 'calc(100vh - 52px)',
                 minHeight: 'calc(100vh - 52px)',
               }}
             >
-              {/* Direct content - no wrapper container */}
-              <Outlet />
+              {/* Dynamic Breadcrumb */}
+              <DynamicBreadcrumb />
+
+              {/* Page Content */}
+              <div style={{ padding: contentPadding }}>
+                <Outlet />
+              </div>
             </Content>
           </Layout>
         </Layout>
