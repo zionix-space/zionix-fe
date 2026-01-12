@@ -368,12 +368,16 @@ export const useMenuData = () => {
      */
     const getMenuRoute = (key) => {
         // Extract base route from current location
-        // Example: /apps/admin-app/something -> /apps/admin-app
+        // Example: /apps/adminApp/something -> /apps/adminApp
         let baseRoute = '';
 
         if (selectedMainMenu) {
             // Build base route dynamically from selected main menu
-            baseRoute = `/apps/${selectedMainMenu.key}`;
+            // Use route property if available, otherwise fall back to key
+            const mainMenuRoute = (selectedMainMenu.route && selectedMainMenu.route.trim() !== '')
+                ? selectedMainMenu.route
+                : selectedMainMenu.key;
+            baseRoute = `/apps/${mainMenuRoute}`;
         }
 
         return buildMenuRoute(sidebarMenus, key, baseRoute);

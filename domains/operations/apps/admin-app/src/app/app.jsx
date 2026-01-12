@@ -1,12 +1,9 @@
-import React, { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Spin } from 'antd';
+import { NotFoundPage } from '@zionix/shared-utilities/components';
 
-const MenuBuilder = React.lazy(() => import('../pages/MenuSetup'));
-
-export function DashboardAdmin() {
-  return <b>Admin Dashboard</b>;
-}
+const MenuManagementScreen = lazy(() => import('../pages/MenuManagement'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -24,9 +21,14 @@ export function App() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <Routes>
-        <Route exact path="/menu-setup" element={<MenuBuilder />} />
+        {/* Menu Management Screen */}
+        <Route path="app-setup/menus" element={<MenuManagementScreen />} />
+
+        {/* 404 Not Found - Wildcard route */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );
 }
+
 export default App;

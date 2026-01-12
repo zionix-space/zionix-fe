@@ -5,7 +5,7 @@ import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore'
 import availableApps from 'tools/deployment/zionix-main.modules.json';
 import HostAppLayout from '../components/shell/layout/HostAppLayout';
 import AppsRedirect from '../components/shell/layout/AppsRedirect';
-import NotFoundPage from '../components/NotFoundPage';
+import { NotFoundPage } from '@zionix/shared-utilities/components';
 import { ProfilePage } from '../pages/UserProfile';
 const AuthApp = React.lazy(() => import('authApp/Module'));
 
