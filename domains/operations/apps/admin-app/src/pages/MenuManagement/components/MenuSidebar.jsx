@@ -1,6 +1,5 @@
-import React, { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Layout, Menu, theme, Tooltip } from 'antd';
-import { useTheme } from '@zionix/design-system';
 import { useStyles } from './MenuSidebar.style';
 
 const { Sider } = Layout;
@@ -71,7 +70,7 @@ const injectSidebarCSS = (token, isDarkMode) => {
     }
 
     .menu-menu-container .ant-menu-item:hover {
-      background: rgba(0, 0, 0, 0.04) !important;
+      background: ${isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)'} !important;
       color: ${token.colorText} !important;
       transform: translateX(3px) scale(1.01) !important;
       opacity: 1 !important;
@@ -110,9 +109,27 @@ const injectSidebarCSS = (token, isDarkMode) => {
 
 const MenuSidebar = ({ collapsed, onCollapse }) => {
   const { token } = useToken();
-  const { isDarkMode, toggleTheme } = useTheme();
-  const styles = useStyles(token, isDarkMode);
   const [isToggleHovered, setIsToggleHovered] = useState(false);
+
+  // Detect dark mode from Ant Design theme - check multiple indicators
+  const isDarkMode =
+    token.colorBgBase === '#000000' ||
+    token.colorBgContainer === '#141414' ||
+    token.colorBgElevated === '#1f1f1f' ||
+    // Fallback: check if background is darker than text (luminance check)
+    (token.colorBgContainer && token.colorBgContainer.startsWith('#') &&
+      parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
+
+  // Debug: Log theme values to console
+  console.log('MenuSidebar Theme Debug:', {
+    isDarkMode,
+    colorBgBase: token.colorBgBase,
+    colorBgContainer: token.colorBgContainer,
+    colorBgElevated: token.colorBgElevated,
+    colorText: token.colorText,
+  });
+
+  const styles = useStyles(token, isDarkMode);
 
   // Inject CSS on mount and theme change
   useLayoutEffect(() => {
@@ -172,23 +189,6 @@ const MenuSidebar = ({ collapsed, onCollapse }) => {
     transition: 'all 0.2s ease',
   };
 
-  const themeButtonStyle = {
-    width: '28px',
-    height: '28px',
-    borderRadius: '8px',
-    backgroundColor: 'transparent',
-    border: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-    color: token.colorTextSecondary,
-    fontSize: '16px',
-    fontWeight: 500,
-    opacity: 0.6,
-  };
-
   return (
     <Sider
       collapsible
@@ -217,47 +217,6 @@ const MenuSidebar = ({ collapsed, onCollapse }) => {
                   <i className="ri-menu-fold-line" style={toggleIconStyle} />
                 </div>
               </Tooltip>
-
-              {/* Theme Capsule */}
-              <div style={{
-                display: 'flex',
-                gap: '2px',
-                padding: '3px',
-                background: isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)',
-                borderRadius: '10px',
-                border: `0.5px solid ${token.colorBorder}15`,
-              }}>
-                <div
-                  style={{
-                    ...themeButtonStyle,
-                    ...((!isDarkMode) && {
-                      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : token.colorPrimaryBg,
-                      color: isDarkMode ? token.colorBgContainer : token.colorPrimary,
-                      opacity: 1,
-                    }),
-                  }}
-                  onClick={() => !isDarkMode && toggleTheme()}
-                  role="button"
-                  aria-label="Light mode"
-                >
-                  <i className="ri-sun-line" />
-                </div>
-                <div
-                  style={{
-                    ...themeButtonStyle,
-                    ...(isDarkMode && {
-                      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : token.colorPrimaryBg,
-                      color: isDarkMode ? token.colorBgContainer : token.colorPrimary,
-                      opacity: 1,
-                    }),
-                  }}
-                  onClick={() => isDarkMode && toggleTheme()}
-                  role="button"
-                  aria-label="Dark mode"
-                >
-                  <i className="ri-moon-line" />
-                </div>
-              </div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
@@ -274,62 +233,20 @@ const MenuSidebar = ({ collapsed, onCollapse }) => {
                   <i className="ri-menu-unfold-line" style={toggleIconStyle} />
                 </div>
               </Tooltip>
-
-              {/* Theme Capsule - Collapsed */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '6px',
-                padding: '6px',
-                background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)',
-                borderRadius: '18px',
-                border: `1px solid ${token.colorBorder}30`,
-              }}>
-                <div
-                  style={{
-                    ...themeButtonStyle,
-                    width: '40px',
-                    height: '40px',
-                    fontSize: '22px',
-                    borderRadius: '14px',
-                    ...((!isDarkMode) && {
-                      backgroundColor: token.colorPrimaryBg,
-                      color: token.colorPrimary,
-                      opacity: 1,
-                    }),
-                  }}
-                  onClick={() => !isDarkMode && toggleTheme()}
-                  role="button"
-                  aria-label="Light mode"
-                >
-                  <i className="ri-sun-line" />
-                </div>
-                <div
-                  style={{
-                    ...themeButtonStyle,
-                    width: '40px',
-                    height: '40px',
-                    fontSize: '22px',
-                    borderRadius: '14px',
-                    ...(isDarkMode && {
-                      backgroundColor: token.colorPrimaryBg,
-                      color: token.colorPrimary,
-                      opacity: 1,
-                    }),
-                  }}
-                  onClick={() => isDarkMode && toggleTheme()}
-                  role="button"
-                  aria-label="Dark mode"
-                >
-                  <i className="ri-moon-line" />
-                </div>
-              </div>
             </div>
           )}
         </div>
 
         {/* Menu Container */}
         <div className="menu-main-content" style={styles.mainContent}>
+          {/* Section Header */}
+          {!collapsed && (
+            <div style={styles.sectionHeader}>
+              <span>APP MANAGEMENT</span>
+            </div>
+          )}
+          {collapsed && <div style={styles.sectionHeaderCollapsed} />}
+
           <div className="menu-menu-container" style={styles.menuContainer}>
             <Menu
               mode="inline"

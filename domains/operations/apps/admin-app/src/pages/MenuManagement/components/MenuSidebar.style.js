@@ -1,4 +1,4 @@
-// CSS-in-JS styles for Admin Sidebar
+// CSS-in-JS styles for Menu Sidebar
 export const useStyles = (token, isDarkMode = false) => ({
     sidebarContainer: {
         background: isDarkMode
@@ -61,5 +61,28 @@ export const useStyles = (token, isDarkMode = false) => ({
         inset 0 1px 0 0 rgba(255, 255, 255, 0.8)
       `,
         border: `1px solid ${isDarkMode ? token.colorBorder + '40' : token.colorBorder + '30'}`,
+    },
+
+    sectionHeader: {
+        padding: '20px 20px 8px 20px',
+        fontSize: '11px',
+        fontWeight: 600,
+        color: token.colorTextTertiary,
+        textTransform: 'uppercase',
+        letterSpacing: '0.8px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        userSelect: 'none',
+        marginTop: '0px',
+        opacity: 0.55,
+    },
+
+    sectionHeaderCollapsed: {
+        height: token.padding,
+        marginTop: token.paddingSM,
+        marginBottom: token.paddingSM,
+        marginLeft: 0,
+        marginRight: 0,
     },
 });

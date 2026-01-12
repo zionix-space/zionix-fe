@@ -1,6 +1,5 @@
-import React, { useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { Layout, Button, Space, theme } from 'antd';
-import { useTheme, ZionixLogo } from '@zionix/design-system';
 import { useStyles } from './MenuTopBar.style';
 
 const { Header } = Layout;
@@ -8,12 +7,15 @@ const { useToken } = theme;
 
 const MenuTopBar = () => {
     const { token } = useToken();
-    const { isDarkMode } = useTheme();
+
+    // Detect dark mode from Ant Design theme
+    const isDarkMode = token.colorBgBase === '#000000' || token.colorBgContainer === '#141414';
+
     const styles = useStyles(token, isDarkMode);
 
     // Inject CSS to override Ant Design Menu default styles
     useLayoutEffect(() => {
-        const styleId = 'admin-topbar-override';
+        const styleId = 'menu-topbar-override';
         const existingStyle = document.getElementById(styleId);
         if (existingStyle) {
             existingStyle.remove();
@@ -39,11 +41,20 @@ const MenuTopBar = () => {
             {/* Left Section - Brand */}
             <div style={styles.leftSectionStyle}>
                 <div style={styles.brandContainerStyle}>
-                    <ZionixLogo
-                        size={48}
-                        useThemeColors={true}
-                        style={{ marginRight: '12px' }}
-                    />
+                    {/* Simple logo icon instead of ZionixLogo component */}
+                    <div style={{
+                        width: '48px',
+                        height: '48px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: '12px',
+                    }}>
+                        <i className="ri-menu-2-line" style={{
+                            fontSize: '32px',
+                            color: token.colorPrimary,
+                        }} />
+                    </div>
                     <span style={styles.logoTextStyle}>Menu Management</span>
                 </div>
             </div>

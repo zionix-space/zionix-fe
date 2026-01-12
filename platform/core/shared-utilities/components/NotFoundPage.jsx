@@ -9,13 +9,13 @@
  */
 
 import React from 'react';
-import { Button, Typography } from 'antd';
+import { Button, Typography, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTheme } from '@zionix/design-system';
 import { useStyles } from './NotFoundPage.style';
 
 const { Title, Text } = Typography;
+const { useToken } = theme;
 
 /**
  * 404 Not Found Page Component
@@ -26,7 +26,7 @@ const { Title, Text } = Typography;
  * @returns {JSX.Element} Not found page component
  */
 const NotFoundPage = () => {
-    const { token } = useTheme();
+    const { token } = useToken();
     const styles = useStyles(token);
     const navigate = useNavigate();
 
