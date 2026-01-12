@@ -1,11 +1,13 @@
 // AppTopBar styles - Premium glassmorphism
 export const useStyles = (token, isDarkMode = false) => ({
   topBarStyle: {
-    background: 'transparent', // Transparent to show through the main background
-    backdropFilter: 'none', // No blur - unified with background
-    WebkitBackdropFilter: 'none',
-    borderBottom: 'none', // No border for seamless look
-    boxShadow: 'none', // No shadow
+    background: isDarkMode
+      ? 'rgba(255, 255, 255, 0.015)' // Ultra-subtle in dark mode
+      : 'rgba(0, 0, 0, 0.015)', // Ultra-subtle in light mode
+    backdropFilter: 'blur(40px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+    borderBottom: 'none',
+    boxShadow: 'none',
     padding: "0 20px",
     height: "52px",
     display: "flex",

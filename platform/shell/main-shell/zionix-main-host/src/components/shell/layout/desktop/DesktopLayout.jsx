@@ -69,9 +69,10 @@ const DesktopLayout = ({ className = '', style = {} }) => {
               className="desktop-content"
               style={{
                 padding: contentPadding,
-                backgroundColor: token?.colorBgLayout, // Same as shell background - no wrapper
+                backgroundColor: token?.colorBgContainer, // Clean, bright background for readability
                 overflow: 'auto',
-                height: 'calc(100vh - 64px)',
+                height: 'calc(100vh - 52px)',
+                minHeight: 'calc(100vh - 52px)',
               }}
             >
               {/* Direct content - no wrapper container */}

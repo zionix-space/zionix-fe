@@ -78,6 +78,9 @@ export const MobileProfileDropdown = ({
         // Ensure navigation happens even if there's an error
         navigate('/');
       }
+    } else if (item.key === 'profile') {
+      // Navigate to profile page
+      navigate('/apps/profile');
     } else if (item.path) {
       // Navigate to the item's path
       navigate(item.path);

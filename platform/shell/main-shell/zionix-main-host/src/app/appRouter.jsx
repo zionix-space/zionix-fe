@@ -6,6 +6,7 @@ import availableApps from 'tools/deployment/zionix-main.modules.json';
 import HostAppLayout from '../components/shell/layout/HostAppLayout';
 import AppsRedirect from '../components/shell/layout/AppsRedirect';
 import NotFoundPage from '../components/NotFoundPage';
+import { ProfilePage } from '../pages/UserProfile';
 const AuthApp = React.lazy(() => import('authApp/Module'));
 
 const PageTransition = ({ children }) => {
@@ -35,6 +36,7 @@ export function AppRouter() {
       case 'adminApp':
         ModuleComponent = React.lazy(() => import('adminApp/Module'));
         break;
+
 
 
 
@@ -84,6 +86,9 @@ export function AppRouter() {
             >
               {/* Default /apps route - redirect to first menu */}
               <Route index element={<AppsRedirect />} />
+
+              {/* Profile route - accessible from all apps */}
+              <Route path="profile" element={<ProfilePage />} />
 
               {availableApps
                 .filter((moduleName) => moduleName !== excludedModule)

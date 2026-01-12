@@ -833,6 +833,12 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
       return;
     }
 
+    // Handle profile navigation
+    if (key === 'profile') {
+      navigate('/apps/profile');
+      return;
+    }
+
     // Build and navigate to the menu's route
     const route = getMenuRoute(key);
     if (route) {

@@ -49,113 +49,34 @@ const GlobalGlassmorphismStyles = ({ isDarkMode }) => {
     const style = document.createElement('style');
     style.id = 'zionix-glassmorphism-styles';
     style.textContent = `
-      /* Clean SaaS Styling - NO glassmorphism, solid backgrounds for readability */
-      
-      /* Global Premium Apple Icon Styling - Bold stroke weight for all icons */
-      i[class*="ri-"],
-      .anticon,
-      [class*="icon-"] {
-        font-weight: 600 !important;
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-      }
-
-      /* Ensure Remix Icons have proper rendering */
-      i[class*="ri-"] {
-        font-style: normal !important;
-        line-height: 1 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-      }
-
-      /* Card Components - Solid backgrounds, no glassmorphism */
+      /* Card Components - Premium glassmorphism styling */
       .ant-card {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        box-shadow: none !important;
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        background: ${isDarkMode
+        ? 'rgba(255, 255, 255, 0.05) !important'
+        : 'rgba(255, 255, 255, 0.7) !important'};
+        border: 1px solid ${isDarkMode
+        ? 'rgba(255, 255, 255, 0.1) !important'
+        : 'rgba(0, 0, 0, 0.06) !important'};
+        box-shadow: ${isDarkMode
+        ? '0 8px 32px rgba(0, 0, 0, 0.3) !important'
+        : '0 8px 32px rgba(0, 0, 0, 0.08) !important'};
       }
 
-      /* Modal & Drawer - Solid backgrounds for readability */
-      .ant-modal-content,
-      .ant-drawer-content {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        box-shadow: none !important;
+      .ant-card-head {
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        background: transparent !important;
+        border-bottom: 1px solid ${isDarkMode
+        ? 'rgba(255, 255, 255, 0.1) !important'
+        : 'rgba(0, 0, 0, 0.06) !important'};
       }
 
-      /* Dropdown & Popover - Solid backgrounds for readability */
-      .ant-dropdown,
-      .ant-popover-inner,
-      .ant-select-dropdown,
-      .ant-picker-dropdown,
-      .ant-cascader-dropdown {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        box-shadow: none !important;
-      }
-
-      /* Table - Solid backgrounds */
-      .ant-table {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      .ant-table-thead > tr > th {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      /* Tabs - Solid backgrounds */
-      .ant-tabs-nav {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      /* Message & Notification - Solid backgrounds for readability */
-      .ant-message-notice-content,
-      .ant-notification-notice {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        box-shadow: none !important;
-      }
-
-      /* Tooltip - Keep minimal styling */
-      .ant-tooltip-inner {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      /* Button hover effects - NO SHADOWS */
-      .ant-btn:not(.ant-btn-primary):not(.ant-btn-text):not(.ant-btn-link) {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-      .ant-btn:not(.ant-btn-primary):not(.ant-btn-text):not(.ant-btn-link):hover {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-
-      /* Primary button - NO SHADOWS, use Ant Design defaults */
-      .ant-btn-primary {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-   
-      /* Prefix icons in inputs */
-      .ant-input-prefix,
-      .ant-input-suffix {
-        color: ${isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'} !important;
-        opacity: 1 !important;
-      }
-
-      /* Disabled state */
-      .ant-input:disabled,
-      .ant-input-disabled,
-      .ant-input[disabled] {
-        color: ${isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)'} !important;
+      .ant-card-body {
+        backdrop-filter: blur(40px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+        background: transparent !important;
       }
     `;
 
@@ -439,130 +360,13 @@ const useDeviceDetection = () => {
  * @returns {Object} Enhanced tokens with responsive values
  */
 const createResponsiveTokens = (baseTokens, deviceType) => {
-  const isMobile = deviceType === 'mobile';
-
-  // Mobile-specific token overrides
-  const mobileTokens = {
-    // Typography - smaller for mobile (but not affecting component-specific tokens)
-    fontSize: 12,
-    fontSizeSM: 10,
-    fontSizeLG: 14,
-    fontSizeXL: 16,
-    // fontSizeIcon removed - let component tokens handle this
-
-    // Control heights - reduced for mobile (but component tokens will override)
-    // These are fallback values for components without specific tokens
-    controlHeight: 28,
-    controlHeightSM: 24,
-    controlHeightLG: 36,
-    controlHeightXL: 40,
-
-    // Spacing - tighter for mobile
-    padding: 6,
-    paddingXXS: 2,
-    paddingXS: 4,
-    paddingSM: 6,
-    paddingMD: 8,
-    paddingLG: 12,
-    paddingXL: 16,
-
-    margin: 6,
-    marginXXS: 2,
-    marginXS: 4,
-    marginSM: 6,
-    marginMD: 8,
-    marginLG: 12,
-    marginXL: 16,
-
-    // Border radius - slightly smaller for mobile
-    borderRadius: 6,
-    borderRadiusSM: 4,
-    borderRadiusLG: 8,
-    borderRadiusXL: 10,
-
-    // Line heights - optimized for mobile
-    lineHeight: 1.4,
-    lineHeightSM: 1.3,
-    lineHeightLG: 1.5,
-
-    // Motion - faster for mobile
-    motionDurationFast: '0.1s',
-    motionDurationMid: '0.2s',
-    motionDurationSlow: '0.3s',
-  };
-
-  // Desktop-specific token overrides
-  const desktopTokens = {
-    // Typography - standard sizes for desktop (but not affecting component-specific tokens)
-    fontSize: 14,
-    fontSizeSM: 12,
-    fontSizeLG: 16,
-    fontSizeXL: 20,
-    // fontSizeIcon removed - let component tokens handle this
-
-    // Control heights - standard for desktop (but component tokens will override)
-    // These are fallback values for components without specific tokens
-    controlHeight: 32,
-    controlHeightSM: 28,
-    controlHeightLG: 48,
-    controlHeightXL: 56,
-
-    // Spacing - generous for desktop
-    padding: 12,
-    paddingXXS: 4,
-    paddingXS: 8,
-    paddingSM: 12,
-    paddingMD: 16,
-    paddingLG: 24,
-    paddingXL: 32,
-
-    margin: 12,
-    marginXXS: 4,
-    marginXS: 8,
-    marginSM: 12,
-    marginMD: 16,
-    marginLG: 24,
-    marginXL: 32,
-
-    // Border radius - standard for desktop
-    borderRadius: 8,
-    borderRadiusSM: 6,
-    borderRadiusLG: 12,
-    borderRadiusXL: 16,
-
-    // Line heights - optimized for desktop
-    lineHeight: 1.5,
-    lineHeightSM: 1.4,
-    lineHeightLG: 1.6,
-
-    // Motion - standard timing for desktop
-    motionDurationFast: '0.15s',
-    motionDurationMid: '0.25s',
-    motionDurationSlow: '0.4s',
-  };
-
-  // Merge base tokens with responsive overrides
-  const responsiveOverrides = isMobile ? mobileTokens : desktopTokens;
-
+  // Return base tokens without any overrides - use Ant Design defaults
   return {
     ...baseTokens,
-    ...responsiveOverrides,
-    // Preserve essential text colors from base tokens (CRITICAL - don't override these)
-    colorText: baseTokens.colorText,
-    colorTextBase: baseTokens.colorTextBase,
-    colorTextHeading: baseTokens.colorTextHeading,
-    colorTextLabel: baseTokens.colorTextLabel,
-    colorTextDescription: baseTokens.colorTextDescription,
-    colorTextDisabled: baseTokens.colorTextDisabled,
-    colorTextPlaceholder: baseTokens.colorTextPlaceholder,
-    colorTextSecondary: baseTokens.colorTextSecondary,
-    // Preserve essential border colors from base tokens
-    colorBorder: baseTokens.colorBorder,
-    colorBorderSecondary: baseTokens.colorBorderSecondary,
     // Add device type for components to use
     deviceType,
-    isMobile,
-    isDesktop: !isMobile,
+    isMobile: deviceType === 'mobile',
+    isDesktop: deviceType !== 'mobile',
   };
 };
 
@@ -721,201 +525,12 @@ const ThemeProvider = ({ children }) => {
   const baseDarkTokens = generateDarkTokens(primaryColor);
 
   /**
-   * Component-specific token configuration to ensure consistent sizing
-   * This overrides responsive tokens for specific components
-   * PREMIUM APPLE GLASSMORPHISM STYLING
+   * Component-specific token configuration
+   * Use pure Ant Design defaults - no customizations
    */
   const getComponentTokens = (isDark) => {
-    // Solid backgrounds for better readability - NO glassmorphism for inputs
-    const solidBackground = isDark
-      ? 'rgba(30, 30, 30, 1)'
-      : 'rgba(255, 255, 255, 1)';
-    const glassBorder = isDark
-      ? 'rgba(255, 255, 255, 0.1)'
-      : 'rgba(0, 0, 0, 0.08)';
-    const textColor = isDark
-      ? 'rgba(255, 255, 255, 0.95)'
-      : 'rgba(0, 0, 0, 0.95)';
-    const placeholderColor = isDark
-      ? 'rgba(255, 255, 255, 0.5)'
-      : 'rgba(0, 0, 0, 0.5)';
-
     return {
-      Select: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        // Solid background for readability
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      Input: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        // Solid background for readability
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      InputNumber: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      Button: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 16,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        borderRadiusSM: 12,
-        borderRadiusLG: 20,
-        colorText: textColor,
-        colorTextDisabled: isDark
-          ? 'rgba(255, 255, 255, 0.25)'
-          : 'rgba(0, 0, 0, 0.25)',
-      },
-      DatePicker: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      TreeSelect: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      Cascader: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      AutoComplete: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      TimePicker: {
-        controlHeight: 32,
-        fontSize: 14,
-        fontSizeIcon: 16,
-        sizeUnit: 4,
-        borderRadius: 12,
-        controlHeightSM: 24,
-        controlHeightLG: 40,
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-        colorText: textColor,
-        colorTextPlaceholder: placeholderColor,
-      },
-      Card: {
-        borderRadius: 16,
-        colorBgContainer: solidBackground,
-        colorBorder: glassBorder,
-      },
-      Modal: {
-        borderRadius: 16,
-        colorBgElevated: solidBackground,
-        colorText: textColor,
-      },
-      Drawer: {
-        colorBgElevated: solidBackground,
-        colorText: textColor,
-      },
-      Dropdown: {
-        borderRadius: 12,
-        colorBgElevated: solidBackground,
-        colorText: textColor,
-      },
-      Popover: {
-        borderRadius: 12,
-        colorBgElevated: solidBackground,
-        colorText: textColor,
-      },
-      Tooltip: {
-        borderRadius: 8,
-        colorBgSpotlight: isDark ? 'rgba(30, 30, 30, 1)' : 'rgba(50, 50, 50, 1)',
-        colorTextLightSolid: 'rgba(255, 255, 255, 0.95)',
-      },
-      Table: {
-        borderRadius: 12,
-        colorBgContainer: solidBackground,
-        colorText: textColor,
-      },
-      Tabs: {
-        borderRadius: 12,
-        colorText: textColor,
-      },
-      Form: {
-        colorText: textColor,
-      },
-      Checkbox: {
-        borderRadius: 4,
-        colorText: textColor,
-      },
-      Radio: {
-        colorText: textColor,
-      },
-      Switch: {
-        borderRadius: 100,
-      },
-      Slider: {
-        borderRadius: 100,
-      },
+      // All components use Ant Design defaults
     };
   };
 

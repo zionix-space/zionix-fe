@@ -87,55 +87,6 @@ p, span, div, a, button, input, textarea, select {
   line-height: 1.5;
 }
 
-/* Premium button styling with gradient */
-.ant-btn-primary {
-  background: linear-gradient(135deg, var(--ant-primary-color) 0%, var(--ant-primary-color-hover) 100%) !important;
-  border: none !important;
-  box-shadow: 0 2px 8px rgba(var(--primary-rgb, 0, 80, 216), 0.25) !important;
-  font-weight: 500 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.ant-btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--primary-rgb, 0, 80, 216), 0.35) !important;
-}
-
-.ant-btn-primary:active {
-  transform: translateY(0);
-}
-
-/* Premium input fields - subtle on unified background */
-.ant-input,
-.ant-input-number,
-.ant-select-selector,
-.ant-picker {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-[data-theme="light"] .ant-input,
-[data-theme="light"] .ant-input-number,
-[data-theme="light"] .ant-select-selector,
-[data-theme="light"] .ant-picker {
-  // background-color: rgba(255, 255, 255, 0.8) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-}
-
-[data-theme="dark"] .ant-input,
-[data-theme="dark"] .ant-input-number,
-[data-theme="dark"] .ant-select-selector,
-[data-theme="dark"] .ant-picker {
-  // background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
-}
-
-.ant-input:focus,
-.ant-input-number:focus,
-.ant-select-selector:focus,
-.ant-picker:focus {
-  box-shadow: 0 0 0 2px rgba(var(--primary-rgb, 0, 80, 216), 0.15) !important;
-}
-
 /* RTL Support */
 [data-direction="rtl"] {
   direction: rtl;

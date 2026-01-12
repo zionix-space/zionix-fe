@@ -1,9 +1,11 @@
 // CSS-in-JS styles with zx-host prefix for module federation isolation
 export const useStyles = (token, isDarkMode = false) => ({
   zxHostSidebarContainer: {
-    background: 'transparent', // Transparent to match topbar
-    backdropFilter: 'none', // No blur - unified with background
-    WebkitBackdropFilter: 'none',
+    background: isDarkMode
+      ? 'rgba(255, 255, 255, 0.015)' // Ultra-subtle in dark mode
+      : 'rgba(0, 0, 0, 0.015)', // Ultra-subtle in light mode
+    backdropFilter: 'blur(40px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(180%)',
     height: 'calc(100vh - 52px)',
     position: 'fixed',
     top: '52px',
@@ -187,7 +189,7 @@ export const useStyles = (token, isDarkMode = false) => ({
     },
   },
 
-  // Premium Apple-style hamburger toggle - macOS inspired
+  // Premium Apple-style hamburger toggle - Clean solid button
   zxHostToggleButton: {
     display: 'flex',
     alignItems: 'center',
@@ -195,24 +197,15 @@ export const useStyles = (token, isDarkMode = false) => ({
     cursor: 'pointer',
     width: '32px',
     height: '32px',
-    borderRadius: '8px',
-    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)',
-    backdropFilter: 'blur(20px) saturate(180%)',
-    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-    border: `0.5px solid ${token.colorBorder}20`,
-    boxShadow: `
-      0 1px 3px rgba(0, 0, 0, 0.08),
-      inset 0 0.5px 0 rgba(255, 255, 255, ${isDarkMode ? '0.1' : '0.5'})
-    `,
+    borderRadius: '10px',
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+    border: 'none',
+    boxShadow: 'none',
     transition: `all 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
     position: 'relative',
     flexShrink: 0,
     '&:hover': {
-      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
-      boxShadow: `
-        0 2px 6px rgba(0, 0, 0, 0.12),
-        inset 0 0.5px 0 rgba(255, 255, 255, ${isDarkMode ? '0.15' : '0.6'})
-      `,
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.1)',
       transform: 'scale(1.05)',
     },
     '&:active': {
@@ -270,7 +263,9 @@ export const useStyles = (token, isDarkMode = false) => ({
   zxHostMenuContainer: {
     userSelect: 'none',
     padding: '8px',
-    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
+    background: isDarkMode
+      ? 'rgba(255, 255, 255, 0.08)' // More opaque for better readability in dark mode
+      : 'rgba(255, 255, 255, 0.75)', // Clear white background with mild opacity in light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
     borderRadius: '18px',
@@ -278,13 +273,20 @@ export const useStyles = (token, isDarkMode = false) => ({
     marginBottom: '8px',
     marginLeft: '12px',
     marginRight: '12px',
-    boxShadow: `
-      0 4px 12px 0 rgba(0, 0, 0, 0.12),
-      0 1px 3px 0 rgba(0, 0, 0, 0.08),
-      inset 0 0 0 1px ${token.colorBorder}40,
-      inset 0 1px 0 0 ${token.colorBgElevated}60
-    `,
-    border: `1px solid ${token.colorBorder}30`,
+    boxShadow: isDarkMode
+      ? `
+        0 4px 12px 0 rgba(0, 0, 0, 0.3),
+        0 1px 3px 0 rgba(0, 0, 0, 0.2),
+        inset 0 0 0 1px ${token.colorBorder}60,
+        inset 0 1px 0 0 ${token.colorBgElevated}40
+      `
+      : `
+        0 2px 8px 0 rgba(0, 0, 0, 0.08),
+        0 1px 2px 0 rgba(0, 0, 0, 0.04),
+        inset 0 0 0 1px ${token.colorBorder}50,
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.8)
+      `,
+    border: `1px solid ${isDarkMode ? token.colorBorder + '40' : token.colorBorder + '30'}`,
   },
 
   zxHostMenuItemBadge: {
@@ -357,16 +359,25 @@ export const useStyles = (token, isDarkMode = false) => ({
     cursor: 'pointer',
     padding: `${token.paddingXS + 2}px ${token.paddingSM}px`,
     borderRadius: '18px',
-    background: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)', // Theme-aware: white for dark mode, black for light mode
+    background: isDarkMode
+      ? 'rgba(255, 255, 255, 0.08)' // More opaque for better readability in dark mode
+      : 'rgba(255, 255, 255, 0.75)', // Clear white background with mild opacity in light mode
     backdropFilter: 'blur(40px) saturate(200%)',
     WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-    border: `1px solid ${token.colorBorder}30`,
-    boxShadow: `
-      0 4px 12px 0 rgba(0, 0, 0, 0.12),
-      0 1px 3px 0 rgba(0, 0, 0, 0.08),
-      inset 0 0 0 1px ${token.colorBorder}40,
-      inset 0 1px 0 0 ${token.colorBgElevated}60
-    `,
+    border: `1px solid ${isDarkMode ? token.colorBorder + '40' : token.colorBorder + '30'}`,
+    boxShadow: isDarkMode
+      ? `
+        0 4px 12px 0 rgba(0, 0, 0, 0.3),
+        0 1px 3px 0 rgba(0, 0, 0, 0.2),
+        inset 0 0 0 1px ${token.colorBorder}60,
+        inset 0 1px 0 0 ${token.colorBgElevated}40
+      `
+      : `
+        0 2px 8px 0 rgba(0, 0, 0, 0.08),
+        0 1px 2px 0 rgba(0, 0, 0, 0.04),
+        inset 0 0 0 1px ${token.colorBorder}50,
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.8)
+      `,
     transition: `all 0.15s cubic-bezier(0.4, 0, 0.2, 1)`,
     justifyContent: 'flex-start',
     '&:hover': {
