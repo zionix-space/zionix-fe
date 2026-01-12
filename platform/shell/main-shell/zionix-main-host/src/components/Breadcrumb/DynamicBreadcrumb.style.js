@@ -14,62 +14,64 @@ export const useStyles = (token) => {
 
         return {
             container: {
-                padding: '16px 24px',
-                background: 'transparent',
-                borderBottom: `1px solid ${token.colorBorderSecondary}20`,
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
+                position: 'sticky',
+                top: 0,
+                zIndex: 100,
+                padding: '10px 24px',
+                background: isDarkMode
+                    ? 'rgba(0, 0, 0, 0.7)'
+                    : 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
             },
 
             item: {
-                fontSize: '13px',
+                fontSize: '12px',
                 fontWeight: 500,
                 color: token.colorTextSecondary,
                 cursor: 'pointer',
                 transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-                opacity: 0.65,
+                opacity: 0.6,
                 letterSpacing: '-0.01em',
-                padding: '4px 8px',
-                borderRadius: '6px',
+                padding: '2px 6px',
+                borderRadius: '4px',
                 display: 'inline-block',
-                willChange: 'opacity, background-color, color',
             },
 
             itemHovered: {
-                fontSize: '13px',
+                fontSize: '12px',
                 fontWeight: 500,
                 color: token.colorText,
                 cursor: 'pointer',
                 transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
                 opacity: 1,
                 letterSpacing: '-0.01em',
-                padding: '4px 8px',
-                borderRadius: '6px',
+                padding: '2px 6px',
+                borderRadius: '4px',
                 display: 'inline-block',
                 backgroundColor: isDarkMode
                     ? 'rgba(255, 255, 255, 0.06)'
                     : 'rgba(0, 0, 0, 0.04)',
-                willChange: 'opacity, background-color, color',
             },
 
             currentItem: {
-                fontSize: '13px',
+                fontSize: '12px',
                 fontWeight: 600,
                 color: token.colorText,
                 cursor: 'default',
-                opacity: 0.9,
+                opacity: 0.85,
                 letterSpacing: '-0.01em',
-                padding: '4px 8px',
-                borderRadius: '6px',
+                padding: '2px 6px',
+                borderRadius: '4px',
                 display: 'inline-block',
             },
 
             separator: {
-                fontSize: '16px',
+                fontSize: '14px',
                 color: token.colorTextQuaternary,
-                opacity: 0.4,
+                opacity: 0.35,
                 margin: '0 2px',
-                fontWeight: 400,
+                fontWeight: 300,
             },
         };
     }, [token]);
