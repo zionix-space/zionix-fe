@@ -49,35 +49,7 @@ const GlobalGlassmorphismStyles = ({ isDarkMode }) => {
     const style = document.createElement('style');
     style.id = 'zionix-glassmorphism-styles';
     style.textContent = `
-      /* Card Components - Premium glassmorphism styling */
-      .ant-card {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-        background: ${isDarkMode
-        ? 'rgba(255, 255, 255, 0.05) !important'
-        : 'rgba(255, 255, 255, 0.7) !important'};
-        border: 1px solid ${isDarkMode
-        ? 'rgba(255, 255, 255, 0.1) !important'
-        : 'rgba(0, 0, 0, 0.06) !important'};
-        box-shadow: ${isDarkMode
-        ? '0 8px 32px rgba(0, 0, 0, 0.3) !important'
-        : '0 8px 32px rgba(0, 0, 0, 0.08) !important'};
-      }
-
-      .ant-card-head {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-        background: transparent !important;
-        border-bottom: 1px solid ${isDarkMode
-        ? 'rgba(255, 255, 255, 0.1) !important'
-        : 'rgba(0, 0, 0, 0.06) !important'};
-      }
-
-      .ant-card-body {
-        backdrop-filter: blur(40px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
-        background: transparent !important;
-      }
+      /* Pure Ant Design defaults - no customizations */
     `;
 
     document.head.appendChild(style);
