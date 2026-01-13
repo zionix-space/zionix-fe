@@ -13,6 +13,11 @@ const MenuManagementScreen = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showJsonPreview, setShowJsonPreview] = useState(false);
 
+    // Theme-aware background
+    const getLightPrimaryBg = () => {
+        return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
+    };
+
     return (
         <Layout style={{ height: '100%', minHeight: '100vh' }}>
             {/* Menu Management Top Bar */}
@@ -30,7 +35,7 @@ const MenuManagementScreen = () => {
                 <Content
                     style={{
                         padding: '24px',
-                        backgroundColor: token?.colorBgContainer,
+                        background: getLightPrimaryBg(),
                         overflow: 'auto',
                         height: '100%',
                     }}

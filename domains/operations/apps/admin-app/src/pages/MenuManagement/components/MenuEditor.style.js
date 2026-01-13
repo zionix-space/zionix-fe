@@ -35,7 +35,7 @@ export const useStyles = (token, isDarkMode = false) => ({
         borderRadius: '16px',
         padding: '16px',
         border: `1px solid ${token.colorBorderSecondary}`,
-        boxShadow: token.boxShadowSecondary,
+        boxShadow: 'none',
         overflow: 'hidden',
     },
 
@@ -49,7 +49,7 @@ export const useStyles = (token, isDarkMode = false) => ({
         borderRadius: '16px',
         padding: '20px',
         border: `1px solid ${token.colorBorderSecondary}`,
-        boxShadow: token.boxShadowSecondary,
+        boxShadow: 'none',
         overflow: 'auto',
         minWidth: 0,
     },
