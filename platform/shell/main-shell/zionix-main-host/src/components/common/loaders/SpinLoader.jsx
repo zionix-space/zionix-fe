@@ -1,6 +1,5 @@
 import React from 'react';
 import { Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
 
 /**
  * Spin Loaders - Responsive component-level loading
@@ -41,7 +40,7 @@ export const InlineSpinner = ({ size = 'small' }) => (
 );
 
 export const ButtonSpinner = () => (
-    <LoadingOutlined style={{ fontSize: 16 }} spin />
+    <i className="ri-loader-4-line" style={{ fontSize: 16 }} />
 );
 
 export const CardSpinner = ({ loading, children, tip }) => (
@@ -51,7 +50,7 @@ export const CardSpinner = ({ loading, children, tip }) => (
 );
 
 export const CustomIconSpinner = ({ icon, size = 24 }) => (
-    <Spin indicator={<LoadingOutlined style={{ fontSize: size }} spin />} />
+    <Spin indicator={<i className="ri-loader-4-line" style={{ fontSize: size }} />} />
 );
 
 const SpinLoader = ({
