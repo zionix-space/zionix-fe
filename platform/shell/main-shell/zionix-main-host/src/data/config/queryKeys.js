@@ -49,44 +49,8 @@ export const queryKeys = {
   },
 
   /**
-   * User-related query keys
-   * @namespace queryKeys.user
-   */
-  user: {
-    /** Base key for all user queries */
-    all: ['user'],
-
-    /** Query key for user profile */
-    profile: () => [...queryKeys.user.all, 'profile'],
-
-    /** Query key for user preferences */
-    preferences: () => [...queryKeys.user.all, 'preferences'],
-
-    /** Query key for user permissions */
-    permissions: () => [...queryKeys.user.all, 'permissions'],
-  },
-
-  /**
-   * Application-related query keys
-   * @namespace queryKeys.app
-   */
-  app: {
-    /** Base key for all app queries */
-    all: ['app'],
-
-    /** Query key for app configuration */
-    config: () => [...queryKeys.app.all, 'config'],
-
-    /** Query key for loaded modules */
-    modules: () => [...queryKeys.app.all, 'modules'],
-
-    /** Query key for app metadata */
-    metadata: () => [...queryKeys.app.all, 'metadata'],
-  },
-
-  /**
    * Legacy support - keeping MENUS for backward compatibility
-   * @deprecated Use queryKeys.menu.pages() instead
+   * @deprecated Use queryKeys.menu.list() instead
    */
   MENUS: () => ["MenuList"],
 };
