@@ -268,7 +268,7 @@ export const useStyles = (token, isDarkMode = false) => {
       padding: '8px',
       background: isDarkMode
         ? 'rgba(255, 255, 255, 0.08)' // More opaque for better readability in dark mode
-        : 'rgba(255, 255, 255, 0.75)', // Clear white background with mild opacity in light mode
+        : `${token.colorBgElevated}`, // Clear white background with mild opacity in light mode
       backdropFilter: 'blur(40px) saturate(200%)',
       WebkitBackdropFilter: 'blur(40px) saturate(200%)',
       borderRadius: '18px',

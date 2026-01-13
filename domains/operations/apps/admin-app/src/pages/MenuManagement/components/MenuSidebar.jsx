@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { Layout, Menu, theme, Tooltip } from 'antd';
+import { Layout, Menu, theme, Tooltip, Avatar, Dropdown } from 'antd';
 import { useStyles } from './MenuSidebar.style';
 
 const { Sider } = Layout;
@@ -246,6 +246,50 @@ const MenuSidebar = ({ collapsed, onCollapse }) => {
               style={{ background: 'transparent', border: 'none' }}
             />
           </div>
+        </div>
+
+        {/* Profile Section */}
+        <div style={collapsed ? styles.profileCollapsed : styles.profileExpanded}>
+          {collapsed ? (
+            <Dropdown
+              menu={{
+                items: [
+                  { key: 'profile', label: 'Profile', icon: <i className="ri-user-line" /> },
+                  { type: 'divider' },
+                  { key: 'logout', label: 'Logout', icon: <i className="ri-logout-box-line" /> },
+                ],
+              }}
+              placement="rightTop"
+              trigger={['click']}
+            >
+              <Avatar
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
+                size={40}
+                style={{ cursor: 'pointer' }}
+              />
+            </Dropdown>
+          ) : (
+            <Dropdown
+              menu={{
+                items: [
+                  { key: 'profile', label: 'Profile', icon: <i className="ri-user-line" /> },
+                  { type: 'divider' },
+                  { key: 'logout', label: 'Logout', icon: <i className="ri-logout-box-line" /> },
+                ],
+              }}
+              placement="topLeft"
+              trigger={['click']}
+            >
+              <div style={styles.profileContent}>
+                <Avatar src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e" size={40} />
+                <div style={styles.profileInfo}>
+                  <div style={styles.profileName}>John Doe</div>
+                  <div style={styles.profileEmail}>john@company.com</div>
+                </div>
+                <i className="ri-more-2-line" style={styles.profileMore} />
+              </div>
+            </Dropdown>
+          )}
         </div>
       </div>
     </Sider>

@@ -1454,12 +1454,12 @@ const AppSidebar = ({ collapsed = false, onCollapse }) => {
                             colors: [
                               token.colorPrimary || '#0050d8',
                               '#0050d8',
-                              '#52c41a',
+                              '#028357',
                               '#fa8c16',
                               '#ff4d4f',
-                              '#722ed1',
-                              '#13c2c2',
-                              '#eb2f96',
+                              '#934ce6',
+                              '#05c987',
+                              '#e51045',
                             ],
                           },
                         ]}
