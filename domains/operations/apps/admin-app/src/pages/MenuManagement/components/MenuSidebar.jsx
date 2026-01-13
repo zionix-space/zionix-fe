@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { Layout, Menu, theme, Tooltip, Avatar, Dropdown } from 'antd';
+import { Layout, Menu, theme, Tooltip, Avatar, Dropdown, Badge } from 'antd';
 import { useStyles } from './MenuSidebar.style';
 
 const { Sider } = Layout;
@@ -107,7 +107,7 @@ const injectSidebarCSS = (token, isDarkMode) => {
   document.head.appendChild(style);
 };
 
-const MenuSidebar = ({ collapsed, onCollapse }) => {
+const MenuSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) => {
   const { token } = useToken();
   const [isToggleHovered, setIsToggleHovered] = useState(false);
 
@@ -127,29 +127,112 @@ const MenuSidebar = ({ collapsed, onCollapse }) => {
     injectSidebarCSS(token, isDarkMode);
   }, [token, isDarkMode]);
 
-  // Static menu items - just for design
-  const menuItems = [
-    {
-      key: 'apps',
-      icon: <i className="ri-apps-line" />,
-      label: 'Apps',
-    },
-    {
-      key: 'menus',
-      icon: <i className="ri-menu-line" />,
-      label: 'Menus',
-    },
-    {
-      key: 'forms',
-      icon: <i className="ri-file-list-3-line" />,
-      label: 'Forms',
-    },
-    {
-      key: 'settings',
-      icon: <i className="ri-settings-3-line" />,
-      label: 'Settings',
-    },
-  ];
+  // Get selected main menu item
+  const selectedMainMenu = menuData?.mainNavigation?.find(
+    item => item.key === selectedMainMenuKey
+  );
+
+  // Helper function to get badge count from badge object
+  const getBadgeCount = (badge) => {
+    if (!badge) return null;
+    if (typeof badge === 'object' && badge !== null && badge.count !== undefined) {
+      return badge.count;
+    }
+    return badge;
+  };
+
+  // Helper function to get badge color from badge object
+  const getBadgeColor = (badge) => {
+    if (!badge || typeof badge !== 'object' || badge === null) {
+      return undefined;
+    }
+    return badge.color || undefined;
+  };
+
+  // Format menu items for Ant Design Menu component (recursive for nested items)
+  const formatMenuItems = (items) => {
+    if (!items || !Array.isArray(items)) {
+      return [];
+    }
+
+    return items.map((item) => {
+      const badgeCount = getBadgeCount(item.badge);
+      const badgeColor = getBadgeColor(item.badge);
+
+      const menuItem = {
+        key: item.key,
+        icon: item.icon ? <i className={item.icon} /> : null,
+        label: badgeCount ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <span>{item.label}</span>
+            <Badge count={badgeCount} size="small" color={badgeColor} />
+          </div>
+        ) : (
+          item.label
+        ),
+      };
+
+      // Handle nested children
+      if (item.children && item.children.length > 0) {
+        menuItem.children = formatMenuItems(item.children);
+      }
+
+      return menuItem;
+    });
+  };
+
+  // Get menu items (children of selected main menu) - support nested structure
+  const sidebarMenus = selectedMainMenu?.children || [];
+
+  // Create sections from sidebar menus (similar to DesktopSidebar logic)
+  const createMenuSections = () => {
+    const sections = [];
+
+    if (sidebarMenus.length > 0) {
+      if (collapsed) {
+        // In collapsed mode: Show all items that have icons
+        const itemsWithIcons = sidebarMenus.filter(item => item.icon);
+        if (itemsWithIcons.length > 0) {
+          sections.push({
+            type: 'section',
+            id: 'navigation-collapsed',
+            title: selectedMainMenu?.sectionTitle || 'Navigation',
+            items: itemsWithIcons,
+          });
+        }
+      } else {
+        // In expanded mode: Show sections with their children
+        sidebarMenus.forEach((menuItem, index) => {
+          const sectionTitle = menuItem.sectionTitle || menuItem.label || selectedMainMenu?.sectionTitle || 'Navigation Menu';
+          const items = menuItem.children || [];
+
+          if (items.length > 0) {
+            sections.push({
+              type: 'section',
+              id: `navigation-${menuItem.key || index}`,
+              title: sectionTitle,
+              items: items,
+            });
+          } else {
+            // If no children, show the item itself
+            sections.push({
+              type: 'section',
+              id: `navigation-${menuItem.key || index}`,
+              title: sectionTitle,
+              items: [menuItem],
+            });
+          }
+        });
+      }
+    }
+
+    return sections;
+  };
+
+  const menuSections = createMenuSections();
+
+  // Get profile section
+  const profileSection = menuData?.profileSection;
 
   // Toggle button styles (copied from original)
   const toggleButtonStyle = {
@@ -230,67 +313,79 @@ const MenuSidebar = ({ collapsed, onCollapse }) => {
 
         {/* Menu Container */}
         <div className="menu-main-content" style={styles.mainContent}>
-          {/* Section Header */}
-          {!collapsed && (
-            <div style={styles.sectionHeader}>
-              <span>APP MANAGEMENT</span>
-            </div>
-          )}
-          {collapsed && <div style={styles.sectionHeaderCollapsed} />}
+          {/* Render all menu sections */}
+          {menuSections.map((section, index) => (
+            <div key={section.id}>
+              {/* Section Header */}
+              {!collapsed && (
+                <div style={styles.sectionHeader}>
+                  <span>{section.title}</span>
+                </div>
+              )}
+              {collapsed && <div style={styles.sectionHeaderCollapsed} />}
 
-          <div className="menu-menu-container" style={styles.menuContainer}>
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={['menus']}
-              items={menuItems}
-              style={{ background: 'transparent', border: 'none' }}
-            />
-          </div>
+              {/* Section Menu Items */}
+              {section.items.length > 0 && (
+                <div className="menu-menu-container" style={styles.menuContainer}>
+                  <Menu
+                    mode="inline"
+                    defaultSelectedKeys={[]}
+                    items={formatMenuItems(section.items)}
+                    inlineCollapsed={collapsed}
+                    triggerSubMenuAction={collapsed ? "hover" : "click"}
+                    style={{ background: 'transparent', border: 'none' }}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
         {/* Profile Section */}
-        <div style={collapsed ? styles.profileCollapsed : styles.profileExpanded}>
-          {collapsed ? (
-            <Dropdown
-              menu={{
-                items: [
-                  { key: 'profile', label: 'Profile', icon: <i className="ri-user-line" /> },
-                  { type: 'divider' },
-                  { key: 'logout', label: 'Logout', icon: <i className="ri-logout-box-line" /> },
-                ],
-              }}
-              placement="rightTop"
-              trigger={['click']}
-            >
-              <Avatar
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
-                size={40}
-                style={{ cursor: 'pointer' }}
-              />
-            </Dropdown>
-          ) : (
-            <Dropdown
-              menu={{
-                items: [
-                  { key: 'profile', label: 'Profile', icon: <i className="ri-user-line" /> },
-                  { type: 'divider' },
-                  { key: 'logout', label: 'Logout', icon: <i className="ri-logout-box-line" /> },
-                ],
-              }}
-              placement="topLeft"
-              trigger={['click']}
-            >
-              <div style={styles.profileContent}>
-                <Avatar src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e" size={40} />
-                <div style={styles.profileInfo}>
-                  <div style={styles.profileName}>John Doe</div>
-                  <div style={styles.profileEmail}>john@company.com</div>
+        {profileSection && (
+          <div style={collapsed ? styles.profileCollapsed : styles.profileExpanded}>
+            {collapsed ? (
+              <Dropdown
+                menu={{
+                  items: profileSection.menuItems?.filter(item => item.type !== 'divider').map(item => ({
+                    key: item.key,
+                    label: item.label,
+                    icon: item.icon ? <i className={item.icon} /> : null,
+                  })) || [],
+                }}
+                placement="rightTop"
+                trigger={['click']}
+              >
+                <Avatar
+                  src={profileSection.userData?.avatar}
+                  size={40}
+                  style={{ cursor: 'pointer' }}
+                />
+              </Dropdown>
+            ) : (
+              <Dropdown
+                menu={{
+                  items: profileSection.menuItems?.filter(item => item.type !== 'divider').map(item => ({
+                    key: item.key,
+                    label: item.label,
+                    icon: item.icon ? <i className={item.icon} /> : null,
+                  })) || [],
+                }}
+                placement="topLeft"
+                trigger={['click']}
+              >
+                <div style={styles.profileContent}>
+                  <Avatar src={profileSection.userData?.avatar} size={40} />
+                  <div style={styles.profileInfo}>
+                    <div style={styles.profileName}>{profileSection.userData?.name}</div>
+                    <div style={styles.profileEmail}>{profileSection.userData?.email}</div>
+                  </div>
+                  <i className="ri-more-2-line" style={styles.profileMore} />
                 </div>
-                <i className="ri-more-2-line" style={styles.profileMore} />
-              </div>
-            </Dropdown>
-          )}
-        </div>
+              </Dropdown>
+            )}
+          </div>
+        )}
       </div>
     </Sider>
   );

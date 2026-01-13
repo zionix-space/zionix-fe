@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Layout, Typography, Space, theme, Button, Tooltip } from 'antd';
 import MenuTopBar from './components/MenuTopBar';
 import MenuSidebar from './components/MenuSidebar';
@@ -12,16 +12,34 @@ const MenuManagementScreen = () => {
     const { token } = useToken();
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showJsonPreview, setShowJsonPreview] = useState(false);
+    const [menuData, setMenuData] = useState(null);
+    const [selectedMainMenuKey, setSelectedMainMenuKey] = useState('');
 
     // Theme-aware background
     const getLightPrimaryBg = () => {
         return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
     };
 
+    // Handle menu data updates from MenuEditor
+    const handleMenuDataChange = useCallback((data) => {
+        setMenuData(data);
+    }, []);
+
+    // Auto-select first main menu when data loads
+    useEffect(() => {
+        if (!selectedMainMenuKey && menuData?.mainNavigation?.length > 0) {
+            setSelectedMainMenuKey(menuData.mainNavigation[0].key);
+        }
+    }, [menuData, selectedMainMenuKey]);
+
     return (
         <Layout style={{ height: '100%', minHeight: '100vh' }}>
             {/* Menu Management Top Bar */}
-            <MenuTopBar />
+            <MenuTopBar
+                menuData={menuData}
+                selectedMainMenuKey={selectedMainMenuKey}
+                onSelectMainMenu={setSelectedMainMenuKey}
+            />
 
             {/* Layout Container */}
             <Layout style={{ height: 'calc(100vh - 52px)' }}>
@@ -29,6 +47,8 @@ const MenuManagementScreen = () => {
                 <MenuSidebar
                     collapsed={sidebarCollapsed}
                     onCollapse={setSidebarCollapsed}
+                    menuData={menuData}
+                    selectedMainMenuKey={selectedMainMenuKey}
                 />
 
                 {/* Menu Management Content */}
@@ -63,6 +83,7 @@ const MenuManagementScreen = () => {
                         <MenuEditor
                             jsonPreviewOpen={showJsonPreview}
                             onJsonPreviewClose={() => setShowJsonPreview(false)}
+                            onMenuDataChange={handleMenuDataChange}
                         />
                     </Space>
                 </Content>

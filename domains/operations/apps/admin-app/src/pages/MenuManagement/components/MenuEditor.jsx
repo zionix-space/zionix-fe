@@ -16,7 +16,7 @@ import { loadMenuConfiguration, saveMenuConfiguration } from '../services/menuAp
 
 const { useToken } = theme;
 
-const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose }) => {
+const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange }) => {
     const { token } = useToken();
 
     // Detect dark mode
@@ -84,6 +84,11 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose }) => {
         addToHistory(newData);
         setMenuData(newData);
         setIsDirty(true);
+
+        // Notify parent component
+        if (onMenuDataChange) {
+            onMenuDataChange(newData);
+        }
     };
 
     // Load menu data from API
@@ -93,6 +98,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose }) => {
                 setLoading(true);
                 const data = await loadMenuConfiguration();
                 setMenuData(data);
+                if (onMenuDataChange) {
+                    onMenuDataChange(data);
+                }
             } catch (error) {
                 message.error('Failed to load menu configuration');
                 // Fallback to sample data with full structure
@@ -406,6 +414,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose }) => {
                     }
                 };
                 setMenuData(sampleData);
+                if (onMenuDataChange) {
+                    onMenuDataChange(sampleData);
+                }
             } finally {
                 setLoading(false);
             }
@@ -414,19 +425,28 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose }) => {
         fetchMenuData();
     }, []);
 
+    // Auto-expand matching nodes when search changes
+    useEffect(() => {
+        if (searchValue && menuData?.mainNavigation) {
+            const { expandedKeys: searchExpandedKeys } = filterMenuItems(
+                menuData.mainNavigation,
+                searchValue
+            );
+            if (searchExpandedKeys.length > 0) {
+                setExpandedKeys(searchExpandedKeys);
+            }
+        }
+    }, [searchValue, menuData]);
+
     // Get filtered tree data
     const getTreeData = () => {
         if (!menuData || !menuData.mainNavigation) return [];
 
         if (searchValue) {
-            const { filteredItems, expandedKeys: searchExpandedKeys } = filterMenuItems(
+            const { filteredItems } = filterMenuItems(
                 menuData.mainNavigation,
                 searchValue
             );
-            // Auto-expand matching nodes
-            if (searchExpandedKeys.length > 0) {
-                setExpandedKeys(searchExpandedKeys);
-            }
             return transformToTreeData(filteredItems);
         }
 

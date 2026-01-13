@@ -67,6 +67,25 @@ export const useStyles = (token, isDarkMode = false) => {
             right: "20px",
         },
 
+        navigationContainerStyle: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            height: "100%",
+        },
+
+        menuStyle: {
+            background: "transparent",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            lineHeight: "52px",
+        },
+
         iconButtonStyle: {
             border: "none",
             background: "transparent",

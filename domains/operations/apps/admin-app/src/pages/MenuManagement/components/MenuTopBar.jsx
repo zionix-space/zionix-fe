@@ -1,11 +1,11 @@
 import { useLayoutEffect } from 'react';
-import { Layout, Button, Space, theme } from 'antd';
+import { Layout, Button, Space, theme, Menu } from 'antd';
 import { useStyles } from './MenuTopBar.style';
 
 const { Header } = Layout;
 const { useToken } = theme;
 
-const MenuTopBar = () => {
+const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
     const { token } = useToken();
 
     // Detect dark mode from Ant Design theme
@@ -32,34 +32,79 @@ const MenuTopBar = () => {
         border-bottom: none !important;
         display: none !important;
       }
+      
+      /* Menu item styling */
+      .menu-topbar-menu .ant-menu-item {
+        border-radius: 8px !important;
+        padding: 0 16px !important;
+        height: 28px !important;
+        line-height: 28px !important;
+        margin: 0 2px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: ${token.colorText} !important;
+        opacity: 0.7 !important;
+        transition: all 0.2s ease !important;
+      }
+      
+      .menu-topbar-menu .ant-menu-item:hover {
+        background: ${token.colorFillQuaternary} !important;
+        opacity: 1 !important;
+      }
+      
+      .menu-topbar-menu .ant-menu-item-selected {
+        background: ${token.colorPrimaryBg} !important;
+        color: ${token.colorPrimary} !important;
+        opacity: 1 !important;
+        font-weight: 600 !important;
+      }
     `;
         document.head.appendChild(style);
     }, [token]);
 
+    // Get main navigation items (root level)
+    const mainMenuItems = menuData?.mainNavigation?.map(item => ({
+        key: item.key,
+        label: item.label,
+        icon: item.icon ? <i className={item.icon} /> : null,
+    })) || [];
+
     return (
         <Header style={styles.topBarStyle}>
-            {/* Left Section - Brand */}
-            <div style={styles.leftSectionStyle}>
-                <div style={styles.brandContainerStyle}>
-                    {/* Simple logo icon instead of ZionixLogo component */}
-                    <div style={{
-                        width: '48px',
-                        height: '48px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginRight: '12px',
-                    }}>
-                        <i className="ri-menu-2-line" style={{
-                            fontSize: '32px',
-                            color: token.colorPrimary,
-                        }} />
-                    </div>
-                    <span style={styles.logoTextStyle}>Menu Management</span>
+            {/* Left Section - Brand (Absolute positioned) */}
+            <div style={styles.brandContainerStyle}>
+                {/* Simple logo icon instead of ZionixLogo component */}
+                <div style={{
+                    width: '48px',
+                    height: '48px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '12px',
+                }}>
+                    <i className="ri-menu-2-line" style={{
+                        fontSize: '32px',
+                        color: token.colorPrimary,
+                    }} />
                 </div>
+                <span style={styles.logoTextStyle}>Menu Management</span>
             </div>
 
-            {/* Right Section - Actions */}
+            {/* Center - Navigation Menu */}
+            {mainMenuItems.length > 0 && (
+                <div style={styles.navigationContainerStyle}>
+                    <Menu
+                        mode="horizontal"
+                        selectedKeys={selectedMainMenuKey ? [selectedMainMenuKey] : []}
+                        items={mainMenuItems}
+                        onClick={({ key }) => onSelectMainMenu && onSelectMainMenu(key)}
+                        style={styles.menuStyle}
+                        className="menu-topbar-menu"
+                    />
+                </div>
+            )}
+
+            {/* Right Section - Actions (Absolute positioned) */}
             <Space style={styles.rightActionsStyle}>
                 <Button
                     type="text"
