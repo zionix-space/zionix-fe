@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react';
 import { Tree, Badge, theme } from 'antd';
 import { useStyles } from './MenuTree.style';
 
@@ -23,6 +24,35 @@ const MenuTree = ({
             parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
 
     const styles = useStyles(token, isDarkMode);
+
+    // Inject minimal CSS for theme-aware tree selection color
+    useLayoutEffect(() => {
+        const styleId = 'menu-tree-theme-styles';
+        const existingStyle = document.getElementById(styleId);
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+            .menu-editor-tree .ant-tree-node-selected .ant-tree-node-content-wrapper {
+                background: ${token.colorPrimaryBg} !important;
+            }
+            
+            .menu-editor-tree .ant-tree-node-selected .ant-tree-node-content-wrapper:hover {
+                background: ${token.colorPrimaryBgHover} !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        return () => {
+            const styleToRemove = document.getElementById(styleId);
+            if (styleToRemove) {
+                styleToRemove.remove();
+            }
+        };
+    }, [token]);
 
     // Custom title renderer
     const renderTitle = (nodeData) => {
@@ -77,6 +107,7 @@ const MenuTree = ({
     return (
         <div style={styles.treeContainer} className="menu-editor-scrollbar">
             <Tree
+                className="menu-editor-tree"
                 treeData={transformedTreeData(treeData)}
                 selectedKeys={selectedKey ? [selectedKey] : []}
                 expandedKeys={expandedKeys}
