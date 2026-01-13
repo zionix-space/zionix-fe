@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Layout, Card, Typography, Space, theme } from 'antd';
+import { Layout, Typography, Space, theme, Button, Tooltip } from 'antd';
 import MenuTopBar from './components/MenuTopBar';
 import MenuSidebar from './components/MenuSidebar';
+import MenuEditor from './components/MenuEditor';
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -10,6 +11,7 @@ const { useToken } = theme;
 const MenuManagementScreen = () => {
     const { token } = useToken();
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [showJsonPreview, setShowJsonPreview] = useState(false);
 
     return (
         <Layout style={{ height: '100%', minHeight: '100vh' }}>
@@ -34,21 +36,29 @@ const MenuManagementScreen = () => {
                     }}
                 >
                     <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                        <div>
-                            <Title level={2}>Menu Setup</Title>
-                            <Paragraph>
-                                Configure and manage your application menus here.
-                            </Paragraph>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div>
+                                <Title level={2} style={{ margin: 0 }}>Menu Setup</Title>
+                                <Paragraph style={{ margin: '4px 0 0 0' }}>
+                                    Configure and manage your application menus here.
+                                </Paragraph>
+                            </div>
+                            <Tooltip title="Preview JSON">
+                                <Button
+                                    type="text"
+                                    icon={<i className="ri-code-s-slash-line" style={{ fontSize: '20px' }} />}
+                                    onClick={() => setShowJsonPreview(true)}
+                                    shape="circle"
+                                    size="large"
+                                />
+                            </Tooltip>
                         </div>
 
-                        <Card>
-                            <Title level={4}>Menu Configuration</Title>
-                            <Paragraph>
-                                This is the menu setup screen with its own topbar and sidebar layout.
-                                The main shell sidebar remains visible on the left, and this menu management panel
-                                renders as content in the main area.
-                            </Paragraph>
-                        </Card>
+                        {/* Menu Editor Component */}
+                        <MenuEditor
+                            jsonPreviewOpen={showJsonPreview}
+                            onJsonPreviewClose={() => setShowJsonPreview(false)}
+                        />
                     </Space>
                 </Content>
             </Layout>
