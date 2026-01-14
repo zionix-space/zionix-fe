@@ -6,6 +6,6 @@ module.exports = {
   exposes: {
     './Module': './src/remote-entry.js',
     './AuthService': './src/services/auth/authService.js',
-    './useAuthStore': './src/stores/useAuthStore.js',
+    './useAuthStore': './src/hooks/useAuthStore.js',
   },
 };

@@ -16,3 +16,4 @@ export * from './queryClient';
  * ```js
  * import { queryKeys, queryClient } from '@/data/config';
  * ```
+ */
