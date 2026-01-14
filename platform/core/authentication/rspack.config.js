@@ -55,8 +55,19 @@ module.exports = composePlugins(
         symlinks: false,
       };
 
-      // Reduce bundle analysis overhead
+      // Reduce bundle analysis overhead and suppress warnings
       config.stats = 'errors-warnings';
+
+      // Suppress performance warnings in development
+      config.performance = {
+        hints: false,
+      };
+
+      // Ignore source map warnings for node_modules
+      config.ignoreWarnings = [
+        /Failed to parse source map/,
+        /source-map-loader/,
+      ];
     }
 
     return config;

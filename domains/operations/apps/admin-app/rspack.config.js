@@ -4,6 +4,8 @@ const { withModuleFederation } = require('@nx/rspack/module-federation');
 const baseConfig = require('./module-federation.config');
 const commonRulesRsPack = require('../../../../tools/deployment/rspack.common');
 
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 const config = {
   ...baseConfig,
 };
@@ -63,9 +65,9 @@ module.exports = composePlugins(
       sideEffects: false,
     };
 
-    // Add performance hints
+    // Add performance hints - suppress in development
     config.performance = {
-      hints: 'warning',
+      hints: isDevelopment ? false : 'warning',
       maxEntrypointSize: 500000, // 500KB
       maxAssetSize: 300000, // 300KB
     };
@@ -84,6 +86,14 @@ module.exports = composePlugins(
         '@zionix-formEngine/core': require('path').resolve(__dirname, 'src/pages/FormEngine/core'),
       },
     };
+
+    // Ignore source map warnings for node_modules in development
+    if (isDevelopment) {
+      config.ignoreWarnings = [
+        /Failed to parse source map/,
+        /source-map-loader/,
+      ];
+    }
 
     return config;
   }

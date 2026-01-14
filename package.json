@@ -3,7 +3,15 @@
   "version": "0.0.0",
   "license": "MIT",
   "moduleFederation": {
-    "shared": ["react", "react-dom", "react-router-dom", "antd", "axios", "zustand"]
+    "shared": [
+      "react",
+      "react-dom",
+      "dayjs",
+      "react-router-dom",
+      "antd",
+      "axios",
+      "zustand"
+    ]
   },
   "scripts": {
     "start-zionix-main": "node tools/deployment/zionix-main.script.config.js",
@@ -24,34 +32,18 @@
   },
   "private": true,
   "dependencies": {
-    "@emotion/cache": "^11.13.5",
-    "@emotion/css": "^11.13.5",
-    "@emotion/react": "^11.14.0",
-    "@emotion/serialize": "^1.3.3",
-    "@emotion/styled": "^11.14.1",
-    "@fluent/bundle": "^0.19.1",
     "@fontsource/inter": "^5.2.8",
     "@tanstack/react-query": "^5.90.5",
     "antd": "^5.27.6",
     "axios": "^1.12.2",
-    "classnames": "^2.5.1",
-    "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "env-cmd": "^10.1.0",
     "framer-motion": "^12.23.24",
-    "mobx": "^6.15.0",
-    "mobx-react": "^9.2.1",
-    "rc-select": "^14.16.4",
     "react": "18.3.1",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "18.3.1",
-    "react-number-format": "^5.4.4",
     "react-router-dom": "6.11.2",
     "remixicon": "^4.7.0",
-    "shortid": "^2.2.17",
     "tslib": "^2.3.0",
-    "zod": "^4.1.13",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
