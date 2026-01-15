@@ -24,6 +24,7 @@ import {
 } from 'antd';
 import { motion } from 'framer-motion';
 import { useTheme, ZionixLogo } from '@zionix/design-system';
+import { CardTopLoader } from '@zionix/shared-utilities/components';
 import {
   useStyles,
   containerVariants,
@@ -140,11 +141,14 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
     return (
       <div style={styles.mobileContainer}>
         <motion.div
-          style={styles.mobileFormContainer}
+          style={{ ...styles.mobileFormContainer, position: 'relative' }}
           variants={formVariants}
           initial="initial"
           animate="animate"
         >
+          {/* Card Top Loader */}
+          <CardTopLoader show={loading} />
+
           {/* Mobile Logo */}
           <div style={styles.mobileLogo}>
             <div style={styles.dotworkLogo}>
@@ -269,11 +273,14 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
           {/* Left Side - Login Form */}
           <Col span={12} style={styles.leftColumn}>
             <motion.div
-              style={styles.formContainer}
+              style={{ ...styles.formContainer, position: 'relative' }}
               variants={formVariants}
               initial="initial"
               animate="animate"
             >
+              {/* Card Top Loader */}
+              <CardTopLoader show={loading} />
+
               {/* Logo */}
               <motion.div
                 style={styles.logo}

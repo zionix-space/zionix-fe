@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
+import { GlobalTopLoader } from '@zionix/shared-utilities/components';
 import availableApps from 'tools/deployment/zionix-main.modules.json';
 import HostAppLayout from '../components/shell/layout/HostAppLayout';
 import AppsRedirect from '../components/shell/layout/AppsRedirect';
@@ -103,7 +104,7 @@ export function AppRouter() {
   const excludedModule = 'authApp';
 
   return (
-    <React.Suspense fallback={null}>
+    <React.Suspense fallback={<GlobalTopLoader />}>
       <AnimatePresence mode="popLayout">
         <div>
           <Routes>
@@ -114,7 +115,9 @@ export function AppRouter() {
                 isAuthenticated ? (
                   <Navigate to="/apps" replace />
                 ) : (
-                  <RouteWithTransition element={<AuthApp />} />
+                  <React.Suspense fallback={<GlobalTopLoader />}>
+                    <RouteWithTransition element={<AuthApp />} />
+                  </React.Suspense>
                 )
               }
             />
@@ -145,7 +148,11 @@ export function AppRouter() {
                     <Route
                       key={moduleName}
                       path={`${moduleName}/*`}
-                      element={<ModuleComponent />}
+                      element={
+                        <React.Suspense fallback={<GlobalTopLoader />}>
+                          <ModuleComponent />
+                        </React.Suspense>
+                      }
                     />
                   );
                 })}

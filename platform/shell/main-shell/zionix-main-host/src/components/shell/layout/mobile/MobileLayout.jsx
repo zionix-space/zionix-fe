@@ -6,6 +6,7 @@ import { useMenuData } from '../../../../data/hooks/menu';
 import { QueryErrorFallback } from '../../../common/QueryErrorBoundary';
 import MobileHeader from './MobileHeader';
 import MobileBottomNavigation from './MobileBottomNavigation';
+import TopLoadingBar from '../../../common/loaders/TopLoadingBar';
 import { useStyles } from './MobileLayout.style';
 
 const { useToken } = theme;
@@ -35,29 +36,34 @@ const MobileLayout = ({ className = '', style = {} }) => {
   }
 
   return (
-    <div
-      className={`mobile-layout ${className}`}
-      style={{
-        ...styles.layoutContainerStyle,
-        ...style
-      }}
-    >
-      {/* Mobile Header */}
-      <MobileHeader />
+    <>
+      {/* Global Top Loading Bar */}
+      <TopLoadingBar />
 
-      {/* Main Content Area */}
-      <main
-        className="mobile-content"
-        style={styles.mainContentStyle}
+      <div
+        className={`mobile-layout ${className}`}
+        style={{
+          ...styles.layoutContainerStyle,
+          ...style
+        }}
       >
-        <div style={styles.contentWrapperStyle}>
-          <Outlet />
-        </div>
-      </main>
+        {/* Mobile Header */}
+        <MobileHeader />
 
-      {/* Mobile Bottom Navigation */}
-      <MobileBottomNavigation />
-    </div>
+        {/* Main Content Area */}
+        <main
+          className="mobile-content"
+          style={styles.mainContentStyle}
+        >
+          <div style={styles.contentWrapperStyle}>
+            <Outlet />
+          </div>
+        </main>
+
+        {/* Mobile Bottom Navigation */}
+        <MobileBottomNavigation />
+      </div>
+    </>
   );
 };
 

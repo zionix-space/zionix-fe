@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
+import { MicrofrontendLoader } from '@zionix/shared-utilities/components';
 import App from "./app/app";
 import { initializeWarningSuppression } from "./utils/suppressWarnings";
 
@@ -37,6 +38,8 @@ initializeWarningSuppression();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <StrictMode>
-    <App />
+    <MicrofrontendLoader appName="Admin">
+      <App />
+    </MicrofrontendLoader>
   </StrictMode>
 );

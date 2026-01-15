@@ -1,63 +1,76 @@
-import { Progress, theme } from 'antd';
-import { useEffect } from 'react';
+import { theme } from 'antd';
+import { useState, useEffect } from 'react';
 import { useTopLoadingBar } from '../../../data/hooks/loaders/useTopLoadingBar';
 import { useMenuQuery } from '../../../data/hooks/menu/useMenuQuery';
 import { useStyles } from './TopLoadingBar.style';
 
 /**
- * Top Loading Bar - Always at the very top of viewport
- * Theme-aware with dark mode support using CSS-in-JS
+ * Top Loading Bar - Indeterminate flowing loader at viewport top
+ * Fast linear motion style, blocks interactions during loading
  * Automatically hides when there's a menu query error
  */
 const TopLoadingBar = () => {
-    const { progress, isLoading } = useTopLoadingBar();
+    const { isLoading } = useTopLoadingBar();
     const { isError: isMenuError } = useMenuQuery();
     const { token } = theme.useToken();
     const styles = useStyles(token);
+    const [showOverlay, setShowOverlay] = useState(false);
 
-    // Inject global CSS to ensure no margins on Progress component
+    // Show overlay after a brief delay to avoid flashing on quick transitions
     useEffect(() => {
-        const styleId = 'top-loading-bar-override';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `
-                .top-loading-bar-progress,
-                .top-loading-bar-progress .ant-progress,
-                .top-loading-bar-progress .ant-progress-outer,
-                .top-loading-bar-progress .ant-progress-inner,
-                .top-loading-bar-progress .ant-progress-bg {
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    line-height: 0 !important;
-                    display: block !important;
-                }
-            `;
-            document.head.appendChild(style);
+        if (isLoading) {
+            const timer = setTimeout(() => setShowOverlay(true), 100);
+            return () => clearTimeout(timer);
+        } else {
+            setShowOverlay(false);
         }
-    }, []);
+    }, [isLoading]);
 
     // Don't show loader if there's a menu error
     if (!isLoading || isMenuError) return null;
 
     return (
-        <div style={styles.container}>
-            <Progress
-                percent={progress}
-                showInfo={false}
-                strokeColor={token.colorPrimary}
-                trailColor="transparent"
-                size={[null, 3]}
-                status="active"
-                style={{
-                    margin: 0,
-                    padding: 0,
-                    lineHeight: 0,
-                    height: '3px',
-                }}
-                className="top-loading-bar-progress"
-            />
-        </div>
+        <>
+            {/* Interaction blocker overlay - only visible during loading */}
+            {showOverlay && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        zIndex: 9998,
+                        cursor: 'wait',
+                        pointerEvents: 'all',
+                    }}
+                />
+            )}
+
+            {/* Top Loading Bar - Indeterminate flowing style */}
+            <div style={styles.container}>
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        height: '100%',
+                        width: '40%',
+                        background: `linear-gradient(90deg, transparent, ${token.colorPrimary}, ${token.colorPrimary}, transparent)`,
+                        animation: 'topFlowLoader 1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+                        boxShadow: `0 0 10px ${token.colorPrimary}`,
+                    }}
+                />
+            </div>
+
+            <style>{`
+                @keyframes topFlowLoader {
+                    0% {
+                        transform: translateX(-100%);
+                    }
+                    100% {
+                        transform: translateX(350%);
+                    }
+                }
+            `}</style>
+        </>
     );
 };
 

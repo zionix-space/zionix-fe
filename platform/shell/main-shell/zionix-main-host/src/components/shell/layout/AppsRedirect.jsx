@@ -10,12 +10,12 @@
 
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spin } from 'antd';
 import { useMenuData } from '../../../data/hooks/menu';
 
 /**
  * Component that redirects to the first available menu page
  * Loads menu data and navigates to first menu's first page
+ * No loader shown - TopLoadingBar handles the visual feedback
  */
 const AppsRedirect = () => {
     const navigate = useNavigate();
@@ -38,25 +38,8 @@ const AppsRedirect = () => {
         }
     }, [mainMenus, isLoading, isError, navigate]);
 
-    // Don't show loader if there's an error (error is handled by layout)
-    if (isError) {
-        return null;
-    }
-
-    // Show loading spinner while fetching menus
-    return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-            width: '100%'
-        }}>
-            <Spin size="large">
-                <div style={{ padding: '50px' }} />
-            </Spin>
-        </div>
-    );
+    // Don't show anything - TopLoadingBar provides visual feedback
+    return null;
 };
 
 export default AppsRedirect;

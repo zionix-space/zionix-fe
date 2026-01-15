@@ -8,9 +8,10 @@ export const useStyles = (token) => ({
         height: '3px',
         margin: 0,
         padding: 0,
-        zIndex: 99999,
+        zIndex: 9999,
         overflow: 'hidden',
         lineHeight: 0,
         fontSize: 0,
+        backgroundColor: 'transparent',
     },
 });

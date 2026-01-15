@@ -3,12 +3,14 @@
  * 
  * Usage:
  * 1. TopLoadingBar - Global route transitions
- * 2. SkeletonLoader - Page-level initial loads
- * 3. SpinLoader - Component-level loading
- * 4. ProgressLoader - Long operations with progress
+ * 2. SuspenseLoader - React.Suspense fallback (top bar only, blocks interactions)
+ * 3. SkeletonLoader - Page-level initial loads
+ * 4. SpinLoader - Component-level loading
+ * 5. ProgressLoader - Long operations with progress
  */
 
 export { default as TopLoadingBar } from './TopLoadingBar';
+export { SuspenseLoader } from './SuspenseLoader';
 export { default as SkeletonLoader } from './SkeletonLoader';
 export { default as SpinLoader } from './SpinLoader';
 export { default as ProgressLoader } from './ProgressLoader';
