@@ -1,4 +1,10 @@
 {
-  "adminApp": "https://admin-app-nu-ruby.vercel.app",
-  "zionix-main-host": "https://zionix-main-host.vercel.app"
+  "adminApp": {
+    "url": "https://admin-app-nu-ruby.vercel.app",
+    "projectName": "admin-app"
+  },
+  "zionix-main-host": {
+    "url": "https://zionix-main-host.vercel.app",
+    "projectName": "zionix-main-host"
+  }
 }

@@ -78,13 +78,21 @@ function deployToVercel(environment, module, isProduction = false) {
         const vercelUrlsPath = path.resolve("tools/deployment/vercel-urls.json");
         const vercelUrls = JSON.parse(fs.readFileSync(vercelUrlsPath, "utf8"));
 
-        const targetUrl = vercelUrls[module];
-        if (!targetUrl) {
-            throw new Error(`No Vercel URL configured for ${module} in vercel-urls.json`);
+        const config = vercelUrls[module];
+        if (!config) {
+            throw new Error(`No Vercel configuration found for ${module} in vercel-urls.json`);
         }
 
-        // Extract project name from URL (e.g., "admin-app-nu-ruby" from "https://admin-app-nu-ruby.vercel.app")
-        const projectName = targetUrl.replace("https://", "").replace(".vercel.app", "");
+        // Support both old format (string) and new format (object)
+        const targetUrl = typeof config === 'string' ? config : config.url;
+        const projectName = typeof config === 'string'
+            ? config.replace("https://", "").replace(".vercel.app", "")
+            : config.projectName;
+
+        if (!targetUrl || !projectName) {
+            throw new Error(`Invalid Vercel configuration for ${module} in vercel-urls.json`);
+        }
+
         console.log(`✅ Target project: ${projectName} (${targetUrl})`);
 
         // Step 4: Deploy to Vercel
