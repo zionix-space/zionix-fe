@@ -3,7 +3,7 @@ module.exports = {
   remotes: [
     [
         "adminApp",
-        "[object Object]/remoteEntry.js"
+        "https://admin-app-nu-ruby.vercel.app/remoteEntry.js"
     ]
 ],
   shared: (name) => {

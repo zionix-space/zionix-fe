@@ -104,6 +104,9 @@ export function AppRouter() {
 
 
 
+
+
+
       default:
         ModuleComponent = () => <div>App not found</div>;
     }

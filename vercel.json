@@ -1,7 +1,6 @@
 {
   "version": 2,
   "name": "zionix-workspace",
-  "projectName": "zionix-workspace",
   "rewrites": [
     {
       "source": "/(.*)",

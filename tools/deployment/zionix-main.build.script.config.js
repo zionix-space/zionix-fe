@@ -201,14 +201,16 @@ function generateRemoteConfig(environment, targetModule = null) {
     const remotes = relevantModules
         .filter(module => module !== 'authApp') // Exclude authApp - it's bundled with host
         .map((module) => {
-            const moduleUrl = vercelUrls[module];
+            const moduleConfig = vercelUrls[module];
 
-            if (!moduleUrl) {
+            if (!moduleConfig) {
                 console.warn(`⚠️  Warning: No Vercel URL found for ${module} in vercel-urls.json`);
                 console.warn(`⚠️  Using fallback URL: https://${module}.vercel.app`);
                 return [module, `https://${module}.vercel.app/remoteEntry.js`];
             }
 
+            // Support both old format (string) and new format (object)
+            const moduleUrl = typeof moduleConfig === 'string' ? moduleConfig : moduleConfig.url;
             return [module, `${moduleUrl}/remoteEntry.js`];
         });
 
@@ -329,7 +331,9 @@ function buildApp(env, targetModule = null) {
         // Get deployment URL for the target module
         let deploymentInfo = "";
         if (targetModule && vercelUrls[targetModule]) {
-            deploymentInfo = `║  Deployment URL: ${vercelUrls[targetModule].padEnd(38)}║`;
+            const moduleConfig = vercelUrls[targetModule];
+            const deployUrl = typeof moduleConfig === 'string' ? moduleConfig : moduleConfig.url;
+            deploymentInfo = `║  Deployment URL: ${deployUrl.padEnd(38)}║`;
         } else if (targetModule) {
             deploymentInfo = `║  Deployment URL: Not configured in vercel-urls.json       ║`;
         } else {
