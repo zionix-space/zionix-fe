@@ -466,6 +466,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         selectedKey={selectedKey}
                         selectedItem={selectedItem}
                         allMenuKeys={allKeys}
+                        menuData={menuData}
                         onChange={handleFieldChange}
                         onDelete={handleDelete}
                         onAddChild={handleAddChild}

@@ -61,7 +61,8 @@ export const useCreateMenuMutation = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: menuService.createMenu,
+        mutationFn: ({ menuData, navDocId, parentKeys }) =>
+            menuService.createMenu(menuData, navDocId, parentKeys),
         onSuccess: (data) => {
             // Invalidate and refetch menus list
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });

@@ -2,15 +2,20 @@ import { useEffect, useState, useRef } from 'react';
 import { Form, Input, InputNumber, Switch, Empty, Button, Popconfirm, Radio, Select, theme } from 'antd';
 import { useStyles } from './MenuForm.style';
 import IconPicker from './IconPicker';
+import { useCreateMenuMutation } from '../hooks/useMenuQuery';
+import { getParentPath } from '../utils/menuTransformers';
 
 const { TextArea } = Input;
 const { useToken } = theme;
 
-const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, onChange, onDelete, onAddChild }) => {
+const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, onDelete, onAddChild }) => {
     const { token } = useToken();
     const [form] = Form.useForm();
     const [badgeType, setBadgeType] = useState('none');
+    const [isAddingChild, setIsAddingChild] = useState(false);
+    const [newChildData, setNewChildData] = useState(null);
     const previousSelectedKeyRef = useRef(null);
+    const createMenuMutation = useCreateMenuMutation();
 
     const isDarkMode =
         token.colorBgBase === '#000000' ||
@@ -25,10 +30,21 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, onChange, onDelete, 
     useEffect(() => {
         // Only update form when a different item is selected (based on selectedKey from parent)
         if (selectedKey && selectedKey !== previousSelectedKeyRef.current) {
-            // New item selected
             previousSelectedKeyRef.current = selectedKey;
 
             if (selectedItem) {
+                // Check if this is a newly created item (starts with 'new-menu-')
+                const isNewItem = selectedItem.key && selectedItem.key.startsWith('new-menu-');
+
+                // If it's a new item, set add mode to true
+                if (isNewItem) {
+                    setIsAddingChild(true);
+                } else {
+                    setIsAddingChild(false);
+                }
+
+                setNewChildData(null);
+
                 let currentBadgeType = 'none';
                 if (selectedItem.badge) {
                     if (typeof selectedItem.badge === 'string') {
@@ -68,11 +84,19 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, onChange, onDelete, 
             previousSelectedKeyRef.current = null;
             form.resetFields();
             setBadgeType('none');
+            setIsAddingChild(false);
+            setNewChildData(null);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedKey]);
 
     const handleFieldChange = (changedFields) => {
+        // If we're in add mode (creating a new child), don't update the tree in real-time
+        // Changes will be saved when the user clicks "Save" and API call succeeds
+        if (isAddingChild) {
+            return;
+        }
+
         const fieldName = Object.keys(changedFields)[0];
         const fieldValue = changedFields[fieldName];
 
@@ -139,6 +163,95 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, onChange, onDelete, 
         }
     };
 
+    const handleAddChildClick = () => {
+        // Call the original onAddChild to create the child in the tree
+        onAddChild();
+        // Switch to "add mode" - button will show "Save"
+        setIsAddingChild(true);
+    };
+
+    const handleSaveNewChild = async () => {
+        try {
+            // Validate form
+            await form.validateFields();
+
+            // Get all form values
+            const formValues = form.getFieldsValue();
+
+            // Get dynamic nav_doc_id from menuData (root level _id)
+            const navDocId = menuData?._id;
+            if (!navDocId) {
+                console.error('Navigation document ID not found');
+                return;
+            }
+
+            // Get dynamic parent path from root to the NEW child's parent
+            // Since selectedKey is the NEW child, getParentPath returns the path to its parent
+            const parentPath = getParentPath(menuData, selectedKey);
+
+            if (!parentPath || parentPath.length === 0) {
+                console.error('Parent path not found for selected item');
+                return;
+            }
+
+            // Prepare badge value
+            let badgeValue = null;
+            if (badgeType === 'string' && formValues.badgeString) {
+                badgeValue = formValues.badgeString;
+            } else if (badgeType === 'object' && formValues.badgeCount) {
+                badgeValue = {
+                    count: formValues.badgeCount,
+                    color: formValues.badgeColor || 'blue'
+                };
+            }
+
+            // Parse menu_metadata
+            let menuMetadata = {};
+            try {
+                menuMetadata = formValues.menu_metadata ? JSON.parse(formValues.menu_metadata) : {};
+            } catch (e) {
+                menuMetadata = {};
+            }
+
+            // Build the API payload according to the schema
+            const menuPayload = {
+                application_id: formValues.application_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                name: formValues.label || "string",
+                label: formValues.label || "string",
+                route: formValues.route || "string",
+                component: formValues.component || "string",
+                icon: formValues.icon || "string",
+                order_index: formValues.order_index ?? 0,
+                level: formValues.level ?? 1,
+                is_visible: formValues.is_visible ?? true,
+                parent_menu_id: selectedItem?.menu_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                menu_metadata: menuMetadata,
+                is_active: formValues.is_active ?? true,
+                access: ["read"],
+                key: formValues.key || "string",
+                badge: badgeValue || "string",
+                section_title: formValues.sectionTitle || "string",
+                object_id: formValues.object_id || "string",
+                menus_description: formValues.description || "string",
+                children: []
+            };
+
+            // Call the create menu API with dynamic parameters
+            // parentPath already contains the correct path to the parent (e.g., ['admin-app', 'app-management'])
+            await createMenuMutation.mutateAsync({
+                menuData: menuPayload,
+                navDocId: navDocId,
+                parentKeys: parentPath
+            });
+
+            // Reset add mode
+            setIsAddingChild(false);
+            setNewChildData(null);
+        } catch (error) {
+            console.error('Failed to save menu:', error);
+        }
+    };
+
     if (!selectedItem) {
         return (
             <div style={styles.emptyState}>
@@ -153,12 +266,13 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, onChange, onDelete, 
             <div style={styles.formHeader}>
                 <Button
                     type="primary"
-                    icon={<i className="ri-add-line" />}
-                    onClick={onAddChild}
+                    icon={isAddingChild ? <i className="ri-save-line" /> : <i className="ri-add-line" />}
+                    onClick={isAddingChild ? handleSaveNewChild : handleAddChildClick}
                     shape="round"
                     size="small"
+                    loading={createMenuMutation.isLoading}
                 >
-                    Add Child
+                    {isAddingChild ? 'Save' : 'Add Child'}
                 </Button>
                 <Popconfirm
                     title="Delete menu item"

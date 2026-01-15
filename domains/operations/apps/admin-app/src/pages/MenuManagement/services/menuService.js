@@ -25,10 +25,20 @@ export const menuService = {
     /**
      * Create new menu
      * @param {Object} menuData - Menu data
+     * @param {string} navDocId - Navigation document ID (from root _id)
+     * @param {Array<string>} parentKeys - Parent keys array (path from root to parent)
      * @returns {Promise<Object>} Created menu
      */
-    createMenu: async (menuData) => {
-        return await axiosClient.post('/menus', menuData);
+    createMenu: async (menuData, navDocId, parentKeys) => {
+        if (!navDocId || !parentKeys || parentKeys.length === 0) {
+            throw new Error('navDocId and parentKeys are required');
+        }
+
+        const params = new URLSearchParams();
+        params.append('nav_doc_id', navDocId);
+        parentKeys.forEach(key => params.append('parent_keys', key));
+
+        return await axiosClient.post(`/menus/?${params.toString()}`, menuData);
     },
 
     /**

@@ -218,3 +218,36 @@ export const filterMenuItems = (menuItems, searchValue) => {
     const filteredItems = filterRecursive(menuItems);
     return { filteredItems, expandedKeys };
 };
+
+/**
+ * Gets the parent path (array of keys) from root to a specific menu item
+ * @param {Object} menuData - Complete menu configuration
+ * @param {string} targetKey - Key of the target menu item
+ * @returns {Array} Array of parent keys from root to target (excluding target itself)
+ */
+export const getParentPath = (menuData, targetKey) => {
+    if (!menuData || !targetKey) return [];
+
+    const findPath = (items, path = []) => {
+        if (!items || !Array.isArray(items)) return null;
+
+        for (const item of items) {
+            if (item.key === targetKey) {
+                return path;
+            }
+            if (item.children && item.children.length > 0) {
+                const found = findPath(item.children, [...path, item.key]);
+                if (found) return found;
+            }
+        }
+        return null;
+    };
+
+    // Search in mainNavigation
+    if (menuData.mainNavigation) {
+        const path = findPath(menuData.mainNavigation);
+        if (path) return path;
+    }
+
+    return [];
+};
