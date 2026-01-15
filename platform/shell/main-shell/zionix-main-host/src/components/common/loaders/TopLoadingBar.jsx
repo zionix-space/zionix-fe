@@ -8,6 +8,9 @@ import { useStyles } from './TopLoadingBar.style';
  * Top Loading Bar - Indeterminate flowing loader at viewport top
  * Fast linear motion style, blocks interactions during loading
  * Automatically hides when there's a menu query error
+ * 
+ * NOTE: This loader is for route transitions within the app.
+ * It coordinates with GlobalTopLoader to prevent duplicate loaders.
  */
 const TopLoadingBar = () => {
     const { isLoading } = useTopLoadingBar();
@@ -40,6 +43,7 @@ const TopLoadingBar = () => {
                         zIndex: 9998,
                         cursor: 'wait',
                         pointerEvents: 'all',
+                        backgroundColor: 'transparent',
                     }}
                 />
             )}
@@ -54,7 +58,7 @@ const TopLoadingBar = () => {
                         height: '100%',
                         width: '40%',
                         background: `linear-gradient(90deg, transparent, ${token.colorPrimary}, ${token.colorPrimary}, transparent)`,
-                        animation: 'topFlowLoader 1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+                        animation: 'topFlowLoader 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite',
                         boxShadow: `0 0 10px ${token.colorPrimary}`,
                     }}
                 />

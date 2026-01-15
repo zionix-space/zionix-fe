@@ -10,6 +10,8 @@ import { theme } from 'antd';
  * Usage:
  * 1. As Suspense fallback: <Suspense fallback={<GlobalTopLoader />}>
  * 2. As standalone loader: <GlobalTopLoader show={isLoading} />
+ * 
+ * NOTE: Uses unique animation name to avoid conflicts with TopLoadingBar
  */
 export const GlobalTopLoader = ({ show = true, minDisplayTime = 300 }) => {
     const { token } = theme.useToken();
@@ -43,12 +45,12 @@ export const GlobalTopLoader = ({ show = true, minDisplayTime = 300 }) => {
 
     return (
         <>
-            {/* Overlay to block interactions */}
+            {/* Overlay to block interactions - transparent, only blocks clicks */}
             <div
                 style={{
                     position: 'fixed',
                     inset: 0,
-                    backgroundColor: token.colorBgContainer,
+                    backgroundColor: 'transparent',
                     zIndex: 9998,
                     cursor: 'wait',
                     pointerEvents: 'all',
@@ -76,14 +78,14 @@ export const GlobalTopLoader = ({ show = true, minDisplayTime = 300 }) => {
                         height: '100%',
                         width: '40%',
                         background: `linear-gradient(90deg, transparent, ${token.colorPrimary}, ${token.colorPrimary}, transparent)`,
-                        animation: 'flowLoader 1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+                        animation: 'globalFlowLoader 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite',
                         boxShadow: `0 0 10px ${token.colorPrimary}`,
                     }}
                 />
             </div>
 
             <style>{`
-                @keyframes flowLoader {
+                @keyframes globalFlowLoader {
                     0% {
                         transform: translateX(-100%);
                     }
@@ -139,14 +141,19 @@ export const MicrofrontendLoader = ({ children, appName = 'App', minDisplayTime 
 
     if (isLoading) {
         return (
-            <div
-                style={{
-                    position: 'fixed',
-                    inset: 0,
-                    backgroundColor: token.colorBgContainer,
-                    zIndex: 99999,
-                }}
-            >
+            <>
+                {/* Transparent overlay to block interactions */}
+                <div
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        backgroundColor: 'transparent',
+                        zIndex: 99998,
+                        cursor: 'wait',
+                        pointerEvents: 'all',
+                    }}
+                />
+
                 {/* Top Loading Bar - Indeterminate flowing style */}
                 <div
                     style={{
@@ -157,6 +164,7 @@ export const MicrofrontendLoader = ({ children, appName = 'App', minDisplayTime 
                         height: '3px',
                         backgroundColor: 'transparent',
                         overflow: 'hidden',
+                        zIndex: 99999,
                     }}
                 >
                     <div
@@ -167,13 +175,13 @@ export const MicrofrontendLoader = ({ children, appName = 'App', minDisplayTime 
                             height: '100%',
                             width: '40%',
                             background: `linear-gradient(90deg, transparent, ${token.colorPrimary}, ${token.colorPrimary}, transparent)`,
-                            animation: 'flowLoader 1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+                            animation: 'microfrontendFlowLoader 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite',
                             boxShadow: `0 0 10px ${token.colorPrimary}`,
                         }}
                     />
                 </div>
                 <style>{`
-                    @keyframes flowLoader {
+                    @keyframes microfrontendFlowLoader {
                         0% {
                             transform: translateX(-100%);
                         }
@@ -182,7 +190,7 @@ export const MicrofrontendLoader = ({ children, appName = 'App', minDisplayTime 
                         }
                     }
                 `}</style>
-            </div>
+            </>
         );
     }
 
