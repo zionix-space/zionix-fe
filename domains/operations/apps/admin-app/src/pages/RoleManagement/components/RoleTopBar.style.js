@@ -72,7 +72,7 @@ export const useStyles = (token, isDarkMode = false) => {
             alignItems: "center",
             flexShrink: 1,
             minWidth: 0,
-            width: "600px", // Fixed width to trigger overflow
+
             maxWidth: "calc(100vw - 500px)",
 
             backdropFilter: 'blur(8px)',
