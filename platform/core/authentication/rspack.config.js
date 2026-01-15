@@ -8,6 +8,32 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config = {
   ...baseConfig,
+  // Production optimizations
+  ...(isDevelopment ? {} : {
+    optimization: {
+      minimize: true,
+      usedExports: true,
+      sideEffects: true,
+      concatenateModules: true,
+      splitChunks: {
+        chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
+        cacheGroups: {
+          defaultVendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true,
+          },
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+        },
+      },
+    },
+  }),
 };
 
 // Nx plugins for rspack to build config object from Nx options and context.
@@ -68,6 +94,16 @@ module.exports = composePlugins(
         /Failed to parse source map/,
         /source-map-loader/,
       ];
+    } else {
+      // Production optimizations
+      config.devtool = 'source-map';
+
+      // Enable performance hints in production
+      config.performance = {
+        hints: 'warning',
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000,
+      };
     }
 
     return config;
