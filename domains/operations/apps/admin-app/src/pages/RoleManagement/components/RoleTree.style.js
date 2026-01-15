@@ -11,7 +11,7 @@ export const useStyles = (token, isDarkMode = false) => ({
         alignItems: 'center',
         gap: '10px',
         width: '100%',
-        padding: '2px 0',
+        padding: '4px 0',
     },
 
     treeNodeIcon: {
@@ -22,13 +22,23 @@ export const useStyles = (token, isDarkMode = false) => ({
 
     treeNodeLabel: {
         flex: 1,
-        fontSize: '13px',
+        fontSize: '14px',
         fontWeight: 500,
         color: token.colorText,
     },
 
-    treeNodeBadge: {
+    permissionControl: {
         flexShrink: 0,
         marginLeft: 'auto',
+    },
+
+    radioButton: {
+        padding: '0 10px',
+        minWidth: '36px',
+        height: '28px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: `1px solid ${token.colorBorder}`,
     },
 });

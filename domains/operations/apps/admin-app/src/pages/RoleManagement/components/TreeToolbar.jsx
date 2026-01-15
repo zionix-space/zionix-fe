@@ -1,10 +1,26 @@
-import { Input, Button, theme } from 'antd';
+import { Input, Button, theme, Dropdown, Space } from 'antd';
+import { LockOutlined, UnlockOutlined, StopOutlined, DownOutlined } from '@ant-design/icons';
 import { useStyles } from './TreeToolbar.style';
 
 const { Search } = Input;
 const { useToken } = theme;
 
-const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport }) => {
+const TreeToolbar = ({
+    searchValue,
+    onSearchChange,
+    onExpandAll,
+    onCollapseAll,
+    onSave,
+    isDirty,
+    saving,
+    onUndo,
+    onRedo,
+    canUndo,
+    canRedo,
+    onExport,
+    onImport,
+    onBulkPermissionChange, // New prop for bulk permission updates
+}) => {
     const { token } = useToken();
 
     const isDarkMode =
@@ -16,6 +32,28 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
             parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
 
     const styles = useStyles(token, isDarkMode);
+
+    // Bulk permission menu items
+    const bulkPermissionItems = [
+        {
+            key: 'fullaccess',
+            label: 'Set All to Full Access',
+            icon: <UnlockOutlined style={{ color: token.colorSuccess }} />,
+            onClick: () => onBulkPermissionChange?.('fullaccess'),
+        },
+        {
+            key: 'readonly',
+            label: 'Set All to Read Only',
+            icon: <LockOutlined style={{ color: token.colorWarning }} />,
+            onClick: () => onBulkPermissionChange?.('readonly'),
+        },
+        {
+            key: 'disabled',
+            label: 'Set All to Disabled',
+            icon: <StopOutlined style={{ color: token.colorError }} />,
+            onClick: () => onBulkPermissionChange?.('disabled'),
+        },
+    ];
 
     return (
         <div style={styles.toolbarContainer}>
@@ -29,6 +67,14 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     size="small"
                 />
                 <div style={styles.spacer} />
+                <Dropdown menu={{ items: bulkPermissionItems }} trigger={['click']}>
+                    <Button size="small" type="default" shape="round">
+                        <Space size={4}>
+                            Bulk Update
+                            <DownOutlined />
+                        </Space>
+                    </Button>
+                </Dropdown>
                 <div style={styles.capsuleContainer}>
                     <Button
                         icon={<i className="ri-arrow-go-back-line" />}

@@ -65,6 +65,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const [isDirty, setIsDirty] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
+    const [permissions, setPermissions] = useState({}); // New state for permissions
 
     // Initialize menu data from API
     useEffect(() => {
@@ -72,6 +73,22 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             setMenuData(apiMenuData);
             if (onMenuDataChange) {
                 onMenuDataChange(apiMenuData);
+            }
+
+            // Initialize permissions for all menu items (default to disabled)
+            const initializePermissions = (items, perms = {}) => {
+                items.forEach(item => {
+                    perms[item.key] = item.permission || 'disabled';
+                    if (item.children && item.children.length > 0) {
+                        initializePermissions(item.children, perms);
+                    }
+                });
+                return perms;
+            };
+
+            if (apiMenuData.mainNavigation) {
+                const initialPerms = initializePermissions(apiMenuData.mainNavigation);
+                setPermissions(initialPerms);
             }
         }
     }, [apiMenuData, onMenuDataChange]);
@@ -305,6 +322,62 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         input.click();
     };
 
+    // Handle permission change for a single node with cascading
+    const handlePermissionChange = (nodeKey, permission, cascade = true) => {
+        if (!menuData?.mainNavigation) return;
+
+        const newPermissions = { ...permissions };
+
+        // Update the node itself
+        newPermissions[nodeKey] = permission;
+
+        // Cascade to all children if enabled
+        if (cascade) {
+            const cascadeToChildren = (items) => {
+                items.forEach(item => {
+                    if (item.key === nodeKey && item.children && item.children.length > 0) {
+                        const updateChildren = (children) => {
+                            children.forEach(child => {
+                                newPermissions[child.key] = permission;
+                                if (child.children && child.children.length > 0) {
+                                    updateChildren(child.children);
+                                }
+                            });
+                        };
+                        updateChildren(item.children);
+                    } else if (item.children && item.children.length > 0) {
+                        cascadeToChildren(item.children);
+                    }
+                });
+            };
+
+            cascadeToChildren(menuData.mainNavigation);
+        }
+
+        setPermissions(newPermissions);
+        setIsDirty(true);
+    };
+
+    // Handle bulk permission change for all nodes
+    const handleBulkPermissionChange = (permission) => {
+        if (!menuData?.mainNavigation) return;
+
+        const updateAllPermissions = (items, perms = {}) => {
+            items.forEach(item => {
+                perms[item.key] = permission;
+                if (item.children && item.children.length > 0) {
+                    updateAllPermissions(item.children, perms);
+                }
+            });
+            return perms;
+        };
+
+        const newPermissions = updateAllPermissions(menuData.mainNavigation);
+        setPermissions(newPermissions);
+        setIsDirty(true);
+        message.success(`All permissions set to ${permission}`);
+    };
+
     const handleDrop = (info) => {
         const dropKey = info.node.key;
         const dragKey = info.dragNode.key;
@@ -448,6 +521,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         canRedo={canRedo}
                         onExport={handleExport}
                         onImport={handleImport}
+                        onBulkPermissionChange={handleBulkPermissionChange}
                     />
                     <RoleTree
                         treeData={getTreeData()}
@@ -457,6 +531,8 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         onSelect={handleSelect}
                         onExpand={handleExpand}
                         onDrop={handleDrop}
+                        permissions={permissions}
+                        onPermissionChange={handlePermissionChange}
                     />
                 </div>
 

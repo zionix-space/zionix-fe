@@ -17,7 +17,7 @@ export const transformToTreeData = (menuItems) => {
         key: item.key,
         title: item.label,
         icon: item.icon,
-        badge: item.badge,
+        // Remove badge and other unnecessary data for role management
         children: item.children && item.children.length > 0
             ? transformToTreeData(item.children)
             : [],

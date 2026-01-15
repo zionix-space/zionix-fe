@@ -1,8 +1,16 @@
-import { useLayoutEffect } from 'react';
-import { Tree, Badge, theme } from 'antd';
+import { useLayoutEffect, useState } from 'react';
+import { Tree, Badge, theme, Radio, Space, Tooltip } from 'antd';
+import { LockOutlined, UnlockOutlined, StopOutlined } from '@ant-design/icons';
 import { useStyles } from './RoleTree.style';
 
 const { useToken } = theme;
+
+// Permission states
+const PERMISSION_STATES = {
+    DISABLED: 'disabled',
+    READONLY: 'readonly',
+    FULLACCESS: 'fullaccess',
+};
 
 const RoleTree = ({
     treeData,
@@ -12,6 +20,8 @@ const RoleTree = ({
     onSelect,
     onExpand,
     onDrop,
+    onPermissionChange, // New callback for permission changes
+    permissions = {}, // Object mapping node keys to permission states
 }) => {
     const { token } = useToken();
 
@@ -25,7 +35,7 @@ const RoleTree = ({
 
     const styles = useStyles(token, isDarkMode);
 
-    // Inject minimal CSS for theme-aware tree selection color
+    // Inject minimal CSS for theme-aware tree selection color with reduced opacity
     useLayoutEffect(() => {
         const styleId = 'menu-tree-theme-styles';
         const existingStyle = document.getElementById(styleId);
@@ -43,6 +53,16 @@ const RoleTree = ({
             .menu-editor-tree .ant-tree-node-selected .ant-tree-node-content-wrapper:hover {
                 background: ${token.colorPrimaryBgHover} !important;
             }
+            
+            /* Reduce opacity of selected radio button */
+            .menu-editor-tree .ant-radio-button-wrapper-checked {
+                background-color: ${token.colorPrimary} !important;
+                opacity: 0.75 !important;
+            }
+            
+            .menu-editor-tree .ant-radio-button-wrapper-checked:hover {
+                opacity: 0.85 !important;
+            }
         `;
         document.head.appendChild(style);
 
@@ -54,9 +74,59 @@ const RoleTree = ({
         };
     }, [token]);
 
+    // Get parent permission for a node
+    const getParentPermission = (nodeKey) => {
+        // Find parent by traversing tree data
+        const findParent = (items, targetKey, parentKey = null) => {
+            for (const item of items) {
+                if (item.key === targetKey) {
+                    return parentKey;
+                }
+                if (item.children && item.children.length > 0) {
+                    const found = findParent(item.children, targetKey, item.key);
+                    if (found !== null) return found;
+                }
+            }
+            return null;
+        };
+
+        const parentKey = findParent(treeData, nodeKey);
+        return parentKey ? permissions[parentKey] : null;
+    };
+
+    // Check if a permission is allowed based on parent
+    const isPermissionAllowed = (nodeKey, permission) => {
+        const parentPermission = getParentPermission(nodeKey);
+        if (!parentPermission) return true; // Root level, all allowed
+
+        // Permission hierarchy: disabled < readonly < fullaccess
+        const hierarchy = {
+            disabled: 0,
+            readonly: 1,
+            fullaccess: 2
+        };
+
+        return hierarchy[permission] <= hierarchy[parentPermission];
+    };
+
+    // Handle permission change for a node
+    const handlePermissionChange = (nodeKey, value) => {
+        // Check if this permission is allowed based on parent
+        if (!isPermissionAllowed(nodeKey, value)) {
+            message.warning('Cannot set higher permission than parent. Please update parent first.');
+            return;
+        }
+
+        if (onPermissionChange) {
+            onPermissionChange(nodeKey, value, true); // true = cascade to children
+        }
+    };
+
     // Custom title renderer
     const renderTitle = (nodeData) => {
-        const { title, icon, badge } = nodeData;
+        const { title, icon, key } = nodeData;
+        const currentPermission = permissions[key] || PERMISSION_STATES.DISABLED;
+        const parentPermission = getParentPermission(key);
 
         const highlightText = (text) => {
             if (!searchValue || !text) return text;
@@ -82,15 +152,50 @@ const RoleTree = ({
             <div style={styles.treeNodeTitle}>
                 {icon && <i className={icon} style={styles.treeNodeIcon} />}
                 <span style={styles.treeNodeLabel}>{highlightText(title)}</span>
-                {badge && (
-                    <span style={styles.treeNodeBadge}>
-                        {typeof badge === 'string' ? (
-                            <Badge count={badge} style={{ backgroundColor: token.colorPrimary }} />
-                        ) : (
-                            <Badge count={badge.count} style={{ backgroundColor: token.colorPrimary }} />
-                        )}
-                    </span>
-                )}
+                <div style={styles.permissionControl} onClick={(e) => e.stopPropagation()}>
+                    <Radio.Group
+                        value={currentPermission}
+                        onChange={(e) => handlePermissionChange(key, e.target.value)}
+                        size="small"
+                        buttonStyle="solid"
+                    >
+                        <Tooltip title="Disabled">
+                            <Radio.Button
+                                value={PERMISSION_STATES.DISABLED}
+                                style={styles.radioButton}
+                            >
+                                <StopOutlined style={{
+                                    color: currentPermission === PERMISSION_STATES.DISABLED ? '#fff' : token.colorError,
+                                    fontSize: '14px'
+                                }} />
+                            </Radio.Button>
+                        </Tooltip>
+                        <Tooltip title={!isPermissionAllowed(key, PERMISSION_STATES.READONLY) ? 'Parent must be Read Only or Full Access' : 'Read Only'}>
+                            <Radio.Button
+                                value={PERMISSION_STATES.READONLY}
+                                style={styles.radioButton}
+                                disabled={!isPermissionAllowed(key, PERMISSION_STATES.READONLY)}
+                            >
+                                <LockOutlined style={{
+                                    color: currentPermission === PERMISSION_STATES.READONLY ? '#fff' : token.colorWarning,
+                                    fontSize: '14px'
+                                }} />
+                            </Radio.Button>
+                        </Tooltip>
+                        <Tooltip title={!isPermissionAllowed(key, PERMISSION_STATES.FULLACCESS) ? 'Parent must be Full Access' : 'Full Access'}>
+                            <Radio.Button
+                                value={PERMISSION_STATES.FULLACCESS}
+                                style={styles.radioButton}
+                                disabled={!isPermissionAllowed(key, PERMISSION_STATES.FULLACCESS)}
+                            >
+                                <UnlockOutlined style={{
+                                    color: currentPermission === PERMISSION_STATES.FULLACCESS ? '#fff' : token.colorSuccess,
+                                    fontSize: '14px'
+                                }} />
+                            </Radio.Button>
+                        </Tooltip>
+                    </Radio.Group>
+                </div>
             </div>
         );
     };
