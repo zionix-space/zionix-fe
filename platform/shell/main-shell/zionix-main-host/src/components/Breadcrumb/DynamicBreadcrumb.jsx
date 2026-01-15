@@ -1,7 +1,9 @@
 import { Breadcrumb, theme } from 'antd';
 import { useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useStyles } from './DynamicBreadcrumb.style';
+import { useMenuData } from '../../data/hooks/menu';
 
 const { useToken } = theme;
 
@@ -11,6 +13,9 @@ const DynamicBreadcrumb = () => {
     const navigate = useNavigate();
     const styles = useStyles(token);
     const [hoveredIndex, setHoveredIndex] = useState(null);
+
+    // Get menu loading state - don't show breadcrumb until menus are loaded
+    const { isLoading: isMenuLoading } = useMenuData();
 
     // Parse the current path into breadcrumb items - skip IDs and dynamic params
     const breadcrumbItems = useMemo(() => {
@@ -47,40 +52,49 @@ const DynamicBreadcrumb = () => {
         return items;
     }, [location.pathname, navigate]);
 
-    // Don't render if no breadcrumb items
-    if (breadcrumbItems.length === 0) {
+    // Don't render if no breadcrumb items or menus are still loading
+    if (breadcrumbItems.length === 0 || isMenuLoading) {
         return null;
     }
 
     return (
-        <div style={styles.container}>
-            <Breadcrumb
-                separator={<i className="ri-arrow-right-s-line" style={styles.separator} />}
-                items={breadcrumbItems.map((item, index) => {
-                    const isLast = index === breadcrumbItems.length - 1;
-                    const isHovered = hoveredIndex === index;
+        <AnimatePresence mode="wait">
+            <motion.div
+                key="breadcrumb"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                style={styles.container}
+            >
+                <Breadcrumb
+                    separator={<i className="ri-arrow-right-s-line" style={styles.separator} />}
+                    items={breadcrumbItems.map((item, index) => {
+                        const isLast = index === breadcrumbItems.length - 1;
+                        const isHovered = hoveredIndex === index;
 
-                    return {
-                        title: (
-                            <span
-                                style={
-                                    isLast
-                                        ? styles.currentItem
-                                        : isHovered
-                                            ? styles.itemHovered
-                                            : styles.item
-                                }
-                                onClick={!isLast ? item.onClick : undefined}
-                                onMouseEnter={() => !isLast && setHoveredIndex(index)}
-                                onMouseLeave={() => !isLast && setHoveredIndex(null)}
-                            >
-                                {item.title}
-                            </span>
-                        ),
-                    };
-                })}
-            />
-        </div>
+                        return {
+                            title: (
+                                <span
+                                    style={
+                                        isLast
+                                            ? styles.currentItem
+                                            : isHovered
+                                                ? styles.itemHovered
+                                                : styles.item
+                                    }
+                                    onClick={!isLast ? item.onClick : undefined}
+                                    onMouseEnter={() => !isLast && setHoveredIndex(index)}
+                                    onMouseLeave={() => !isLast && setHoveredIndex(null)}
+                                >
+                                    {item.title}
+                                </span>
+                            ),
+                        };
+                    })}
+                />
+            </motion.div>
+        </AnimatePresence>
     );
 };
 

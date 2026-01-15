@@ -1,9 +1,11 @@
 import React from 'react';
 import { theme } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import { useMenuData } from '../../../../data/hooks/menu';
 import { QueryErrorFallback } from '../../../common/QueryErrorBoundary';
+import { PageTransitionWrapper } from '@zionix/shared-utilities/animations';
 import MobileHeader from './MobileHeader';
 import MobileBottomNavigation from './MobileBottomNavigation';
 import TopLoadingBar from '../../../common/loaders/TopLoadingBar';
@@ -21,6 +23,7 @@ const { useToken } = theme;
 const MobileLayout = ({ className = '', style = {} }) => {
   const { token } = useToken();
   const styles = useStyles(token);
+  const location = useLocation();
 
   const { deviceType } = useResponsiveLayout();
   const { isError, error } = useMenuData();
@@ -55,9 +58,14 @@ const MobileLayout = ({ className = '', style = {} }) => {
           className="mobile-content"
           style={styles.mainContentStyle}
         >
-          <div style={styles.contentWrapperStyle}>
-            <Outlet />
-          </div>
+          <AnimatePresence mode="wait">
+            <PageTransitionWrapper
+              key={location.pathname}
+              style={styles.contentWrapperStyle}
+            >
+              <Outlet />
+            </PageTransitionWrapper>
+          </AnimatePresence>
         </main>
 
         {/* Mobile Bottom Navigation */}

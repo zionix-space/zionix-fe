@@ -1,10 +1,12 @@
 import React from 'react';
 import { Layout } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { useTheme } from '@zionix/design-system';
 import { useResponsiveLayout } from '../shared/ResponsiveLayoutProvider';
 import { useMenuData } from '../../../../data/hooks/menu';
 import { QueryErrorFallback } from '../../../common/QueryErrorBoundary';
+import { PageTransitionWrapper } from '@zionix/shared-utilities/animations';
 import DesktopTopBar from './DesktopTopBar';
 import DesktopSidebar from './DesktopSidebar';
 import TopLoadingBar from '../../../common/loaders/TopLoadingBar';
@@ -21,6 +23,7 @@ const { Content } = Layout;
 const DesktopLayout = ({ className = '', style = {} }) => {
   const { token, isDarkMode } = useTheme();
   const { isError, error } = useMenuData();
+  const location = useLocation();
 
   const { sidebarCollapsed, setSidebarCollapsed, screenWidth } =
     useResponsiveLayout();
@@ -128,10 +131,15 @@ const DesktopLayout = ({ className = '', style = {} }) => {
               {/* Dynamic Breadcrumb */}
               <DynamicBreadcrumb />
 
-              {/* Page Content */}
-              <div style={{ padding: contentPadding }}>
-                <Outlet />
-              </div>
+              {/* Page Content with Smooth Animation */}
+              <AnimatePresence mode="wait">
+                <PageTransitionWrapper
+                  key={location.pathname}
+                  style={{ padding: contentPadding }}
+                >
+                  <Outlet />
+                </PageTransitionWrapper>
+              </AnimatePresence>
             </Content>
           </Layout>
         </Layout>
