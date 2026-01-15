@@ -10,7 +10,8 @@
       "react-router-dom",
       "antd",
       "axios",
-      "zustand"
+      "zustand",
+      "@tanstack/react-query"
     ]
   },
   "scripts": {

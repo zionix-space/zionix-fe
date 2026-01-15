@@ -223,6 +223,9 @@ function generateRemoteConfig(environment, targetModule = null) {
     const remotesConfigContent = `module.exports = {
   name: 'zionix-main-host',
   remotes: ${JSON.stringify(remotes, null, 4)},
+  shared: (name) => {
+${sharedFunctionBody}
+  },
 };
 `;
 

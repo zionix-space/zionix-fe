@@ -12,12 +12,16 @@ import {
     getAllExpandableKeys,
     filterMenuItems,
 } from '../utils/menuTransformers';
-import { loadMenuConfiguration, saveMenuConfiguration } from '../services/menuApi';
+import { useMenusQuery, useBulkUpdateMenusMutation } from '../hooks/useMenuQuery';
 
 const { useToken } = theme;
 
-const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange }) => {
+const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isMobile }) => {
     const { token } = useToken();
+
+    // React Query hooks
+    const { data: apiMenuData, isLoading: loading, isError, error } = useMenusQuery();
+    const bulkUpdateMutation = useBulkUpdateMenusMutation();
 
     // Detect dark mode
     const isDarkMode =
@@ -58,11 +62,19 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange }) =
     const [selectedKey, setSelectedKey] = useState(null);
     const [expandedKeys, setExpandedKeys] = useState([]);
     const [searchValue, setSearchValue] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
     const [isDirty, setIsDirty] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
+
+    // Initialize menu data from API
+    useEffect(() => {
+        if (apiMenuData) {
+            setMenuData(apiMenuData);
+            if (onMenuDataChange) {
+                onMenuDataChange(apiMenuData);
+            }
+        }
+    }, [apiMenuData, onMenuDataChange]);
 
     // Add to history when menu data changes
     const addToHistory = (data) => {
@@ -90,340 +102,6 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange }) =
             onMenuDataChange(newData);
         }
     };
-
-    // Load menu data from API
-    useEffect(() => {
-        const fetchMenuData = async () => {
-            try {
-                setLoading(true);
-                const data = await loadMenuConfiguration();
-                setMenuData(data);
-                if (onMenuDataChange) {
-                    onMenuDataChange(data);
-                }
-            } catch (error) {
-                message.error('Failed to load menu configuration');
-                // Fallback to sample data with full structure
-                const sampleData = {
-                    "_id": "69074724f217ab8fcb2e3b24",
-                    "mainNavigation": [
-                        {
-                            "key": "admin-app",
-                            "label": "AdminApp",
-                            "icon": "ri-admin-line",
-                            "description": "Manage applications and configurations",
-                            "badge": null,
-                            "children": [
-                                {
-                                    "key": "app-management",
-                                    "label": "AppSetup",
-                                    "application_id": "c3140a19-c79e-4902-8591-2a7e7e944809",
-                                    "icon": "ri-kanban-view-2",
-                                    "description": "Manage applications and configurations",
-                                    "badge": null,
-                                    "sectionTitle": "App Management",
-                                    "object_id": "string",
-                                    "children": [
-                                        {
-                                            "key": "domains",
-                                            "label": "Domains",
-                                            "icon": null,
-                                            "description": "Manage domain configurations",
-                                            "badge": null,
-                                            "children": [],
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "apps",
-                                            "label": "Apps",
-                                            "icon": null,
-                                            "description": "Application management",
-                                            "badge": { "count": 5, "color": "blue" },
-                                            "children": [],
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "menus",
-                                            "label": "Menus",
-                                            "icon": null,
-                                            "description": "Menu configuration and management",
-                                            "badge": null,
-                                            "children": [],
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "forms",
-                                            "label": "Forms",
-                                            "icon": null,
-                                            "description": "Form builder and management",
-                                            "badge": { "count": 3, "color": "green" },
-                                            "children": [],
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "lowcode",
-                                            "label": "Low Code Viewer",
-                                            "icon": null,
-                                            "description": "Low code form viewer",
-                                            "badge": null,
-                                            "children": [],
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "buttons",
-                                            "label": "Buttons",
-                                            "icon": null,
-                                            "description": "Button components and styles",
-                                            "badge": null,
-                                            "children": [],
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        }
-                                    ],
-                                    "route": "app-setup",
-                                    "component": null,
-                                    "order_index": 0,
-                                    "level": 1,
-                                    "is_visible": true,
-                                    "is_active": true,
-                                    "menu_metadata": {},
-                                    "menu_id": "593fe78f-ba99-48cc-8d19-799f41995ab4",
-                                    "icons": [{ "additionalProp1": {} }]
-                                },
-                                {
-                                    "key": "client-management",
-                                    "label": "Client setup",
-                                    "application_id": "c3140a19-c79e-4902-8591-2a7e7e944809",
-                                    "icon": "ri-id-card-line",
-                                    "description": "Client and organizational management",
-                                    "badge": null,
-                                    "sectionTitle": "Client Management",
-                                    "object_id": "string",
-                                    "children": [
-                                        {
-                                            "key": "clients",
-                                            "label": "Clients",
-                                            "icon": null,
-                                            "description": "Client information and management",
-                                            "badge": { "count": 12, "color": "orange" },
-                                            "children": [],
-                                            "menu_id": "64cf9321-6469-44b8-8e2f-969466356ec0",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "entities-branches",
-                                            "label": "Entities/Branches",
-                                            "icon": null,
-                                            "description": "Organizational entities and branches",
-                                            "badge": null,
-                                            "children": [],
-                                            "menu_id": "a89826fc-e5a6-4479-8aca-b90cbd46d430",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "date-time",
-                                            "label": "Date & Time",
-                                            "icon": null,
-                                            "description": "Date and time configurations",
-                                            "badge": null,
-                                            "children": [],
-                                            "menu_id": "29ed3c69-329f-4c06-a0a3-e7f647a00666",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "department",
-                                            "label": "Department",
-                                            "icon": null,
-                                            "description": "Department management",
-                                            "badge": { "count": 8, "color": "purple" },
-                                            "children": [],
-                                            "menu_id": "6c1e81b2-2de4-4e95-a049-2f67521ca2a8",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "divisions",
-                                            "label": "Divisions",
-                                            "icon": null,
-                                            "description": "Division and unit management",
-                                            "badge": null,
-                                            "children": [],
-                                            "menu_id": "9a5dd30d-b4e5-454e-bfcb-56b5e99f48c7",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "job-code",
-                                            "label": "Job Code",
-                                            "icon": null,
-                                            "description": "Job classification and codes",
-                                            "badge": null,
-                                            "children": [],
-                                            "menu_id": "c487f4fa-4f8e-4d35-9972-e01ad9399f1b",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "authentication-policies",
-                                            "label": "Authentication Policies",
-                                            "icon": null,
-                                            "description": "Security and authentication policies",
-                                            "badge": { "count": 2, "color": "red" },
-                                            "children": [],
-                                            "menu_id": "90ee344a-5ecb-427c-bb11-3ce132efab66",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        }
-                                    ],
-                                    "route": "client-setup/",
-                                    "component": null,
-                                    "order_index": 0,
-                                    "level": 1,
-                                    "is_visible": true,
-                                    "is_active": true,
-                                    "menu_metadata": {},
-                                    "menu_id": "c1882b1a-ee13-43c2-9025-d0ea5386b74d",
-                                    "icons": [{ "additionalProp1": {} }]
-                                },
-                                {
-                                    "key": "user-roles-management",
-                                    "label": "User Roles setup",
-                                    "application_id": "c3140a19-c79e-4902-8591-2a7e7e944809",
-                                    "icon": "ri-shield-check-line",
-                                    "description": "User roles and permissions management",
-                                    "badge": null,
-                                    "sectionTitle": "User Management",
-                                    "object_id": "string",
-                                    "children": [
-                                        {
-                                            "key": "roles",
-                                            "label": "Roles",
-                                            "icon": null,
-                                            "description": "Role definitions and permissions",
-                                            "badge": { "count": 6, "color": "cyan" },
-                                            "children": [],
-                                            "menu_id": "a57cf002-fa43-4eda-b639-e32c666d1364",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        },
-                                        {
-                                            "key": "users",
-                                            "label": "Users",
-                                            "icon": null,
-                                            "description": "User accounts and management",
-                                            "badge": { "count": 24, "color": "gold" },
-                                            "children": [],
-                                            "menu_id": "ee7bc1f9-ced8-47fd-9f35-0d1199422900",
-                                            "level": 2,
-                                            "is_visible": true,
-                                            "is_active": true
-                                        }
-                                    ],
-                                    "route": "user-roles-setup/",
-                                    "component": null,
-                                    "order_index": 0,
-                                    "level": 1,
-                                    "is_visible": true,
-                                    "is_active": true,
-                                    "menu_metadata": {},
-                                    "menu_id": "a21b430f-c9e1-4ccc-abba-7002f1cb176a",
-                                    "icons": [{ "additionalProp1": {} }]
-                                }
-                            ],
-                            "route": "adminApp/",
-                            "sectionTitle": "Application Configuration",
-                            "application_id": "c3140a19-c79e-4902-8591-2a7e7e944809",
-                            "application_name": "admin-app",
-                            "application_version": "1.0",
-                            "application_status": "active",
-                            "object_id": "",
-                            "level": 0,
-                            "is_visible": true,
-                            "is_active": true
-                        }
-                    ],
-                    "profileSection": {
-                        "type": "profile",
-                        "key": "profile-section",
-                        "userData": {
-                            "name": "John Doe",
-                            "email": "john@company.com",
-                            "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e",
-                            "role": "Administrator",
-                            "status": "online"
-                        },
-                        "menuItems": [
-                            {
-                                "key": "profile",
-                                "label": "Profile",
-                                "icon": "ri-user-line",
-                                "children": []
-                            },
-                            {
-                                "key": "upgrade",
-                                "label": "Upgrade to Pro",
-                                "icon": "ri-star-line",
-                                "badge": { "count": "NEW", "color": "gold" },
-                                "children": []
-                            },
-                            {
-                                "type": "divider",
-                                "key": "profile-divider"
-                            },
-                            {
-                                "key": "logout",
-                                "label": "Logout",
-                                "icon": "ri-logout-box-line",
-                                "children": []
-                            }
-                        ]
-                    },
-                    "config": {
-                        "version": "2.1.0",
-                        "lastUpdated": "2024-01-15T10:30:00Z",
-                        "dataHash": "abc123def456",
-                        "defaultExpandedKeys": [],
-                        "defaultSelectedKeys": [],
-                        "theme": "light",
-                        "mode": "inline",
-                        "collapsible": true,
-                        "selectable": true,
-                        "multiple": false
-                    }
-                };
-                setMenuData(sampleData);
-                if (onMenuDataChange) {
-                    onMenuDataChange(sampleData);
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchMenuData();
-    }, []);
 
     // Auto-expand matching nodes when search changes
     useEffect(() => {
@@ -466,30 +144,6 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange }) =
 
     const handleSearchChange = (value) => {
         setSearchValue(value);
-    };
-
-    const handleAddRoot = () => {
-        const newItem = {
-            key: `new-menu-${Date.now()}`,
-            label: 'New Menu',
-            icon: null,
-            description: '',
-            badge: null,
-            children: [],
-            level: 0,
-            is_visible: true,
-            is_active: true,
-            order_index: menuData.mainNavigation.length,
-        };
-
-        const updatedData = {
-            ...menuData,
-            mainNavigation: [...menuData.mainNavigation, newItem],
-        };
-
-        updateMenuData(updatedData);
-        setSelectedKey(newItem.key);
-        message.success('Root menu item created');
     };
 
     const handleExpandAll = () => {
@@ -569,20 +223,18 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange }) =
         message.success('Menu item deleted');
     };
 
-    const handleSave = async () => {
-        try {
-            setSaving(true);
-            await saveMenuConfiguration(menuData);
-            setIsDirty(false);
-            // Clear history after successful save
-            setHistory([]);
-            setHistoryIndex(-1);
-            message.success('Menu configuration saved successfully');
-        } catch (error) {
-            message.error('Failed to save menu configuration');
-        } finally {
-            setSaving(false);
-        }
+    const handleSave = () => {
+        // Prevent multiple clicks - mutation handles loading state
+        if (bulkUpdateMutation.isLoading) return;
+
+        bulkUpdateMutation.mutate(menuData.mainNavigation, {
+            onSuccess: () => {
+                setIsDirty(false);
+                // Clear history after successful save
+                setHistory([]);
+                setHistoryIndex(-1);
+            },
+        });
     };
 
     const handleUndo = () => {
@@ -789,7 +441,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange }) =
                         onCollapseAll={handleCollapseAll}
                         onSave={handleSave}
                         isDirty={isDirty}
-                        saving={saving}
+                        saving={bulkUpdateMutation.isLoading}
                         onUndo={handleUndo}
                         onRedo={handleRedo}
                         canUndo={canUndo}

@@ -68,22 +68,30 @@ export const useStyles = (token, isDarkMode = false) => {
         },
 
         navigationContainerStyle: {
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
-            height: "100%",
+            flexShrink: 1,
+            minWidth: 0,
+            width: "600px", // Fixed width to trigger overflow
+            maxWidth: "calc(100vw - 500px)",
+            background: token.colorBgContainer,
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            borderRadius: "8px",
+            padding: "2px",
+            border: `1px solid ${token.colorBorderSecondary}`,
+            boxShadow: 'none',
+            height: "32px",
         },
 
         menuStyle: {
             background: "transparent",
             border: "none",
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            justifyContent: "center",
-            lineHeight: "52px",
+            lineHeight: "normal",
+            minWidth: 0,
+            flex: 1,
         },
 
         iconButtonStyle: {

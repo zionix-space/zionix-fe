@@ -233,6 +233,65 @@ function getRemotePort(remoteName) {
   return 4250 + (Math.abs(hash) % 50);
 }
 
+// Load shared dependencies from package.json
+function loadSharedDependencies() {
+  const packageJsonPath = path.resolve(__dirname, "../../package.json");
+
+  if (!fs.existsSync(packageJsonPath)) {
+    console.error(`❌ package.json not found`);
+    return null;
+  }
+
+  try {
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+
+    if (!packageJson.moduleFederation || !packageJson.moduleFederation.shared) {
+      console.warn(`⚠️  No moduleFederation.shared config found in package.json`);
+      return null;
+    }
+
+    const sharedDeps = {};
+    const sharedPackages = packageJson.moduleFederation.shared;
+
+    sharedPackages.forEach(pkg => {
+      const packageName = typeof pkg === 'string' ? pkg : pkg.name;
+      const version = packageJson.dependencies[packageName] || packageJson.devDependencies[packageName];
+
+      if (version) {
+        sharedDeps[packageName] = {
+          singleton: true,
+          eager: false,  // Use false for dev mode to allow lazy loading
+          requiredVersion: version
+        };
+      } else {
+        console.warn(`⚠️  Package ${packageName} not found in dependencies, skipping`);
+      }
+    });
+
+    console.log(`✅ Loaded ${Object.keys(sharedDeps).length} shared packages from package.json`);
+    return sharedDeps;
+  } catch (error) {
+    console.error(`❌ Error reading package.json:`, error.message);
+    return null;
+  }
+}
+
+// Generate shared dependencies function code
+function generateSharedFunction(sharedDeps) {
+  if (!sharedDeps) {
+    return `return undefined;`;
+  }
+
+  const conditions = Object.entries(sharedDeps).map(([packageName, config]) => {
+    return `    if (name === '${packageName}') {
+      return ${JSON.stringify(config, null, 6)};
+    }`;
+  }).join('\n');
+
+  return `${conditions}
+    return undefined;`;
+}
+
 // Generate remote configuration
 function generateRemoteConfig(environment) {
   const relevantModules = getRelevantModules().map(renameModule);
@@ -249,13 +308,21 @@ function generateRemoteConfig(environment) {
     "platform/shell/main-shell/zionix-main-host/module-federation.config.js"
   );
 
-  // Create or update the configuration file with the current remotes
+  // Load shared dependencies
+  const sharedDeps = loadSharedDependencies();
+  const sharedFunctionBody = generateSharedFunction(sharedDeps);
+
+  // Create or update the configuration file with the current remotes and shared config
   const remotesConfigContent = `module.exports = {
-    name: 'zionix-main-host',
-    remotes: ${JSON.stringify(remotes)}
-  };`;
+  name: 'zionix-main-host',
+  remotes: ${JSON.stringify(remotes)},
+  shared: (name) => {
+${sharedFunctionBody}
+  },
+};`;
 
   fs.writeFileSync(remotesConfigPath, remotesConfigContent, "utf-8");
+  console.log(`✅ Module federation config updated with ${remotes.length} remotes`);
 }
 
 function updateAppJs() {
