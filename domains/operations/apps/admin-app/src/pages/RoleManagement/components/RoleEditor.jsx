@@ -3,7 +3,7 @@ import { Spin, message, theme, Button, Modal } from 'antd';
 import { useStyles } from './RoleEditor.style';
 import TreeToolbar from './TreeToolbar';
 import RoleTree from './RoleTree';
-import RoleForm from './RoleForm';
+import RoleDetailsForm from './RoleDetailsForm';
 import {
     transformToTreeData,
     extractAllKeys,
@@ -538,14 +538,11 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
                 {/* Right column - Form */}
                 <div style={styles.rightColumn} className="menu-editor-scrollbar">
-                    <RoleForm
+                    <RoleDetailsForm
                         selectedKey={selectedKey}
                         selectedItem={selectedItem}
-                        allMenuKeys={allKeys}
-                        menuData={menuData}
-                        onChange={handleFieldChange}
-                        onDelete={handleDelete}
-                        onAddChild={handleAddChild}
+                        permissions={permissions}
+                        onPermissionChange={handlePermissionChange}
                     />
                 </div>
             </div>
