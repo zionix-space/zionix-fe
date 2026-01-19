@@ -58,6 +58,13 @@ module.exports = {
       "requiredVersion": "^5.90.5"
 };
     }
+    if (name === '@zionix-space/lowcode') {
+      return {
+      "singleton": true,
+      "eager": false,
+      "requiredVersion": "^1.0.3"
+};
+    }
     return undefined;
   },
 };

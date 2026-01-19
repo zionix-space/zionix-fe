@@ -5,6 +5,7 @@ import { NotFoundPage } from '@zionix/shared-utilities/components';
 
 const MenuManagementScreen = lazy(() => import('../pages/MenuManagement'));
 const RoleManagementScreen = lazy(() => import('../pages/RoleManagement'));
+const FormManagementScreen = lazy(() => import('../pages/FormManagement'));
 
 export function App() {
   return (
@@ -14,6 +15,8 @@ export function App() {
         <Route path="app-setup/menus" element={<MenuManagementScreen />} />
         {/* Role Management Screen */}
         <Route path="user-roles-setup/roles" element={<RoleManagementScreen />} />
+        {/* Form Management Screen */}
+        <Route path="app-setup/forms" element={<FormManagementScreen />} />
         {/* 404 Not Found - Wildcard route */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

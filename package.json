@@ -11,7 +11,8 @@
       "antd",
       "axios",
       "zustand",
-      "@tanstack/react-query"
+      "@tanstack/react-query",
+      "@zionix-space/lowcode"
     ]
   },
   "scripts": {
@@ -35,6 +36,7 @@
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
     "@tanstack/react-query": "^5.90.5",
+    "@zionix-space/lowcode": "^1.0.3",
     "antd": "^5.27.6",
     "axios": "^1.12.2",
     "dayjs": "^1.11.13",

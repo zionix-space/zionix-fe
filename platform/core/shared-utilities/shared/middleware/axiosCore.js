@@ -16,8 +16,6 @@ import axios from "axios";
 // Configure via .env-cmdrc file: NX_PUBLIC_API_BASE=https://your-api.com/api/v1
 const API_BASE_URL = process.env.NX_PUBLIC_API_BASE || 'https://zionix-be-v1-2.onrender.com/api/v1';
 
-console.log('🌐 API Base URL:', API_BASE_URL);
-
 /**
  * Shared axios instance for all microfrontends
  */

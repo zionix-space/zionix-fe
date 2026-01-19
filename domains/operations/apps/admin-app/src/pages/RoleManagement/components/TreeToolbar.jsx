@@ -1,5 +1,4 @@
 import { Input, Button, theme, Dropdown, Space } from 'antd';
-import { LockOutlined, UnlockOutlined, StopOutlined, DownOutlined } from '@ant-design/icons';
 import { useStyles } from './TreeToolbar.style';
 
 const { Search } = Input;
@@ -38,19 +37,19 @@ const TreeToolbar = ({
         {
             key: 'fullaccess',
             label: 'Set All to Full Access',
-            icon: <UnlockOutlined style={{ color: token.colorSuccess }} />,
+            icon: <i className="ri-lock-unlock-line" style={{ color: token.colorSuccess }} />,
             onClick: () => onBulkPermissionChange?.('fullaccess'),
         },
         {
             key: 'readonly',
             label: 'Set All to Read Only',
-            icon: <LockOutlined style={{ color: token.colorWarning }} />,
+            icon: <i className="ri-lock-line" style={{ color: token.colorWarning }} />,
             onClick: () => onBulkPermissionChange?.('readonly'),
         },
         {
             key: 'disabled',
             label: 'Set All to Disabled',
-            icon: <StopOutlined style={{ color: token.colorError }} />,
+            icon: <i className="ri-close-circle-line" style={{ color: token.colorError }} />,
             onClick: () => onBulkPermissionChange?.('disabled'),
         },
     ];
@@ -71,7 +70,7 @@ const TreeToolbar = ({
                     <Button size="small" type="default" shape="round">
                         <Space size={4}>
                             Bulk Update
-                            <DownOutlined />
+                            <i className="ri-arrow-down-s-line" />
                         </Space>
                     </Button>
                 </Dropdown>

@@ -1,6 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { Tree, Badge, theme, Radio, Space, Tooltip } from 'antd';
-import { LockOutlined, UnlockOutlined, StopOutlined } from '@ant-design/icons';
+import { Tree, Badge, theme, Radio, Space, Tooltip, message } from 'antd';
 import { useStyles } from './RoleTree.style';
 
 const { useToken } = theme;
@@ -164,7 +163,7 @@ const RoleTree = ({
                                 value={PERMISSION_STATES.DISABLED}
                                 style={styles.radioButton}
                             >
-                                <StopOutlined style={{
+                                <i className="ri-close-circle-line" style={{
                                     color: currentPermission === PERMISSION_STATES.DISABLED ? '#fff' : token.colorError,
                                     fontSize: '14px'
                                 }} />
@@ -176,7 +175,7 @@ const RoleTree = ({
                                 style={styles.radioButton}
                                 disabled={!isPermissionAllowed(key, PERMISSION_STATES.READONLY)}
                             >
-                                <LockOutlined style={{
+                                <i className="ri-lock-line" style={{
                                     color: currentPermission === PERMISSION_STATES.READONLY ? '#fff' : token.colorWarning,
                                     fontSize: '14px'
                                 }} />
@@ -188,7 +187,7 @@ const RoleTree = ({
                                 style={styles.radioButton}
                                 disabled={!isPermissionAllowed(key, PERMISSION_STATES.FULLACCESS)}
                             >
-                                <UnlockOutlined style={{
+                                <i className="ri-lock-unlock-line" style={{
                                     color: currentPermission === PERMISSION_STATES.FULLACCESS ? '#fff' : token.colorSuccess,
                                     fontSize: '14px'
                                 }} />
