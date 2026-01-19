@@ -38,7 +38,7 @@ const DesktopLayout = ({ className = '', style = {} }) => {
   // Use fixed sidebar widths that match DesktopSidebar component (260px expanded, 80px collapsed)
   // This ensures curve stays aligned even when zooming
   const sidebarWidth = sidebarCollapsed ? 80 : 260;
-  const contentPadding = isTabletSize ? '16px' : '24px';
+  const contentPadding = '13px';
 
   // Match topbar background color
   const topbarColor = isDarkMode

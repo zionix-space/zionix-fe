@@ -17,7 +17,7 @@ export const useStyles = (token) => {
                 position: 'sticky',
                 top: 0,
                 zIndex: 100,
-                padding: '10px 24px',
+                padding: '10px 13px',
                 background: isDarkMode
                     ? 'rgba(0, 0, 0, 0.7)'
                     : 'rgba(255, 255, 255, 0.7)',
