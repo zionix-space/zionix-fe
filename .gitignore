@@ -13,6 +13,9 @@ node_modules
 .env.local
 .env.*.local
 
+# NPM authentication (contains GitHub token)
+.npmrc
+
 # IDEs and editors
 /.idea
 .project

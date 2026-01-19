@@ -213,13 +213,6 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                   }
                   placeholder="Password"
                   style={styles.input}
-                  iconRender={(visible) =>
-                    visible ? (
-                      <i className="ri-eye-line" />
-                    ) : (
-                      <i className="ri-eye-off-line" />
-                    )
-                  }
                   autoComplete="current-password"
                 />
               </Form.Item>
@@ -375,13 +368,6 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                         }
                         placeholder="Password"
                         style={styles.input}
-                        iconRender={(visible) =>
-                          visible ? (
-                            <i className="ri-eye-line" />
-                          ) : (
-                            <i className="ri-eye-off-line" />
-                          )
-                        }
                         autoComplete="current-password"
                       />
                     </Form.Item>
