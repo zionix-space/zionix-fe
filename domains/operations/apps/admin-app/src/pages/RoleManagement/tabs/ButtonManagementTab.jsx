@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Card, Typography, Space, Button, Table, Modal, Form, Input, Select, Tag, message } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -89,13 +88,13 @@ const ButtonManagementTab = () => {
                 <Space>
                     <Button
                         type="text"
-                        icon={<EditOutlined />}
+                        icon={<i className="ri-edit-line" />}
                         onClick={() => handleEdit(record)}
                     />
                     <Button
                         type="text"
                         danger
-                        icon={<DeleteOutlined />}
+                        icon={<i className="ri-delete-bin-line" />}
                         onClick={() => handleDelete(record.id)}
                     />
                 </Space>
@@ -115,7 +114,7 @@ const ButtonManagementTab = () => {
                     </div>
                     <Button
                         type="primary"
-                        icon={<PlusOutlined />}
+                        icon={<i className="ri-add-line" />}
                         onClick={handleAdd}
                         shape='round'
                     >

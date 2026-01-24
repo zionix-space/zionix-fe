@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Form, Input, Select, Empty, Button, Card, Tag, Space, Divider, Switch, message, theme } from 'antd';
-import { SaveOutlined, PlusOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -83,7 +82,7 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
                 <Space>
                     <Button
                         type="primary"
-                        icon={<SaveOutlined />}
+                        icon={<i className="ri-save-line" />}
                         onClick={handleSave}
                         disabled={!hasChanges}
                         size="small"
@@ -91,7 +90,7 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
                         Save
                     </Button>
                     <Button
-                        icon={<PlusOutlined />}
+                        icon={<i className="ri-add-line" />}
                         onClick={handleCreateNew}
                         size="small"
                     >
