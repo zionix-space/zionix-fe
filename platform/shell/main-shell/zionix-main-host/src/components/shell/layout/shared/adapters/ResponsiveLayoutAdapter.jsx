@@ -1,5 +1,5 @@
 import { ResponsiveLayout } from '@zionix-space/design-system/layouts';
-import { useResponsiveLayout } from '../ResponsiveLayoutProvider';
+import { useResponsiveLayout } from '@zionix-space/design-system/layouts';
 import { DesktopLayout } from '../../desktop';
 import { MobileLayout } from '../../mobile';
 

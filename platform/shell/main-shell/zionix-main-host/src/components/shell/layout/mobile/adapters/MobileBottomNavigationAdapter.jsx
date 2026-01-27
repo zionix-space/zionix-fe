@@ -17,12 +17,11 @@ const MobileBottomNavigationAdapter = ({ className, style }) => {
 
     const {
         mainMenus,
-        selectedSidebarKey,
-        setSelectedSidebarKey,
-        selectMainMenu,
+        getMenuRoute,
+        selectSidebarMenu,
     } = useMenuData();
 
-    // Handle navigation item click
+    // Handle navigation item click - same logic as desktop
     const handleNavItemClick = (navItem) => {
         if (navItem.isMore) {
             // Open More menu
@@ -31,9 +30,21 @@ const MobileBottomNavigationAdapter = ({ className, style }) => {
             // Set selected nav item
             setSelectedNavKey(navItem.key);
 
-            // Navigate if path exists
-            if (navItem.path) {
-                navigate(navItem.path);
+            // Use the same routing logic as desktop
+            if (navItem.key === 'home') {
+                navigate('/apps');
+            } else {
+                // Select the menu item
+                selectSidebarMenu(navItem.key);
+
+                // Get the proper route using the same logic as desktop
+                const route = getMenuRoute(navItem.key);
+                if (route) {
+                    navigate(route);
+                } else if (navItem.path) {
+                    // Fallback to navItem.path
+                    navigate(navItem.path);
+                }
             }
         }
     };

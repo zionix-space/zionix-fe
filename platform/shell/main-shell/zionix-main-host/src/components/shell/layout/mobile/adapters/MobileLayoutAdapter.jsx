@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { useTheme } from '@zionix-space/design-system';
 import { MobileLayout } from '@zionix-space/design-system/layouts';
-import { useResponsiveLayout } from '../../shared/ResponsiveLayoutProvider';
+import { useResponsiveLayout } from '@zionix-space/design-system/layouts';
 import { useMenuData } from '../../../../../data/hooks/menu';
 import { QueryErrorFallback } from '../../../../common/QueryErrorBoundary';
 import TopLoadingBar from '../../../../common/loaders/TopLoadingBar';

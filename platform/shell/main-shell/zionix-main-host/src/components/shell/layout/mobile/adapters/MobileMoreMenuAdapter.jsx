@@ -9,16 +9,26 @@ import { useMenuData } from '../../../../../data/hooks/menu';
  */
 const MobileMoreMenuAdapter = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
-    const { menuData } = useMenuData();
+    const { mainMenus, getMenuRoute, selectSidebarMenu } = useMenuData();
     const [openKeys, setOpenKeys] = useState([]);
 
     // Get the currently selected menu key from location
-    const selectedKey = window.location.pathname.split('/').filter(Boolean)[0] || 'home';
+    const selectedKey = window.location.pathname.split('/').filter(Boolean)[1] || 'home';
 
-    // Handle menu item selection
+    // Handle menu item selection - same logic as desktop
     const handleItemSelect = (item) => {
-        if (item.path) {
+        // Select the menu item
+        selectSidebarMenu(item.key);
+
+        // Get the proper route using the same logic as desktop
+        const route = getMenuRoute(item.key);
+        if (route) {
+            navigate(route);
+            onClose(); // Close the menu after navigation
+        } else if (item.path) {
+            // Fallback to item.path if getMenuRoute doesn't return anything
             navigate(item.path);
+            onClose();
         }
     };
 
@@ -31,7 +41,7 @@ const MobileMoreMenuAdapter = ({ isOpen, onClose }) => {
         <MobileMoreMenu
             isOpen={isOpen}
             onClose={onClose}
-            menuItems={menuData}
+            menuItems={mainMenus}
             selectedKey={selectedKey}
             onItemSelect={handleItemSelect}
             openKeys={openKeys}

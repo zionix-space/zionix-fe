@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@zionix-space/design-system';
 import { MobileHeader } from '@zionix-space/design-system/layouts';
-import { useResponsiveLayout } from '../../shared/ResponsiveLayoutProvider';
+import { useResponsiveLayout } from '@zionix-space/design-system/layouts';
 import { useMenuData } from '../../../../../data/hooks/menu';
 import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
 
