@@ -1,8 +1,6 @@
 import { useLayoutEffect } from 'react';
-import { Tree, Badge, theme } from 'antd';
+import { BaseTree, BaseBadge, useTheme } from '@zionix-space/design-system';
 import { useStyles } from './MenuTree.style';
-
-const { useToken } = theme;
 
 const MenuTree = ({
     treeData,
@@ -13,7 +11,7 @@ const MenuTree = ({
     onExpand,
     onDrop,
 }) => {
-    const { token } = useToken();
+    const { token } = useTheme();
 
     const isDarkMode =
         token.colorBgBase === '#000000' ||
@@ -85,9 +83,9 @@ const MenuTree = ({
                 {badge && (
                     <span style={styles.treeNodeBadge}>
                         {typeof badge === 'string' ? (
-                            <Badge count={badge} style={{ backgroundColor: token.colorPrimary }} />
+                            <BaseBadge count={badge} style={{ backgroundColor: token.colorPrimary }} />
                         ) : (
-                            <Badge count={badge.count} style={{ backgroundColor: token.colorPrimary }} />
+                            <BaseBadge count={badge.count} style={{ backgroundColor: token.colorPrimary }} />
                         )}
                     </span>
                 )}
@@ -106,7 +104,7 @@ const MenuTree = ({
 
     return (
         <div style={styles.treeContainer} className="menu-editor-scrollbar">
-            <Tree
+            <BaseTree
                 className="menu-editor-tree"
                 treeData={transformedTreeData(treeData)}
                 selectedKeys={selectedKey ? [selectedKey] : []}

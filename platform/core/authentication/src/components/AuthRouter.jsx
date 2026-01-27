@@ -18,7 +18,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { message } from 'antd';
+import { baseMessage } from '@zionix-space/design-system';
 import LoginPage from '../pages/LoginPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import ChangePasswordPage from '../pages/ChangePasswordPage';
@@ -73,10 +73,10 @@ const AuthRouter = () => {
 
       // Check if password change is required
       if (result.isPasswordChange) {
-        message.warning('Password change required');
+        baseMessage.warning('Password change required');
         navigate('/change-password');
       } else {
-        message.success('Login successful!');
+        baseMessage.success('Login successful!');
         // Main router will automatically redirect to /apps via <Navigate>
         // when isAuthenticated becomes true in the shared Zustand store
       }
@@ -95,7 +95,7 @@ const AuthRouter = () => {
   const handleForgotPassword = async (forgotPasswordData) => {
     try {
       await forgotPassword(forgotPasswordData.email);
-      message.success('Password reset email sent successfully!');
+      baseMessage.success('Password reset email sent successfully!');
 
       // Navigate back to login after a delay
       setTimeout(() => {
@@ -119,7 +119,7 @@ const AuthRouter = () => {
         newPassword: changePasswordData.newPassword,
       });
 
-      message.success('Password changed successfully!');
+      baseMessage.success('Password changed successfully!');
 
       // The main app router will automatically redirect to /apps
       // when the auth store updates

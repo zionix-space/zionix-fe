@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Form, Input, Select, Empty, Button, Card, Tag, Space, Divider, Switch, message, theme } from 'antd';
+import { BaseForm, BaseInput, BaseSelect, Empty, BaseButton, BaseCard, BaseTag, BaseSpace, BaseDivider, BaseSwitch, baseMessage, theme } from '@zionix-space/design-system';
 
-const { TextArea } = Input;
-const { Option } = Select;
+const { TextArea } = BaseInput;
+const { Option } = BaseSelect;
 const { useToken } = theme;
 
 const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionChange }) => {
     const { token } = useToken();
-    const [form] = Form.useForm();
+    const [BaseForm] = BaseForm.useForm();
     const [hasChanges, setHasChanges] = useState(false);
 
     const isDarkMode =
@@ -22,9 +22,9 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
         if (selectedItem) {
             const currentPermission = permissions?.[selectedKey] || 'disabled';
 
-            // Only update fields that should change based on tree selection
+            // Only update fields that should change based on BaseTree selection
             // Role Name and Description remain unchanged (user enters them manually)
-            form.setFieldsValue({
+            BaseForm.setFieldsValue({
                 accessLevel: currentPermission,
                 isActive: selectedItem.is_active ?? true,
                 route: selectedItem.route || '',
@@ -32,12 +32,12 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
             });
             setHasChanges(false);
         }
-    }, [selectedKey, selectedItem, permissions, form]);
+    }, [selectedKey, selectedItem, permissions, BaseForm]);
 
     const handleValuesChange = (changedValues) => {
         setHasChanges(true);
 
-        // If access level changed, update the tree permissions
+        // If access level changed, update the BaseTree permissions
         if (changedValues.accessLevel && selectedKey && onPermissionChange) {
             onPermissionChange(selectedKey, changedValues.accessLevel, true);
         }
@@ -45,9 +45,9 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
 
     const handleSave = async () => {
         try {
-            const values = await form.validateFields();
+            const values = await BaseForm.validateFields();
             console.log('Saving role details:', values);
-            message.success('Role details saved successfully');
+            baseMessage.success('Role details saved successfully');
             setHasChanges(false);
         } catch (error) {
             console.error('Validation failed:', error);
@@ -55,19 +55,19 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
     };
 
     const handleCreateNew = () => {
-        form.resetFields();
+        BaseForm.resetFields();
         setHasChanges(false);
-        message.info('Ready to create new role');
+        baseMessage.info('Ready to create new role');
     };
 
     if (!selectedItem) {
         return (
-            <Card style={{ height: '100%' }}>
+            <BaseCard style={{ height: '100%' }}>
                 <Empty
-                    description="Select a menu item from the tree to configure role access"
+                    description="BaseSelect a BaseMenu item from the BaseTree to configure role access"
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                 />
-            </Card>
+            </BaseCard>
         );
     }
 
@@ -76,11 +76,11 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
     const summaryBg = isDarkMode ? 'rgba(255, 255, 255, 0.04)' : '#fafafa';
 
     return (
-        <Card
+        <BaseCard
             title="Role Access Configuration"
             extra={
-                <Space>
-                    <Button
+                <BaseSpace>
+                    <BaseButton
                         type="primary"
                         icon={<i className="ri-save-line" />}
                         onClick={handleSave}
@@ -88,66 +88,66 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
                         size="small"
                     >
                         Save
-                    </Button>
-                    <Button
+                    </BaseButton>
+                    <BaseButton
                         icon={<i className="ri-add-line" />}
                         onClick={handleCreateNew}
                         size="small"
                     >
                         New Role
-                    </Button>
-                </Space>
+                    </BaseButton>
+                </BaseSpace>
             }
             style={{ height: '100%', overflow: 'auto' }}
         >
-            <Form
-                form={form}
-                layout="vertical"
+            <BaseForm
+                BaseForm={BaseForm}
+                BaseLayout="vertical"
                 onValuesChange={handleValuesChange}
                 size="middle"
             >
-                {/* Selected Menu Info */}
+                {/* Selected BaseMenu Info */}
                 <div style={{ marginBottom: 24, padding: 16, background: infoBg, borderRadius: 8 }}>
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                    <BaseSpace direction="vertical" size="small" style={{ width: '100%' }}>
                         <div>
-                            <strong>Selected Menu:</strong> {selectedItem.label}
+                            <strong>Selected BaseMenu:</strong> {selectedItem.label}
                         </div>
                         <div>
-                            <strong>Key:</strong> <Tag>{selectedItem.key}</Tag>
+                            <strong>Key:</strong> <BaseTag>{selectedItem.key}</BaseTag>
                         </div>
                         <div>
                             <strong>Current Access:</strong>{' '}
-                            <Tag color={
+                            <BaseTag color={
                                 currentPermission === 'full' ? 'green' :
                                     currentPermission === 'read' ? 'blue' :
                                         currentPermission === 'write' ? 'orange' : 'default'
                             }>
                                 {currentPermission.toUpperCase()}
-                            </Tag>
+                            </BaseTag>
                         </div>
-                    </Space>
+                    </BaseSpace>
                 </div>
 
-                <Divider orientation="left">Role Information</Divider>
+                <BaseDivider orientation="left">Role Information</BaseDivider>
 
-                <Form.Item
+                <BaseForm.Item
                     label="Role Name"
                     name="roleName"
                     rules={[
-                        { required: true, message: 'Please enter role name' },
-                        { min: 3, message: 'Role name must be at least 3 characters' }
+                        { required: true, baseMessage: 'Please enter role name' },
+                        { min: 3, baseMessage: 'Role name must be at least 3 characters' }
                     ]}
                 >
-                    <Input
+                    <BaseInput
                         placeholder="e.g., Admin, Editor, Viewer"
                         size="large"
                     />
-                </Form.Item>
+                </BaseForm.Item>
 
-                <Form.Item
+                <BaseForm.Item
                     label="Role Description"
                     name="roleDescription"
-                    rules={[{ required: true, message: 'Please enter role description' }]}
+                    rules={[{ required: true, baseMessage: 'Please enter role description' }]}
                 >
                     <TextArea
                         placeholder="Describe the purpose and responsibilities of this role"
@@ -155,83 +155,83 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
                         showCount
                         maxLength={500}
                     />
-                </Form.Item>
+                </BaseForm.Item>
 
-                <Form.Item
+                <BaseForm.Item
                     label="Access Level"
                     name="accessLevel"
-                    rules={[{ required: true, message: 'Please select access level' }]}
-                    tooltip="This determines what actions the role can perform on this menu item"
+                    rules={[{ required: true, baseMessage: 'Please BaseSelect access level' }]}
+                    BaseTooltip="This determines what actions the role can perform on this BaseMenu item"
                 >
-                    <Select
-                        placeholder="Select access level"
+                    <BaseSelect
+                        placeholder="BaseSelect access level"
                         size="large"
                     >
                         <Option value="disabled">
-                            <Space>
-                                <Tag color="default">DISABLED</Tag>
-                                <span>No access to this menu</span>
-                            </Space>
+                            <BaseSpace>
+                                <BaseTag color="default">DISABLED</BaseTag>
+                                <span>No access to this BaseMenu</span>
+                            </BaseSpace>
                         </Option>
                         <Option value="read">
-                            <Space>
-                                <Tag color="blue">READ</Tag>
+                            <BaseSpace>
+                                <BaseTag color="blue">READ</BaseTag>
                                 <span>View only access</span>
-                            </Space>
+                            </BaseSpace>
                         </Option>
                         <Option value="write">
-                            <Space>
-                                <Tag color="orange">WRITE</Tag>
+                            <BaseSpace>
+                                <BaseTag color="orange">WRITE</BaseTag>
                                 <span>Can view and edit</span>
-                            </Space>
+                            </BaseSpace>
                         </Option>
                         <Option value="full">
-                            <Space>
-                                <Tag color="green">FULL</Tag>
+                            <BaseSpace>
+                                <BaseTag color="green">FULL</BaseTag>
                                 <span>Complete control</span>
-                            </Space>
+                            </BaseSpace>
                         </Option>
-                    </Select>
-                </Form.Item>
+                    </BaseSelect>
+                </BaseForm.Item>
 
-                <Divider orientation="left">Additional Settings</Divider>
+                <BaseDivider orientation="left">Additional Settings</BaseDivider>
 
-                <Form.Item
+                <BaseForm.Item
                     label="Active Status"
                     name="isActive"
                     valuePropName="checked"
-                    tooltip="Inactive roles cannot be assigned to users"
+                    BaseTooltip="Inactive roles cannot be assigned to users"
                 >
-                    <Switch
+                    <BaseSwitch
                         checkedChildren="Active"
                         unCheckedChildren="Inactive"
                     />
-                </Form.Item>
+                </BaseForm.Item>
 
-                <Form.Item
+                <BaseForm.Item
                     label="Route Path"
                     name="route"
-                    tooltip="The URL path for this menu item"
+                    BaseTooltip="The URL path for this BaseMenu item"
                 >
-                    <Input
+                    <BaseInput
                         placeholder="/admin/dashboard"
                         prefix={<i className="ri-route-line" />}
                     />
-                </Form.Item>
+                </BaseForm.Item>
 
-                <Form.Item
+                <BaseForm.Item
                     label="Component"
                     name="component"
-                    tooltip="The React component to render for this route"
+                    BaseTooltip="The React component to render for this route"
                 >
-                    <Input
+                    <BaseInput
                         placeholder="DashboardComponent"
                         prefix={<i className="ri-code-box-line" />}
                     />
-                </Form.Item>
+                </BaseForm.Item>
 
                 {/* Access Permissions Summary */}
-                <Divider orientation="left">Permission Summary</Divider>
+                <BaseDivider orientation="left">Permission Summary</BaseDivider>
 
                 <div style={{
                     padding: 16,
@@ -239,21 +239,21 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
                     borderRadius: 8,
                     border: `1px solid ${token.colorBorder}`
                 }}>
-                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                        <div><strong>Menu Item:</strong> {selectedItem.label}</div>
+                    <BaseSpace direction="vertical" size="small" style={{ width: '100%' }}>
+                        <div><strong>BaseMenu Item:</strong> {selectedItem.label}</div>
                         <div><strong>Level:</strong> {selectedItem.level ?? 0}</div>
                         <div><strong>Has Children:</strong> {selectedItem.children?.length > 0 ? 'Yes' : 'No'}</div>
                         {selectedItem.children?.length > 0 && (
                             <div style={{ marginTop: 8 }}>
-                                <Tag color="warning">
-                                    Note: Changing access level will affect {selectedItem.children.length} child menu(s)
-                                </Tag>
+                                <BaseTag color="warning">
+                                    Note: Changing access level will affect {selectedItem.children.length} child BaseMenu(s)
+                                </BaseTag>
                             </div>
                         )}
-                    </Space>
+                    </BaseSpace>
                 </div>
-            </Form>
-        </Card>
+            </BaseForm>
+        </BaseCard>
     );
 };
 

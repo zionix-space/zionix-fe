@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { Button, Result } from 'antd';
+import { BaseButton as Button, BaseResult as Result } from '@zionix-space/design-system';
 
 /**
  * Error Boundary Component

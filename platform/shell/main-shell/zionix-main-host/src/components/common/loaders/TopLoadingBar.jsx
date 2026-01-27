@@ -1,5 +1,5 @@
-import { theme } from 'antd';
 import { useState, useEffect } from 'react';
+import { useTheme } from '@zionix-space/design-system';
 import { useTopLoadingBar } from '../../../data/hooks/loaders/useTopLoadingBar';
 import { useMenuQuery } from '../../../data/hooks/menu/useMenuQuery';
 import { useStyles } from './TopLoadingBar.style';
@@ -15,7 +15,7 @@ import { useStyles } from './TopLoadingBar.style';
 const TopLoadingBar = () => {
     const { isLoading } = useTopLoadingBar();
     const { isError: isMenuError } = useMenuQuery();
-    const { token } = theme.useToken();
+    const { token } = useTheme();
     const styles = useStyles(token);
     const [showOverlay, setShowOverlay] = useState(false);
 

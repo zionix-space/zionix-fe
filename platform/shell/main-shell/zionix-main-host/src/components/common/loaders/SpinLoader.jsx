@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spin } from 'antd';
+import { BaseSpin as Spin } from '@zionix-space/design-system';
 
 /**
  * Spin Loaders - Responsive component-level loading

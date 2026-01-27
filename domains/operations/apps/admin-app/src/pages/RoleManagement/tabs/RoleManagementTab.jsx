@@ -1,18 +1,18 @@
 import { useState, useCallback, useEffect, lazy, Suspense } from 'react';
-import { Layout, Typography, Space, theme, Button, Tooltip, Drawer, Spin } from 'antd';
+import { BaseLayout, BaseTypography, BaseSpace, BaseButton, BaseTooltip, BaseDrawer, BaseSpin, theme } from '@zionix-space/design-system';
 
 // Lazy load heavy components
 const RoleTopBar = lazy(() => import('../components/RoleTopBar'));
 const RoleSidebar = lazy(() => import('../components/RoleSidebar'));
 const RoleEditor = lazy(() => import('../components/RoleEditor'));
 
-const { Content } = Layout;
-const { Title, Paragraph } = Typography;
+const { Content } = BaseLayout;
+const { Title, Paragraph } = BaseTypography;
 const { useToken } = theme;
 
 const ComponentLoader = () => (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
-        <Spin size="large" />
+        <BaseSpin size="large" />
     </div>
 );
 
@@ -40,7 +40,7 @@ const RoleManagementTab = ({ isMobile }) => {
 
     if (isMobile) {
         return (
-            <Layout style={{ height: '100%', minHeight: 'calc(100vh - 46px)' }}>
+            <BaseLayout style={{ height: '100%', minHeight: 'calc(100vh - 46px)' }}>
                 <Suspense fallback={<ComponentLoader />}>
                     <RoleTopBar
                         menuData={menuData}
@@ -51,7 +51,7 @@ const RoleManagementTab = ({ isMobile }) => {
                     />
                 </Suspense>
 
-                <Drawer
+                <BaseDrawer
                     placement="left"
                     open={mobileSidebarOpen}
                     onClose={() => setMobileSidebarOpen(false)}
@@ -68,7 +68,7 @@ const RoleManagementTab = ({ isMobile }) => {
                             onItemClick={() => setMobileSidebarOpen(false)}
                         />
                     </Suspense>
-                </Drawer>
+                </BaseDrawer>
 
                 <Content
                     style={{
@@ -78,7 +78,7 @@ const RoleManagementTab = ({ isMobile }) => {
                         height: 'calc(100vh - 98px)',
                     }}
                 >
-                    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                    <BaseSpace direction="vertical" size="middle" style={{ width: '100%' }}>
                         <div>
                             <Title level={3} style={{ margin: 0 }}>User Roles Setup</Title>
                             <Paragraph style={{ margin: '4px 0 0 0', fontSize: '14px' }}>
@@ -94,14 +94,14 @@ const RoleManagementTab = ({ isMobile }) => {
                                 isMobile={isMobile}
                             />
                         </Suspense>
-                    </Space>
+                    </BaseSpace>
                 </Content>
-            </Layout>
+            </BaseLayout>
         );
     }
 
     return (
-        <Layout style={{ height: '100%', minHeight: 'calc(100vh - 46px)' }}>
+        <BaseLayout style={{ height: '100%', minHeight: 'calc(100vh - 46px)' }}>
             <Suspense fallback={<ComponentLoader />}>
                 <RoleTopBar
                     menuData={menuData}
@@ -111,7 +111,7 @@ const RoleManagementTab = ({ isMobile }) => {
                 />
             </Suspense>
 
-            <Layout style={{ height: 'calc(100vh - 98px)' }}>
+            <BaseLayout style={{ height: 'calc(100vh - 98px)' }}>
                 <Suspense fallback={<ComponentLoader />}>
                     <RoleSidebar
                         collapsed={sidebarCollapsed}
@@ -130,18 +130,24 @@ const RoleManagementTab = ({ isMobile }) => {
                         height: '100%',
                     }}
                 >
-                    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                    <BaseSpace direction="vertical" size="large" style={{ width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div>
+                                <Title level={3} style={{ margin: 0 }}>User Roles Setup</Title>
+                                <Paragraph style={{ margin: '4px 0 0 0' }}>
+                                    Configure and manage your application User Menus Role Access.
+                                </Paragraph>
+                            </div>
 
-                            <Tooltip title="Preview JSON">
-                                <Button
+                            <BaseTooltip title="Preview JSON">
+                                <BaseButton
                                     type="text"
                                     icon={<i className="ri-code-s-slash-line" style={{ fontSize: '20px' }} />}
                                     onClick={() => setShowJsonPreview(true)}
                                     shape="circle"
                                     size="large"
                                 />
-                            </Tooltip>
+                            </BaseTooltip>
                         </div>
 
                         <Suspense fallback={<ComponentLoader />}>
@@ -152,10 +158,10 @@ const RoleManagementTab = ({ isMobile }) => {
                                 isMobile={false}
                             />
                         </Suspense>
-                    </Space>
+                    </BaseSpace>
                 </Content>
-            </Layout>
-        </Layout>
+            </BaseLayout>
+        </BaseLayout>
     );
 };
 

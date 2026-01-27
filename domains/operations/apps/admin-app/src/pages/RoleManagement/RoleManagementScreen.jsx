@@ -1,6 +1,5 @@
 import { useState, lazy, Suspense } from 'react';
-import { Tabs, Spin } from 'antd';
-import { useTheme } from '@zionix/design-system';
+import { BaseTabs, BaseSpin, useTheme } from '@zionix-space/design-system';
 
 // Lazy load tabs for better performance
 const RoleManagementTab = lazy(() => import('./tabs/RoleManagementTab'));
@@ -15,7 +14,7 @@ const TabLoader = () => (
         alignItems: 'center',
         height: 'calc(100vh - 100px)'
     }}>
-        <Spin size="large" tip="Loading..." />
+        <BaseSpin size="large" tip="Loading..." />
     </div>
 );
 
@@ -55,7 +54,7 @@ const RoleManagementScreen = () => {
 
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <Tabs
+            <BaseTabs
                 activeKey={activeTab}
                 onChange={setActiveTab}
                 items={tabItems}

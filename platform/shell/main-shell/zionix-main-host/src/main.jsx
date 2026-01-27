@@ -29,7 +29,6 @@ const showInitialLoader = () => {
       text-align: center;
       background: ${bgColor};
       z-index: 9999;
-      font-family:"-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif";
     ">
       <div class="loader-spinner" style="
         width: clamp(48px, 15vw, 80px);
@@ -68,7 +67,6 @@ const showInitialLoader = () => {
         margin-top: clamp(1rem, 3vw, 1.5rem);
         font-size: clamp(0.875rem, 2.5vw, 1.1rem);
         color: ${textColor};
-        letter-spacing: 0.3px;
       ">Loading...</div>
       <style>
         @keyframes spin {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { theme } from 'antd';
+import { useTheme } from '@zionix-space/design-system';
 
 /**
  * SuspenseLoader - Indeterminate top edge loader for React.Suspense
@@ -7,7 +7,7 @@ import { theme } from 'antd';
  * Blocks all interactions during loading
  */
 export const SuspenseLoader = () => {
-    const { token } = theme.useToken();
+    const { token } = useTheme();
 
     return (
         <>

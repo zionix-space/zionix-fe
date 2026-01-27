@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { theme } from 'antd';
+import { theme } from '@zionix-space/design-system';
 
 const { useToken } = theme;
 
@@ -138,7 +138,7 @@ export const useTouchGestures = () => {
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;

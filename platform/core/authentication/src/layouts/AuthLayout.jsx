@@ -10,9 +10,9 @@
  */
 
 import React from 'react';
-import { Layout, Card, Typography, Space } from 'antd';
+import { BaseLayout as Layout, BaseCard as Card, BaseTypography as Typography, BaseSpace as Space } from '@zionix-space/design-system';
 import { motion } from 'framer-motion';
-import { useTheme, ZionixLogo } from '@zionix/design-system';
+import { useTheme, ZionixLogo } from '@zionix-space/design-system';
 import { useStyles, layoutVariants, cardVariants, logoVariants } from './AuthLayout.style';
 
 const { Content } = Layout;

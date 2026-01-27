@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, Card, Space } from 'antd';
+import { BaseSkeleton as Skeleton, BaseCard as Card, BaseSpace as Space } from '@zionix-space/design-system';
 
 /**
  * Skeleton Loaders - Fully responsive with theme support

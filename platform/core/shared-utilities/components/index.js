@@ -1,8 +1,11 @@
 /**
  * Shared utility components for Zionix Platform
- * These components are available to all microfrontends
+ *
+ * Note: Loaders and NotFoundPage have been moved to @zionix-space/design-system
+ * Import them directly from the design system:
+ *
+ * import { GlobalTopLoader, MicrofrontendLoader, CardTopLoader, NotFoundPage } from '@zionix-space/design-system';
  */
 
-export { default as NotFoundPage } from './NotFoundPage';
-export { GlobalTopLoader, MicrofrontendLoader } from './GlobalTopLoader';
-export { CardTopLoader } from './CardTopLoader';
+// No components exported from here anymore
+// All feedback components are now in the design system

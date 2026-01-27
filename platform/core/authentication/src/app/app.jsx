@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-import { ThemeProvider } from '@zionix/design-system';
+import { ThemeProvider } from '@zionix-space/design-system';
 import AuthRouter from '../components/AuthRouter';
 
 /**

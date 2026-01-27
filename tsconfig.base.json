@@ -24,8 +24,6 @@
         "platform/core/shared-utilities/shared/middleware/axiosCore.js"
       ],
       "@zionix/shared-utilities/*": ["platform/core/shared-utilities/*"],
-      "@zionix/design-system": ["platform/core/design-system"],
-      "@zionix/design-system/*": ["platform/core/design-system/*"],
       "adminApp/Module": [
         "domains/operations/teams/admin-team/admin-app/src/remote-entry.js"
       ],

@@ -1,7 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { GlobalTopLoader } from '@zionix/shared-utilities/components';
-import { NotFoundPage } from '@zionix/shared-utilities/components';
+import { GlobalTopLoader, NotFoundPage } from '@zionix-space/design-system';
 
 const MenuManagementScreen = lazy(() => import('../pages/MenuManagement'));
 const RoleManagementScreen = lazy(() => import('../pages/RoleManagement'));

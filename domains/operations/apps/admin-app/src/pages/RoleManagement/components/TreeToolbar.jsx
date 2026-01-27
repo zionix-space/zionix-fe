@@ -1,25 +1,10 @@
-import { Input, Button, theme, Dropdown, Space } from 'antd';
+import { BaseInput, BaseButton, theme } from '@zionix-space/design-system';
 import { useStyles } from './TreeToolbar.style';
 
-const { Search } = Input;
+const { Search } = BaseInput;
 const { useToken } = theme;
 
-const TreeToolbar = ({
-    searchValue,
-    onSearchChange,
-    onExpandAll,
-    onCollapseAll,
-    onSave,
-    isDirty,
-    saving,
-    onUndo,
-    onRedo,
-    canUndo,
-    canRedo,
-    onExport,
-    onImport,
-    onBulkPermissionChange, // New prop for bulk permission updates
-}) => {
+const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport }) => {
     const { token } = useToken();
 
     const isDarkMode =
@@ -31,28 +16,6 @@ const TreeToolbar = ({
             parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
 
     const styles = useStyles(token, isDarkMode);
-
-    // Bulk permission menu items
-    const bulkPermissionItems = [
-        {
-            key: 'fullaccess',
-            label: 'Set All to Full Access',
-            icon: <i className="ri-lock-unlock-line" style={{ color: token.colorSuccess }} />,
-            onClick: () => onBulkPermissionChange?.('fullaccess'),
-        },
-        {
-            key: 'readonly',
-            label: 'Set All to Read Only',
-            icon: <i className="ri-lock-line" style={{ color: token.colorWarning }} />,
-            onClick: () => onBulkPermissionChange?.('readonly'),
-        },
-        {
-            key: 'disabled',
-            label: 'Set All to Disabled',
-            icon: <i className="ri-close-circle-line" style={{ color: token.colorError }} />,
-            onClick: () => onBulkPermissionChange?.('disabled'),
-        },
-    ];
 
     return (
         <div style={styles.toolbarContainer}>
@@ -66,16 +29,8 @@ const TreeToolbar = ({
                     size="small"
                 />
                 <div style={styles.spacer} />
-                <Dropdown menu={{ items: bulkPermissionItems }} trigger={['click']}>
-                    <Button size="small" type="default" shape="round">
-                        <Space size={4}>
-                            Bulk Update
-                            <i className="ri-arrow-down-s-line" />
-                        </Space>
-                    </Button>
-                </Dropdown>
                 <div style={styles.capsuleContainer}>
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-arrow-go-back-line" />}
                         onClick={onUndo}
                         disabled={!canUndo}
@@ -84,7 +39,7 @@ const TreeToolbar = ({
                         size="small"
                         type="text"
                     />
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-arrow-go-forward-line" />}
                         onClick={onRedo}
                         disabled={!canRedo}
@@ -95,7 +50,7 @@ const TreeToolbar = ({
                     />
                 </div>
                 <div style={styles.capsuleContainer}>
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-download-line" />}
                         onClick={onExport}
                         title="Export"
@@ -103,7 +58,7 @@ const TreeToolbar = ({
                         size="small"
                         type="text"
                     />
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-upload-line" />}
                         onClick={onImport}
                         title="Import"
@@ -113,7 +68,7 @@ const TreeToolbar = ({
                     />
                 </div>
                 <div style={styles.capsuleContainer}>
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-expand-diagonal-line" />}
                         onClick={onExpandAll}
                         title="Expand All"
@@ -121,7 +76,7 @@ const TreeToolbar = ({
                         size="small"
                         type="text"
                     />
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-collapse-diagonal-line" />}
                         onClick={onCollapseAll}
                         title="Collapse All"
@@ -131,7 +86,7 @@ const TreeToolbar = ({
                     />
                 </div>
                 <div style={styles.spacer} />
-                <Button
+                <BaseButton
                     type="primary"
                     icon={<i className="ri-save-line" />}
                     onClick={onSave}
@@ -141,7 +96,7 @@ const TreeToolbar = ({
                     size="small"
                 >
                     {isDirty ? 'Save' : 'Saved'}
-                </Button>
+                </BaseButton>
             </div>
         </div>
     );

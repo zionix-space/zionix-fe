@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Spin, message, theme, Button, Modal } from 'antd';
+import { BaseSpin, baseMessage, BaseButton, BaseModal, theme } from '@zionix-space/design-system';
 import { useStyles } from './MenuEditor.style';
 import TreeToolbar from './TreeToolbar';
 import MenuTree from './MenuTree';
@@ -195,7 +195,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         updateMenuData(updatedData);
         setExpandedKeys([...expandedKeys, selectedKey]);
         setSelectedKey(newItem.key);
-        message.success('Child menu item created');
+        baseMessage.success('Child menu item created');
     };
 
     const handleDelete = () => {
@@ -220,7 +220,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         updateMenuData(updatedData);
         setSelectedKey(null);
-        message.success('Menu item deleted');
+        baseMessage.success('Menu item deleted');
     };
 
     const handleSave = () => {
@@ -270,17 +270,17 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            message.success('Menu configuration exported');
+            baseMessage.success('Menu configuration exported');
         } catch (error) {
-            message.error('Failed to export menu configuration');
+            baseMessage.error('Failed to export menu configuration');
         }
     };
 
     const handleImport = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        input.onchange = (e) => {
+        const BaseInput = document.createElement('BaseInput');
+        BaseInput.type = 'file';
+        BaseInput.accept = '.json';
+        BaseInput.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
@@ -295,14 +295,14 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     }
 
                     updateMenuData(importedData);
-                    message.success('Menu configuration imported successfully');
+                    baseMessage.success('Menu configuration imported successfully');
                 } catch (error) {
-                    message.error('Failed to import: Invalid JSON format');
+                    baseMessage.error('Failed to import: Invalid JSON format');
                 }
             };
             reader.readAsText(file);
         };
-        input.click();
+        BaseInput.click();
     };
 
     const handleDrop = (info) => {
@@ -313,7 +313,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         // Prevent dropping on itself
         if (dragKey === dropKey) {
-            message.warning('Cannot drop item on itself');
+            baseMessage.warning('Cannot drop item on itself');
             return;
         }
 
@@ -336,7 +336,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         };
 
         if (isDescendant(dragKey, dropKey)) {
-            message.error('Cannot move parent into its own child');
+            baseMessage.error('Cannot move parent into its own child');
             return;
         }
 
@@ -361,7 +361,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         removeItem(clonedData.mainNavigation);
 
         if (!draggedItem) {
-            message.error('Failed to find dragged item');
+            baseMessage.error('Failed to find dragged item');
             return;
         }
 
@@ -378,7 +378,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 const updatedData = updateMenuItemByKey(clonedData, dropKey, dropItem);
                 updateMenuData(updatedData);
                 setExpandedKeys([...expandedKeys, dropKey]);
-                message.success('Item moved successfully');
+                baseMessage.success('Item moved successfully');
             }
         } else {
             // Drop between nodes (as sibling)
@@ -404,9 +404,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
             if (insertIntoItems(clonedData.mainNavigation)) {
                 updateMenuData(clonedData);
-                message.success('Item reordered successfully');
+                baseMessage.success('Item reordered successfully');
             } else {
-                message.error('Failed to reorder item');
+                baseMessage.error('Failed to reorder item');
             }
         }
     };
@@ -423,7 +423,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     if (loading) {
         return (
             <div style={styles.loadingContainer}>
-                <Spin size="large" tip="Loading menu configuration..." />
+                <BaseSpin size="large" tip="Loading menu configuration..." />
             </div>
         );
     }
@@ -460,7 +460,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     />
                 </div>
 
-                {/* Right column - Form */}
+                {/* Right column - BaseForm */}
                 <div style={styles.rightColumn} className="menu-editor-scrollbar">
                     <MenuForm
                         selectedKey={selectedKey}
@@ -474,8 +474,8 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 </div>
             </div>
 
-            {/* JSON Preview Modal */}
-            <Modal
+            {/* JSON Preview BaseModal */}
+            <BaseModal
                 title="Menu Configuration JSON"
                 open={jsonPreviewOpen}
                 onCancel={onJsonPreviewClose}
@@ -501,7 +501,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 >
                     {JSON.stringify(menuData, null, 2)}
                 </pre>
-            </Modal>
+            </BaseModal>
         </div>
     );
 };

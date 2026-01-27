@@ -1,8 +1,8 @@
 import { useLayoutEffect, useState } from 'react';
-import { Layout, Menu, theme, Tooltip, Avatar, Dropdown, Badge } from 'antd';
+import { BaseLayout, BaseMenu, BaseTooltip, BaseAvatar, BaseDropdown, BaseBadge, theme } from '@zionix-space/design-system';
 import { useStyles } from './RoleSidebar.style';
 
-const { Sider } = Layout;
+const { Sider } = BaseLayout;
 const { useToken } = theme;
 
 // Inject CSS for menu styling
@@ -165,7 +165,7 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
         label: badgeCount ? (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <span>{item.label}</span>
-            <Badge count={badgeCount} size="small" color={badgeColor} />
+            <BaseBadge count={badgeCount} size="small" color={badgeColor} />
           </div>
         ) : (
           item.label
@@ -184,7 +184,7 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
   // Get menu items (children of selected main menu) - support nested structure
   const sidebarMenus = selectedMainMenu?.children || [];
 
-  // Create sections from sidebar menus (similar to DesktopSidebar logic)
+  // CrktopSidebar logic)
   const createMenuSections = () => {
     const sections = [];
 
@@ -279,7 +279,7 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
           {!collapsed ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
               {/* Hamburger Toggle */}
-              <Tooltip title="Collapse" placement="right">
+              <BaseTooltip title="Collapse" placement="right">
                 <div
                   style={toggleButtonStyle}
                   onClick={() => onCollapse(!collapsed)}
@@ -290,12 +290,12 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
                 >
                   <i className="ri-menu-fold-line" style={toggleIconStyle} />
                 </div>
-              </Tooltip>
+              </BaseTooltip>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
               {/* Hamburger Toggle - Collapsed */}
-              <Tooltip title="Expand" placement="right">
+              <BaseTooltip title="Expand" placement="right">
                 <div
                   style={toggleButtonStyle}
                   onClick={() => onCollapse(!collapsed)}
@@ -306,7 +306,7 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
                 >
                   <i className="ri-menu-unfold-line" style={toggleIconStyle} />
                 </div>
-              </Tooltip>
+              </BaseTooltip>
             </div>
           )}
         </div>
@@ -327,7 +327,7 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
               {/* Section Menu Items */}
               {section.items.length > 0 && (
                 <div className="menu-menu-container" style={styles.menuContainer}>
-                  <Menu
+                  <BaseMenu
                     mode="inline"
                     defaultSelectedKeys={[]}
                     items={formatMenuItems(section.items)}
@@ -345,7 +345,7 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
         {profileSection && (
           <div style={collapsed ? styles.profileCollapsed : styles.profileExpanded}>
             {collapsed ? (
-              <Dropdown
+              <BaseDropdown
                 menu={{
                   items: profileSection.menuItems?.filter(item => item.type !== 'divider').map(item => ({
                     key: item.key,
@@ -356,14 +356,14 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
                 placement="rightTop"
                 trigger={['click']}
               >
-                <Avatar
+                <BaseAvatar
                   src={profileSection.userData?.avatar}
                   size={40}
                   style={{ cursor: 'pointer' }}
                 />
-              </Dropdown>
+              </BaseDropdown>
             ) : (
-              <Dropdown
+              <BaseDropdown
                 menu={{
                   items: profileSection.menuItems?.filter(item => item.type !== 'divider').map(item => ({
                     key: item.key,
@@ -375,14 +375,14 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
                 trigger={['click']}
               >
                 <div style={styles.profileContent}>
-                  <Avatar src={profileSection.userData?.avatar} size={40} />
+                  <BaseAvatar src={profileSection.userData?.avatar} size={40} />
                   <div style={styles.profileInfo}>
                     <div style={styles.profileName}>{profileSection.userData?.name}</div>
                     <div style={styles.profileEmail}>{profileSection.userData?.email}</div>
                   </div>
                   <i className="ri-more-2-line" style={styles.profileMore} />
                 </div>
-              </Dropdown>
+              </BaseDropdown>
             )}
           </div>
         )}

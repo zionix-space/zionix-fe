@@ -1,28 +1,24 @@
 import React, { useState } from 'react';
 import {
-    Row,
-    Col,
-    Card,
-    Avatar,
-    Progress,
-    Menu,
-    Input,
-    Select,
-    DatePicker,
-    Button,
-    Form,
-    message,
-    theme,
-} from 'antd';
-import { useTheme } from '@zionix/design-system';
+    BaseRow as Row,
+    BaseCol as Col,
+    BaseCard as Card,
+    BaseAvatar as Avatar,
+    BaseProgress as Progress,
+    BaseMenu as Menu,
+    BaseInput as Input,
+    BaseSelect as Select,
+    BaseDatePicker as DatePicker,
+    BaseButton as Button,
+    BaseForm as Form,
+    baseMessage as message,
+    useTheme,
+} from '@zionix-space/design-system';
 import { useStyles } from './ProfilePage.style';
 import dayjs from 'dayjs';
 
-const { useToken } = theme;
-
 const ProfilePage = () => {
-    const { token } = useToken();
-    const { isDarkMode } = useTheme();
+    const { token, isDarkMode } = useTheme();
     const styles = useStyles(token, isDarkMode);
     const [form] = Form.useForm();
 

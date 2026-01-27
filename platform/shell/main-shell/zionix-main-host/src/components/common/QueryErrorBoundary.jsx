@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-import { Button, Result, Alert } from 'antd';
+import { BaseButton as Button, BaseResult as Result, BaseAlert as Alert } from '@zionix-space/design-system';
 import {
     errorContainerStyles,
     errorContentStyles,

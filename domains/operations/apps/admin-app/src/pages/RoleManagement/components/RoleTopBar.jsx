@@ -1,8 +1,8 @@
 import { useLayoutEffect } from 'react';
-import { Layout, Button, Space, theme, Menu } from 'antd';
+import { BaseLayout, BaseButton, BaseSpace, BaseMenu, theme } from '@zionix-space/design-system';
 import { useStyles } from './RoleTopBar.style';
 
-const { Header } = Layout;
+const { Header } = BaseLayout;
 const { useToken } = theme;
 
 const RoleTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
@@ -93,7 +93,7 @@ const RoleTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
             {/* Center - Navigation Menu */}
             {mainMenuItems.length > 0 && (
                 <div style={styles.navigationContainerStyle}>
-                    <Menu
+                    <BaseMenu
                         mode="horizontal"
                         selectedKeys={selectedMainMenuKey ? [selectedMainMenuKey] : []}
                         items={mainMenuItems}
@@ -105,14 +105,14 @@ const RoleTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
             )}
 
             {/* Right Section - Actions (Absolute positioned) */}
-            <Space style={styles.rightActionsStyle}>
-                <Button
+            <BaseSpace style={styles.rightActionsStyle}>
+                <BaseButton
                     type="text"
                     icon={<i className="ri-notification-3-line" />}
                     style={styles.iconButtonStyle}
                     title="Notifications"
                 />
-            </Space>
+            </BaseSpace>
         </Header>
     );
 };

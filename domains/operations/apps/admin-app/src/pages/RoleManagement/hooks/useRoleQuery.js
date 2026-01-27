@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { message } from 'antd';
+import { baseMessage } from '@zionix-space/design-system';
 import { menuService } from '../services/roleService';
 
 /**
- * Query keys for menu-related queries
+ * Query keys for BaseMenu-related queries
  */
 export const menuKeys = {
     all: ['menus'],
@@ -26,16 +26,16 @@ export const useMenusQuery = (options = {}) => {
         retry: 2,
         refetchOnWindowFocus: false,
         onError: (error) => {
-            message.error(error.message || 'Failed to load menus');
+            baseMessage.error(error.message || 'Failed to load menus');
         },
         ...options,
     });
 };
 
 /**
- * Hook to fetch menu by ID
- * @param {string} menuId - Menu ID
- * @returns {Object} Query result with menu data
+ * Hook to fetch BaseMenu by ID
+ * @param {string} menuId - BaseMenu ID
+ * @returns {Object} Query result with BaseMenu data
  */
 export const useMenuQuery = (menuId, options = {}) => {
     return useQuery({
@@ -47,14 +47,14 @@ export const useMenuQuery = (menuId, options = {}) => {
         retry: 2,
         refetchOnWindowFocus: false,
         onError: (error) => {
-            message.error(error.message || 'Failed to load menu');
+            baseMessage.error(error.message || 'Failed to load BaseMenu');
         },
         ...options,
     });
 };
 
 /**
- * Hook to create new menu
+ * Hook to create new BaseMenu
  * @returns {Object} Mutation object
  */
 export const useCreateMenuMutation = () => {
@@ -66,16 +66,16 @@ export const useCreateMenuMutation = () => {
         onSuccess: (data) => {
             // Invalidate and refetch menus list
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
-            message.success('Menu created successfully');
+            baseMessage.success('BaseMenu created successfully');
         },
         onError: (error) => {
-            message.error(error.message || 'Failed to create menu');
+            baseMessage.error(error.message || 'Failed to create BaseMenu');
         },
     });
 };
 
 /**
- * Hook to update menu
+ * Hook to update BaseMenu
  * @returns {Object} Mutation object
  */
 export const useUpdateMenuMutation = () => {
@@ -103,19 +103,19 @@ export const useUpdateMenuMutation = () => {
                     context.previousMenu
                 );
             }
-            message.error(error.message || 'Failed to update menu');
+            baseMessage.error(error.message || 'Failed to update BaseMenu');
         },
         onSuccess: (data, variables) => {
             // Invalidate related queries
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
             queryClient.invalidateQueries({ queryKey: menuKeys.detail(variables.menuId) });
-            message.success('Menu updated successfully');
+            baseMessage.success('BaseMenu updated successfully');
         },
     });
 };
 
 /**
- * Hook to delete menu
+ * Hook to delete BaseMenu
  * @returns {Object} Mutation object
  */
 export const useDeleteMenuMutation = () => {
@@ -128,10 +128,10 @@ export const useDeleteMenuMutation = () => {
             queryClient.removeQueries({ queryKey: menuKeys.detail(menuId) });
             // Invalidate list
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
-            message.success('Menu deleted successfully');
+            baseMessage.success('BaseMenu deleted successfully');
         },
         onError: (error) => {
-            message.error(error.message || 'Failed to delete menu');
+            baseMessage.error(error.message || 'Failed to delete BaseMenu');
         },
     });
 };
@@ -146,12 +146,12 @@ export const useBulkUpdateMenusMutation = () => {
     return useMutation({
         mutationFn: menuService.bulkUpdateMenus,
         onSuccess: () => {
-            // Invalidate all menu queries
+            // Invalidate all BaseMenu queries
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
-            message.success('Menus updated successfully');
+            baseMessage.success('Menus updated successfully');
         },
         onError: (error) => {
-            message.error(error.message || 'Failed to update menus');
+            baseMessage.error(error.message || 'Failed to update menus');
         },
     });
 };

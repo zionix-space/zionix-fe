@@ -8,11 +8,10 @@
       "react-dom",
       "dayjs",
       "react-router-dom",
-      "antd",
-      "axios",
       "zustand",
       "@tanstack/react-query",
-      "@zionix-space/lowcode"
+      "@zionix-space/lowcode",
+      "@zionix-space/design-system"
     ]
   },
   "scripts": {
@@ -36,9 +35,8 @@
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
     "@tanstack/react-query": "^5.90.5",
+    "@zionix-space/design-system": "^1.3.1",
     "@zionix-space/lowcode": "^1.0.3",
-    "antd": "^5.27.6",
-    "axios": "^1.12.2",
     "dayjs": "^1.11.13",
     "env-cmd": "^10.1.0",
     "framer-motion": "^12.23.24",

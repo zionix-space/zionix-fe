@@ -7,7 +7,8 @@ import {
     ltrCssLoader,
     rtlCssLoader,
     zionixlcAntdCssLoader,
-    BiDi
+    BiDi,
+    formDB
 } from '@zionix-space/lowcode';
 import '@zionix-space/lowcode/styles';
 // Create BuilderView with all Ant Design components

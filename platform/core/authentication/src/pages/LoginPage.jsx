@@ -11,20 +11,21 @@
 
 import React, { useState } from 'react';
 import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Typography,
-  Divider,
-  message,
-  Row,
-  Col,
-  Carousel,
-} from 'antd';
+  BaseForm,
+  BaseInput,
+  BaseButton,
+  BaseTypography,
+  BaseDivider,
+  baseMessage,
+  BaseCheckbox,
+  BaseRow,
+  BaseCol,
+  BaseCarousel,
+  useTheme,
+  ZionixLogo,
+} from '@zionix-space/design-system';
 import { motion } from 'framer-motion';
-import { useTheme, ZionixLogo } from '@zionix/design-system';
-import { CardTopLoader } from '@zionix/shared-utilities/components';
+import { CardTopLoader } from '@zionix-space/design-system';
 import {
   useStyles,
   containerVariants,
@@ -38,7 +39,7 @@ import {
   carouselCustomCSS,
 } from './LoginPage.style';
 
-const { Text, Link, Title } = Typography;
+const { Text, Link, Title } = BaseTypography;
 
 /**
  * Carousel slides data for promotional content
@@ -92,7 +93,7 @@ const carouselSlides = [
 const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
   const { token, isMobile } = useTheme();
   const styles = useStyles(token);
-  const [form] = Form.useForm();
+  const [form] = BaseForm.useForm();
   const [loading, setLoading] = useState(false);
 
   /**
@@ -110,7 +111,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
       }
     } catch (error) {
       const errorMessage = error.message || 'Login failed. Please check your credentials.';
-      message.error(errorMessage);
+      baseMessage.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -169,19 +170,19 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
             </Text> */}
 
             {/* Divider */}
-            <Divider style={styles.divider}>
+            <BaseDivider style={styles.divider}>
               <Text style={styles.dividerText}>Continue with email</Text>
-            </Divider>
+            </BaseDivider>
 
             {/* Login Form */}
-            <Form
+            <BaseForm
               form={form}
               layout="vertical"
               onFinish={handleSubmit}
               autoComplete="off"
             >
               {/* Email Field */}
-              <Form.Item
+              <BaseForm.Item
                 name="email"
                 rules={[
                   { required: true, message: 'Please enter your email' },
@@ -189,7 +190,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                 ]}
                 style={styles.formItem}
               >
-                <Input
+                <BaseInput
                   prefix={
                     <i className="ri-mail-line" style={styles.inputIcon} />
                   }
@@ -197,17 +198,17 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                   style={styles.input}
                   autoComplete="email"
                 />
-              </Form.Item>
+              </BaseForm.Item>
 
               {/* Password Field */}
-              <Form.Item
+              <BaseForm.Item
                 name="password"
                 rules={[
                   { required: true, message: 'Please enter your password' },
                 ]}
                 style={styles.formItem}
               >
-                <Input.Password
+                <BaseInput.Password
                   prefix={
                     <i className="ri-lock-line" style={styles.inputIcon} />
                   }
@@ -215,13 +216,13 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                   style={styles.input}
                   autoComplete="current-password"
                 />
-              </Form.Item>
+              </BaseForm.Item>
 
               {/* Remember Me & Forgot Password */}
               <div style={styles.rememberForgotContainer}>
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox style={styles.checkbox}>Remember me</Checkbox>
-                </Form.Item>
+                <BaseForm.Item name="remember" valuePropName="checked" noStyle>
+                  <BaseCheckbox style={styles.checkbox}>Remember me</BaseCheckbox>
+                </BaseForm.Item>
                 <Link
                   onClick={handleForgotPasswordClick}
                   style={styles.forgotLink}
@@ -231,7 +232,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
               </div>
 
               {/* Login Button */}
-              <Button
+              <BaseButton
                 type="primary"
                 htmlType="submit"
                 loading={loading}
@@ -239,8 +240,8 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                 block
               >
                 Log In
-              </Button>
-            </Form>
+              </BaseButton>
+            </BaseForm>
 
             {/* Sign Up Link */}
             <div style={styles.signUpContainer}>
@@ -262,9 +263,9 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
     <>
       <style dangerouslySetInnerHTML={{ __html: carouselCustomCSS }} />
       <div style={styles.container}>
-        <Row style={styles.row}>
+        <BaseRow style={styles.row}>
           {/* Left Side - Login Form */}
-          <Col span={12} style={styles.leftColumn}>
+          <BaseCol span={12} style={styles.leftColumn}>
             <motion.div
               style={{ ...styles.formContainer, position: 'relative' }}
               variants={formVariants}
@@ -305,13 +306,13 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                   animate={{ opacity: 1, scaleX: 1 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
-                  <Divider style={styles.divider}>
+                  <BaseDivider style={styles.divider}>
                     <Text style={styles.dividerText}>Continue with email</Text>
-                  </Divider>
+                  </BaseDivider>
                 </motion.div>
 
                 {/* Login Form */}
-                <Form
+                <BaseForm
                   form={form}
                   layout="vertical"
                   onFinish={handleSubmit}
@@ -324,7 +325,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     initial="initial"
                     animate="animate"
                   >
-                    <Form.Item
+                    <BaseForm.Item
                       name="email"
                       rules={[
                         { required: true, message: 'Please enter your email' },
@@ -332,7 +333,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                       ]}
                       style={styles.formItem}
                     >
-                      <Input
+                      <BaseInput
                         prefix={
                           <i className="ri-mail-line" style={styles.inputIcon} />
                         }
@@ -340,7 +341,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                         style={styles.input}
                         autoComplete="email"
                       />
-                    </Form.Item>
+                    </BaseForm.Item>
                   </motion.div>
 
                   {/* Password Field */}
@@ -350,14 +351,14 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     initial="initial"
                     animate="animate"
                   >
-                    <Form.Item
+                    <BaseForm.Item
                       name="password"
                       rules={[
                         { required: true, message: 'Please enter your password' },
                       ]}
                       style={styles.formItem}
                     >
-                      <Input.Password
+                      <BaseInput.Password
                         prefix={
                           <motion.i
                             className="ri-lock-line"
@@ -370,7 +371,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                         style={styles.input}
                         autoComplete="current-password"
                       />
-                    </Form.Item>
+                    </BaseForm.Item>
                   </motion.div>
 
                   {/* Remember Me & Forgot Password */}
@@ -380,9 +381,9 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.8 }}
                   >
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                      <Checkbox style={styles.checkbox}>Remember me</Checkbox>
-                    </Form.Item>
+                    <BaseForm.Item name="remember" valuePropName="checked" noStyle>
+                      <BaseCheckbox style={styles.checkbox}>Remember me</BaseCheckbox>
+                    </BaseForm.Item>
                     <motion.div
                       whileHover={{ x: 3 }}
                       transition={{ duration: 0.2 }}
@@ -404,7 +405,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     whileHover="hover"
                     whileTap="tap"
                   >
-                    <Button
+                    <BaseButton
                       type="primary"
                       htmlType="submit"
                       loading={loading}
@@ -413,15 +414,15 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                       block
                     >
                       Log In
-                    </Button>
+                    </BaseButton>
                   </motion.div>
-                </Form>
+                </BaseForm>
               </div>
             </motion.div>
-          </Col>
+          </BaseCol>
 
           {/* Right Side - Promotional Carousel */}
-          <Col span={12} style={styles.rightColumn}>
+          <BaseCol span={12} style={styles.rightColumn}>
             <motion.div
               style={styles.promoContainer}
               variants={promoVariants}
@@ -483,7 +484,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
               {/* Carousel Content */}
               <div style={styles.carouselContainer}>
-                <Carousel
+                <BaseCarousel
                   autoplay
                   autoplaySpeed={4000}
                   dots={{ className: 'custom-carousel-dots' }}
@@ -527,7 +528,7 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                           <Text style={styles.slideDescription}>
                             {slide.description}
                           </Text>
-                          <Button
+                          <BaseButton
                             type="link"
                             style={styles.learnMoreButton}
                             onClick={() =>
@@ -535,16 +536,16 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                             }
                           >
                             Learn more
-                          </Button>
+                          </BaseButton>
                         </div>
                       </motion.div>
                     </div>
                   ))}
-                </Carousel>
+                </BaseCarousel>
               </div>
             </motion.div>
-          </Col>
-        </Row>
+          </BaseCol>
+        </BaseRow>
       </div>
     </>
   );

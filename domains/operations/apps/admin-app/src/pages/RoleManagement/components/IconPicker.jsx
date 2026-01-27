@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { Input, Popover, Button, Space } from 'antd';
+import { BaseInput, BasePopover, BaseButton, BaseSpace, theme } from '@zionix-space/design-system';
 import { useStyles } from './IconPicker.style';
-import { theme } from 'antd';
-
 const { useToken } = theme;
 
 // Common RemixIcon classes used in the application
@@ -11,7 +9,7 @@ const COMMON_ICONS = [
     'ri-apps-line',
     'ri-global-line',
     'ri-kanban-view-2',
-    'ri-id-card-line',
+    'ri-id-BaseCard-line',
     'ri-shield-check-line',
     'ri-user-line',
     'ri-home-5-line',
@@ -26,7 +24,7 @@ const COMMON_ICONS = [
     'ri-phone-line',
     'ri-calendar-line',
     'ri-notification-3-line',
-    'ri-message-3-line',
+    'ri-baseMessage-3-line',
     'ri-search-line',
     'ri-add-line',
     'ri-delete-bin-line',
@@ -39,7 +37,7 @@ const COMMON_ICONS = [
     'ri-arrow-up-line',
     'ri-arrow-down-line',
     'ri-more-line',
-    'ri-menu-line',
+    'ri-BaseMenu-line',
     'ri-star-line',
     'ri-heart-line',
     'ri-bookmark-line',
@@ -83,7 +81,7 @@ const IconPicker = ({ value, onChange }) => {
 
     const content = (
         <div style={styles.popoverContent}>
-            <Input
+            <BaseInput
                 placeholder="Search icons..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
@@ -110,15 +108,15 @@ const IconPicker = ({ value, onChange }) => {
                 <div style={styles.noResults}>No icons found</div>
             )}
             <div style={styles.actions}>
-                <Button size="small" onClick={handleClear}>
+                <BaseButton size="small" onClick={handleClear}>
                     Clear
-                </Button>
+                </BaseButton>
             </div>
         </div>
     );
 
     return (
-        <Popover
+        <BasePopover
             content={content}
             trigger="click"
             open={open}
@@ -126,19 +124,19 @@ const IconPicker = ({ value, onChange }) => {
             placement="bottomLeft"
             overlayStyle={{ width: 320 }}
         >
-            <Space.Compact style={{ width: '100%' }}>
-                <Input
+            <BaseSpace.Compact style={{ width: '100%' }}>
+                <BaseInput
                     value={value}
                     onChange={(e) => onChange?.(e.target.value)}
-                    placeholder="Enter RemixIcon class or select"
+                    placeholder="Enter RemixIcon class or BaseSelect"
                     prefix={value ? <i className={value} /> : <i className="ri-palette-line" />}
                     style={{ borderRadius: '20px 0 0 20px' }}
                 />
-                <Button onClick={() => setOpen(true)} style={{ borderRadius: '0 20px 20px 0' }}>
+                <BaseButton onClick={() => setOpen(true)} style={{ borderRadius: '0 20px 20px 0' }}>
                     <i className="ri-arrow-down-s-line" />
-                </Button>
-            </Space.Compact>
-        </Popover>
+                </BaseButton>
+            </BaseSpace.Compact>
+        </BasePopover>
     );
 };
 

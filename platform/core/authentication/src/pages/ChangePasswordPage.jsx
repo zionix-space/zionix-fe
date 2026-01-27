@@ -10,10 +10,10 @@
  */
 
 import React, { useState } from 'react';
-import { Form, Input, Button, Typography, Space, Progress, Alert, message } from 'antd';
+import { BaseForm as Form, BaseInput as Input, BaseButton as Button, BaseTypography as Typography, BaseSpace as Space, BaseProgress as Progress, BaseAlert as Alert, baseMessage } from '@zionix-space/design-system';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@zionix/design-system';
+import { useTheme } from '@zionix-space/design-system';
 import AuthLayout from '../layouts/AuthLayout';
 import { useFormValidation } from '../hooks/useFormValidation';
 import { validatePassword, getPasswordStrength } from '../utils/validation';
@@ -27,7 +27,7 @@ const { Text, Link, Title } = Typography;
 const PasswordStrengthIndicator = ({ password, token, isMobile }) => {
   const styles = useStyles(token);
   const strength = getPasswordStrength(password);
-  
+
   if (!password) return null;
 
   const getStrengthColor = () => {
@@ -73,19 +73,19 @@ const PasswordStrengthIndicator = ({ password, token, isMobile }) => {
             style={strengthProgressStyle}
           />
         </div>
-        
+
         <div style={strengthRequirementsStyle}>
           {strength.requirements.map((req, index) => (
             <div key={index} style={styles.strengthRequirementStyle}>
-              <span style={{ 
+              <span style={{
                 color: req.met ? token.colorSuccess : token.colorTextSecondary,
-                marginRight: token.marginXS 
+                marginRight: token.marginXS
               }}>
                 {req.met ? '✓' : '○'}
               </span>
-              <Text style={{ 
+              <Text style={{
                 fontSize: isMobile ? token.fontSizeXS : token.fontSizeSM,
-                color: req.met ? token.colorSuccess : token.colorTextSecondary 
+                color: req.met ? token.colorSuccess : token.colorTextSecondary
               }}>
                 {req.text}
               </Text>
@@ -102,7 +102,7 @@ const PasswordStrengthIndicator = ({ password, token, isMobile }) => {
  */
 const SuccessState = ({ onBackToLogin, token, isMobile }) => {
   const styles = useStyles(token);
-  
+
   const iconStyle = isMobile ? styles.mobileSuccessIconStyle : styles.desktopSuccessIconStyle;
   const titleStyle = isMobile ? styles.mobileSuccessTitleStyle : styles.desktopSuccessTitleStyle;
   const descriptionStyle = isMobile ? styles.mobileSuccessDescriptionStyle : styles.desktopSuccessDescriptionStyle;
@@ -156,9 +156,9 @@ const SuccessState = ({ onBackToLogin, token, isMobile }) => {
  * @param {Function} props.onBackToLogin - Callback for back to login navigation
  * @returns {JSX.Element} Change password page component
  */
-const ChangePasswordPage = ({ 
-  onChangePassword, 
-  onBackToLogin 
+const ChangePasswordPage = ({
+  onChangePassword,
+  onBackToLogin
 }) => {
   const { token, isMobile } = useTheme();
   const styles = useStyles(token);
@@ -207,14 +207,14 @@ const ChangePasswordPage = ({
         try {
           // Simulate API call
           await new Promise(resolve => setTimeout(resolve, 2000));
-          
+
           if (onChangePassword) {
             await onChangePassword({
               currentPassword: formData.currentPassword,
               newPassword: formData.newPassword,
             });
           }
-          
+
           setIsSuccess(true);
           message.success('Password changed successfully!');
         } catch (error) {
@@ -345,7 +345,7 @@ const ChangePasswordPage = ({
                 iconRender={(visible) => (visible ? <i className="ri-eye-line" /> : <i className="ri-eye-off-line" />)}
                 autoComplete="new-password"
               />
-              
+
               {/* Password Strength Indicator */}
               <PasswordStrengthIndicator
                 password={getFieldValue('newPassword')}

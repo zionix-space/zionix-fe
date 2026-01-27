@@ -1,4 +1,4 @@
-import { Breadcrumb, theme } from 'antd';
+import { BaseBreadcrumb, theme } from '@zionix-space/design-system';
 import { useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -67,7 +67,7 @@ const DynamicBreadcrumb = () => {
                 transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
                 style={styles.container}
             >
-                <Breadcrumb
+                <BaseBreadcrumb
                     separator={<i className="ri-arrow-right-s-line" style={styles.separator} />}
                     items={breadcrumbItems.map((item, index) => {
                         const isLast = index === breadcrumbItems.length - 1;

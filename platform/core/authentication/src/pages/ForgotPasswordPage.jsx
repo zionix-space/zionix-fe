@@ -10,10 +10,10 @@
  */
 
 import React, { useState } from 'react';
-import { Form, Input, Button, Typography, Space, Alert, message } from 'antd';
+import { BaseForm as Form, BaseInput as Input, BaseButton as Button, BaseTypography as Typography, BaseSpace as Space, BaseAlert as Alert, baseMessage } from '@zionix-space/design-system';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '@zionix/design-system';
+import { useTheme } from '@zionix-space/design-system';
 import AuthLayout from '../layouts/AuthLayout';
 import { useFormValidation } from '../hooks/useFormValidation';
 import { validateEmail } from '../utils/validation';
@@ -26,7 +26,7 @@ const { Text, Link, Title } = Typography;
  */
 const SuccessState = ({ email, onBackToLogin, token, isMobile }) => {
   const styles = useStyles(token);
-  
+
   const iconStyle = isMobile ? styles.mobileSuccessIconStyle : styles.desktopSuccessIconStyle;
   const titleStyle = isMobile ? styles.mobileSuccessTitleStyle : styles.desktopSuccessTitleStyle;
   const descriptionStyle = isMobile ? styles.mobileSuccessDescriptionStyle : styles.desktopSuccessDescriptionStyle;
@@ -121,9 +121,9 @@ const ForgotPasswordPage = ({ onForgotPassword, onBackToLogin }) => {
 
         setSubmittedEmail(formData.email);
         setIsSuccess(true);
-        message.success('Password reset email sent successfully!');
+        baseMessage.success('Password reset email sent successfully!');
       } catch (error) {
-        message.error('Failed to send reset email. Please try again.');
+        baseMessage.error('Failed to send reset email. Please try again.');
         throw error;
       }
     },

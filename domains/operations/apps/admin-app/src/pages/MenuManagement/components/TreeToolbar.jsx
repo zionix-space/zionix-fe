@@ -1,11 +1,8 @@
-import { Input, Button, theme } from 'antd';
+import { BaseInput, BaseButton, useTheme } from '@zionix-space/design-system';
 import { useStyles } from './TreeToolbar.style';
 
-const { Search } = Input;
-const { useToken } = theme;
-
 const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport }) => {
-    const { token } = useToken();
+    const { token } = useTheme();
 
     const isDarkMode =
         token.colorBgBase === '#000000' ||
@@ -20,7 +17,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
     return (
         <div style={styles.toolbarContainer}>
             <div style={styles.singleRow}>
-                <Search
+                <BaseInput.Search
                     placeholder="Search..."
                     value={searchValue}
                     onChange={(e) => onSearchChange(e.target.value)}
@@ -30,7 +27,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                 />
                 <div style={styles.spacer} />
                 <div style={styles.capsuleContainer}>
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-arrow-go-back-line" />}
                         onClick={onUndo}
                         disabled={!canUndo}
@@ -39,7 +36,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         size="small"
                         type="text"
                     />
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-arrow-go-forward-line" />}
                         onClick={onRedo}
                         disabled={!canRedo}
@@ -50,7 +47,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     />
                 </div>
                 <div style={styles.capsuleContainer}>
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-download-line" />}
                         onClick={onExport}
                         title="Export"
@@ -58,7 +55,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         size="small"
                         type="text"
                     />
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-upload-line" />}
                         onClick={onImport}
                         title="Import"
@@ -68,7 +65,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     />
                 </div>
                 <div style={styles.capsuleContainer}>
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-expand-diagonal-line" />}
                         onClick={onExpandAll}
                         title="Expand All"
@@ -76,7 +73,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         size="small"
                         type="text"
                     />
-                    <Button
+                    <BaseButton
                         icon={<i className="ri-collapse-diagonal-line" />}
                         onClick={onCollapseAll}
                         title="Collapse All"
@@ -86,7 +83,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     />
                 </div>
                 <div style={styles.spacer} />
-                <Button
+                <BaseButton
                     type="primary"
                     icon={<i className="ri-save-line" />}
                     onClick={onSave}
@@ -96,7 +93,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     size="small"
                 >
                     {isDirty ? 'Save' : 'Saved'}
-                </Button>
+                </BaseButton>
             </div>
         </div>
     );

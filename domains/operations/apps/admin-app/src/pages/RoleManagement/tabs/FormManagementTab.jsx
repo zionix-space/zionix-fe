@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Spin } from 'antd';
+import { BaseSpin } from '@zionix-space/design-system';
 
 // Lazy load the heavy FormBuilder library - only loads when tab is active
 const FormBuilderWrapper = lazy(() =>
@@ -13,7 +13,7 @@ const FormLoader = () => (
         alignItems: 'center',
         height: 'calc(100vh - 46px)'
     }}>
-        <Spin size="large" tip="Loading Form Builder..." />
+        <BaseSpin size="large" tip="Loading Form Builder..." />
     </div>
 );
 

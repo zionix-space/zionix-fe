@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { message } from 'antd';
+import { baseMessage } from '@zionix-space/design-system';
 import { menuService } from '../services/menuService';
 
 /**
@@ -26,7 +26,7 @@ export const useMenusQuery = (options = {}) => {
         retry: 2,
         refetchOnWindowFocus: false,
         onError: (error) => {
-            message.error(error.message || 'Failed to load menus');
+            baseMessage.error(error.message || 'Failed to load menus');
         },
         ...options,
     });
@@ -47,7 +47,7 @@ export const useMenuQuery = (menuId, options = {}) => {
         retry: 2,
         refetchOnWindowFocus: false,
         onError: (error) => {
-            message.error(error.message || 'Failed to load menu');
+            baseMessage.error(error.message || 'Failed to load menu');
         },
         ...options,
     });
@@ -66,10 +66,10 @@ export const useCreateMenuMutation = () => {
         onSuccess: (data) => {
             // Invalidate and refetch menus list
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
-            message.success('Menu created successfully');
+            baseMessage.success('Menu created successfully');
         },
         onError: (error) => {
-            message.error(error.message || 'Failed to create menu');
+            baseMessage.error(error.message || 'Failed to create menu');
         },
     });
 };
@@ -103,13 +103,13 @@ export const useUpdateMenuMutation = () => {
                     context.previousMenu
                 );
             }
-            message.error(error.message || 'Failed to update menu');
+            baseMessage.error(error.message || 'Failed to update menu');
         },
         onSuccess: (data, variables) => {
             // Invalidate related queries
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
             queryClient.invalidateQueries({ queryKey: menuKeys.detail(variables.menuId) });
-            message.success('Menu updated successfully');
+            baseMessage.success('Menu updated successfully');
         },
     });
 };
@@ -128,10 +128,10 @@ export const useDeleteMenuMutation = () => {
             queryClient.removeQueries({ queryKey: menuKeys.detail(menuId) });
             // Invalidate list
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
-            message.success('Menu deleted successfully');
+            baseMessage.success('Menu deleted successfully');
         },
         onError: (error) => {
-            message.error(error.message || 'Failed to delete menu');
+            baseMessage.error(error.message || 'Failed to delete menu');
         },
     });
 };
@@ -148,10 +148,10 @@ export const useBulkUpdateMenusMutation = () => {
         onSuccess: () => {
             // Invalidate all menu queries
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
-            message.success('Menus updated successfully');
+            baseMessage.success('Menus updated successfully');
         },
         onError: (error) => {
-            message.error(error.message || 'Failed to update menus');
+            baseMessage.error(error.message || 'Failed to update menus');
         },
     });
 };

@@ -1,12 +1,9 @@
 import { useLayoutEffect } from 'react';
-import { Layout, Button, Space, theme, Menu } from 'antd';
+import { BaseLayout, BaseButton, BaseSpace, BaseMenu, useTheme } from '@zionix-space/design-system';
 import { useStyles } from './MenuTopBar.style';
 
-const { Header } = Layout;
-const { useToken } = theme;
-
 const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
-    const { token } = useToken();
+    const { token } = useTheme();
 
     // Detect dark mode from Ant Design theme
     const isDarkMode = token.colorBgBase === '#000000' || token.colorBgContainer === '#141414';
@@ -70,7 +67,7 @@ const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
     })) || [];
 
     return (
-        <Header style={styles.topBarStyle}>
+        <BaseLayout.Header style={styles.topBarStyle}>
             {/* Left Section - Brand (Absolute positioned) */}
             <div style={styles.brandContainerStyle}>
                 {/* Simple logo icon instead of ZionixLogo component */}
@@ -93,7 +90,7 @@ const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
             {/* Center - Navigation Menu */}
             {mainMenuItems.length > 0 && (
                 <div style={styles.navigationContainerStyle}>
-                    <Menu
+                    <BaseMenu
                         mode="horizontal"
                         selectedKeys={selectedMainMenuKey ? [selectedMainMenuKey] : []}
                         items={mainMenuItems}
@@ -105,15 +102,15 @@ const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
             )}
 
             {/* Right Section - Actions (Absolute positioned) */}
-            <Space style={styles.rightActionsStyle}>
-                <Button
+            <BaseSpace style={styles.rightActionsStyle}>
+                <BaseButton
                     type="text"
                     icon={<i className="ri-notification-3-line" />}
                     style={styles.iconButtonStyle}
                     title="Notifications"
                 />
-            </Space>
-        </Header>
+            </BaseSpace>
+        </BaseLayout.Header>
     );
 };
 

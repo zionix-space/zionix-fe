@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Spin, message, theme, Button, Modal } from 'antd';
+import { BaseSpin, baseMessage, BaseButton, BaseModal, theme } from '@zionix-space/design-system';
 import { useStyles } from './RoleEditor.style';
 import TreeToolbar from './TreeToolbar';
 import RoleTree from './RoleTree';
-import RoleDetailsForm from './RoleDetailsForm';
+import RoleForm from './RoleForm';
 import {
     transformToTreeData,
     extractAllKeys,
@@ -65,7 +65,6 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const [isDirty, setIsDirty] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
-    const [permissions, setPermissions] = useState({}); // New state for permissions
 
     // Initialize menu data from API
     useEffect(() => {
@@ -73,22 +72,6 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             setMenuData(apiMenuData);
             if (onMenuDataChange) {
                 onMenuDataChange(apiMenuData);
-            }
-
-            // Initialize permissions for all menu items (default to disabled)
-            const initializePermissions = (items, perms = {}) => {
-                items.forEach(item => {
-                    perms[item.key] = item.permission || 'disabled';
-                    if (item.children && item.children.length > 0) {
-                        initializePermissions(item.children, perms);
-                    }
-                });
-                return perms;
-            };
-
-            if (apiMenuData.mainNavigation) {
-                const initialPerms = initializePermissions(apiMenuData.mainNavigation);
-                setPermissions(initialPerms);
             }
         }
     }, [apiMenuData, onMenuDataChange]);
@@ -212,7 +195,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         updateMenuData(updatedData);
         setExpandedKeys([...expandedKeys, selectedKey]);
         setSelectedKey(newItem.key);
-        message.success('Child menu item created');
+        baseMessage.success('Child menu item created');
     };
 
     const handleDelete = () => {
@@ -237,7 +220,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         updateMenuData(updatedData);
         setSelectedKey(null);
-        message.success('Menu item deleted');
+        baseMessage.success('Menu item deleted');
     };
 
     const handleSave = () => {
@@ -287,9 +270,9 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            message.success('Menu configuration exported');
+            baseMessage.success('Menu configuration exported');
         } catch (error) {
-            message.error('Failed to export menu configuration');
+            baseMessage.error('Failed to export menu configuration');
         }
     };
 
@@ -312,70 +295,14 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     }
 
                     updateMenuData(importedData);
-                    message.success('Menu configuration imported successfully');
+                    baseMessage.success('Menu configuration imported successfully');
                 } catch (error) {
-                    message.error('Failed to import: Invalid JSON format');
+                    baseMessage.error('Failed to import: Invalid JSON format');
                 }
             };
             reader.readAsText(file);
         };
         input.click();
-    };
-
-    // Handle permission change for a single node with cascading
-    const handlePermissionChange = (nodeKey, permission, cascade = true) => {
-        if (!menuData?.mainNavigation) return;
-
-        const newPermissions = { ...permissions };
-
-        // Update the node itself
-        newPermissions[nodeKey] = permission;
-
-        // Cascade to all children if enabled
-        if (cascade) {
-            const cascadeToChildren = (items) => {
-                items.forEach(item => {
-                    if (item.key === nodeKey && item.children && item.children.length > 0) {
-                        const updateChildren = (children) => {
-                            children.forEach(child => {
-                                newPermissions[child.key] = permission;
-                                if (child.children && child.children.length > 0) {
-                                    updateChildren(child.children);
-                                }
-                            });
-                        };
-                        updateChildren(item.children);
-                    } else if (item.children && item.children.length > 0) {
-                        cascadeToChildren(item.children);
-                    }
-                });
-            };
-
-            cascadeToChildren(menuData.mainNavigation);
-        }
-
-        setPermissions(newPermissions);
-        setIsDirty(true);
-    };
-
-    // Handle bulk permission change for all nodes
-    const handleBulkPermissionChange = (permission) => {
-        if (!menuData?.mainNavigation) return;
-
-        const updateAllPermissions = (items, perms = {}) => {
-            items.forEach(item => {
-                perms[item.key] = permission;
-                if (item.children && item.children.length > 0) {
-                    updateAllPermissions(item.children, perms);
-                }
-            });
-            return perms;
-        };
-
-        const newPermissions = updateAllPermissions(menuData.mainNavigation);
-        setPermissions(newPermissions);
-        setIsDirty(true);
-        message.success(`All permissions set to ${permission}`);
     };
 
     const handleDrop = (info) => {
@@ -386,7 +313,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         // Prevent dropping on itself
         if (dragKey === dropKey) {
-            message.warning('Cannot drop item on itself');
+            baseMessage.warning('Cannot drop item on itself');
             return;
         }
 
@@ -409,7 +336,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         };
 
         if (isDescendant(dragKey, dropKey)) {
-            message.error('Cannot move parent into its own child');
+            baseMessage.error('Cannot move parent into its own child');
             return;
         }
 
@@ -434,7 +361,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         removeItem(clonedData.mainNavigation);
 
         if (!draggedItem) {
-            message.error('Failed to find dragged item');
+            baseMessage.error('Failed to find dragged item');
             return;
         }
 
@@ -451,7 +378,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 const updatedData = updateMenuItemByKey(clonedData, dropKey, dropItem);
                 updateMenuData(updatedData);
                 setExpandedKeys([...expandedKeys, dropKey]);
-                message.success('Item moved successfully');
+                baseMessage.success('Item moved successfully');
             }
         } else {
             // Drop between nodes (as sibling)
@@ -477,9 +404,9 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
             if (insertIntoItems(clonedData.mainNavigation)) {
                 updateMenuData(clonedData);
-                message.success('Item reordered successfully');
+                baseMessage.success('Item reordered successfully');
             } else {
-                message.error('Failed to reorder item');
+                baseMessage.error('Failed to reorder item');
             }
         }
     };
@@ -496,7 +423,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     if (loading) {
         return (
             <div style={styles.loadingContainer}>
-                <Spin size="large" tip="Loading menu configuration..." />
+                <BaseSpin size="large" tip="Loading menu configuration..." />
             </div>
         );
     }
@@ -521,7 +448,6 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         canRedo={canRedo}
                         onExport={handleExport}
                         onImport={handleImport}
-                        onBulkPermissionChange={handleBulkPermissionChange}
                     />
                     <RoleTree
                         treeData={getTreeData()}
@@ -531,24 +457,25 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         onSelect={handleSelect}
                         onExpand={handleExpand}
                         onDrop={handleDrop}
-                        permissions={permissions}
-                        onPermissionChange={handlePermissionChange}
                     />
                 </div>
 
                 {/* Right column - Form */}
                 <div style={styles.rightColumn} className="menu-editor-scrollbar">
-                    <RoleDetailsForm
+                    <RoleForm
                         selectedKey={selectedKey}
                         selectedItem={selectedItem}
-                        permissions={permissions}
-                        onPermissionChange={handlePermissionChange}
+                        allMenuKeys={allKeys}
+                        menuData={menuData}
+                        onChange={handleFieldChange}
+                        onDelete={handleDelete}
+                        onAddChild={handleAddChild}
                     />
                 </div>
             </div>
 
             {/* JSON Preview Modal */}
-            <Modal
+            <BaseModal
                 title="Menu Configuration JSON"
                 open={jsonPreviewOpen}
                 onCancel={onJsonPreviewClose}
@@ -574,7 +501,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 >
                     {JSON.stringify(menuData, null, 2)}
                 </pre>
-            </Modal>
+            </BaseModal>
         </div>
     );
 };

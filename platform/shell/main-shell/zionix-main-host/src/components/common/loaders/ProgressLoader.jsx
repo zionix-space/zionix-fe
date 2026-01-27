@@ -1,4 +1,4 @@
-import { Progress, Space, Typography, theme } from 'antd';
+import { BaseProgress as Progress, BaseSpace as Space, BaseTypography as Typography, useTheme } from '@zionix-space/design-system';
 
 const { Text } = Typography;
 
@@ -13,7 +13,7 @@ export const LinearProgress = ({
     showInfo = true,
     label = null
 }) => {
-    const { token } = theme.useToken();
+    const { token } = useTheme();
 
     return (
         <Space direction="vertical" style={{ width: '100%', maxWidth: '100%' }}>
@@ -60,7 +60,7 @@ export const DashboardProgress = ({
     size = 80,
     strokeColor
 }) => {
-    const { token } = theme.useToken();
+    const { token } = useTheme();
     const responsiveSize = typeof window !== 'undefined'
         ? Math.min(size, window.innerWidth * 0.2)
         : size;
@@ -111,7 +111,7 @@ export const UploadProgress = ({
     percent = 0,
     status = 'active'
 }) => {
-    const { token } = theme.useToken();
+    const { token } = useTheme();
 
     return (
         <Space direction="vertical" style={{ width: '100%', maxWidth: '100%' }} size="small">

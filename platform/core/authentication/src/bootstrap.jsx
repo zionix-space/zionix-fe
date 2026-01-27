@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import * as ReactDOM from 'react-dom/client';
-import { MicrofrontendLoader } from '@zionix/shared-utilities/components';
+import { MicrofrontendLoader } from '@zionix-space/design-system';
 import App from './app/app';
 import './styles.css';
 

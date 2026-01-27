@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
-import { MicrofrontendLoader } from '@zionix/shared-utilities/components';
+import { MicrofrontendLoader } from '@zionix-space/design-system';
 import App from "./app/app";
 import { initializeWarningSuppression } from "./utils/suppressWarnings";
 

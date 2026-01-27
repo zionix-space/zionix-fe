@@ -1,8 +1,10 @@
-// Import Inter font for optimal performance
+// Import Inter font IMMEDIATELY for fastest loading (before React)
+import "@fontsource/inter/300.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
+import "@fontsource/inter/800.css";
 
 // Import Remix Icons CSS
 import 'remixicon/fonts/remixicon.css';
@@ -13,57 +15,6 @@ import React, { StrictMode, useState, useEffect, useRef } from "react";
 import * as ReactDOM from "react-dom/client";
 import App from "./app/app";
 import { initializeWarningSuppression } from "./utils/suppressWarnings";
-
-// Inject global Apple-inspired font styles
-const injectGlobalFontStyles = () => {
-  const styleId = 'zionix-global-fonts';
-  if (!document.getElementById(styleId)) {
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
-      * {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeLegibility;
-      }
-      
-      body,
-      html,
-      #main-module,
-      .ant-app,
-      .ant-layout,
-      .ant-menu,
-      .ant-btn,
-      .ant-input,
-      .ant-select,
-      .ant-table,
-      .ant-modal,
-      .ant-drawer,
-      .ant-dropdown,
-      .ant-tooltip,
-      .ant-popover,
-      .ant-notification,
-      .ant-message,
-      .ant-alert,
-      .ant-card,
-      .ant-form,
-      .ant-typography {
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
-      }
-      
-      code,
-      pre,
-      .ant-typography-code,
-      .ant-input-textarea {
-        font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace !important;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-};
-
-// Inject fonts immediately
-injectGlobalFontStyles();
 
 // Initialize warning suppression for known Ant Design issues
 initializeWarningSuppression();

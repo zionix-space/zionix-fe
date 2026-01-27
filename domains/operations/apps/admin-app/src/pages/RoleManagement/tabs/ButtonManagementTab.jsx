@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Card, Typography, Space, Button, Table, Modal, Form, Input, Select, Tag, message } from 'antd';
+import { BaseCard, BaseTypography, BaseSpace, BaseButton, BaseTable, BaseModal, BaseForm, BaseInput, BaseSelect, BaseTag, baseMessage } from '@zionix-space/design-system';
 
-const { Title, Paragraph } = Typography;
-const { Option } = Select;
+const { Title, Paragraph } = BaseTypography;
+const { Option } = BaseSelect;
 
 const ButtonManagementTab = () => {
     const [buttons, setButtons] = useState([
@@ -12,7 +12,7 @@ const ButtonManagementTab = () => {
     ]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingButton, setEditingButton] = useState(null);
-    const [form] = Form.useForm();
+    const [form] = BaseForm.useForm();
 
     const handleAdd = () => {
         setEditingButton(null);
@@ -27,12 +27,12 @@ const ButtonManagementTab = () => {
     };
 
     const handleDelete = (id) => {
-        Modal.confirm({
+        BaseModal.confirm({
             title: 'Delete Button',
             content: 'Are you sure you want to delete this button?',
             onOk: () => {
                 setButtons(buttons.filter(btn => btn.id !== id));
-                message.success('Button deleted successfully');
+                baseMessage.success('Button deleted successfully');
             },
         });
     };
@@ -42,11 +42,11 @@ const ButtonManagementTab = () => {
             setButtons(buttons.map(btn =>
                 btn.id === editingButton.id ? { ...btn, ...values } : btn
             ));
-            message.success('Button updated successfully');
+            baseMessage.success('Button updated successfully');
         } else {
             const newButton = { ...values, id: Date.now() };
             setButtons([...buttons, newButton]);
-            message.success('Button created successfully');
+            baseMessage.success('Button created successfully');
         }
         setIsModalOpen(false);
         form.resetFields();
@@ -62,7 +62,7 @@ const ButtonManagementTab = () => {
             title: 'Type',
             dataIndex: 'type',
             key: 'type',
-            render: (type) => <Tag color={type === 'primary' ? 'blue' : type === 'danger' ? 'red' : 'default'}>{type}</Tag>,
+            render: (type) => <BaseTag color={type === 'primary' ? 'blue' : type === 'danger' ? 'red' : 'default'}>{type}</BaseTag>,
         },
         {
             title: 'Action',
@@ -76,7 +76,7 @@ const ButtonManagementTab = () => {
             render: (roles) => (
                 <>
                     {roles.map(role => (
-                        <Tag key={role} color="green">{role}</Tag>
+                        <BaseTag key={role} color="green">{role}</BaseTag>
                     ))}
                 </>
             ),
@@ -85,26 +85,26 @@ const ButtonManagementTab = () => {
             title: 'Actions',
             key: 'actions',
             render: (_, record) => (
-                <Space>
-                    <Button
+                <BaseSpace>
+                    <BaseButton
                         type="text"
                         icon={<i className="ri-edit-line" />}
                         onClick={() => handleEdit(record)}
                     />
-                    <Button
+                    <BaseButton
                         type="text"
                         danger
                         icon={<i className="ri-delete-bin-line" />}
                         onClick={() => handleDelete(record.id)}
                     />
-                </Space>
+                </BaseSpace>
             ),
         },
     ];
 
     return (
         <div style={{ padding: '24px', height: 'calc(100vh - 46px)', overflow: 'auto' }}>
-            <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <BaseSpace direction="vertical" size="large" style={{ width: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <Title level={2} style={{ margin: 0 }}>Button Management</Title>
@@ -112,27 +112,27 @@ const ButtonManagementTab = () => {
                             Configure and manage application buttons and their role-based access.
                         </Paragraph>
                     </div>
-                    <Button
+                    <BaseButton
                         type="primary"
                         icon={<i className="ri-add-line" />}
                         onClick={handleAdd}
                         shape='round'
                     >
                         Add Button
-                    </Button>
+                    </BaseButton>
                 </div>
 
-                <Card>
-                    <Table
+                <BaseCard>
+                    <BaseTable
                         columns={columns}
                         dataSource={buttons}
                         rowKey="id"
                         pagination={{ pageSize: 10 }}
                     />
-                </Card>
-            </Space>
+                </BaseCard>
+            </BaseSpace>
 
-            <Modal
+            <BaseModal
                 title={editingButton ? 'Edit Button' : 'Add Button'}
                 open={isModalOpen}
                 onCancel={() => {
@@ -142,53 +142,53 @@ const ButtonManagementTab = () => {
                 onOk={() => form.submit()}
                 okText={editingButton ? 'Update' : 'Create'}
             >
-                <Form
+                <BaseForm
                     form={form}
                     layout="vertical"
                     onFinish={handleSubmit}
                 >
-                    <Form.Item
+                    <BaseForm.Item
                         name="name"
                         label="Button Name"
                         rules={[{ required: true, message: 'Please enter button name' }]}
                     >
-                        <Input placeholder="Enter button name" />
-                    </Form.Item>
+                        <BaseInput placeholder="Enter button name" />
+                    </BaseForm.Item>
 
-                    <Form.Item
+                    <BaseForm.Item
                         name="type"
                         label="Button Type"
                         rules={[{ required: true, message: 'Please select button type' }]}
                     >
-                        <Select placeholder="Select button type">
+                        <BaseSelect placeholder="Select button type">
                             <Option value="primary">Primary</Option>
                             <Option value="default">Default</Option>
                             <Option value="danger">Danger</Option>
                             <Option value="link">Link</Option>
-                        </Select>
-                    </Form.Item>
+                        </BaseSelect>
+                    </BaseForm.Item>
 
-                    <Form.Item
+                    <BaseForm.Item
                         name="action"
                         label="Action"
                         rules={[{ required: true, message: 'Please enter action' }]}
                     >
-                        <Input placeholder="Enter action (e.g., save, delete)" />
-                    </Form.Item>
+                        <BaseInput placeholder="Enter action (e.g., save, delete)" />
+                    </BaseForm.Item>
 
-                    <Form.Item
+                    <BaseForm.Item
                         name="roles"
                         label="Allowed Roles"
                         rules={[{ required: true, message: 'Please select at least one role' }]}
                     >
-                        <Select mode="multiple" placeholder="Select roles">
+                        <BaseSelect mode="multiple" placeholder="Select roles">
                             <Option value="admin">Admin</Option>
                             <Option value="editor">Editor</Option>
                             <Option value="viewer">Viewer</Option>
-                        </Select>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                        </BaseSelect>
+                    </BaseForm.Item>
+                </BaseForm>
+            </BaseModal>
         </div>
     );
 };

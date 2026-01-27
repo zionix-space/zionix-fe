@@ -2,11 +2,10 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore';
-import { GlobalTopLoader } from '@zionix/shared-utilities/components';
+import { GlobalTopLoader, NotFoundPage } from '@zionix-space/design-system';
 import availableApps from 'tools/deployment/zionix-main.modules.json';
 import HostAppLayout from '../components/shell/layout/HostAppLayout';
 import AppsRedirect from '../components/shell/layout/AppsRedirect';
-import { NotFoundPage } from '@zionix/shared-utilities/components';
 import { ProfilePage } from '../pages/UserProfile';
 const AuthApp = React.lazy(() => import('authApp/Module'));
 
@@ -37,6 +36,67 @@ export function AppRouter() {
       case 'adminApp':
         ModuleComponent = React.lazy(() => import('adminApp/Module'));
         break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

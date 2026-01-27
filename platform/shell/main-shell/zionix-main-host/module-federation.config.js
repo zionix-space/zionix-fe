@@ -30,20 +30,6 @@ module.exports = {
       "requiredVersion": "6.11.2"
 };
     }
-    if (name === 'antd') {
-      return {
-      "singleton": true,
-      "eager": false,
-      "requiredVersion": "^5.27.6"
-};
-    }
-    if (name === 'axios') {
-      return {
-      "singleton": true,
-      "eager": false,
-      "requiredVersion": "^1.12.2"
-};
-    }
     if (name === 'zustand') {
       return {
       "singleton": true,
@@ -63,6 +49,13 @@ module.exports = {
       "singleton": true,
       "eager": false,
       "requiredVersion": "^1.0.3"
+};
+    }
+    if (name === '@zionix-space/design-system') {
+      return {
+      "singleton": true,
+      "eager": false,
+      "requiredVersion": "^1.3.1"
 };
     }
     return undefined;
