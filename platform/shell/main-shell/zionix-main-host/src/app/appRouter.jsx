@@ -7,6 +7,8 @@ import availableApps from 'tools/deployment/zionix-main.modules.json';
 import HostAppLayout from '../components/shell/layout/HostAppLayout';
 import AppsRedirect from '../components/shell/layout/AppsRedirect';
 import { ProfilePage } from '../pages/UserProfile';
+import ErrorBoundary from '../components/common/ErrorBoundary';
+
 const AuthApp = React.lazy(() => import('authApp/Module'));
 
 const PageTransition = ({ children }) => {
@@ -236,7 +238,14 @@ export function AppRouter() {
               <Route index element={<AppsRedirect />} />
 
               {/* Profile route - accessible from all apps */}
-              <Route path="profile" element={<ProfilePage />} />
+              <Route
+                path="profile"
+                element={
+                  <ErrorBoundary>
+                    <ProfilePage />
+                  </ErrorBoundary>
+                }
+              />
 
               {availableApps
                 .filter((moduleName) => moduleName !== excludedModule)
@@ -248,9 +257,11 @@ export function AppRouter() {
                       key={moduleName}
                       path={`${moduleName}/*`}
                       element={
-                        <React.Suspense fallback={<GlobalTopLoader />}>
-                          <ModuleComponent />
-                        </React.Suspense>
+                        <ErrorBoundary>
+                          <React.Suspense fallback={<GlobalTopLoader />}>
+                            <ModuleComponent />
+                          </React.Suspense>
+                        </ErrorBoundary>
                       }
                     />
                   );
