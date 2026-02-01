@@ -90,12 +90,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
     }, [selectedKey]);
 
     const handleFieldChange = (changedFields) => {
-        // If we're in add mode (creating a new child), don't update the tree in real-time
-        // Changes will be saved when the user clicks "Save" and API call succeeds
-        if (isAddingChild) {
-            return;
-        }
-
         const fieldName = Object.keys(changedFields)[0];
         const fieldValue = changedFields[fieldName];
 

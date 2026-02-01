@@ -227,7 +227,10 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         // Prevent multiple clicks - mutation handles loading state
         if (bulkUpdateMutation.isLoading) return;
 
-        bulkUpdateMutation.mutate(menuData.mainNavigation, {
+        bulkUpdateMutation.mutate({
+            menus: menuData.mainNavigation,
+            applicationId: null // Uses default from service if not provided
+        }, {
             onSuccess: () => {
                 setIsDirty(false);
                 // Clear history after successful save

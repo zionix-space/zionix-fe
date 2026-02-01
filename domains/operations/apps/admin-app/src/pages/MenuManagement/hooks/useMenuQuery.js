@@ -137,14 +137,20 @@ export const useDeleteMenuMutation = () => {
 };
 
 /**
- * Hook to bulk update menus
+ * Hook to bulk update menus - supports both reordering AND field updates
+ * Uses the new batch update API endpoint that handles:
+ * - Reordering (order_index, parent_menu_id)
+ * - Field updates (name, label, icon, route, component, etc.)
+ * - Access permissions, visibility, metadata, and more
+ * 
  * @returns {Object} Mutation object
  */
 export const useBulkUpdateMenusMutation = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: menuService.bulkUpdateMenus,
+        mutationFn: ({ menus, applicationId }) =>
+            menuService.batchUpdateMenus(menus, applicationId),
         onSuccess: () => {
             // Invalidate all menu queries
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
