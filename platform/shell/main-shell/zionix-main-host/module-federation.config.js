@@ -55,7 +55,7 @@ module.exports = {
       return {
       "singleton": true,
       "eager": false,
-      "requiredVersion": "^1.3.3"
+      "requiredVersion": "^1.3.6"
 };
     }
     return undefined;

@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { BaseForm, BaseInput, BaseInputNumber, BaseSwitch, BaseEmpty, BaseButton, BasePopconfirm, BaseRadio, BaseSelect } from '@zionix-space/design-system';
 import { useTheme } from '@zionix-space/design-system';
 import { useStyles } from './MenuForm.style';
-import IconPicker from './IconPicker';
 import { useCreateMenuMutation } from '../hooks/useMenuQuery';
 import { getParentPath } from '../utils/menuTransformers';
 
@@ -328,18 +327,14 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     <BaseForm.Item label="Component" name="component">
                         <BaseInput placeholder="Enter component name" />
                     </BaseForm.Item>
+                    <BaseForm.Item label="Icon" name="icon">
+                        <BaseInput placeholder="Enter icon class name" />
+                    </BaseForm.Item>
                     <BaseForm.Item label="Order Index" name="order_index">
                         <BaseInputNumber placeholder="Enter order" style={{ width: '100%' }} min={0} />
                     </BaseForm.Item>
                     <BaseForm.Item label="Level" name="level">
                         <BaseInputNumber placeholder="Level" style={{ width: '100%' }} disabled min={0} />
-                    </BaseForm.Item>
-                </div>
-
-                <div style={styles.section}>
-                    <div style={styles.sectionTitle}>Display Settings</div>
-                    <BaseForm.Item label="Icon" name="icon">
-                        <IconPicker />
                     </BaseForm.Item>
                     <BaseForm.Item label="Visible" name="is_visible" valuePropName="checked">
                         <BaseSwitch />

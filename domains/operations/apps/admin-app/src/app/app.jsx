@@ -5,11 +5,14 @@ import { GlobalTopLoader, NotFoundPage } from '@zionix-space/design-system';
 const MenuManagementScreen = lazy(() => import('../pages/MenuManagement'));
 const RoleManagementScreen = lazy(() => import('../pages/RoleManagement'));
 const FormManagementScreen = lazy(() => import('../pages/FormManagement'));
+const KitchenSink = lazy(() => import('../pages/KitchenSink/KitchenSinkScreen'));
 
 export function App() {
   return (
     <Suspense fallback={<GlobalTopLoader />}>
       <Routes>
+        {/* Kitchen Sink - Component Showcase */}
+        <Route path="app-setup/sink" element={<KitchenSink />} />
         {/* Menu Management Screen */}
         <Route path="app-setup/menus" element={<MenuManagementScreen />} />
         {/* Role Management Screen */}
