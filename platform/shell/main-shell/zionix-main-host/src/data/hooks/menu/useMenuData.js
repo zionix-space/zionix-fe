@@ -203,8 +203,9 @@ export const useMenuData = () => {
     useEffect(() => {
         if (sidebarMenus.length === 0 || !location.pathname) return;
 
-        // Build base route for comparison
-        const baseRoute = selectedMainMenu ? `/apps/${selectedMainMenu.key}` : '';
+        // Build base route for comparison - use route property if available
+        const mainMenuRoute = selectedMainMenu?.route || selectedMainMenu?.key;
+        const baseRoute = selectedMainMenu ? `/apps/${mainMenuRoute}` : '';
 
         // Extract the path after base route
         const pathAfterBase = location.pathname.startsWith(baseRoute)

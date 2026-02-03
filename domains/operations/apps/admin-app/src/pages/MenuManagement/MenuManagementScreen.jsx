@@ -73,7 +73,7 @@ const MenuManagementScreen = () => {
                         height: 'calc(100vh - 52px)',
                     }}
                 >
-                    <BaseSpace direction="vertical" size="middle" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" size="middle" style={{ width: '100%' }}>
                         <div>
                             <Title level={3} style={{ margin: 0 }}>Menu Setup</Title>
                             <Paragraph style={{ margin: '4px 0 0 0', fontSize: '14px' }}>
@@ -125,7 +125,7 @@ const MenuManagementScreen = () => {
                         height: '100%',
                     }}
                 >
-                    <BaseSpace direction="vertical" size="large" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" size="large" style={{ width: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <div>
                                 <Title level={2} style={{ margin: 0 }}>Menu Setup</Title>

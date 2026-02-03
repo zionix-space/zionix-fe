@@ -278,7 +278,7 @@ const ChangePasswordPage = ({
       footer={
         <motion.div variants={linkVariants}>
           <Space
-            direction="vertical"
+            orientation="vertical"
             size="small"
             style={{ width: '100%', textAlign: 'center' }}
           >

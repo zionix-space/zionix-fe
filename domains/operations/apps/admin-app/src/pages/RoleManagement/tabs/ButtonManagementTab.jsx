@@ -104,7 +104,7 @@ const ButtonManagementTab = () => {
 
     return (
         <div style={{ padding: '24px', height: 'calc(100vh - 46px)', overflow: 'auto' }}>
-            <BaseSpace direction="vertical" size="large" style={{ width: '100%' }}>
+            <BaseSpace orientation="vertical" size="large" style={{ width: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <Title level={2} style={{ margin: 0 }}>Button Management</Title>

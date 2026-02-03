@@ -13,7 +13,7 @@ const FormLoader = () => (
         alignItems: 'center',
         height: 'calc(100vh - 46px)'
     }}>
-        <BaseSpin size="large" tip="Loading Form Builder..." />
+        <BaseSpin size="large" />
     </div>
 );
 

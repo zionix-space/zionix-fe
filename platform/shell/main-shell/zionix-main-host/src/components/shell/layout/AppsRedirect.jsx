@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMenuData } from '../../../data/hooks/menu';
 
@@ -19,24 +19,66 @@ import { useMenuData } from '../../../data/hooks/menu';
  */
 const AppsRedirect = () => {
     const navigate = useNavigate();
-    const { mainMenus, isLoading, isError } = useMenuData();
+    const {
+        mainMenus,
+        selectedMainMenu,
+        sidebarMenus,
+        selectedSidebarKey,
+        isLoading,
+        isError,
+        getMenuRoute
+    } = useMenuData();
+    const [hasRedirected, setHasRedirected] = useState(false);
 
     useEffect(() => {
-        // Once menus are loaded, redirect to first menu's first page
-        if (!isLoading && !isError && mainMenus.length > 0) {
-            const firstMenu = mainMenus[0];
+        // Prevent multiple redirects
+        if (hasRedirected) return;
 
-            // Navigate to first menu's first child page
-            if (firstMenu.children && firstMenu.children.length > 0) {
-                const firstPage = firstMenu.children[0];
-                // Construct the route: /apps/{menuKey}/{pageKey}
-                navigate(`/apps/${firstMenu.key}/${firstPage.key}`, { replace: true });
-            } else {
-                // If no children, just navigate to the menu key
-                navigate(`/apps/${firstMenu.key}`, { replace: true });
-            }
+        // Wait for menus to load
+        if (isLoading || isError || mainMenus.length === 0) return;
+
+        // Wait for selectedMainMenu to be set by useMenuData
+        if (!selectedMainMenu) return;
+
+        // Wait for sidebar menus to be available
+        if (!sidebarMenus || sidebarMenus.length === 0) {
+            // If no sidebar menus, navigate to the main menu route
+            const mainMenuRoute = selectedMainMenu.route || selectedMainMenu.key;
+            const targetRoute = `/apps/${mainMenuRoute}`;
+            navigate(targetRoute, { replace: true });
+            setHasRedirected(true);
+            return;
         }
-    }, [mainMenus, isLoading, isError, navigate]);
+
+        // CRITICAL: Wait for sidebar key to be auto-selected by useMenuData
+        // This ensures the first menu item is selected before navigation
+        if (!selectedSidebarKey) return;
+
+        // Now we have everything: main menu, sidebar menus, and selected sidebar key
+        // Build the route using getMenuRoute
+        const route = getMenuRoute(selectedSidebarKey);
+
+        if (route) {
+            navigate(route, { replace: true });
+            setHasRedirected(true);
+        } else {
+            // Fallback: try to construct route manually
+            const mainMenuRoute = selectedMainMenu.route || selectedMainMenu.key;
+            const fallbackRoute = `/apps/${mainMenuRoute}`;
+            navigate(fallbackRoute, { replace: true });
+            setHasRedirected(true);
+        }
+    }, [
+        mainMenus,
+        selectedMainMenu,
+        sidebarMenus,
+        selectedSidebarKey,
+        isLoading,
+        isError,
+        navigate,
+        getMenuRoute,
+        hasRedirected
+    ]);
 
     // Don't show anything - TopLoadingBar provides visual feedback
     return null;

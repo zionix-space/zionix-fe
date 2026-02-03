@@ -86,7 +86,7 @@ const KitchenSink = () => {
 
     return (
         <div style={{ minHeight: '100vh' }}>
-            <BaseSpace direction="vertical" size="large" style={{ width: '100%' }}>
+            <BaseSpace orientation="vertical" size="large" style={{ width: '100%' }}>
                 {/* Header */}
                 <BaseCard>
                     <BaseFlex justify="space-between" align="center">
@@ -135,7 +135,7 @@ const KitchenSink = () => {
 
                 {/* Typography */}
                 <BaseCard title="Typography">
-                    <BaseSpace direction="vertical">
+                    <BaseSpace orientation="vertical">
                         <Title level={1}>h1. Heading</Title>
                         <Title level={2}>h2. Heading</Title>
                         <Title level={3}>h3. Heading</Title>
@@ -280,7 +280,7 @@ const KitchenSink = () => {
 
                 {/* Alerts */}
                 <BaseCard title="Alerts">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <BaseAlert message="Success Alert" type="success" showIcon />
                         <BaseAlert message="Info Alert" type="info" showIcon />
                         <BaseAlert message="Warning Alert" type="warning" showIcon closable />
@@ -296,7 +296,7 @@ const KitchenSink = () => {
 
                 {/* Progress */}
                 <BaseCard title="Progress">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <BaseProgress percent={30} />
                         <BaseProgress percent={50} status="active" />
                         <BaseProgress percent={70} status="exception" />
@@ -353,7 +353,7 @@ const KitchenSink = () => {
 
                 {/* Steps */}
                 <BaseCard title="Steps (Progress Indicator)">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <Text type="secondary">Current Step: {currentStep + 1} of 3</Text>
                         <BaseSteps
                             current={currentStep}
@@ -490,7 +490,7 @@ const KitchenSink = () => {
 
                 {/* Tooltip & Popover */}
                 <BaseCard title="Tooltip, Popover & Popconfirm" style={{ overflow: 'visible' }}>
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <div>
                             <Text strong>Tooltip:</Text>
                             <BaseSpace wrap style={{ marginTop: 8 }}>
@@ -658,7 +658,7 @@ const KitchenSink = () => {
 
                 {/* Loading Spinner */}
                 <BaseCard title="Custom Loading Spinner">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <div>
                             <Text strong>LoadingSpinner:</Text>
                             <LoadingSpinner />
@@ -684,7 +684,7 @@ const KitchenSink = () => {
 
                 {/* Global Top Loader */}
                 <BaseCard title="Global Top Loader">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <Text>GlobalTopLoader and MicrofrontendLoader components (used for page transitions)</Text>
                         <Text type="secondary">These loaders are typically controlled by routing/navigation events</Text>
                     </BaseSpace>
@@ -692,7 +692,7 @@ const KitchenSink = () => {
 
                 {/* Card Top Loader */}
                 <BaseCard title="Card Top Loader">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <Text>CardTopLoader component (used for loading states at the top of cards)</Text>
                         <BaseButton
                             type="primary"
@@ -891,7 +891,7 @@ const KitchenSink = () => {
 
                 {/* Notification & Message Demo */}
                 <BaseCard title="Notification & Message">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }}>
                         <div>
                             <Text strong>Messages (Top center toast):</Text>
                             <BaseSpace wrap style={{ marginTop: 8 }}>
@@ -980,7 +980,7 @@ const KitchenSink = () => {
 
                 {/* Advanced Layout Components */}
                 <BaseCard title="Advanced Layout Components">
-                    <BaseSpace direction="vertical" style={{ width: '100%' }} size="large">
+                    <BaseSpace orientation="vertical" style={{ width: '100%' }} size="large">
                         <div>
                             <Title level={4}>Desktop Layout</Title>
                             <Text type="secondary">
@@ -1168,7 +1168,7 @@ const KitchenSink = () => {
 
                 {/* Full Screen Loader */}
                 <BaseCard title="Full Screen Loader">
-                    <BaseSpace direction="vertical">
+                    <BaseSpace orientation="vertical">
                         <Text>FullScreenLoader component (used for full-page loading states)</Text>
                         <BaseButton
                             type="primary"

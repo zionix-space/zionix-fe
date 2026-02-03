@@ -16,7 +16,7 @@ export const LinearProgress = ({
     const { token } = useTheme();
 
     return (
-        <Space direction="vertical" style={{ width: '100%', maxWidth: '100%' }}>
+        <Space orientation="vertical" style={{ width: '100%', maxWidth: '100%' }}>
             {label && <Text type="secondary" style={{ wordBreak: 'break-word' }}>{label}</Text>}
             <Progress
                 percent={percent}
@@ -81,7 +81,7 @@ export const StepProgress = ({
     steps = [],
     current = 0
 }) => (
-    <Space direction="vertical" style={{ width: '100%', maxWidth: '100%' }} size="small">
+    <Space orientation="vertical" style={{ width: '100%', maxWidth: '100%' }} size="small">
         {steps.map((step, index) => (
             <div key={index} style={{ width: '100%' }}>
                 <Text
@@ -114,7 +114,7 @@ export const UploadProgress = ({
     const { token } = useTheme();
 
     return (
-        <Space direction="vertical" style={{ width: '100%', maxWidth: '100%' }} size="small">
+        <Space orientation="vertical" style={{ width: '100%', maxWidth: '100%' }} size="small">
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',

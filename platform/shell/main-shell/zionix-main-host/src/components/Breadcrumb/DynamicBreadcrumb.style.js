@@ -13,7 +13,7 @@ export const useStyles = (token) => {
             container: {
                 position: 'sticky',
                 top: 0,
-                zIndex: token.zIndexPopupBase || 100,
+                zIndex: 1001, // Above topbar (1000) but below modals/dropdowns
                 padding: '0px 13px',
                 paddingTop: '4px',
                 paddingBottom: '4px',

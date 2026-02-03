@@ -6,7 +6,7 @@ import { BaseSkeleton as Skeleton, BaseCard as Card, BaseSpace as Space } from '
  */
 
 export const TableSkeleton = ({ rows = 5 }) => (
-    <Space direction="vertical" style={{ width: '100%' }} size="middle">
+    <Space orientation="vertical" style={{ width: '100%' }} size="middle">
         {[...Array(rows)].map((_, index) => (
             <Skeleton.Input
                 key={index}
@@ -40,7 +40,7 @@ export const CardGridSkeleton = ({ cards = 6, columns = 3 }) => (
 );
 
 export const FormSkeleton = ({ fields = 5 }) => (
-    <Space direction="vertical" style={{ width: '100%' }} size="large">
+    <Space orientation="vertical" style={{ width: '100%' }} size="large">
         {[...Array(fields)].map((_, index) => (
             <div key={index} style={{ width: '100%' }}>
                 <Skeleton.Input
@@ -66,7 +66,7 @@ export const FormSkeleton = ({ fields = 5 }) => (
 );
 
 export const DashboardSkeleton = () => (
-    <Space direction="vertical" style={{ width: '100%' }} size="large">
+    <Space orientation="vertical" style={{ width: '100%' }} size="large">
         <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
@@ -101,7 +101,7 @@ export const DashboardSkeleton = () => (
 );
 
 export const ListSkeleton = ({ items = 5 }) => (
-    <Space direction="vertical" style={{ width: '100%' }} size="middle">
+    <Space orientation="vertical" style={{ width: '100%' }} size="middle">
         {[...Array(items)].map((_, index) => (
             <Card key={index} size="small" style={{ width: '100%' }}>
                 <Skeleton active avatar paragraph={{ rows: 2 }} />

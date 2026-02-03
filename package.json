@@ -12,7 +12,8 @@
       "@tanstack/react-query",
       "@zionix-space/lowcode",
       "@zionix-space/design-system",
-      "framer-motion"
+      "framer-motion",
+      "remixicon"
     ]
   },
   "scripts": {

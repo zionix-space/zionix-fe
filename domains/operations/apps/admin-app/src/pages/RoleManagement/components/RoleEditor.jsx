@@ -423,7 +423,13 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     if (loading) {
         return (
             <div style={styles.loadingContainer}>
-                <BaseSpin size="large" tip="Loading menu configuration..." />
+                <BaseSpin size="large">
+                    <div style={{ padding: '20px', textAlign: 'center' }}>
+                        <div style={{ marginTop: '8px', color: token.colorTextSecondary }}>
+                            Loading menu configuration...
+                        </div>
+                    </div>
+                </BaseSpin>
             </div>
         );
     }

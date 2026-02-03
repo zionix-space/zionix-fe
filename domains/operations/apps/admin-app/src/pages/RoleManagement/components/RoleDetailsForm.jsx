@@ -7,7 +7,7 @@ const { useToken } = theme;
 
 const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionChange }) => {
     const { token } = useToken();
-    const [BaseForm] = BaseForm.useForm();
+    const [form] = BaseForm.useForm();
     const [hasChanges, setHasChanges] = useState(false);
 
     const isDarkMode =
@@ -24,7 +24,7 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
 
             // Only update fields that should change based on BaseTree selection
             // Role Name and Description remain unchanged (user enters them manually)
-            BaseForm.setFieldsValue({
+            form.setFieldsValue({
                 accessLevel: currentPermission,
                 isActive: selectedItem.is_active ?? true,
                 route: selectedItem.route || '',
@@ -32,7 +32,7 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
             });
             setHasChanges(false);
         }
-    }, [selectedKey, selectedItem, permissions, BaseForm]);
+    }, [selectedKey, selectedItem, permissions, form]);
 
     const handleValuesChange = (changedValues) => {
         setHasChanges(true);
@@ -45,7 +45,7 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
 
     const handleSave = async () => {
         try {
-            const values = await BaseForm.validateFields();
+            const values = await form.validateFields();
             console.log('Saving role details:', values);
             baseMessage.success('Role details saved successfully');
             setHasChanges(false);
@@ -55,7 +55,7 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
     };
 
     const handleCreateNew = () => {
-        BaseForm.resetFields();
+        form.resetFields();
         setHasChanges(false);
         baseMessage.info('Ready to create new role');
     };
@@ -101,14 +101,14 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
             style={{ height: '100%', overflow: 'auto' }}
         >
             <BaseForm
-                BaseForm={BaseForm}
-                BaseLayout="vertical"
+                form={form}
+                layout="vertical"
                 onValuesChange={handleValuesChange}
                 size="middle"
             >
                 {/* Selected BaseMenu Info */}
                 <div style={{ marginBottom: 24, padding: 16, background: infoBg, borderRadius: 8 }}>
-                    <BaseSpace direction="vertical" size="small" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" size="small" style={{ width: '100%' }}>
                         <div>
                             <strong>Selected BaseMenu:</strong> {selectedItem.label}
                         </div>
@@ -239,7 +239,7 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
                     borderRadius: 8,
                     border: `1px solid ${token.colorBorder}`
                 }}>
-                    <BaseSpace direction="vertical" size="small" style={{ width: '100%' }}>
+                    <BaseSpace orientation="vertical" size="small" style={{ width: '100%' }}>
                         <div><strong>BaseMenu Item:</strong> {selectedItem.label}</div>
                         <div><strong>Level:</strong> {selectedItem.level ?? 0}</div>
                         <div><strong>Has Children:</strong> {selectedItem.children?.length > 0 ? 'Yes' : 'No'}</div>

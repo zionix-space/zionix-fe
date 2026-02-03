@@ -14,7 +14,7 @@ const TabLoader = () => (
         alignItems: 'center',
         height: 'calc(100vh - 100px)'
     }}>
-        <BaseSpin size="large" tip="Loading..." />
+        <BaseSpin size="large" />
     </div>
 );
 
@@ -60,7 +60,7 @@ const RoleManagementScreen = () => {
                 items={tabItems}
                 style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
                 tabBarStyle={{ margin: 0, padding: '0 16px' }}
-                destroyInactiveTabPane={true}
+                destroyOnHidden={true}
             />
         </div>
     );
