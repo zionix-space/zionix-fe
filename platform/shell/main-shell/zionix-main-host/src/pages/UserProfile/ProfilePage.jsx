@@ -12,13 +12,16 @@ import {
     BaseButton as Button,
     BaseForm as Form,
     baseMessage as message,
+    BaseSwitch as Switch,
+    BaseColorPicker as ColorPicker,
+    BaseDivider as Divider,
     useTheme,
 } from '@zionix-space/design-system';
 import { useStyles } from './ProfilePage.style';
 import dayjs from 'dayjs';
 
 const ProfilePage = () => {
-    const { token, isDarkMode } = useTheme();
+    const { token, isDarkMode, isRTL, toggleRTL, primaryColor, setPrimaryColor } = useTheme();
     const styles = useStyles(token, isDarkMode);
     const [form] = Form.useForm();
 
@@ -341,7 +344,122 @@ const ProfilePage = () => {
                         {activeMenu === 'settings' && (
                             <div>
                                 <h2 style={styles.sectionTitle}>Settings</h2>
-                                <p style={styles.placeholderText}>General settings content goes here...</p>
+
+                                {/* Theme Customization Section */}
+                                <div style={{ marginTop: '24px' }}>
+                                    <h3 style={{
+                                        fontSize: '16px',
+                                        fontWeight: 600,
+                                        color: token.colorText,
+                                        marginBottom: '16px'
+                                    }}>
+                                        Theme Customization
+                                    </h3>
+
+                                    {/* RTL Mode Toggle */}
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '16px',
+                                        background: token.colorBgContainer,
+                                        borderRadius: token.borderRadius,
+                                        border: `1px solid ${token.colorBorderSecondary}`,
+                                        marginBottom: '16px'
+                                    }}>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '12px',
+                                                marginBottom: '4px'
+                                            }}>
+                                                <i className="ri-text-direction-r" style={{
+                                                    fontSize: '20px',
+                                                    color: token.colorPrimary
+                                                }} />
+                                                <span style={{
+                                                    fontSize: '14px',
+                                                    fontWeight: 600,
+                                                    color: token.colorText
+                                                }}>
+                                                    RTL Mode
+                                                </span>
+                                            </div>
+                                            <p style={{
+                                                fontSize: '13px',
+                                                color: token.colorTextSecondary,
+                                                margin: 0,
+                                                paddingLeft: '32px'
+                                            }}>
+                                                Enable right-to-left text direction for languages like Arabic and Hebrew
+                                            </p>
+                                        </div>
+                                        <Switch
+                                            checked={isRTL}
+                                            onChange={toggleRTL}
+                                            style={{ marginLeft: '16px' }}
+                                        />
+                                    </div>
+
+                                    {/* Primary Color Picker */}
+                                    <div style={{
+                                        padding: '16px',
+                                        background: token.colorBgContainer,
+                                        borderRadius: token.borderRadius,
+                                        border: `1px solid ${token.colorBorderSecondary}`,
+                                    }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '12px',
+                                            marginBottom: '4px'
+                                        }}>
+                                            <i className="ri-palette-line" style={{
+                                                fontSize: '20px',
+                                                color: token.colorPrimary
+                                            }} />
+                                            <span style={{
+                                                fontSize: '14px',
+                                                fontWeight: 600,
+                                                color: token.colorText
+                                            }}>
+                                                Primary Color
+                                            </span>
+                                        </div>
+                                        <p style={{
+                                            fontSize: '13px',
+                                            color: token.colorTextSecondary,
+                                            margin: '0 0 16px 0',
+                                            paddingLeft: '32px'
+                                        }}>
+                                            Customize the primary color theme for your interface
+                                        </p>
+                                        <div style={{ paddingLeft: '32px' }}>
+                                            <ColorPicker
+                                                value={primaryColor}
+                                                onChange={(color) => setPrimaryColor(color.toHexString())}
+                                                showText
+                                                disabledAlpha
+                                                presets={[
+                                                    {
+                                                        label: 'Recommended Colors',
+                                                        colors: [
+                                                            '#0050d8',
+                                                            '#52c41a',
+                                                            '#fa8c16',
+                                                            '#ff4d4f',
+                                                            '#722ed1',
+                                                            '#13c2c2',
+                                                            '#eb2f96',
+                                                            '#001968',
+                                                        ],
+                                                    },
+                                                ]}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </Card>

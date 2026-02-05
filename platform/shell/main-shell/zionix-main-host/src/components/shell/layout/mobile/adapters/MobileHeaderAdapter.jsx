@@ -10,7 +10,7 @@ import { useAuthStore } from '@zionix/shared-utilities/stores/core/useAuthStore'
  * Handles business logic and data fetching for MobileHeader
  */
 const MobileHeaderAdapter = () => {
-    const { token, isDarkMode, toggleTheme, primaryColor, setPrimaryColor } = useTheme();
+    const { token, isDarkMode, toggleTheme } = useTheme();
     const { deviceType } = useResponsiveLayout();
     const { profileSection } = useMenuData();
     const navigate = useNavigate();
@@ -53,8 +53,6 @@ const MobileHeaderAdapter = () => {
                 token,
                 isDarkMode,
                 toggleTheme,
-                primaryColor,
-                setPrimaryColor,
             }}
             deviceType={deviceType}
             profile={profileData}

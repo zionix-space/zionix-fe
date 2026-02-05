@@ -10,7 +10,7 @@ import { useCallback, useMemo } from 'react';
  * Handles business logic and data fetching for DesktopSidebar
  */
 const DesktopSidebarAdapter = ({ collapsed, onCollapse }) => {
-    const { token, isDarkMode, toggleTheme, toggleRTL, isRTL, primaryColor, setPrimaryColor } = useTheme();
+    const { token, isDarkMode, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const { clearAuth } = useAuthStore();
 
@@ -59,16 +59,12 @@ const DesktopSidebarAdapter = ({ collapsed, onCollapse }) => {
         setOpenSidebarKeys(keys);
     }, [setOpenSidebarKeys]);
 
-    // Memoize theme object to prevent re-renders
+    // Memoize theme object to prevent re-renders - only light/dark mode for sidebar
     const themeConfig = useMemo(() => ({
         token,
         isDarkMode,
         toggleTheme,
-        toggleRTL,
-        isRTL,
-        primaryColor,
-        setPrimaryColor,
-    }), [token, isDarkMode, toggleTheme, toggleRTL, isRTL, primaryColor, setPrimaryColor]);
+    }), [token, isDarkMode, toggleTheme]);
 
     // Memoize menu object to prevent re-renders
     const menuConfig = useMemo(() => ({
