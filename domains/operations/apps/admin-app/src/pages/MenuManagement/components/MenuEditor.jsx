@@ -167,7 +167,8 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         updateMenuData(updatedData);
 
         // If the key field was changed, update selectedKey to the new key
-        if (updates.key && updates.key !== key) {
+        // Only update if the new key is not empty
+        if (updates.key && updates.key !== key && updates.key.trim() !== '') {
             setSelectedKey(updates.key);
         }
     };
@@ -178,9 +179,12 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         const parentItem = findMenuItemByKey(menuData, selectedKey);
         if (!parentItem) return;
 
+        // Use a temporary key that will be replaced when user types the label
+        const tempKey = `temp-new-${Date.now()}`;
+
         const newItem = {
-            key: `new-menu-${Date.now()}`,
-            label: 'New Child Menu',
+            key: tempKey,
+            label: '',
             icon: null,
             description: '',
             badge: null,
@@ -199,8 +203,8 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         const updatedData = updateMenuItemByKey(menuData, selectedKey, updatedParent);
         updateMenuData(updatedData);
         setExpandedKeys([...expandedKeys, selectedKey]);
-        setSelectedKey(newItem.key);
-        baseMessage.success('Child menu item created');
+        setSelectedKey(tempKey);
+        baseMessage.success('Child menu item created. Enter a label to generate the key.');
     };
 
     const handleDelete = () => {

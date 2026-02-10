@@ -89,11 +89,21 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             const generatedKey = fieldValue
                 ? fieldValue.toLowerCase().replace(/\s+/g, '-')
                 : '';
-            form.setFieldsValue({ key: generatedKey });
 
-            // Update both label and key in parent
+            // Only update the form field if we have a valid generated key
+            // If label is empty, keep the current key in the form field
+            if (generatedKey) {
+                form.setFieldsValue({ key: generatedKey });
+            }
+
+            // Update only label in parent, don't update key if it's empty
             if (onChange && selectedKey) {
-                onChange(selectedKey, { label: fieldValue, key: generatedKey });
+                if (generatedKey) {
+                    onChange(selectedKey, { label: fieldValue, key: generatedKey });
+                } else {
+                    // Only update label, keep the existing key
+                    onChange(selectedKey, { label: fieldValue });
+                }
             }
             return;
         }
@@ -181,8 +191,8 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 return;
             }
 
-            // Check if this is a new item (starts with 'new-menu-')
-            const isNewItem = selectedKey && selectedKey.startsWith('new-menu-');
+            // Check if this is a new item (no menu_id means it hasn't been saved to backend yet)
+            const isNewItem = !selectedItem?.menu_id;
 
             if (!isNewItem) {
                 baseMessage.info('Updating existing menus is not implemented yet. Only new menu creation is supported.');
