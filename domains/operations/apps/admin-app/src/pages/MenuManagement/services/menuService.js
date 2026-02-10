@@ -7,10 +7,12 @@ import axiosClient from '@zionix/shared-utilities/shared/middleware/axiosCore';
 export const menuService = {
     /**
      * Get all menus
-     * @returns {Promise<Object>} Menu configuration
+     * @returns {Promise<Object>} Menu configuration with _id (nav_doc_id)
      */
     getMenus: async () => {
-        return await axiosClient.get('/menus');
+        const response = await axiosClient.get('/menus');
+        // Store the nav_doc_id from response for later use in save operations
+        return response;
     },
 
     /**
@@ -26,17 +28,15 @@ export const menuService = {
      * Create new menu
      * @param {Object} menuData - Menu data
      * @param {string} navDocId - Navigation document ID (from root _id)
-     * @param {Array<string>} parentKeys - Parent keys array (path from root to parent)
      * @returns {Promise<Object>} Created menu
      */
-    createMenu: async (menuData, navDocId, parentKeys) => {
-        if (!navDocId || !parentKeys || parentKeys.length === 0) {
-            throw new Error('navDocId and parentKeys are required');
+    createMenu: async (menuData, navDocId) => {
+        if (!navDocId) {
+            throw new Error('navDocId is required');
         }
 
         const params = new URLSearchParams();
         params.append('nav_doc_id', navDocId);
-        parentKeys.forEach(key => params.append('parent_keys', key));
 
         return await axiosClient.post(`/menus/?${params.toString()}`, menuData);
     },
@@ -58,6 +58,84 @@ export const menuService = {
      */
     deleteMenu: async (menuId) => {
         return await axiosClient.delete(`/menus/${menuId}`);
+    },
+
+    /**
+     * Save menus - supports both single and batch creation/update
+     * POST endpoint that handles:
+     * - Single menu creation
+     * - Batch (multiple parents) menu creation
+     * 
+     * @param {Array} menus - Array of menu objects from the tree structure
+     * @param {string} navDocId - Navigation document ObjectId from GET response (_id field)
+     * @param {string} applicationId - Application ID (optional, uses default if not provided)
+     * @returns {Promise<Object>} Response with created/updated menus
+     */
+    saveMenus: async (menus, navDocId, applicationId = null) => {
+        if (!navDocId) {
+            throw new Error('nav_doc_id is required for saving menus');
+        }
+
+        // Transform menu tree to API format - children should be nested
+        const transformMenuForAPI = (item) => {
+            const menuItem = {
+                name: item.name || item.key || item.label,
+                label: item.label,
+            };
+
+            // Add optional fields only if they exist
+            if (item.key) menuItem.key = item.key;
+            if (item.route) menuItem.route = item.route;
+            if (item.component) menuItem.component = item.component;
+            if (item.icon) menuItem.icon = item.icon;
+            if (item.badge) menuItem.badge = item.badge;
+            if (item.section_title) menuItem.section_title = item.section_title;
+            if (item.menus_description || item.description) {
+                menuItem.menus_description = item.menus_description || item.description;
+            }
+            if (item.menu_metadata) menuItem.menu_metadata = item.menu_metadata;
+            if (item.access && Array.isArray(item.access)) {
+                menuItem.access = item.access;
+            }
+            if (item.order_index !== undefined) menuItem.order_index = item.order_index;
+            if (item.level !== undefined) menuItem.level = item.level;
+            if (item.is_visible !== undefined) menuItem.is_visible = item.is_visible;
+            if (item.is_active !== undefined) menuItem.is_active = item.is_active;
+
+            // Recursively transform children
+            if (item.children && Array.isArray(item.children) && item.children.length > 0) {
+                menuItem.children = item.children.map(child => transformMenuForAPI(child));
+            } else {
+                menuItem.children = [];
+            }
+
+            return menuItem;
+        };
+
+        // Build payload based on number of root menus
+        let payload;
+
+        if (menus.length === 1) {
+            // Single menu format - use application_id from the menu itself or parameter
+            const appId = menus[0].application_id || applicationId || "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+            payload = {
+                application_id: appId,
+                ...transformMenuForAPI(menus[0])
+            };
+        } else {
+            // Batch format (multiple parents) - use application_id from first menu or parameter
+            const appId = menus[0]?.application_id || applicationId || "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+            payload = {
+                application_id: appId,
+                menus: menus.map(menu => transformMenuForAPI(menu))
+            };
+        }
+
+        // Add nav_doc_id as query parameter
+        const params = new URLSearchParams();
+        params.append('nav_doc_id', navDocId);
+
+        return await axiosClient.post(`/menus/?${params.toString()}`, payload);
     },
 
     /**

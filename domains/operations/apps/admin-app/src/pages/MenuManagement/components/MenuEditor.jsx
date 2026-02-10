@@ -12,7 +12,7 @@ import {
     getAllExpandableKeys,
     filterMenuItems,
 } from '../utils/menuTransformers';
-import { useMenusQuery, useBulkUpdateMenusMutation } from '../hooks/useMenuQuery';
+import { useMenusQuery, useSaveMenusMutation } from '../hooks/useMenuQuery';
 
 const { useToken } = theme;
 
@@ -20,8 +20,8 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const { token } = useToken();
 
     // React Query hooks
-    const { data: apiMenuData, isLoading: loading, isError, error } = useMenusQuery();
-    const bulkUpdateMutation = useBulkUpdateMenusMutation();
+    const { data: apiMenuData, isLoading: loading, refetch } = useMenusQuery();
+    const saveMenusMutation = useSaveMenusMutation();
 
     // Detect dark mode
     const isDarkMode =
@@ -59,6 +59,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
     // State management
     const [menuData, setMenuData] = useState(null);
+    const [navDocId, setNavDocId] = useState(null); // Store nav_doc_id from API response
     const [selectedKey, setSelectedKey] = useState(null);
     const [expandedKeys, setExpandedKeys] = useState([]);
     const [searchValue, setSearchValue] = useState('');
@@ -69,6 +70,10 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     // Initialize menu data from API
     useEffect(() => {
         if (apiMenuData) {
+            // Extract nav_doc_id from response (_id field at root level)
+            if (apiMenuData._id) {
+                setNavDocId(apiMenuData._id);
+            }
             setMenuData(apiMenuData);
             if (onMenuDataChange) {
                 onMenuDataChange(apiMenuData);
@@ -224,20 +229,58 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     };
 
     const handleSave = () => {
-        // Prevent multiple clicks - mutation handles loading state
-        if (bulkUpdateMutation.isLoading) return;
+        // Batch save/update - saves all menus at once
+        if (saveMenusMutation.isLoading) return;
 
-        bulkUpdateMutation.mutate({
+        if (!navDocId) {
+            baseMessage.error('Navigation document ID is missing. Please refresh the page.');
+            return;
+        }
+
+        if (!menuData || !menuData.mainNavigation || menuData.mainNavigation.length === 0) {
+            baseMessage.error('No menu data to save');
+            return;
+        }
+
+        // Check if there are any new menus (keys starting with 'new-menu-')
+        const hasNewMenus = (items) => {
+            for (const item of items) {
+                if (item.key && item.key.startsWith('new-menu-')) return true;
+                if (item.children && hasNewMenus(item.children)) return true;
+            }
+            return false;
+        };
+
+        const isCreating = hasNewMenus(menuData.mainNavigation);
+
+        // Use POST for batch save (creating new menus)
+        saveMenusMutation.mutate({
             menus: menuData.mainNavigation,
-            applicationId: null // Uses default from service if not provided
+            navDocId: navDocId,
+            applicationId: null
         }, {
             onSuccess: () => {
                 setIsDirty(false);
-                // Clear history after successful save
                 setHistory([]);
                 setHistoryIndex(-1);
+                refetch();
             },
         });
+    };
+
+    // Determine button label based on whether there are new items
+    const getBatchSaveButtonLabel = () => {
+        if (!menuData || !menuData.mainNavigation) return 'Batch Save';
+
+        const hasNewMenus = (items) => {
+            for (const item of items) {
+                if (item.key && item.key.startsWith('new-menu-')) return true;
+                if (item.children && hasNewMenus(item.children)) return true;
+            }
+            return false;
+        };
+
+        return hasNewMenus(menuData.mainNavigation) ? 'Batch Save' : 'Batch Update';
     };
 
     const handleUndo = () => {
@@ -449,8 +492,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         onExpandAll={handleExpandAll}
                         onCollapseAll={handleCollapseAll}
                         onSave={handleSave}
+                        saveButtonLabel={getBatchSaveButtonLabel()}
                         isDirty={isDirty}
-                        saving={bulkUpdateMutation.isLoading}
+                        saving={saveMenusMutation.isLoading}
                         onUndo={handleUndo}
                         onRedo={handleRedo}
                         canUndo={canUndo}

@@ -1,7 +1,7 @@
 import { BaseInput, BaseButton, useTheme } from '@zionix-space/design-system';
 import { useStyles } from './TreeToolbar.style';
 
-const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport }) => {
+const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, saveButtonLabel, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport }) => {
     const { token } = useTheme();
 
     const isDarkMode =
@@ -92,7 +92,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     shape="round"
                     size="small"
                 >
-                    {isDirty ? 'Save' : 'Saved'}
+                    {saveButtonLabel || (isDirty ? 'Save' : 'Saved')}
                 </BaseButton>
             </div>
         </div>

@@ -80,15 +80,6 @@ const MenuTree = ({
             <div style={styles.treeNodeTitle}>
                 {icon && <i className={icon} style={styles.treeNodeIcon} />}
                 <span style={styles.treeNodeLabel}>{highlightText(title)}</span>
-                {badge && (
-                    <span style={styles.treeNodeBadge}>
-                        {typeof badge === 'string' ? (
-                            <BaseBadge count={badge} style={{ backgroundColor: token.colorPrimary }} />
-                        ) : (
-                            <BaseBadge count={badge.count} style={{ backgroundColor: token.colorPrimary }} />
-                        )}
-                    </span>
-                )}
             </div>
         );
     };

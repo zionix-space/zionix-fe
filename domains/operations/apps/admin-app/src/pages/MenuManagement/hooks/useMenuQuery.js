@@ -61,12 +61,12 @@ export const useCreateMenuMutation = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ menuData, navDocId, parentKeys }) =>
-            menuService.createMenu(menuData, navDocId, parentKeys),
+        mutationFn: ({ menuData, navDocId }) =>
+            menuService.createMenu(menuData, navDocId),
         onSuccess: (data) => {
             // Invalidate and refetch menus list
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
-            baseMessage.success('Menu created successfully');
+            baseMessage.success('Menu created successfully! The menu list will refresh. Please select the menu again to see updated details.');
         },
         onError: (error) => {
             baseMessage.error(error.message || 'Failed to create menu');
@@ -137,6 +137,31 @@ export const useDeleteMenuMutation = () => {
 };
 
 /**
+ * Hook to save menus - supports both single and batch creation
+ * Uses POST endpoint that handles:
+ * - Single menu creation
+ * - Batch (multiple parents) menu creation
+ * 
+ * @returns {Object} Mutation object
+ */
+export const useSaveMenusMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ menus, navDocId, applicationId }) =>
+            menuService.saveMenus(menus, navDocId, applicationId),
+        onSuccess: () => {
+            // Invalidate and refetch all menu queries to refresh the list
+            queryClient.invalidateQueries({ queryKey: menuKeys.all });
+            baseMessage.success('Menus saved successfully');
+        },
+        onError: (error) => {
+            baseMessage.error(error.message || 'Failed to save menus');
+        },
+    });
+};
+
+/**
  * Hook to bulk update menus - supports both reordering AND field updates
  * Uses the new batch update API endpoint that handles:
  * - Reordering (order_index, parent_menu_id)
@@ -152,7 +177,7 @@ export const useBulkUpdateMenusMutation = () => {
         mutationFn: ({ menus, applicationId }) =>
             menuService.batchUpdateMenus(menus, applicationId),
         onSuccess: () => {
-            // Invalidate all menu queries
+            // Invalidate and refetch all menu queries to refresh the list
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
             baseMessage.success('Menus updated successfully');
         },

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { BaseForm, BaseInput, BaseInputNumber, BaseSwitch, BaseEmpty, BaseButton, BasePopconfirm, BaseRadio, BaseSelect } from '@zionix-space/design-system';
+import { BaseForm, BaseInput, BaseInputNumber, BaseSwitch, BaseEmpty, BaseButton, BasePopconfirm, BaseRadio, BaseSelect, baseMessage } from '@zionix-space/design-system';
 import { useTheme } from '@zionix-space/design-system';
 import { useStyles } from './MenuForm.style';
 import { useCreateMenuMutation } from '../hooks/useMenuQuery';
@@ -11,8 +11,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
     const { token } = useTheme();
     const [form] = BaseForm.useForm();
     const [badgeType, setBadgeType] = useState('none');
-    const [isAddingChild, setIsAddingChild] = useState(false);
-    const [newChildData, setNewChildData] = useState(null);
     const previousSelectedKeyRef = useRef(null);
     const createMenuMutation = useCreateMenuMutation();
 
@@ -31,19 +29,12 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
         if (selectedKey && selectedKey !== previousSelectedKeyRef.current) {
             previousSelectedKeyRef.current = selectedKey;
 
+            console.log('=== MENU SELECTED ===');
+            console.log('Selected key:', selectedKey);
+            console.log('Selected item:', selectedItem);
+            console.log('Selected item fields:', selectedItem ? Object.keys(selectedItem) : 'null');
+
             if (selectedItem) {
-                // Check if this is a newly created item (starts with 'new-menu-')
-                const isNewItem = selectedItem.key && selectedItem.key.startsWith('new-menu-');
-
-                // If it's a new item, set add mode to true
-                if (isNewItem) {
-                    setIsAddingChild(true);
-                } else {
-                    setIsAddingChild(false);
-                }
-
-                setNewChildData(null);
-
                 let currentBadgeType = 'none';
                 if (selectedItem.badge) {
                     if (typeof selectedItem.badge === 'string') {
@@ -77,14 +68,14 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     menu_id: selectedItem.menu_id || '',
                     menu_metadata: selectedItem.menu_metadata ? JSON.stringify(selectedItem.menu_metadata, null, 2) : '{}',
                 });
+
+                console.log('Form values set successfully');
             }
         } else if (!selectedKey) {
             // No item selected
             previousSelectedKeyRef.current = null;
             form.resetFields();
             setBadgeType('none');
-            setIsAddingChild(false);
-            setNewChildData(null);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedKey]);
@@ -92,6 +83,20 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
     const handleFieldChange = (changedFields) => {
         const fieldName = Object.keys(changedFields)[0];
         const fieldValue = changedFields[fieldName];
+
+        // Auto-generate key from label
+        if (fieldName === 'label') {
+            const generatedKey = fieldValue
+                ? fieldValue.toLowerCase().replace(/\s+/g, '-')
+                : '';
+            form.setFieldsValue({ key: generatedKey });
+
+            // Update both label and key in parent
+            if (onChange && selectedKey) {
+                onChange(selectedKey, { label: fieldValue, key: generatedKey });
+            }
+            return;
+        }
 
         // Special handling for key field - we need to update the selectedKey in parent
         if (fieldName === 'key') {
@@ -159,11 +164,9 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
     const handleAddChildClick = () => {
         // Call the original onAddChild to create the child in the tree
         onAddChild();
-        // BaseSwitch to "add mode" - BaseButton will show "Save"
-        setIsAddingChild(true);
     };
 
-    const handleSaveNewChild = async () => {
+    const handleSaveClick = async () => {
         try {
             // Validate form
             await form.validateFields();
@@ -171,31 +174,83 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             // Get all form values
             const formValues = form.getFieldsValue();
 
-            // Get dynamic nav_doc_id from menuData (root level _id)
+            // Get nav_doc_id from menuData (root level _id)
             const navDocId = menuData?._id;
             if (!navDocId) {
-                console.error('Navigation document ID not found');
+                baseMessage.error('Navigation document ID not found. Please refresh the page.');
                 return;
             }
 
-            // Get dynamic parent path from root to the NEW child's parent
-            // Since selectedKey is the NEW child, getParentPath returns the path to its parent
+            // Check if this is a new item (starts with 'new-menu-')
+            const isNewItem = selectedKey && selectedKey.startsWith('new-menu-');
+
+            if (!isNewItem) {
+                baseMessage.info('Updating existing menus is not implemented yet. Only new menu creation is supported.');
+                return;
+            }
+
+            // Get parent path from root to the selected item's parent
             const parentPath = getParentPath(menuData, selectedKey);
 
             if (!parentPath || parentPath.length === 0) {
-                console.error('Parent path not found for selected item');
+                baseMessage.error('Parent path not found. Cannot save menu.');
                 return;
             }
 
-            // Prepare badge value
-            let badgeValue = null;
+            // Helper function to find menu item by key
+            const findItemByKey = (items, key) => {
+                for (const item of items) {
+                    if (item.key === key) return item;
+                    if (item.children) {
+                        const found = findItemByKey(item.children, key);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            };
+
+            // Get application_id from the root menu (first level in tree)
+            const rootMenuKey = parentPath[0]; // First level is the application
+            const rootMenu = findItemByKey(menuData.mainNavigation, rootMenuKey);
+            const applicationId = rootMenu?.application_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+
+            // Get parent_menu_id from the direct parent (last item in parentPath)
+            const parentMenuKey = parentPath[parentPath.length - 1]; // Direct parent
+            const parentMenu = findItemByKey(menuData.mainNavigation, parentMenuKey);
+
+            // Determine parent_menu_id:
+            // - If parent is root level (application), parent_menu_id should be null
+            // - If parent is a nested menu, use its menu_id
+            let parentMenuId = null;
+            if (parentMenu) {
+                // Check if parent is root level (has application_id but no menu_id, or level is 1)
+                const isRootLevel = !parentMenu.menu_id || parentMenu.level === 1;
+
+                if (isRootLevel) {
+                    parentMenuId = null; // Root level parent = null
+                } else {
+                    parentMenuId = parentMenu.menu_id; // Nested menu parent = menu_id
+                }
+            }
+
+            console.log('=== PARENT MENU DEBUG ===');
+            console.log('Parent path:', parentPath);
+            console.log('Parent menu key:', parentMenuKey);
+            console.log('Parent menu:', parentMenu);
+            console.log('Is root level parent?', !parentMenu?.menu_id || parentMenu?.level === 1);
+            console.log('Parent menu ID (null for root):', parentMenuId);
+            console.log('Root menu:', rootMenu);
+            console.log('Application ID:', applicationId);
+
+            // Prepare badge value - must be string, not null
+            let badgeValue = "";
             if (badgeType === 'string' && formValues.badgeString) {
                 badgeValue = formValues.badgeString;
             } else if (badgeType === 'object' && formValues.badgeCount) {
-                badgeValue = {
+                badgeValue = JSON.stringify({
                     count: formValues.badgeCount,
                     color: formValues.badgeColor || 'blue'
-                };
+                });
             }
 
             // Parse menu_metadata
@@ -206,42 +261,49 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 menuMetadata = {};
             }
 
-            // Build the API payload according to the schema
+            // Build the API payload for single menu creation - ALL fields required
             const menuPayload = {
-                application_id: formValues.application_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                name: formValues.label || "string",
-                label: formValues.label || "string",
-                route: formValues.route || "string",
-                component: formValues.component || "string",
-                icon: formValues.icon || "string",
+                application_id: applicationId, // Use application_id from root menu
+                name: formValues.label || "",
+                key: selectedKey || "",
+                section_title: formValues.sectionTitle || "",
+                menus_description: formValues.description || "",
+                label: formValues.label || "",
+                route: formValues.route || "",
+                badge: badgeValue || "",
+                component: formValues.component || "",
+                icon: formValues.icon || "",
                 order_index: formValues.order_index ?? 0,
                 level: formValues.level ?? 1,
                 is_visible: formValues.is_visible ?? true,
-                parent_menu_id: selectedItem?.menu_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                menu_metadata: menuMetadata,
+                parent_menu_id: parentMenuId, // Use menu_id from parent menu
+                menu_metadata: Object.keys(menuMetadata).length > 0 ? menuMetadata : {},
                 is_active: formValues.is_active ?? true,
                 access: ["read"],
-                key: formValues.key || "string",
-                badge: badgeValue || "string",
-                section_title: formValues.sectionTitle || "string",
-                object_id: formValues.object_id || "string",
-                menus_description: formValues.description || "string",
                 children: []
             };
 
-            // Call the create menu API with dynamic parameters
-            // parentPath already contains the correct path to the parent (e.g., ['admin-app', 'app-management'])
+            console.log('Saving menu with payload:', menuPayload);
+            console.log('navDocId:', navDocId);
+
+            // Call the create menu API - only navDocId needed
             await createMenuMutation.mutateAsync({
                 menuData: menuPayload,
-                navDocId: navDocId,
-                parentKeys: parentPath
+                navDocId: navDocId
             });
 
-            // Reset add mode
-            setIsAddingChild(false);
-            setNewChildData(null);
+            // Success! The mutation hook will automatically:
+            // 1. Invalidate the menu queries
+            // 2. Trigger a refetch
+            // 3. Show success message
+            // The menu list will refresh and show the newly created menu with all backend data
+
         } catch (error) {
             console.error('Failed to save menu:', error);
+            if (error.name !== 'ValidationError') {
+                // Error message is already shown by the mutation hook
+                console.error('Save error details:', error);
+            }
         }
     };
 
@@ -259,13 +321,24 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             <div style={styles.formHeader}>
                 <BaseButton
                     type="primary"
-                    icon={isAddingChild ? <i className="ri-save-line" /> : <i className="ri-add-line" />}
-                    onClick={isAddingChild ? handleSaveNewChild : handleAddChildClick}
+                    icon={<i className="ri-save-line" />}
+                    onClick={handleSaveClick}
                     shape="round"
-                    size="small"
+                    size="middle"
                     loading={createMenuMutation.isLoading}
+                    style={{ minWidth: '100px' }}
                 >
-                    {isAddingChild ? 'Save' : 'Add Child'}
+                    Save
+                </BaseButton>
+                <BaseButton
+                    type="default"
+                    icon={<i className="ri-add-line" />}
+                    onClick={handleAddChildClick}
+                    shape="round"
+                    size="middle"
+                    style={{ minWidth: '120px' }}
+                >
+                    Add Child
                 </BaseButton>
                 <BasePopconfirm
                     title="Delete menu item"
@@ -274,7 +347,13 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     okText="Yes"
                     cancelText="No"
                 >
-                    <BaseButton danger icon={<i className="ri-delete-bin-line" />} shape="round" size="small">
+                    <BaseButton
+                        danger
+                        icon={<i className="ri-delete-bin-line" />}
+                        shape="round"
+                        size="middle"
+                        style={{ minWidth: '100px' }}
+                    >
                         Delete
                     </BaseButton>
                 </BasePopconfirm>
@@ -286,21 +365,9 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     <BaseForm.Item
                         label="Key"
                         name="key"
-                        rules={[
-                            { required: true, message: 'Key is required' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value) return Promise.resolve();
-                                    const duplicates = allMenuKeys.filter((k) => k === value);
-                                    if (duplicates.length > 1) {
-                                        return Promise.reject(new Error('Key must be unique'));
-                                    }
-                                    return Promise.resolve();
-                                },
-                            },
-                        ]}
+                        tooltip="Auto-generated from label"
                     >
-                        <BaseInput placeholder="Enter unique key" />
+                        <BaseInput placeholder="Auto-generated from label" disabled />
                     </BaseForm.Item>
                     <BaseForm.Item label="Label" name="label" rules={[{ required: true, message: 'Label is required' }]}>
                         <BaseInput placeholder="Enter label" />
@@ -376,8 +443,8 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
 
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Application Settings</div>
-                    <BaseForm.Item label="Application ID" name="application_id">
-                        <BaseInput placeholder="Enter application ID" />
+                    <BaseForm.Item label="Application ID" name="application_id" tooltip="Read-only system field">
+                        <BaseInput placeholder="System managed" disabled />
                     </BaseForm.Item>
                     <BaseForm.Item label="Application Name" name="application_name">
                         <BaseInput placeholder="Enter application name" />
@@ -392,10 +459,10 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                             <BaseSelect.Option value="development">Development</BaseSelect.Option>
                         </BaseSelect>
                     </BaseForm.Item>
-                    <BaseForm.Item label="Object ID" name="object_id">
-                        <BaseInput placeholder="Enter object ID" />
+                    <BaseForm.Item label="Object ID" name="object_id" tooltip="Auto-generated by backend">
+                        <BaseInput placeholder="Auto-generated" disabled />
                     </BaseForm.Item>
-                    <BaseForm.Item label="Menu ID" name="menu_id">
+                    <BaseForm.Item label="Menu ID" name="menu_id" tooltip="Auto-generated by backend">
                         <BaseInput placeholder="Auto-generated" disabled />
                     </BaseForm.Item>
                 </div>

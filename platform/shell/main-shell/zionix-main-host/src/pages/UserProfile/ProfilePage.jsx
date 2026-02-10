@@ -93,7 +93,7 @@ const ProfilePage = () => {
             <Row gutter={[24, 24]}>
                 {/* Left Sidebar - Profile Card */}
                 <Col xs={24} sm={24} md={8} lg={6}>
-                    <Card style={styles.profileCard} variant="borderless">
+                    <Card variant="borderless">
                         {/* Avatar with gradient border */}
                         <div style={styles.avatarContainer}>
                             <div style={styles.avatarGradientBorder}>
@@ -138,7 +138,7 @@ const ProfilePage = () => {
 
                 {/* Right Content - Form */}
                 <Col xs={24} sm={24} md={16} lg={18}>
-                    <Card style={styles.contentCard} variant="borderless">
+                    <Card variant="borderless">
                         {activeMenu === 'personal-info' && (
                             <Form
                                 form={form}

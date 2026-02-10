@@ -25,7 +25,7 @@ export const useStyles = (token, isDarkMode = false) => ({
     },
 
     leftColumn: {
-        flex: '0 0 75%',
+        flex: '0 0 50%',
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
@@ -40,7 +40,7 @@ export const useStyles = (token, isDarkMode = false) => ({
     },
 
     rightColumn: {
-        flex: 1,
+        flex: '0 0 50%',
         display: 'flex',
         flexDirection: 'column',
         background: token.colorBgContainer,

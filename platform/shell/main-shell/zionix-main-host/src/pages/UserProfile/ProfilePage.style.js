@@ -7,12 +7,18 @@ export const useStyles = (token, isDarkMode) => ({
 
     // Profile Card (Left Sidebar)
     profileCard: {
-        borderRadius: token.borderRadius,
-        background: token.colorBgContainer,
-        boxShadow: token.boxShadow,
+        borderRadius: '16px',
+        background: isDarkMode
+            ? 'rgba(255, 255, 255, 0.03)'
+            : 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        boxShadow: isDarkMode
+            ? '0 4px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.05)'
+            : '0 2px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.8)',
         padding: '32px 24px',
         textAlign: 'center',
-        border: `1px solid ${token.colorBorderSecondary}`,
+        border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)'}`,
     },
 
     avatarContainer: {
@@ -72,12 +78,18 @@ export const useStyles = (token, isDarkMode) => ({
 
     // Content Card (Right Side)
     contentCard: {
-        borderRadius: token.borderRadius,
-        background: token.colorBgContainer,
-        boxShadow: token.boxShadow,
+        borderRadius: '16px',
+        background: isDarkMode
+            ? 'rgba(255, 255, 255, 0.03)'
+            : 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        boxShadow: isDarkMode
+            ? '0 4px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.05)'
+            : '0 2px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.8)',
         padding: '40px',
         minHeight: '600px',
-        border: `1px solid ${token.colorBorderSecondary}`,
+        border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)'}`,
     },
 
     sectionTitle: {
@@ -133,24 +145,60 @@ export const useStyles = (token, isDarkMode) => ({
     // Responsive adjustments
     '@media (max-width: 768px)': {
         container: {
-            padding: '16px',
+            padding: '12px',
+            background: token.colorBgLayout,
         },
         contentCard: {
-            padding: '24px',
+            padding: '20px 16px',
+            borderRadius: '12px',
+            minHeight: 'auto',
         },
         profileCard: {
-            marginBottom: '16px',
-            padding: '24px 20px',
+            marginBottom: '12px',
+            padding: '24px 16px',
+            borderRadius: '12px',
         },
         actionButtons: {
             flexDirection: 'column',
-            gap: '8px',
+            gap: '12px',
+            marginTop: '32px',
+            position: 'sticky',
+            bottom: '12px',
+            background: isDarkMode
+                ? 'rgba(0, 0, 0, 0.8)'
+                : 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            padding: '16px',
+            margin: '32px -16px -20px -16px',
+            borderRadius: '0 0 12px 12px',
+            borderTop: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)'}`,
         },
         cancelButton: {
             width: '100%',
+            height: '44px',
+            borderRadius: '10px',
+            fontSize: '15px',
+            fontWeight: 600,
         },
         saveButton: {
             width: '100%',
+            height: '44px',
+            borderRadius: '10px',
+            fontSize: '15px',
+            fontWeight: 600,
+        },
+        sectionTitle: {
+            fontSize: '18px',
+            fontWeight: 700,
+            marginBottom: '20px',
+        },
+        userName: {
+            fontSize: '20px',
+            fontWeight: 700,
+        },
+        avatarGradientBorder: {
+            padding: '4px',
         },
     },
 });
