@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
     BaseButton, BaseInput, BaseForm, BaseSelect, BaseTable, BaseSpace, BaseCard,
-    BaseTypography, BaseBadge, BaseTag, BaseModal, baseMessage, BaseCheckbox,
+    BaseTypography, BaseBadge, BaseTag, BaseModal, bannerMessage, BaseCheckbox,
     BaseRow, BaseCol, BaseCarousel, BaseMenu, BaseDropdown, BaseTabs, BaseSwitch,
     BaseRadio, BaseInputNumber, BaseTree, BaseList, BaseAvatar, BaseTooltip,
     BasePopover, BasePopconfirm, BaseDrawer, BaseEmpty, BaseDivider, BaseColorPicker,
@@ -541,8 +541,8 @@ const KitchenSink = () => {
                                     <BasePopconfirm
                                         title="Are you sure you want to delete this?"
                                         description="This action cannot be undone."
-                                        onConfirm={() => baseMessage.success('Confirmed! Item deleted.')}
-                                        onCancel={() => baseMessage.info('Cancelled')}
+                                        onConfirm={() => bannerMessage.success('Confirmed! Item deleted.')}
+                                        onCancel={() => bannerMessage.info('Cancelled')}
                                         okText="Yes, Delete"
                                         cancelText="No, Cancel"
                                         placement="bottom"
@@ -551,8 +551,8 @@ const KitchenSink = () => {
                                     </BasePopconfirm>
                                     <BasePopconfirm
                                         title="Save changes?"
-                                        onConfirm={() => baseMessage.success('Changes saved!')}
-                                        onCancel={() => baseMessage.info('Not saved')}
+                                        onConfirm={() => bannerMessage.success('Changes saved!')}
+                                        onCancel={() => bannerMessage.info('Not saved')}
                                         okText="Save"
                                         cancelText="Cancel"
                                         placement="bottom"
@@ -561,7 +561,7 @@ const KitchenSink = () => {
                                     </BasePopconfirm>
                                     <BasePopconfirm
                                         title="Are you sure?"
-                                        onConfirm={() => baseMessage.success('Action confirmed')}
+                                        onConfirm={() => bannerMessage.success('Action confirmed')}
                                         okText="Yes"
                                         cancelText="No"
                                         placement="bottom"
@@ -895,19 +895,19 @@ const KitchenSink = () => {
                         <div>
                             <Text strong>Messages (Top center toast):</Text>
                             <BaseSpace wrap style={{ marginTop: 8 }}>
-                                <BaseButton onClick={() => baseMessage.success('Success message!')}>
+                                <BaseButton onClick={() => bannerMessage.success('Success message!')}>
                                     Success Message
                                 </BaseButton>
-                                <BaseButton onClick={() => baseMessage.error('Error message!')}>
+                                <BaseButton onClick={() => bannerMessage.error('Error message!')}>
                                     Error Message
                                 </BaseButton>
-                                <BaseButton onClick={() => baseMessage.warning('Warning message!')}>
+                                <BaseButton onClick={() => bannerMessage.warning('Warning message!')}>
                                     Warning Message
                                 </BaseButton>
-                                <BaseButton onClick={() => baseMessage.info('Info message!')}>
+                                <BaseButton onClick={() => bannerMessage.info('Info message!')}>
                                     Info Message
                                 </BaseButton>
-                                <BaseButton onClick={() => baseMessage.loading('Loading...', 2)}>
+                                <BaseButton onClick={() => bannerMessage.show({ content: 'Loading...', type: 'info', duration: 2 })}>
                                     Loading Message
                                 </BaseButton>
                             </BaseSpace>
