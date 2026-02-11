@@ -135,9 +135,22 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
   // Helper function to get badge count from badge object
   const getBadgeCount = (badge) => {
     if (!badge) return null;
+
+    // If badge is an object, extract count
     if (typeof badge === 'object' && badge !== null && badge.count !== undefined) {
-      return badge.count;
+      const count = badge.count;
+      // Return null if count is empty string or null/undefined
+      if (count === "" || count === null || count === undefined) return null;
+      return count;
     }
+
+    // If badge is a string
+    if (typeof badge === 'string') {
+      // Return null if empty string
+      if (badge === "" || badge.trim() === "") return null;
+      return badge;
+    }
+
     return badge;
   };
 

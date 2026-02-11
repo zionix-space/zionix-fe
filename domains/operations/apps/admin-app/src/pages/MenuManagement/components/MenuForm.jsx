@@ -2,17 +2,18 @@ import { useEffect, useState, useRef } from 'react';
 import { BaseForm, BaseInput, BaseInputNumber, BaseSwitch, BaseEmpty, BaseButton, BasePopconfirm, BaseRadio, BaseSelect, baseMessage } from '@zionix-space/design-system';
 import { useTheme } from '@zionix-space/design-system';
 import { useStyles } from './MenuForm.style';
-import { useCreateMenuMutation } from '../hooks/useMenuQuery';
+import { useCreateMenuMutation, useUpdateMenuMutation } from '../hooks/useMenuQuery';
 import { getParentPath } from '../utils/menuTransformers';
 
 const { TextArea } = BaseInput;
 
-const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, onDelete, onAddChild }) => {
+const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, onDelete, onAddChild, onRefetch }) => {
     const { token } = useTheme();
     const [form] = BaseForm.useForm();
     const [badgeType, setBadgeType] = useState('none');
     const previousSelectedKeyRef = useRef(null);
     const createMenuMutation = useCreateMenuMutation();
+    const updateMenuMutation = useUpdateMenuMutation();
 
     const isDarkMode =
         token.colorBgBase === '#000000' ||
@@ -194,11 +195,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             // Check if this is a new item (no menu_id means it hasn't been saved to backend yet)
             const isNewItem = !selectedItem?.menu_id;
 
-            if (!isNewItem) {
-                baseMessage.info('Updating existing menus is not implemented yet. Only new menu creation is supported.');
-                return;
-            }
-
             // Get parent path from root to the selected item's parent
             const parentPath = getParentPath(menuData, selectedKey);
 
@@ -280,42 +276,60 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 menuMetadata = {};
             }
 
-            // Build the API payload for single menu creation - ALL fields required
+            // Build the API payload matching swagger specification exactly
             const menuPayload = {
-                application_id: applicationId, // Use application_id from root menu
+                application_id: applicationId,
                 name: formValues.label || "",
-                key: selectedKey || "",
-                section_title: formValues.sectionTitle || "",
-                menus_description: formValues.description || "",
                 label: formValues.label || "",
                 route: formValues.route || "",
-                badge: badgeValue || "",
                 component: formValues.component || "",
                 icon: formValues.icon || "",
                 order_index: formValues.order_index ?? 0,
                 level: formValues.level ?? 1,
                 is_visible: formValues.is_visible ?? true,
-                parent_menu_id: parentMenuId, // Use menu_id from parent menu
-                menu_metadata: Object.keys(menuMetadata).length > 0 ? menuMetadata : {},
+                parent_menu_id: parentMenuId,
                 is_active: formValues.is_active ?? true,
                 access: ["read"],
+                key: selectedKey || "",
+                badge: badgeValue || "",
+                section_title: formValues.sectionTitle || "",
+                menus_description: formValues.description || "",
                 children: []
             };
 
             console.log('Saving menu with payload:', menuPayload);
             console.log('navDocId:', navDocId);
+            console.log('isNewItem:', isNewItem);
 
-            // Call the create menu API - only navDocId needed
-            await createMenuMutation.mutateAsync({
-                menuData: menuPayload,
-                navDocId: navDocId
-            });
+            if (isNewItem) {
+                // Call the create menu API for new items
+                await createMenuMutation.mutateAsync({
+                    menuData: menuPayload,
+                    navDocId: navDocId
+                });
+                // Refetch to get the latest data
+                if (onRefetch) {
+                    await onRefetch();
+                }
+            } else {
+                // Call the update menu API for existing items
+                const menuId = selectedItem.menu_id;
+                await updateMenuMutation.mutateAsync({
+                    menuId: menuId,
+                    menuData: menuPayload,
+                    navDocId: navDocId
+                });
+                // Refetch to get the latest data
+                if (onRefetch) {
+                    await onRefetch();
+                }
+            }
 
             // Success! The mutation hook will automatically:
             // 1. Invalidate the menu queries
             // 2. Trigger a refetch
             // 3. Show success message
-            // The menu list will refresh and show the newly created menu with all backend data
+            // The menu list will refresh and show the updated menu with all backend data
 
         } catch (error) {
             console.error('Failed to save menu:', error);
@@ -344,7 +358,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     onClick={handleSaveClick}
                     shape="round"
                     size="middle"
-                    loading={createMenuMutation.isLoading}
+                    loading={createMenuMutation.isLoading || updateMenuMutation.isLoading}
                     style={{ minWidth: '100px' }}
                 >
                     Save

@@ -12,7 +12,7 @@ import {
     getAllExpandableKeys,
     filterMenuItems,
 } from '../utils/menuTransformers';
-import { useMenusQuery, useSaveMenusMutation, useDeleteMenuMutation } from '../hooks/useMenuQuery';
+import { useMenusQuery, useSaveMenusMutation, useDeleteMenuMutation, useUpdateMenuMutation } from '../hooks/useMenuQuery';
 
 const { useToken } = theme;
 
@@ -22,6 +22,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     // React Query hooks
     const { data: apiMenuData, isLoading: loading, refetch } = useMenusQuery();
     const saveMenusMutation = useSaveMenusMutation();
+    const updateMenuMutation = useUpdateMenuMutation();
     const deleteMenuMutation = useDeleteMenuMutation();
 
     // Detect dark mode
@@ -267,9 +268,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         }
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         // Batch save/update - saves all menus at once
-        if (saveMenusMutation.isLoading) return;
+        if (saveMenusMutation.isLoading || updateMenuMutation.isLoading) return;
 
         if (!navDocId) {
             baseMessage.error('Navigation document ID is missing. Please refresh the page.');
@@ -292,19 +293,95 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         const isCreating = hasNewMenus(menuData.mainNavigation);
 
-        // Use POST for batch save (creating new menus)
-        saveMenusMutation.mutate({
-            menus: menuData.mainNavigation,
-            navDocId: navDocId,
-            applicationId: null
-        }, {
-            onSuccess: () => {
-                setIsDirty(false);
-                setHistory([]);
-                setHistoryIndex(-1);
-                refetch();
-            },
-        });
+        if (isCreating) {
+            // Use POST for batch save (creating new menus)
+            saveMenusMutation.mutate({
+                menus: menuData.mainNavigation,
+                navDocId: navDocId,
+                applicationId: null
+            }, {
+                onSuccess: () => {
+                    setIsDirty(false);
+                    setHistory([]);
+                    setHistoryIndex(-1);
+                    refetch();
+                },
+            });
+        } else {
+            // Use PUT for updating existing menus - update each menu individually
+            try {
+                // Flatten all menus (including nested children) into a single array with parent tracking
+                const flattenMenus = (items, parentId = null) => {
+                    const flattened = [];
+                    items.forEach(item => {
+                        flattened.push({ ...item, parent_menu_id: parentId });
+                        if (item.children && Array.isArray(item.children) && item.children.length > 0) {
+                            flattened.push(...flattenMenus(item.children, item.menu_id || item.key));
+                        }
+                    });
+                    return flattened;
+                };
+
+                const allMenus = flattenMenus(menuData.mainNavigation);
+
+                // Update each menu individually
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (const menu of allMenus) {
+                    const menuId = menu.menu_id || menu.key;
+
+                    // Skip if it's a new menu (shouldn't happen in update flow, but just in case)
+                    if (!menuId || menuId.startsWith('new-menu-')) continue;
+
+                    // Prepare menu data for update - matching swagger request body structure exactly
+                    const menuUpdateData = {
+                        application_id: menu.application_id || menuData.mainNavigation[0]?.application_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        name: menu.name || menu.label,
+                        label: menu.label,
+                        route: menu.route || "",
+                        component: menu.component || "",
+                        icon: menu.icon || "",
+                        order_index: menu.order_index !== undefined ? menu.order_index : 0,
+                        level: menu.level !== undefined ? menu.level : 0,
+                        is_visible: menu.is_visible !== undefined ? menu.is_visible : true,
+                        parent_menu_id: menu.parent_menu_id || null,
+                        is_active: menu.is_active !== undefined ? menu.is_active : true,
+                        access: menu.access && Array.isArray(menu.access) ? menu.access : [],
+                        key: menu.key || "",
+                        badge: menu.badge || "",
+                        section_title: menu.section_title || "",
+                        menus_description: menu.menus_description || menu.description || "",
+                        children: []
+                    };
+
+                    try {
+                        await updateMenuMutation.mutateAsync({
+                            menuId: menuId,
+                            menuData: menuUpdateData,
+                            navDocId: navDocId
+                        });
+                        successCount++;
+                    } catch (error) {
+                        console.error(`Failed to update menu ${menuId}:`, error);
+                        errorCount++;
+                    }
+                }
+
+                if (errorCount === 0) {
+                    baseMessage.success(`Successfully updated ${successCount} menu(s)`);
+                    setIsDirty(false);
+                    setHistory([]);
+                    setHistoryIndex(-1);
+                    refetch();
+                } else {
+                    baseMessage.warning(`Updated ${successCount} menu(s), but ${errorCount} failed`);
+                    refetch();
+                }
+            } catch (error) {
+                baseMessage.error('Failed to update menus: ' + (error.message || 'Unknown error'));
+            }
+        }
     };
 
     // Determine button label based on whether there are new items
@@ -533,7 +610,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         onSave={handleSave}
                         saveButtonLabel={getBatchSaveButtonLabel()}
                         isDirty={isDirty}
-                        saving={saveMenusMutation.isLoading}
+                        saving={saveMenusMutation.isLoading || updateMenuMutation.isLoading}
                         onUndo={handleUndo}
                         onRedo={handleRedo}
                         canUndo={canUndo}
@@ -562,6 +639,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         onChange={handleFieldChange}
                         onDelete={handleDelete}
                         onAddChild={handleAddChild}
+                        onRefetch={refetch}
                     />
                 </div>
             </div>

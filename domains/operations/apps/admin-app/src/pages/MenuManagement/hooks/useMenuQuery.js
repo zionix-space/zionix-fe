@@ -82,7 +82,7 @@ export const useUpdateMenuMutation = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ menuId, menuData }) => menuService.updateMenu(menuId, menuData),
+        mutationFn: ({ menuId, menuData, navDocId }) => menuService.updateMenu(menuId, menuData, navDocId),
         onMutate: async ({ menuId, menuData }) => {
             // Cancel outgoing refetches
             await queryClient.cancelQueries({ queryKey: menuKeys.detail(menuId) });
@@ -157,32 +157,6 @@ export const useSaveMenusMutation = () => {
         },
         onError: (error) => {
             baseMessage.error(error.message || 'Failed to save menus');
-        },
-    });
-};
-
-/**
- * Hook to bulk update menus - supports both reordering AND field updates
- * Uses the new batch update API endpoint that handles:
- * - Reordering (order_index, parent_menu_id)
- * - Field updates (name, label, icon, route, component, etc.)
- * - Access permissions, visibility, metadata, and more
- * 
- * @returns {Object} Mutation object
- */
-export const useBulkUpdateMenusMutation = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: ({ menus, applicationId }) =>
-            menuService.batchUpdateMenus(menus, applicationId),
-        onSuccess: () => {
-            // Invalidate and refetch all menu queries to refresh the list
-            queryClient.invalidateQueries({ queryKey: menuKeys.all });
-            baseMessage.success('Menus updated successfully');
-        },
-        onError: (error) => {
-            baseMessage.error(error.message || 'Failed to update menus');
         },
     });
 };
