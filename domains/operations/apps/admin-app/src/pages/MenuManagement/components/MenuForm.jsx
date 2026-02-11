@@ -7,7 +7,7 @@ import { getParentPath } from '../utils/menuTransformers';
 
 const { TextArea } = BaseInput;
 
-const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, onDelete, onAddChild, onRefetch }) => {
+const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, onDelete, onAddChild, onRefetch, isDeleting }) => {
     const { token } = useTheme();
     const [form] = BaseForm.useForm();
     const [badgeType, setBadgeType] = useState('none');
@@ -359,6 +359,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     shape="round"
                     size="middle"
                     loading={createMenuMutation.isLoading || updateMenuMutation.isLoading}
+                    disabled={createMenuMutation.isLoading || updateMenuMutation.isLoading || isDeleting}
                     style={{ minWidth: '100px' }}
                 >
                     Save
@@ -369,6 +370,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     onClick={handleAddChildClick}
                     shape="round"
                     size="middle"
+                    disabled={createMenuMutation.isLoading || updateMenuMutation.isLoading || isDeleting}
                     style={{ minWidth: '120px' }}
                 >
                     Add Child
@@ -379,12 +381,15 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     onConfirm={onDelete}
                     okText="Yes"
                     cancelText="No"
+                    okButtonProps={{ loading: isDeleting }}
                 >
                     <BaseButton
                         danger
                         icon={<i className="ri-delete-bin-line" />}
                         shape="round"
                         size="middle"
+                        loading={isDeleting}
+                        disabled={createMenuMutation.isLoading || updateMenuMutation.isLoading || isDeleting}
                         style={{ minWidth: '100px' }}
                     >
                         Delete

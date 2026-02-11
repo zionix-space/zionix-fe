@@ -30,7 +30,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     <BaseButton
                         icon={<i className="ri-arrow-go-back-line" />}
                         onClick={onUndo}
-                        disabled={!canUndo}
+                        disabled={!canUndo || saving}
                         title="Undo"
                         shape="circle"
                         size="small"
@@ -39,7 +39,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     <BaseButton
                         icon={<i className="ri-arrow-go-forward-line" />}
                         onClick={onRedo}
-                        disabled={!canRedo}
+                        disabled={!canRedo || saving}
                         title="Redo"
                         shape="circle"
                         size="small"
@@ -54,6 +54,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         shape="circle"
                         size="small"
                         type="text"
+                        disabled={saving}
                     />
                     <BaseButton
                         icon={<i className="ri-upload-line" />}
@@ -62,6 +63,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         shape="circle"
                         size="small"
                         type="text"
+                        disabled={saving}
                     />
                 </div>
                 <div style={styles.capsuleContainer}>
@@ -72,6 +74,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         shape="circle"
                         size="small"
                         type="text"
+                        disabled={saving}
                     />
                     <BaseButton
                         icon={<i className="ri-collapse-diagonal-line" />}
@@ -80,6 +83,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         shape="circle"
                         size="small"
                         type="text"
+                        disabled={saving}
                     />
                 </div>
                 <div style={styles.spacer} />
@@ -87,10 +91,10 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     type="primary"
                     icon={<i className="ri-save-line" />}
                     onClick={onSave}
-                    disabled={!isDirty}
+                    disabled={!isDirty || saving}
                     loading={saving}
                     shape="round"
-                    size="small"
+                    size="middle"
                 >
                     {saveButtonLabel || (isDirty ? 'Save' : 'Saved')}
                 </BaseButton>

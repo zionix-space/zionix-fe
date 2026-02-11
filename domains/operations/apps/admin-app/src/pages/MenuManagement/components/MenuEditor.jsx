@@ -640,6 +640,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         onDelete={handleDelete}
                         onAddChild={handleAddChild}
                         onRefetch={refetch}
+                        isDeleting={deleteMenuMutation.isLoading}
                     />
                 </div>
             </div>

@@ -18,6 +18,7 @@ export const useStyles = (token, isDarkMode = false) => {
             gap: '8px',
             padding: '12px',
             marginBottom: '16px',
+            marginRight: '8px',
             borderRadius: '12px',
             background: getLightPrimaryBg(),
             border: `1px solid ${token.colorBorderSecondary}`,
