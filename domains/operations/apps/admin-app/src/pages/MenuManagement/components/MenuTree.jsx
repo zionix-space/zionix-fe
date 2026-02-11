@@ -106,6 +106,8 @@ const MenuTree = ({
                 draggable
                 blockNode
                 showIcon={false}
+                showLine={false}
+                defaultExpandAll={false}
             />
         </div>
     );

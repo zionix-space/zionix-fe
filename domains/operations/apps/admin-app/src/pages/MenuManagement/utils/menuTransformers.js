@@ -5,6 +5,7 @@
 
 /**
  * Transforms menu items array to Ant Design Tree data format
+ * Uses menu_id (or application_id for root) as the tree key for stability
  * @param {Array} menuItems - Array of MenuItem objects
  * @returns {Array} Array of TreeNode objects
  */
@@ -13,18 +14,23 @@ export const transformToTreeData = (menuItems) => {
         return [];
     }
 
-    return menuItems.map((item) => ({
-        key: item.key,
-        title: item.label,
-        icon: item.icon,
-        badge: item.badge,
-        children: item.children && item.children.length > 0
-            ? transformToTreeData(item.children)
-            : [],
-        isLeaf: !item.children || item.children.length === 0,
-        // Store original item data for reference
-        data: item,
-    }));
+    return menuItems.map((item) => {
+        // Use menu_id as key, fallback to application_id for root level, then _tempId for new items
+        const treeKey = item.menu_id || item.application_id || item._tempId || `fallback-${Date.now()}`;
+
+        return {
+            key: treeKey,
+            title: item.label,
+            icon: item.icon,
+            badge: item.badge,
+            children: item.children && item.children.length > 0
+                ? transformToTreeData(item.children)
+                : [],
+            isLeaf: !item.children || item.children.length === 0,
+            // Store original item data for reference
+            data: item,
+        };
+    });
 };
 
 /**
@@ -64,19 +70,21 @@ export const extractAllKeys = (config) => {
 };
 
 /**
- * Finds a menu item by key in the menu data
+ * Finds a menu item by its ID (menu_id, application_id, or temp key)
  * @param {Object} menuData - Complete menu configuration
- * @param {string} key - Key to search for
+ * @param {string} id - ID to search for (menu_id, application_id, or temp key)
  * @returns {Object|null} Found menu item or null
  */
-export const findMenuItemByKey = (menuData, key) => {
-    if (!menuData || !key) return null;
+export const findMenuItemByKey = (menuData, id) => {
+    if (!menuData || !id) return null;
 
     const searchInItems = (items) => {
         if (!items || !Array.isArray(items)) return null;
 
         for (const item of items) {
-            if (item.key === key) {
+            // Check menu_id, application_id, or _tempId (for new items)
+            const itemId = item.menu_id || item.application_id || item._tempId;
+            if (itemId === id) {
                 return item;
             }
             if (item.children && item.children.length > 0) {
@@ -103,14 +111,14 @@ export const findMenuItemByKey = (menuData, key) => {
 };
 
 /**
- * Updates a menu item by key with new properties
+ * Updates a menu item by its ID (menu_id, application_id, or temp key) with new properties
  * @param {Object} menuData - Complete menu configuration
- * @param {string} key - Key of item to update
+ * @param {string} id - ID of item to update (menu_id, application_id, or temp key)
  * @param {Object} updates - Properties to update
  * @returns {Object} Updated menu configuration
  */
-export const updateMenuItemByKey = (menuData, key, updates) => {
-    if (!menuData || !key || !updates) return menuData;
+export const updateMenuItemByKey = (menuData, id, updates) => {
+    if (!menuData || !id || !updates) return menuData;
 
     // Deep clone to avoid mutation
     const clonedData = JSON.parse(JSON.stringify(menuData));
@@ -119,7 +127,9 @@ export const updateMenuItemByKey = (menuData, key, updates) => {
         if (!items || !Array.isArray(items)) return false;
 
         for (let i = 0; i < items.length; i++) {
-            if (items[i].key === key) {
+            // Check menu_id, application_id, or _tempId (for new items)
+            const itemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
+            if (itemId === id) {
                 // Update the item
                 items[i] = { ...items[i], ...updates };
                 return true;
@@ -149,8 +159,9 @@ export const updateMenuItemByKey = (menuData, key, updates) => {
 
 /**
  * Gets all expanded keys from menu data (all parent nodes)
+ * Uses menu_id/application_id as keys
  * @param {Array} menuItems - Array of MenuItem objects
- * @returns {Array} Array of keys that should be expanded
+ * @returns {Array} Array of IDs that should be expanded
  */
 export const getAllExpandableKeys = (menuItems) => {
     if (!menuItems || !Array.isArray(menuItems)) {
@@ -162,7 +173,11 @@ export const getAllExpandableKeys = (menuItems) => {
     const collectKeys = (items) => {
         items.forEach((item) => {
             if (item.children && item.children.length > 0) {
-                keys.push(item.key);
+                // Use menu_id, application_id, or _tempId (for new items)
+                const itemId = item.menu_id || item.application_id || item._tempId;
+                if (itemId) {
+                    keys.push(itemId);
+                }
                 collectKeys(item.children);
             }
         });
@@ -220,23 +235,26 @@ export const filterMenuItems = (menuItems, searchValue) => {
 };
 
 /**
- * Gets the parent path (array of keys) from root to a specific menu item
+ * Gets the parent path (array of IDs) from root to a specific menu item
  * @param {Object} menuData - Complete menu configuration
- * @param {string} targetKey - Key of the target menu item
- * @returns {Array} Array of parent keys from root to target (excluding target itself)
+ * @param {string} targetId - ID of the target menu item (menu_id, application_id, or _tempId)
+ * @returns {Array} Array of parent IDs from root to target (excluding target itself)
  */
-export const getParentPath = (menuData, targetKey) => {
-    if (!menuData || !targetKey) return [];
+export const getParentPath = (menuData, targetId) => {
+    if (!menuData || !targetId) return [];
 
     const findPath = (items, path = []) => {
         if (!items || !Array.isArray(items)) return null;
 
         for (const item of items) {
-            if (item.key === targetKey) {
+            // Get the item's ID (menu_id, application_id, or _tempId)
+            const itemId = item.menu_id || item.application_id || item._tempId;
+
+            if (itemId === targetId) {
                 return path;
             }
             if (item.children && item.children.length > 0) {
-                const found = findPath(item.children, [...path, item.key]);
+                const found = findPath(item.children, [...path, itemId]);
                 if (found) return found;
             }
         }

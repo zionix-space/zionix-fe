@@ -162,15 +162,12 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         setExpandedKeys([]);
     };
 
-    const handleFieldChange = (key, updates) => {
-        const updatedData = updateMenuItemByKey(menuData, key, updates);
+    const handleFieldChange = (id, updates) => {
+        const updatedData = updateMenuItemByKey(menuData, id, updates);
         updateMenuData(updatedData);
 
-        // If the key field was changed, update selectedKey to the new key
-        // Only update if the new key is not empty
-        if (updates.key && updates.key !== key && updates.key.trim() !== '') {
-            setSelectedKey(updates.key);
-        }
+        // No need to update selectedKey or expandedKeys since we're using stable IDs (menu_id/application_id)
+        // The tree will maintain its state correctly even when label/key fields change
     };
 
     const handleAddChild = () => {
@@ -179,11 +176,11 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         const parentItem = findMenuItemByKey(menuData, selectedKey);
         if (!parentItem) return;
 
-        // Use a temporary key that will be replaced when user types the label
-        const tempKey = `temp-new-${Date.now()}`;
+        // Generate a unique temporary ID for the new item (will be replaced by backend menu_id after save)
+        const tempId = `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
         const newItem = {
-            key: tempKey,
+            key: '', // Key field starts empty, will be generated from label
             label: '',
             icon: null,
             description: '',
@@ -193,6 +190,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             is_visible: true,
             is_active: true,
             order_index: parentItem.children ? parentItem.children.length : 0,
+            _tempId: tempId, // Temporary ID for tree tracking (not sent to backend)
         };
 
         const updatedParent = {
@@ -202,8 +200,17 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         const updatedData = updateMenuItemByKey(menuData, selectedKey, updatedParent);
         updateMenuData(updatedData);
-        setExpandedKeys([...expandedKeys, selectedKey]);
-        setSelectedKey(tempKey);
+
+        // Ensure parent is expanded - add if not already in expandedKeys
+        setExpandedKeys(prevKeys => {
+            if (!prevKeys.includes(selectedKey)) {
+                return [...prevKeys, selectedKey];
+            }
+            return prevKeys;
+        });
+
+        // Select the new item using its temp ID
+        setSelectedKey(tempId);
         baseMessage.success('Child menu item created. Enter a label to generate the key.');
     };
 
@@ -212,7 +219,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         const deleteFromItems = (items) => {
             return items.filter((item) => {
-                if (item.key === selectedKey) {
+                // Check menu_id, application_id, or _tempId
+                const itemId = item.menu_id || item.application_id || item._tempId;
+                if (itemId === selectedKey) {
                     return false;
                 }
                 if (item.children && item.children.length > 0) {

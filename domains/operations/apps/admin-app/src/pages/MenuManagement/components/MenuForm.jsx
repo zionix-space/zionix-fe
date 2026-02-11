@@ -207,12 +207,13 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 return;
             }
 
-            // Helper function to find menu item by key
-            const findItemByKey = (items, key) => {
+            // Helper function to find menu item by ID (menu_id, application_id, or _tempId)
+            const findItemById = (items, id) => {
                 for (const item of items) {
-                    if (item.key === key) return item;
+                    const itemId = item.menu_id || item.application_id || item._tempId;
+                    if (itemId === id) return item;
                     if (item.children) {
-                        const found = findItemByKey(item.children, key);
+                        const found = findItemById(item.children, id);
                         if (found) return found;
                     }
                 }
@@ -220,35 +221,43 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             };
 
             // Get application_id from the root menu (first level in tree)
-            const rootMenuKey = parentPath[0]; // First level is the application
-            const rootMenu = findItemByKey(menuData.mainNavigation, rootMenuKey);
-            const applicationId = rootMenu?.application_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+            const rootMenuId = parentPath[0]; // First level is the application
+            const rootMenu = findItemById(menuData.mainNavigation, rootMenuId);
+
+            if (!rootMenu) {
+                baseMessage.error('Application not found. Cannot save menu.');
+                return;
+            }
+
+            const applicationId = rootMenu.application_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6";
 
             // Get parent_menu_id from the direct parent (last item in parentPath)
-            const parentMenuKey = parentPath[parentPath.length - 1]; // Direct parent
-            const parentMenu = findItemByKey(menuData.mainNavigation, parentMenuKey);
+            const parentId = parentPath[parentPath.length - 1]; // Direct parent ID
+            const parentMenu = findItemById(menuData.mainNavigation, parentId);
 
             // Determine parent_menu_id:
-            // - If parent is root level (application), parent_menu_id should be null
-            // - If parent is a nested menu, use its menu_id
+            // - If parent is the application (root level), parent_menu_id should be null
+            // - If parent is a menu (any level), use its menu_id
             let parentMenuId = null;
             if (parentMenu) {
-                // Check if parent is root level (has application_id but no menu_id, or level is 1)
-                const isRootLevel = !parentMenu.menu_id || parentMenu.level === 1;
+                // Check if parent is the application (has application_id but no menu_id)
+                const isApplication = parentMenu.application_id && !parentMenu.menu_id;
 
-                if (isRootLevel) {
-                    parentMenuId = null; // Root level parent = null
+                if (isApplication) {
+                    // Parent is the application itself, so parent_menu_id = null
+                    parentMenuId = null;
                 } else {
-                    parentMenuId = parentMenu.menu_id; // Nested menu parent = menu_id
+                    // Parent is a menu (could be level 1, 2, 3, etc.), use its menu_id
+                    parentMenuId = parentMenu.menu_id || null;
                 }
             }
 
             console.log('=== PARENT MENU DEBUG ===');
             console.log('Parent path:', parentPath);
-            console.log('Parent menu key:', parentMenuKey);
+            console.log('Parent ID:', parentId);
             console.log('Parent menu:', parentMenu);
-            console.log('Is root level parent?', !parentMenu?.menu_id || parentMenu?.level === 1);
-            console.log('Parent menu ID (null for root):', parentMenuId);
+            console.log('Is application (root)?', parentMenu?.application_id && !parentMenu?.menu_id);
+            console.log('Parent menu ID:', parentMenuId);
             console.log('Root menu:', rootMenu);
             console.log('Application ID:', applicationId);
 
