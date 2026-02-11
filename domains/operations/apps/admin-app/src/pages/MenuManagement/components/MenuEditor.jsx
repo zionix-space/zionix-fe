@@ -12,7 +12,7 @@ import {
     getAllExpandableKeys,
     filterMenuItems,
 } from '../utils/menuTransformers';
-import { useMenusQuery, useSaveMenusMutation } from '../hooks/useMenuQuery';
+import { useMenusQuery, useSaveMenusMutation, useDeleteMenuMutation } from '../hooks/useMenuQuery';
 
 const { useToken } = theme;
 
@@ -22,6 +22,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     // React Query hooks
     const { data: apiMenuData, isLoading: loading, refetch } = useMenusQuery();
     const saveMenusMutation = useSaveMenusMutation();
+    const deleteMenuMutation = useDeleteMenuMutation();
 
     // Detect dark mode
     const isDarkMode =
@@ -214,31 +215,56 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         baseMessage.success('Child menu item created. Enter a label to generate the key.');
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!selectedKey) return;
 
-        const deleteFromItems = (items) => {
-            return items.filter((item) => {
-                // Check menu_id, application_id, or _tempId
-                const itemId = item.menu_id || item.application_id || item._tempId;
-                if (itemId === selectedKey) {
-                    return false;
-                }
-                if (item.children && item.children.length > 0) {
-                    item.children = deleteFromItems(item.children);
-                }
-                return true;
-            });
-        };
+        // Find the selected item
+        const selectedItem = findMenuItemByKey(menuData, selectedKey);
+        if (!selectedItem) {
+            baseMessage.error('Menu item not found');
+            return;
+        }
 
-        const updatedData = {
-            ...menuData,
-            mainNavigation: deleteFromItems(menuData.mainNavigation),
-        };
+        // Check if this is a saved menu (has menu_id) or a new unsaved menu (_tempId)
+        const isSavedMenu = !!selectedItem.menu_id;
 
-        updateMenuData(updatedData);
-        setSelectedKey(null);
-        baseMessage.success('Menu item deleted');
+        if (isSavedMenu) {
+            // Delete from backend via API
+            try {
+                await deleteMenuMutation.mutateAsync(selectedItem.menu_id);
+                // Success message and query invalidation handled by the mutation hook
+                // The invalidation will trigger a refetch and update apiMenuData
+                // which will then update menuData via the useEffect
+                setSelectedKey(null);
+            } catch (error) {
+                // Error message handled by the mutation hook
+                console.error('Delete failed:', error);
+            }
+        } else {
+            // New unsaved menu - just remove from local state
+            const deleteFromItems = (items) => {
+                return items.filter((item) => {
+                    // Check menu_id, application_id, or _tempId
+                    const itemId = item.menu_id || item.application_id || item._tempId;
+                    if (itemId === selectedKey) {
+                        return false;
+                    }
+                    if (item.children && item.children.length > 0) {
+                        item.children = deleteFromItems(item.children);
+                    }
+                    return true;
+                });
+            };
+
+            const updatedData = {
+                ...menuData,
+                mainNavigation: deleteFromItems(menuData.mainNavigation),
+            };
+
+            updateMenuData(updatedData);
+            setSelectedKey(null);
+            baseMessage.success('Menu item removed');
+        }
     };
 
     const handleSave = () => {

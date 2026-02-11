@@ -124,10 +124,10 @@ export const useDeleteMenuMutation = () => {
     return useMutation({
         mutationFn: menuService.deleteMenu,
         onSuccess: (data, menuId) => {
-            // Remove from cache
+            // Remove specific menu from cache
             queryClient.removeQueries({ queryKey: menuKeys.detail(menuId) });
-            // Invalidate list
-            queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
+            // Invalidate and refetch all menu queries to refresh the list
+            queryClient.invalidateQueries({ queryKey: menuKeys.all });
             baseMessage.success('Menu deleted successfully');
         },
         onError: (error) => {
