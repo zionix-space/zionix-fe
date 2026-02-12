@@ -18,11 +18,10 @@ export const useStyles = (token) => {
                 paddingTop: '4px',
                 paddingBottom: '4px',
                 marginBottom: '0px',
-                background: glassBackground,
-                backdropFilter: 'blur(24px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                borderTopLeftRadius: '30px',
-                boxShadow: `0 1px 3px ${token.colorBgSpotlight}`,
+                // background: `color-mix(in srgb, ${token.colorPrimaryBg} 1%, ${token.colorBgContainer})`,
+                // backdropFilter: 'blur(24px) saturate(180%)',
+                // WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                // boxShadow: `0 1px 3px ${token.colorBgSpotlight}`,
                 overflow: 'hidden', // Prevent horizontal scroll
                 maxWidth: '100%', // Ensure it doesn't exceed container
             },
