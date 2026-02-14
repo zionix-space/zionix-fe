@@ -160,3 +160,31 @@ export const useSaveMenusMutation = () => {
         },
     });
 };
+
+/**
+ * Hook to reorder menus
+ * Supports:
+ * - Parent menu reordering
+ * - Children menu reordering within same parent
+ * - Moving menus between parents
+ * - Nested children reordering (multi-level)
+ * - Swap two menus (auto-detected by backend)
+ * 
+ * @returns {Object} Mutation object
+ */
+export const useReorderMenusMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ applicationId, items }) =>
+            menuService.reorderMenus(applicationId, items),
+        onSuccess: (data) => {
+            // Invalidate and refetch all menu queries to refresh the list
+            queryClient.invalidateQueries({ queryKey: menuKeys.all });
+            baseMessage.success('Menus reordered successfully');
+        },
+        onError: (error) => {
+            baseMessage.error(error.message || 'Failed to reorder menus');
+        },
+    });
+};

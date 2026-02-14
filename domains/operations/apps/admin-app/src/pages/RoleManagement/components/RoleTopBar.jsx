@@ -35,7 +35,7 @@ const RoleTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
       
       /* Menu item styling */
       .menu-topbar-menu .ant-menu-item {
-        border-radius: 8px !important;
+       
         padding: 0 16px !important;
         height: 28px !important;
         line-height: 28px !important;
@@ -57,6 +57,7 @@ const RoleTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
         color: ${token.colorPrimary} !important;
         opacity: 1 !important;
         font-weight: 600 !important;
+         border-left: 3px solid !important;
       }
     `;
         document.head.appendChild(style);

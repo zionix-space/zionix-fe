@@ -145,6 +145,41 @@ export const menuService = {
 
         return await axiosClient.post(`/menus/?${params.toString()}`, payload);
     },
+
+    /**
+     * Reorder menus - supports multiple reordering scenarios
+     * Handles:
+     * - Parent menu reordering
+     * - Children menu reordering within same parent
+     * - Moving menus between parents
+     * - Nested children reordering (multi-level)
+     * - Swap two menus (automatically detected when exactly 2 items with same parent)
+     * 
+     * @param {string} applicationId - Application ID
+     * @param {Array} items - Array of menu items with menu_id, order_index, parent_menu_id, level
+     * @returns {Promise<Object>} Response with updated count
+     */
+    reorderMenus: async (applicationId, items) => {
+        if (!applicationId) {
+            throw new Error('application_id is required for reordering menus');
+        }
+
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            throw new Error('items array is required and must not be empty');
+        }
+
+        const payload = {
+            application_id: applicationId,
+            items: items.map(item => ({
+                menu_id: item.menu_id,
+                order_index: item.order_index,
+                parent_menu_id: item.parent_menu_id || null,
+                level: item.level !== undefined ? item.level : 0
+            }))
+        };
+
+        return await axiosClient.post('/menus/reorder', payload);
+    },
 };
 
 export default menuService;

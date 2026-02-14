@@ -12,7 +12,7 @@ import {
     getAllExpandableKeys,
     filterMenuItems,
 } from '../utils/menuTransformers';
-import { useMenusQuery, useSaveMenusMutation, useDeleteMenuMutation, useUpdateMenuMutation } from '../hooks/useMenuQuery';
+import { useMenusQuery, useSaveMenusMutation, useDeleteMenuMutation, useUpdateMenuMutation, useReorderMenusMutation } from '../hooks/useMenuQuery';
 
 const { useToken } = theme;
 
@@ -24,6 +24,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const saveMenusMutation = useSaveMenusMutation();
     const updateMenuMutation = useUpdateMenuMutation();
     const deleteMenuMutation = useDeleteMenuMutation();
+    const reorderMenusMutation = useReorderMenusMutation();
 
     // Detect dark mode
     const isDarkMode =
@@ -68,6 +69,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const [isDirty, setIsDirty] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
+    const [hasReorderChanges, setHasReorderChanges] = useState(false); // Track if reordering happened
+    const [hasFieldChanges, setHasFieldChanges] = useState(false); // Track if field updates happened
+    const [affectedReorderItems, setAffectedReorderItems] = useState([]); // Track only affected items during reorder
 
     // Initialize menu data from API
     useEffect(() => {
@@ -167,6 +171,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const handleFieldChange = (id, updates) => {
         const updatedData = updateMenuItemByKey(menuData, id, updates);
         updateMenuData(updatedData);
+        setHasFieldChanges(true); // Mark that field changes occurred
 
         // No need to update selectedKey or expandedKeys since we're using stable IDs (menu_id/application_id)
         // The tree will maintain its state correctly even when label/key fields change
@@ -191,7 +196,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             level: (parentItem.level ?? 0) + 1,
             is_visible: true,
             is_active: true,
-            order_index: parentItem.children ? parentItem.children.length : 0,
+            order_index: parentItem.children ? (parentItem.children.length + 1) * 1000 : 1000,
             _tempId: tempId, // Temporary ID for tree tracking (not sent to backend)
         };
 
@@ -304,6 +309,8 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     setIsDirty(false);
                     setHistory([]);
                     setHistoryIndex(-1);
+                    setHasReorderChanges(false);
+                    setHasFieldChanges(false);
                     refetch();
                 },
             });
@@ -368,11 +375,13 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     }
                 }
 
+                // Show success/error messages
                 if (errorCount === 0) {
                     baseMessage.success(`Successfully updated ${successCount} menu(s)`);
                     setIsDirty(false);
                     setHistory([]);
                     setHistoryIndex(-1);
+                    setHasFieldChanges(false); // Reset field changes flag
                     refetch();
                 } else {
                     baseMessage.warning(`Updated ${successCount} menu(s), but ${errorCount} failed`);
@@ -383,6 +392,46 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             }
         }
     };
+
+    const handleReorder = async () => {
+        // Reorder button - only calls reorder API with affected items
+        if (reorderMenusMutation.isLoading) return;
+
+        if (!menuData || !menuData.mainNavigation || menuData.mainNavigation.length === 0) {
+            baseMessage.error('No menu data to reorder');
+            return;
+        }
+
+        if (affectedReorderItems.length === 0) {
+            baseMessage.warning('No items to reorder');
+            return;
+        }
+
+        try {
+            const applicationId = menuData.mainNavigation[0]?.application_id;
+
+            if (!applicationId) {
+                baseMessage.error('Application ID not found');
+                return;
+            }
+
+            // Use the tracked affected items from drag-drop
+            await reorderMenusMutation.mutateAsync({
+                applicationId: applicationId,
+                items: affectedReorderItems
+            });
+
+            // Reset reorder changes flag and affected items after success
+            setHasReorderChanges(false);
+            setAffectedReorderItems([]);
+            setIsDirty(false);
+            refetch();
+
+        } catch (error) {
+            console.error('Reorder API failed:', error);
+            baseMessage.error('Failed to reorder menus: ' + (error.message || 'Unknown error'));
+        }
+    }
 
     // Determine button label based on whether there are new items
     const getBatchSaveButtonLabel = () => {
@@ -473,43 +522,63 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         const dropPos = info.node.pos.split('-');
         const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
 
-        // Prevent dropping on itself
-        if (dragKey === dropKey) {
-            baseMessage.warning('Cannot drop item on itself');
+        // Find the dragged item and drop target
+        const draggedItemOriginal = findMenuItemByKey(menuData, dragKey);
+        const dropItemOriginal = findMenuItemByKey(menuData, dropKey);
+
+        if (!draggedItemOriginal || !dropItemOriginal) {
+            baseMessage.error('Failed to find items');
             return;
         }
 
-        // Check for circular reference (dropping parent into its own child)
-        const isDescendant = (parentKey, childKey) => {
-            const parent = findMenuItemByKey(menuData, parentKey);
-            if (!parent || !parent.children) return false;
-
-            const checkChildren = (items) => {
-                for (const item of items) {
-                    if (item.key === childKey) return true;
-                    if (item.children && item.children.length > 0) {
-                        if (checkChildren(item.children)) return true;
-                    }
+        // Helper to find which application an item belongs to
+        const findApplicationForItem = (itemKey) => {
+            for (const app of menuData.mainNavigation) {
+                // Check if the item is the application itself
+                const appId = app.application_id || app.menu_id;
+                if (appId === itemKey) {
+                    return app.application_id;
                 }
-                return false;
-            };
 
-            return checkChildren(parent.children);
+                // Search in the application's children
+                const searchInChildren = (items) => {
+                    for (const item of items) {
+                        const itemId = item.menu_id || item.application_id || item._tempId;
+                        if (itemId === itemKey) {
+                            return app.application_id;
+                        }
+                        if (item.children && item.children.length > 0) {
+                            const found = searchInChildren(item.children);
+                            if (found) return found;
+                        }
+                    }
+                    return null;
+                };
+
+                const result = searchInChildren(app.children || []);
+                if (result) return result;
+            }
+            return null;
         };
 
-        if (isDescendant(dragKey, dropKey)) {
-            baseMessage.error('Cannot move parent into its own child');
+        const draggedAppId = findApplicationForItem(dragKey);
+        const dropAppId = findApplicationForItem(dropKey);
+
+        // Prevent moving menus between different applications
+        if (draggedAppId && dropAppId && draggedAppId !== dropAppId) {
+            baseMessage.error('Cannot move menus between different applications');
             return;
         }
 
         // Deep clone menu data
         const clonedData = JSON.parse(JSON.stringify(menuData));
 
-        // Find and remove the dragged item
+        // Find and remove the dragged item using proper ID matching
         let draggedItem = null;
         const removeItem = (items) => {
             for (let i = 0; i < items.length; i++) {
-                if (items[i].key === dragKey) {
+                const itemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
+                if (itemId === dragKey) {
                     draggedItem = items.splice(i, 1)[0];
                     return true;
                 }
@@ -529,36 +598,78 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         // Insert the dragged item at the new position
         if (!info.dropToGap) {
-            // Drop on the node (as child)
+            // Drop on the node (as child) - put at the beginning
             const dropItem = findMenuItemByKey(clonedData, dropKey);
             if (dropItem) {
                 if (!dropItem.children) dropItem.children = [];
+
+                // Update level and parent for dragged item
                 draggedItem.level = (dropItem.level ?? 0) + 1;
-                dropItem.children.push(draggedItem);
+                draggedItem.parent_menu_id = dropItem.menu_id || dropItem.application_id;
+
+                // Insert at the BEGINNING (index 0) when dropping on parent
+                dropItem.children.unshift(draggedItem);
+
+                // Update order_index for all children
+                dropItem.children.forEach((item, idx) => {
+                    item.order_index = (idx + 1) * 1000;
+                });
+
+                // Track affected items (all children of the parent)
+                const affectedItems = dropItem.children
+                    .filter(item => item.menu_id) // Only saved items
+                    .map(item => ({
+                        menu_id: item.menu_id,
+                        order_index: item.order_index,
+                        parent_menu_id: dropItem.menu_id || dropItem.application_id,
+                        level: item.level
+                    }));
+
+                setAffectedReorderItems(affectedItems);
 
                 // Update the cloned data
                 const updatedData = updateMenuItemByKey(clonedData, dropKey, dropItem);
                 updateMenuData(updatedData);
                 setExpandedKeys([...expandedKeys, dropKey]);
-                baseMessage.success('Item moved successfully');
+                setHasReorderChanges(true);
+                baseMessage.success('Item moved to top. Click "Reorder" to save changes.');
             }
         } else {
             // Drop between nodes (as sibling)
-            const insertIntoItems = (items, parentLevel = -1) => {
+            const insertIntoItems = (items, parentLevel = -1, parentId = null) => {
                 for (let i = 0; i < items.length; i++) {
-                    if (items[i].key === dropKey) {
+                    const itemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
+                    if (itemId === dropKey) {
                         const insertIndex = dropPosition === -1 ? i : i + 1;
                         draggedItem.level = parentLevel + 1;
+
+                        // Update parent_menu_id for the dragged item
+                        draggedItem.parent_menu_id = parentId;
+
                         items.splice(insertIndex, 0, draggedItem);
 
-                        // Update order_index for all items at this level
+                        // Update order_index for all items at this level (using increments of 1000)
                         items.forEach((item, idx) => {
-                            item.order_index = idx;
+                            item.order_index = (idx + 1) * 1000;
                         });
+
+                        // Track affected items (all siblings at this level)
+                        const affectedItems = items
+                            .filter(item => item.menu_id) // Only saved items
+                            .map(item => ({
+                                menu_id: item.menu_id,
+                                order_index: item.order_index,
+                                parent_menu_id: parentId,
+                                level: item.level
+                            }));
+
+                        setAffectedReorderItems(affectedItems);
+
                         return true;
                     }
                     if (items[i].children && items[i].children.length > 0) {
-                        if (insertIntoItems(items[i].children, items[i].level ?? 0)) return true;
+                        const currentItemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
+                        if (insertIntoItems(items[i].children, items[i].level ?? 0, currentItemId)) return true;
                     }
                 }
                 return false;
@@ -566,12 +677,13 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
             if (insertIntoItems(clonedData.mainNavigation)) {
                 updateMenuData(clonedData);
-                baseMessage.success('Item reordered successfully');
+                setHasReorderChanges(true); // Mark that reordering occurred
+                baseMessage.success('Item reordered successfully. Click "Reorder" to save changes.');
             } else {
                 baseMessage.error('Failed to reorder item');
             }
         }
-    };
+    }
 
     // Memoize selectedItem and allKeys to prevent unnecessary re-renders
     const selectedItem = useMemo(() => {
@@ -617,6 +729,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         canRedo={canRedo}
                         onExport={handleExport}
                         onImport={handleImport}
+                        onReorder={handleReorder}
+                        hasReorderChanges={hasReorderChanges}
+                        reordering={reorderMenusMutation.isLoading}
                     />
                     <MenuTree
                         treeData={getTreeData()}

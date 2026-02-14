@@ -1,7 +1,25 @@
 import { BaseInput, BaseButton, useTheme } from '@zionix-space/design-system';
 import { useStyles } from './TreeToolbar.style';
 
-const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, saveButtonLabel, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport }) => {
+const TreeToolbar = ({
+    searchValue,
+    onSearchChange,
+    onExpandAll,
+    onCollapseAll,
+    onSave,
+    saveButtonLabel,
+    isDirty,
+    saving,
+    onUndo,
+    onRedo,
+    canUndo,
+    canRedo,
+    onExport,
+    onImport,
+    onReorder,
+    hasReorderChanges,
+    reordering
+}) => {
     const { token } = useTheme();
 
     const isDarkMode =
@@ -87,11 +105,25 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                     />
                 </div>
                 <div style={styles.spacer} />
+                {hasReorderChanges && (
+                    <BaseButton
+                        type="default"
+                        icon={<i className="ri-sort-asc" />}
+                        onClick={onReorder}
+                        loading={reordering}
+                        disabled={reordering || saving}
+                        shape="round"
+                        size="middle"
+                        style={{ marginRight: '8px' }}
+                    >
+                        Reorder
+                    </BaseButton>
+                )}
                 <BaseButton
                     type="primary"
                     icon={<i className="ri-save-line" />}
                     onClick={onSave}
-                    disabled={!isDirty || saving}
+                    disabled={!isDirty || saving || reordering}
                     loading={saving}
                     shape="round"
                     size="middle"
