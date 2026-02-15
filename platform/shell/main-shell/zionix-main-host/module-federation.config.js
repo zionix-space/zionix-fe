@@ -55,7 +55,7 @@ module.exports = {
       return {
       "singleton": true,
       "eager": false,
-      "requiredVersion": "^1.3.7"
+      "requiredVersion": "^1.3.8"
 };
     }
     if (name === 'framer-motion') {

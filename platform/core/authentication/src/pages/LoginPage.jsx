@@ -26,6 +26,7 @@ import {
 } from '@zionix-space/design-system';
 import { motion } from 'framer-motion';
 import { CardTopLoader } from '@zionix-space/design-system';
+import { SvgLogin } from '@zionix-space/illusion';
 import {
   useStyles,
   containerVariants,
@@ -502,22 +503,13 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                       >
                         {/* Slide Illustration */}
                         <div style={styles.slideIllustration}>
-                          <div style={styles.slideIconContainer}>
-                            <div style={styles.slideMainIcon}>{slide.icon}</div>
-                          </div>
-
-                          {/* Feature Icons */}
-                          <div style={styles.featureIcons}>
-                            <div style={styles.featureIcon}>
-                              <i className="ri-user-line" />
-                            </div>
-                            <div style={styles.featureIcon}>
-                              <i className="ri-shield-star-line" />
-                            </div>
-                            <div style={styles.featureIcon}>
-                              <i className="ri-links-line" />
-                            </div>
-                          </div>
+                          <SvgLogin
+                            height="300px"
+                            primarycolor={token.colorPrimary}
+                            accentcolor={token.colorTextSecondary}
+                            haircolor={token.border}
+                            skincolor={token.colorPrimaryBg}
+                          />
                         </div>
 
                         {/* Slide Text Content */}
