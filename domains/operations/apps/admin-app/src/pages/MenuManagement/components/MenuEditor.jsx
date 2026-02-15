@@ -605,7 +605,11 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
                 // Update level and parent for dragged item
                 draggedItem.level = (dropItem.level ?? 0) + 1;
-                draggedItem.parent_menu_id = dropItem.menu_id || dropItem.application_id;
+
+                // Check if dropItem is a root-level application (has application_id but no menu_id)
+                // If so, children should have parent_menu_id as null (root level inside application)
+                const isRootApplication = dropItem.application_id && !dropItem.menu_id;
+                draggedItem.parent_menu_id = isRootApplication ? null : dropItem.menu_id;
 
                 // Insert at the BEGINNING (index 0) when dropping on parent
                 dropItem.children.unshift(draggedItem);
@@ -621,7 +625,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     .map(item => ({
                         menu_id: item.menu_id,
                         order_index: item.order_index,
-                        parent_menu_id: dropItem.menu_id || dropItem.application_id,
+                        parent_menu_id: isRootApplication ? null : dropItem.menu_id,
                         level: item.level
                     }));
 
@@ -668,8 +672,11 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         return true;
                     }
                     if (items[i].children && items[i].children.length > 0) {
-                        const currentItemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
-                        if (insertIntoItems(items[i].children, items[i].level ?? 0, currentItemId)) return true;
+                        // For root-level applications (has application_id but no menu_id), 
+                        // children should have parent_menu_id as null
+                        const isRootApplication = items[i].application_id && !items[i].menu_id;
+                        const parentIdForChildren = isRootApplication ? null : (items[i].menu_id || items[i]._tempId);
+                        if (insertIntoItems(items[i].children, items[i].level ?? 0, parentIdForChildren)) return true;
                     }
                 }
                 return false;
