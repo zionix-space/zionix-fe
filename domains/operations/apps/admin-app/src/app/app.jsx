@@ -20,7 +20,14 @@ export function App() {
         {/* Form Management Screen */}
         <Route path="app-setup/forms" element={<FormManagementScreen />} />
         {/* 404 Not Found - Wildcard route */}
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<GlobalTopLoader />}>
+              <NotFoundPage />
+            </Suspense>
+          }
+        />
       </Routes>
     </Suspense>
   );

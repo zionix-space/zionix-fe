@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { BaseSpin, baseMessage, BaseButton, BaseModal, theme } from '@zionix-space/design-system';
+import { BaseSpin, bannerMessage, BaseModal, theme } from '@zionix-space/design-system';
 import { useStyles } from './MenuEditor.style';
 import TreeToolbar from './TreeToolbar';
 import MenuTree from './MenuTree';
@@ -218,7 +218,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         // Select the new item using its temp ID
         setSelectedKey(tempId);
-        baseMessage.success('Child menu item created. Enter a label to generate the key.');
+        bannerMessage.success('Child menu item created. Enter a label to generate the key.');
     };
 
     const handleDelete = async () => {
@@ -227,7 +227,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         // Find the selected item
         const selectedItem = findMenuItemByKey(menuData, selectedKey);
         if (!selectedItem) {
-            baseMessage.error('Menu item not found');
+            bannerMessage.error('Menu item not found');
             return;
         }
 
@@ -269,7 +269,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
             updateMenuData(updatedData);
             setSelectedKey(null);
-            baseMessage.success('Menu item removed');
+            bannerMessage.success('Menu item removed');
         }
     };
 
@@ -278,12 +278,12 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         if (saveMenusMutation.isLoading || updateMenuMutation.isLoading) return;
 
         if (!navDocId) {
-            baseMessage.error('Navigation document ID is missing. Please refresh the page.');
+            bannerMessage.error('Navigation document ID is missing. Please refresh the page.');
             return;
         }
 
         if (!menuData || !menuData.mainNavigation || menuData.mainNavigation.length === 0) {
-            baseMessage.error('No menu data to save');
+            bannerMessage.error('No menu data to save');
             return;
         }
 
@@ -377,18 +377,18 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
                 // Show success/error messages
                 if (errorCount === 0) {
-                    baseMessage.success(`Successfully updated ${successCount} menu(s)`);
+                    bannerMessage.success(`Successfully updated ${successCount} menu(s)`);
                     setIsDirty(false);
                     setHistory([]);
                     setHistoryIndex(-1);
                     setHasFieldChanges(false); // Reset field changes flag
                     refetch();
                 } else {
-                    baseMessage.warning(`Updated ${successCount} menu(s), but ${errorCount} failed`);
+                    bannerMessage.warning(`Updated ${successCount} menu(s), but ${errorCount} failed`);
                     refetch();
                 }
             } catch (error) {
-                baseMessage.error('Failed to update menus: ' + (error.message || 'Unknown error'));
+                bannerMessage.error('Failed to update menus: ' + (error.message || 'Unknown error'));
             }
         }
     };
@@ -398,12 +398,12 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         if (reorderMenusMutation.isLoading) return;
 
         if (!menuData || !menuData.mainNavigation || menuData.mainNavigation.length === 0) {
-            baseMessage.error('No menu data to reorder');
+            bannerMessage.error('No menu data to reorder');
             return;
         }
 
         if (affectedReorderItems.length === 0) {
-            baseMessage.warning('No items to reorder');
+            bannerMessage.warning('No items to reorder');
             return;
         }
 
@@ -411,7 +411,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             const applicationId = menuData.mainNavigation[0]?.application_id;
 
             if (!applicationId) {
-                baseMessage.error('Application ID not found');
+                bannerMessage.error('Application ID not found');
                 return;
             }
 
@@ -429,7 +429,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         } catch (error) {
             console.error('Reorder API failed:', error);
-            baseMessage.error('Failed to reorder menus: ' + (error.message || 'Unknown error'));
+            bannerMessage.error('Failed to reorder menus: ' + (error.message || 'Unknown error'));
         }
     }
 
@@ -481,9 +481,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            baseMessage.success('Menu configuration exported');
+            bannerMessage.success('Menu configuration exported');
         } catch (error) {
-            baseMessage.error('Failed to export menu configuration');
+            bannerMessage.error('Failed to export menu configuration');
         }
     };
 
@@ -506,9 +506,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     }
 
                     updateMenuData(importedData);
-                    baseMessage.success('Menu configuration imported successfully');
+                    bannerMessage.success('Menu configuration imported successfully');
                 } catch (error) {
-                    baseMessage.error('Failed to import: Invalid JSON format');
+                    bannerMessage.error('Failed to import: Invalid JSON format');
                 }
             };
             reader.readAsText(file);
@@ -527,7 +527,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         const dropItemOriginal = findMenuItemByKey(menuData, dropKey);
 
         if (!draggedItemOriginal || !dropItemOriginal) {
-            baseMessage.error('Failed to find items');
+            bannerMessage.error('Failed to find items');
             return;
         }
 
@@ -566,7 +566,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
         // Prevent moving menus between different applications
         if (draggedAppId && dropAppId && draggedAppId !== dropAppId) {
-            baseMessage.error('Cannot move menus between different applications');
+            bannerMessage.error('Cannot move menus between different applications');
             return;
         }
 
@@ -592,7 +592,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         removeItem(clonedData.mainNavigation);
 
         if (!draggedItem) {
-            baseMessage.error('Failed to find dragged item');
+            bannerMessage.error('Failed to find dragged item');
             return;
         }
 
@@ -636,7 +636,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 updateMenuData(updatedData);
                 setExpandedKeys([...expandedKeys, dropKey]);
                 setHasReorderChanges(true);
-                baseMessage.success('Item moved to top. Click "Reorder" to save changes.');
+                bannerMessage.success('Item moved to top. Click "Reorder" to save changes.');
             }
         } else {
             // Drop between nodes (as sibling)
@@ -685,9 +685,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             if (insertIntoItems(clonedData.mainNavigation)) {
                 updateMenuData(clonedData);
                 setHasReorderChanges(true); // Mark that reordering occurred
-                baseMessage.success('Item reordered successfully. Click "Reorder" to save changes.');
+                bannerMessage.success('Item reordered successfully. Click "Reorder" to save changes.');
             } else {
-                baseMessage.error('Failed to reorder item');
+                bannerMessage.error('Failed to reorder item');
             }
         }
     }

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { baseMessage } from '@zionix-space/design-system';
+import { bannerMessage } from '@zionix-space/design-system';
 import { menuService } from '../services/menuService';
 
 /**
@@ -26,7 +26,7 @@ export const useMenusQuery = (options = {}) => {
         retry: 2,
         refetchOnWindowFocus: false,
         onError: (error) => {
-            baseMessage.error(error.message || 'Failed to load menus');
+            bannerMessage.error(error.message || 'Failed to load menus');
         },
         ...options,
     });
@@ -47,7 +47,7 @@ export const useMenuQuery = (menuId, options = {}) => {
         retry: 2,
         refetchOnWindowFocus: false,
         onError: (error) => {
-            baseMessage.error(error.message || 'Failed to load menu');
+            bannerMessage.error(error.message || 'Failed to load menu');
         },
         ...options,
     });
@@ -66,10 +66,10 @@ export const useCreateMenuMutation = () => {
         onSuccess: (data) => {
             // Invalidate and refetch menus list
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
-            baseMessage.success('Menu created successfully! The menu list will refresh. Please select the menu again to see updated details.');
+            bannerMessage.success('Menu created successfully! The menu list will refresh. Please select the menu again to see updated details.');
         },
         onError: (error) => {
-            baseMessage.error(error.message || 'Failed to create menu');
+            bannerMessage.error(error.message || 'Failed to create menu');
         },
     });
 };
@@ -103,13 +103,13 @@ export const useUpdateMenuMutation = () => {
                     context.previousMenu
                 );
             }
-            baseMessage.error(error.message || 'Failed to update menu');
+            bannerMessage.error(error.message || 'Failed to update menu');
         },
         onSuccess: (data, variables) => {
             // Invalidate related queries
             queryClient.invalidateQueries({ queryKey: menuKeys.lists() });
             queryClient.invalidateQueries({ queryKey: menuKeys.detail(variables.menuId) });
-            baseMessage.success('Menu updated successfully');
+            bannerMessage.success('Menu updated successfully');
         },
     });
 };
@@ -128,10 +128,10 @@ export const useDeleteMenuMutation = () => {
             queryClient.removeQueries({ queryKey: menuKeys.detail(menuId) });
             // Invalidate and refetch all menu queries to refresh the list
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
-            baseMessage.success('Menu deleted successfully');
+            bannerMessage.success('Menu deleted successfully');
         },
         onError: (error) => {
-            baseMessage.error(error.message || 'Failed to delete menu');
+            bannerMessage.error(error.message || 'Failed to delete menu');
         },
     });
 };
@@ -153,10 +153,10 @@ export const useSaveMenusMutation = () => {
         onSuccess: () => {
             // Invalidate and refetch all menu queries to refresh the list
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
-            baseMessage.success('Menus saved successfully');
+            bannerMessage.success('Menus saved successfully');
         },
         onError: (error) => {
-            baseMessage.error(error.message || 'Failed to save menus');
+            bannerMessage.error(error.message || 'Failed to save menus');
         },
     });
 };
@@ -181,10 +181,10 @@ export const useReorderMenusMutation = () => {
         onSuccess: (data) => {
             // Invalidate and refetch all menu queries to refresh the list
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
-            baseMessage.success('Menus reordered successfully');
+            bannerMessage.success('Menus reordered successfully');
         },
         onError: (error) => {
-            baseMessage.error(error.message || 'Failed to reorder menus');
+            bannerMessage.error(error.message || 'Failed to reorder menus');
         },
     });
 };

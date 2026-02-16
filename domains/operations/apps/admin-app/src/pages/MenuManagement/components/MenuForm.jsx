@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { BaseForm, BaseInput, BaseInputNumber, BaseSwitch, BaseEmpty, BaseButton, BasePopconfirm, BaseRadio, BaseSelect, baseMessage } from '@zionix-space/design-system';
+import { BaseForm, BaseInput, BaseInputNumber, BaseSwitch, BaseEmpty, BaseButton, BasePopconfirm, BaseRadio, BaseSelect, bannerMessage } from '@zionix-space/design-system';
 import { useTheme } from '@zionix-space/design-system';
 import { useStyles } from './MenuForm.style';
 import { useCreateMenuMutation, useUpdateMenuMutation } from '../hooks/useMenuQuery';
@@ -188,7 +188,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             // Get nav_doc_id from menuData (root level _id)
             const navDocId = menuData?._id;
             if (!navDocId) {
-                baseMessage.error('Navigation document ID not found. Please refresh the page.');
+                bannerMessage.error('Navigation document ID not found. Please refresh the page.');
                 return;
             }
 
@@ -199,7 +199,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             const parentPath = getParentPath(menuData, selectedKey);
 
             if (!parentPath || parentPath.length === 0) {
-                baseMessage.error('Parent path not found. Cannot save menu.');
+                bannerMessage.error('Parent path not found. Cannot save menu.');
                 return;
             }
 
@@ -221,7 +221,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             const rootMenu = findItemById(menuData.mainNavigation, rootMenuId);
 
             if (!rootMenu) {
-                baseMessage.error('Application not found. Cannot save menu.');
+                bannerMessage.error('Application not found. Cannot save menu.');
                 return;
             }
 
