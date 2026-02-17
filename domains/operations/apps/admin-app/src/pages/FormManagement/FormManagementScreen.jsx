@@ -1,4 +1,8 @@
-import React from 'react'
+import { useState, useCallback, useEffect } from 'react';
+import { BaseLayout, BaseTypography, BaseDrawer } from '@zionix-space/design-system';
+import { useTheme } from '@zionix-space/design-system';
+import MenuTopBar from './components/MenuTopBar';
+import MenuSidebar from './components/MenuSidebar';
 import {
     FormBuilder,
     BuilderView,
@@ -11,6 +15,8 @@ import {
     formDB
 } from '@zionix-space/lowcode';
 import '@zionix-space/lowcode/styles';
+const { Content } = BaseLayout;
+const { Title, Paragraph } = BaseTypography;
 // Create BuilderView with all Ant Design components
 // Matches zionixlc's pattern exactly: rSuiteComponents.map(c => c.build())
 const builderComponents = antdComponents.map(c => c.build());
@@ -39,11 +45,17 @@ const getForm = async (formId) => {
  * Fully dynamic - loads form based on user selection
  */
 
-const FormManagementScreen = () => {
-    const [currentFormId, setCurrentFormId] = React.useState(() => getCurrentFormId());
+const MenuManagementScreen = () => {
+    const { token, isMobile } = useTheme();
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+    const [showJsonPreview, setShowJsonPreview] = useState(false);
+    const [menuData, setMenuData] = useState(null);
+    const [selectedMainMenuKey, setSelectedMainMenuKey] = useState('');
+    const [currentFormId, setCurrentFormId] = useState(() => getCurrentFormId());
 
     // Listen for form selection changes
-    React.useEffect(() => {
+    useEffect(() => {
         const handleStorageChange = () => {
             const newFormId = getCurrentFormId();
             setCurrentFormId(newFormId);
@@ -81,19 +93,125 @@ const FormManagementScreen = () => {
     };
 
     // Always show FormBuilder - it handles empty state internally
+    // Theme-aware background
+    const getLightPrimaryBg = () => {
+        return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
+    };
+
+    // Handle menu data updates from MenuEditor
+    const handleMenuDataChange = useCallback((data) => {
+        setMenuData(data);
+    }, []);
+
+    // Auto-select first main menu when data loads
+    useEffect(() => {
+        if (!selectedMainMenuKey && menuData?.mainNavigation?.length > 0) {
+            setSelectedMainMenuKey(menuData.mainNavigation[0].key);
+        }
+    }, [menuData, selectedMainMenuKey]);
+
+    // Mobile: Render with drawer for sidebar
+    if (isMobile) {
+        return (
+            <BaseLayout style={{ height: '100%', minHeight: '100vh' }}>
+                {/* Menu Management Top Bar */}
+                <MenuTopBar
+                    menuData={menuData}
+                    selectedMainMenuKey={selectedMainMenuKey}
+                    onSelectMainMenu={setSelectedMainMenuKey}
+                    isMobile={isMobile}
+                    onMenuClick={() => setMobileSidebarOpen(true)}
+                />
+
+                {/* Mobile Sidebar Drawer */}
+                <BaseDrawer
+                    placement="left"
+                    open={mobileSidebarOpen}
+                    onClose={() => setMobileSidebarOpen(false)}
+                    width="80%"
+                    styles={{ body: { padding: 0 } }}
+                >
+                    <MenuSidebar
+                        collapsed={false}
+                        onCollapse={() => { }}
+                        menuData={menuData}
+                        selectedMainMenuKey={selectedMainMenuKey}
+                        isMobile={isMobile}
+                        onItemClick={() => setMobileSidebarOpen(false)}
+                    />
+                </BaseDrawer>
+
+                {/* Menu Management Content */}
+                <Content
+                    style={{
+                        padding: '16px',
+                        background: getLightPrimaryBg(),
+                        overflow: 'auto',
+                        height: 'calc(100vh - 52px)',
+                    }}
+                >
+                    <FormBuilder
+                        key={currentFormId || 'no-form'} // Force remount when form changes
+                        view={builderView}
+                        getForm={currentFormId ? () => getForm(currentFormId) : null}
+                        formName={currentFormId || null}
+                        initialData={{}}
+                        validators={customValidators}
+                        actions={customActions}
+                        onFormDataChange={handleFormDataChange}
+                        useLayoutSystem={false}  // Disable layout system - use hardcoded version
+                    />
+                </Content>
+            </BaseLayout>
+        );
+    }
+
+    // Desktop: Render with fixed sidebar
     return (
-        <FormBuilder
-            key={currentFormId || 'no-form'} // Force remount when form changes
-            view={builderView}
-            getForm={currentFormId ? () => getForm(currentFormId) : null}
-            formName={currentFormId || null}
-            initialData={{}}
-            validators={customValidators}
-            actions={customActions}
-            onFormDataChange={handleFormDataChange}
-            useLayoutSystem={false}  // Disable layout system - use hardcoded version
-        />
+        <BaseLayout style={{ height: '100%', minHeight: '100vh' }}>
+            {/* Menu Management Top Bar */}
+            <MenuTopBar
+                menuData={menuData}
+                selectedMainMenuKey={selectedMainMenuKey}
+                onSelectMainMenu={setSelectedMainMenuKey}
+                isMobile={false}
+            />
+
+            {/* Layout Container */}
+            <BaseLayout style={{ height: 'calc(100vh - 52px)' }}>
+                {/* Menu Management Sidebar */}
+                <MenuSidebar
+                    collapsed={sidebarCollapsed}
+                    onCollapse={setSidebarCollapsed}
+                    menuData={menuData}
+                    selectedMainMenuKey={selectedMainMenuKey}
+                    isMobile={false}
+                />
+
+                {/* Menu Management Content */}
+                <Content
+                    style={{
+                        background: getLightPrimaryBg(),
+                        overflow: 'scroll',
+                        height: '100%',
+                        scrollBehavior: "smooth"
+                    }}
+                >
+                    <FormBuilder
+                        key={currentFormId || 'no-form'} // Force remount when form changes
+                        view={builderView}
+                        getForm={currentFormId ? () => getForm(currentFormId) : null}
+                        formName={currentFormId || null}
+                        initialData={{}}
+                        validators={customValidators}
+                        actions={customActions}
+                        onFormDataChange={handleFormDataChange}
+                        useLayoutSystem={false}  // Disable layout system - use hardcoded version
+                    />
+                </Content>
+            </BaseLayout>
+        </BaseLayout>
     );
 };
 
-export default FormManagementScreen;
+export default MenuManagementScreen;
