@@ -16,7 +16,7 @@ export function App() {
         {/* Menu Management Screen */}
         <Route path="app-setup/menus" element={<MenuManagementScreen />} />
         {/* Role Management Screen */}
-        <Route path="user-roles-setup/roles" element={<RoleManagementScreen />} />
+        <Route path="user-setup/roles" element={<RoleManagementScreen />} />
         {/* Form Management Screen */}
         <Route path="app-setup/forms" element={<FormManagementScreen />} />
         {/* 404 Not Found - Wildcard route */}
