@@ -14,6 +14,7 @@ export const formKeys = {
     detail: (id) => [...formKeys.details(), id],
     domains: () => [...formKeys.all, 'domains'],
     applications: (domainId) => [...formKeys.all, 'applications', domainId],
+    menus: (applicationId) => [...formKeys.all, 'menus', applicationId],
 };
 
 /**
@@ -146,3 +147,57 @@ export const useDeleteFormMutation = () => {
     });
 };
 
+
+/**
+ * Hook to fetch applications by domain ID
+ * @param {string} domainId - Domain ID
+ * @returns {Object} Query result with applications data
+ */
+export const useApplicationsQuery = (domainId, options = {}) => {
+    console.log('useApplicationsQuery hook called with domainId:', domainId);
+
+    const result = useQuery({
+        queryKey: formKeys.applications(domainId),
+        queryFn: () => formService.getApplicationsByDomain(domainId),
+        enabled: !!domainId,  // Only fetch if domainId exists
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 10 * 60 * 1000,
+        retry: 2,
+        refetchOnWindowFocus: false,
+        onError: (error) => {
+            console.error('useApplicationsQuery error:', error);
+            bannerMessage.error(error.message || 'Failed to load applications');
+        },
+        ...options,
+    });
+
+    console.log('useApplicationsQuery result:', result);
+    return result;
+};
+
+/**
+ * Hook to fetch menus by application ID
+ * @param {string} applicationId - Application ID
+ * @returns {Object} Query result with menus data
+ */
+export const useMenusQuery = (applicationId, options = {}) => {
+    console.log('useMenusQuery hook called with applicationId:', applicationId);
+
+    const result = useQuery({
+        queryKey: formKeys.menus(applicationId),
+        queryFn: () => formService.getMenusByApplication(applicationId),
+        enabled: !!applicationId,  // Only fetch if applicationId exists
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 10 * 60 * 1000,
+        retry: 2,
+        refetchOnWindowFocus: false,
+        onError: (error) => {
+            console.error('useMenusQuery error:', error);
+            bannerMessage.error(error.message || 'Failed to load menus');
+        },
+        ...options,
+    });
+
+    console.log('useMenusQuery result:', result);
+    return result;
+};

@@ -17,6 +17,30 @@ export const formService = {
     },
 
     /**
+     * Get applications by domain ID
+     * @param {string} domainId - Domain ID
+     * @returns {Promise<Object>} Applications list
+     */
+    getApplicationsByDomain: async (domainId) => {
+        console.log('Calling getApplicationsByDomain API with domainId:', domainId);
+        const response = await axiosClient.get(`/applications/domain/${domainId}?skip=0&limit=100`);
+        console.log('getApplicationsByDomain response:', response);
+        return response;
+    },
+
+    /**
+     * Get menus by application ID
+     * @param {string} applicationId - Application ID
+     * @returns {Promise<Object>} Menus list
+     */
+    getMenusByApplication: async (applicationId) => {
+        console.log('Calling getMenusByApplication API with applicationId:', applicationId);
+        const response = await axiosClient.get(`/applications/${applicationId}/menus?skip=0&limit=100&include_children=true`);
+        console.log('getMenusByApplication response:', response);
+        return response;
+    },
+
+    /**
      * Get menu by ID
      * @param {string} menuId - Menu ID
      * @returns {Promise<Object>} Menu data

@@ -1,18 +1,68 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState, useEffect } from 'react';
 import { BaseLayout, BaseMenu, useTheme, BaseSelect, BaseSpace } from '@zionix-space/design-system';
 import { useStyles } from './MenuTopBar.style';
-import { useDomainsQuery } from '../hooks/useFormQuery';
+import { useDomainsQuery, useApplicationsQuery } from '../hooks/useFormQuery';
 
-const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
+const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu, onApplicationChange }) => {
     const { token } = useTheme();
-    const { data: domainsData, isLoading: isLoadingDomains, error } = useDomainsQuery();
+    const [selectedDomain, setSelectedDomain] = useState(null);
+    const [selectedApplication, setSelectedApplication] = useState(null);
 
-    console.log('MenuTopBar - Domains Query:', { domainsData, isLoadingDomains, error });
+    const { data: domainsData, isLoading: isLoadingDomains } = useDomainsQuery();
+    const { data: applicationsData, isLoading: isLoadingApps } = useApplicationsQuery(selectedDomain);
 
     // Detect dark mode from Ant Design theme
     const isDarkMode = token.colorBgBase === '#000000' || token.colorBgContainer === '#141414';
 
     const styles = useStyles(token, isDarkMode);
+
+    // Transform domains data for select options
+    const domains = Array.isArray(domainsData)
+        ? domainsData.map(domain => ({
+            value: domain.id,
+            label: domain.name,
+        }))
+        : [];
+
+    // Transform applications data for select options
+    const applications = Array.isArray(applicationsData)
+        ? applicationsData.map(app => ({
+            value: app.id,
+            label: app.name,
+        }))
+        : [];
+
+    // Auto-select first domain on initial load
+    useEffect(() => {
+        if (domains.length > 0 && !selectedDomain) {
+            setSelectedDomain(domains[0].value);
+        }
+    }, [domains, selectedDomain]);
+
+    // Auto-select first application when applications load
+    useEffect(() => {
+        if (applications.length > 0 && !selectedApplication) {
+            const firstAppId = applications[0].value;
+            setSelectedApplication(firstAppId);
+            if (onApplicationChange) {
+                onApplicationChange(firstAppId);
+            }
+        }
+    }, [applications, selectedApplication, onApplicationChange]);
+
+    // Handle domain change
+    const handleDomainChange = (domainId) => {
+        setSelectedDomain(domainId);
+        setSelectedApplication(null); // Reset application when domain changes
+    };
+
+    // Handle application change
+    const handleApplicationChange = (applicationId) => {
+        setSelectedApplication(applicationId);
+        if (onApplicationChange) {
+            onApplicationChange(applicationId);
+        }
+    };
 
     // Inject CSS to override Ant Design Menu default styles
     useLayoutEffect(() => {
@@ -71,26 +121,9 @@ const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
         icon: item.icon ? <i className={item.icon} /> : null,
     })) || [];
 
-    // Transform domains data for select options
-    // API returns array directly, not nested under 'data'
-    const domains = Array.isArray(domainsData)
-        ? domainsData.map(domain => ({
-            value: domain.id,  // Use 'id' not '_id'
-            label: domain.name,
-        }))
-        : [];
-
-    console.log('Transformed domains:', domains);
-
-    const applications = [
-        { value: 'admin-app', label: 'Admin App' },
-        { value: 'user-app', label: 'User App' },
-        { value: 'reporting-app', label: 'Reporting App' },
-    ];
-
     return (
         <BaseLayout.Header style={styles.topBarStyle}>
-            <BaseSpace style={{ width: '100%', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', width: '100%', gap: '16px' }}>
                 {mainMenuItems.length > 0 && (
                     <div style={styles.navigationContainerStyle}>
                         <BaseMenu
@@ -103,11 +136,13 @@ const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
                         />
                     </div>
                 )}
-                <BaseSpace size="small">
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
                     <BaseSelect
                         placeholder="Domain"
                         style={{ width: 150 }}
                         allowClear
+                        value={selectedDomain}
+                        onChange={handleDomainChange}
                         options={domains}
                         loading={isLoadingDomains}
                     />
@@ -115,10 +150,14 @@ const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu }) => {
                         placeholder="Application"
                         style={{ width: 150 }}
                         allowClear
+                        value={selectedApplication}
+                        onChange={handleApplicationChange}
                         options={applications}
+                        loading={isLoadingApps}
+                        disabled={!selectedDomain}
                     />
-                </BaseSpace>
-            </BaseSpace>
+                </div>
+            </div>
         </BaseLayout.Header>
     );
 };

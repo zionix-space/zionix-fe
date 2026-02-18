@@ -3,6 +3,7 @@ import { BaseLayout, BaseTypography, BaseDrawer } from '@zionix-space/design-sys
 import { useTheme } from '@zionix-space/design-system';
 import MenuTopBar from './components/MenuTopBar';
 import MenuSidebar from './components/MenuSidebar';
+import { useMenusQuery } from './hooks/useFormQuery';
 import {
     FormBuilder,
     BuilderView,
@@ -49,10 +50,15 @@ const MenuManagementScreen = () => {
     const { token, isMobile } = useTheme();
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-    const [showJsonPreview, setShowJsonPreview] = useState(false);
-    const [menuData, setMenuData] = useState(null);
     const [selectedMainMenuKey, setSelectedMainMenuKey] = useState('');
     const [currentFormId, setCurrentFormId] = useState(() => getCurrentFormId());
+    const [selectedApplication, setSelectedApplication] = useState(null);
+
+    // Fetch menus based on selected application
+    const { data: menusData } = useMenusQuery(selectedApplication);
+
+    // Transform menus data to match expected format
+    const menuData = menusData ? { mainNavigation: menusData } : null;
 
     // Listen for form selection changes
     useEffect(() => {
@@ -98,17 +104,17 @@ const MenuManagementScreen = () => {
         return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
     };
 
-    // Handle menu data updates from MenuEditor
-    const handleMenuDataChange = useCallback((data) => {
-        setMenuData(data);
-    }, []);
-
     // Auto-select first main menu when data loads
     useEffect(() => {
         if (!selectedMainMenuKey && menuData?.mainNavigation?.length > 0) {
             setSelectedMainMenuKey(menuData.mainNavigation[0].key);
         }
     }, [menuData, selectedMainMenuKey]);
+
+    // Handle application selection from MenuTopBar
+    const handleApplicationChange = useCallback((applicationId) => {
+        setSelectedApplication(applicationId);
+    }, []);
 
     // Mobile: Render with drawer for sidebar
     if (isMobile) {
@@ -119,6 +125,7 @@ const MenuManagementScreen = () => {
                     menuData={menuData}
                     selectedMainMenuKey={selectedMainMenuKey}
                     onSelectMainMenu={setSelectedMainMenuKey}
+                    onApplicationChange={handleApplicationChange}
                     isMobile={isMobile}
                     onMenuClick={() => setMobileSidebarOpen(true)}
                 />
@@ -174,6 +181,7 @@ const MenuManagementScreen = () => {
                 menuData={menuData}
                 selectedMainMenuKey={selectedMainMenuKey}
                 onSelectMainMenu={setSelectedMainMenuKey}
+                onApplicationChange={handleApplicationChange}
                 isMobile={false}
             />
 
