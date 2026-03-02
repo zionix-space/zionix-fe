@@ -126,7 +126,7 @@ const MenuSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
 
   // Get selected main menu item
   const selectedMainMenu = menuData?.mainNavigation?.find(
-    item => item.key === selectedMainMenuKey
+    item => item.key === selectedMainMenuKey || item.application_id === selectedMainMenuKey
   );
 
   // Helper function to get badge count from badge object

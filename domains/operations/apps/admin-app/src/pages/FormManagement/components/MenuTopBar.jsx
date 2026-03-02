@@ -115,7 +115,8 @@ const MenuTopBar = ({ menuData, selectedMainMenuKey, onSelectMainMenu, onApplica
     }, [token]);
 
     // Get main navigation items (root level)
-    const mainMenuItems = menuData?.mainNavigation?.map(item => ({
+    const menuNav = menuData?.mainNavigation;
+    const mainMenuItems = menuNav?.mainNavigation?.map(item => ({
         key: item.key,
         label: item.label,
         icon: item.icon ? <i className={item.icon} /> : null,

@@ -128,7 +128,8 @@ const RoleSidebar = ({ collapsed, onCollapse, menuData, selectedMainMenuKey }) =
   }, [token, isDarkMode]);
 
   // Get selected main menu item
-  const selectedMainMenu = menuData?.mainNavigation?.find(
+  const menuNav = menuData?.mainNavigation;
+  const selectedMainMenu = menuNav?.mainNavigation?.find(
     item => item.key === selectedMainMenuKey
   );
 
