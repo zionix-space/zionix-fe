@@ -16,7 +16,7 @@ import MobileBottomNavigation from './MobileBottomNavigationAdapter';
 const MobileLayoutAdapter = ({ className = '', style = {} }) => {
     const { token } = useTheme();
     const { deviceType } = useResponsiveLayout();
-    const { isError, error } = useMenuData();
+    const { isError, error, shouldShowTopbar } = useMenuData();
     const location = useLocation();
 
     // Only render on mobile devices
@@ -32,7 +32,7 @@ const MobileLayoutAdapter = ({ className = '', style = {} }) => {
     return (
         <MobileLayout
             theme={{ token }}
-            header={<MobileHeader />}
+            header={shouldShowTopbar ? <MobileHeader /> : null}
             bottomNavigation={<MobileBottomNavigation />}
             loadingBar={<TopLoadingBar />}
             currentPath={location.pathname}

@@ -66,6 +66,8 @@ const RoleForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     icon: selectedItem.icon || '',
                     is_visible: selectedItem.is_visible ?? true,
                     is_active: selectedItem.is_active ?? true,
+                    showsidebar: selectedItem.showsidebar ?? true,
+                    showtopbar: selectedItem.showtopbar ?? true,
                     badgeString: typeof selectedItem.BaseBadge === 'string' ? selectedItem.BaseBadge : '',
                     badgeCount: typeof selectedItem.BaseBadge === 'object' && selectedItem.BaseBadge !== null ? selectedItem.BaseBadge.count : '',
                     badgeColor: typeof selectedItem.BaseBadge === 'object' && selectedItem.BaseBadge !== null ? selectedItem.BaseBadge.color : 'blue',
@@ -226,6 +228,8 @@ const RoleForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 parent_menu_id: selectedItem?.menu_id || "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                 menu_metadata: menuMetadata,
                 is_active: formValues.is_active ?? true,
+                showsidebar: formValues.showsidebar ?? true,
+                showtopbar: formValues.showtopbar ?? true,
                 access: ["read"],
                 key: formValues.key || "string",
                 BaseBadge: badgeValue || "string",
@@ -287,63 +291,85 @@ const RoleForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             </div>
 
             <BaseForm form={form} layout="vertical" onValuesChange={handleFieldChange} style={styles.form} size="middle" className="BaseMenu-editor-scrollbar">
+                {/* Basic Information Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Basic Information</div>
-                    <BaseForm.Item
-                        label="Key"
-                        name="key"
-                        rules={[
-                            { required: true, baseMessage: 'Key is required' },
-                            {
-                                validator: (_, value) => {
-                                    if (!value) return Promise.resolve();
-                                    const duplicates = allMenuKeys.filter((k) => k === value);
-                                    if (duplicates.length > 1) {
-                                        return Promise.reject(new Error('Key must be unique'));
-                                    }
-                                    return Promise.resolve();
+                    <div style={styles.gridRow2}>
+                        <BaseForm.Item
+                            label="Key"
+                            name="key"
+                            rules={[
+                                { required: true, baseMessage: 'Key is required' },
+                                {
+                                    validator: (_, value) => {
+                                        if (!value) return Promise.resolve();
+                                        const duplicates = allMenuKeys.filter((k) => k === value);
+                                        if (duplicates.length > 1) {
+                                            return Promise.reject(new Error('Key must be unique'));
+                                        }
+                                        return Promise.resolve();
+                                    },
                                 },
-                            },
-                        ]}
-                    >
-                        <BaseInput placeholder="Enter unique key" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Label" name="label" rules={[{ required: true, baseMessage: 'Label is required' }]}>
-                        <BaseInput placeholder="Enter label" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Description" name="description">
-                        <TextArea placeholder="Enter description" rows={3} />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Section Title" name="sectionTitle">
-                        <BaseInput placeholder="Enter section title (optional)" />
-                    </BaseForm.Item>
+                            ]}
+                        >
+                            <BaseInput placeholder="Enter unique key" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Label" name="label" rules={[{ required: true, baseMessage: 'Label is required' }]}>
+                            <BaseInput placeholder="Enter label" />
+                        </BaseForm.Item>
+                        <div style={styles.fullWidth}>
+                            <BaseForm.Item label="Description" name="description">
+                                <TextArea placeholder="Enter description" rows={3} />
+                            </BaseForm.Item>
+                        </div>
+                        <div style={styles.fullWidth}>
+                            <BaseForm.Item label="Section Title" name="sectionTitle">
+                                <BaseInput placeholder="Enter section title (optional)" />
+                            </BaseForm.Item>
+                        </div>
+                    </div>
                 </div>
 
+                {/* Routing & Navigation Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Routing & Navigation</div>
-                    <BaseForm.Item label="Route" name="route">
-                        <BaseInput placeholder="Enter route path" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Component" name="component">
-                        <BaseInput placeholder="Enter component name" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Icon" name="icon">
-                        <BaseInput placeholder="Enter icon class name" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Order Index" name="order_index">
-                        <BaseInputNumber placeholder="Enter order" style={{ width: '100%' }} min={0} />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Level" name="level">
-                        <BaseInputNumber placeholder="Level" style={{ width: '100%' }} disabled min={0} />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Visible" name="is_visible" valuePropName="checked">
-                        <BaseSwitch />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Active" name="is_active" valuePropName="checked">
-                        <BaseSwitch />
-                    </BaseForm.Item>
+                    <div style={styles.gridRow3}>
+                        <BaseForm.Item label="Route" name="route">
+                            <BaseInput placeholder="Enter route path" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Component" name="component">
+                            <BaseInput placeholder="Enter component name" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Icon" name="icon">
+                            <BaseInput placeholder="Enter icon class name" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Order Index" name="order_index">
+                            <BaseInputNumber placeholder="Enter order" style={{ width: '100%' }} min={0} />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Level" name="level">
+                            <BaseInputNumber placeholder="Level" style={{ width: '100%' }} disabled min={0} />
+                        </BaseForm.Item>
+                    </div>
+
+                    {/* Switch Group */}
+                    <div style={styles.switchGroup}>
+                        <div style={styles.switchGroupTitle}>Display Options</div>
+                        <BaseForm.Item label="Visible" name="is_visible" valuePropName="checked">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Active" name="is_active" valuePropName="checked">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Show Sidebar" name="showsidebar" valuePropName="checked" tooltip="Show sidebar when this menu is active">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Show Topbar" name="showtopbar" valuePropName="checked" tooltip="Show topbar when this menu is active">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                    </div>
                 </div>
 
+                {/* Badge Configuration Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>BaseBadge Configuration</div>
                     <BaseForm.Item label="BaseBadge Type">
@@ -361,7 +387,7 @@ const RoleForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     )}
 
                     {badgeType === 'object' && (
-                        <>
+                        <div style={styles.gridRow2}>
                             <BaseForm.Item label="BaseBadge Count" name="badgeCount">
                                 <BaseInput placeholder="Enter count" />
                             </BaseForm.Item>
@@ -376,36 +402,40 @@ const RoleForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                                     <BaseSelect.Option value="gold">Gold</BaseSelect.Option>
                                 </BaseSelect>
                             </BaseForm.Item>
-                        </>
+                        </div>
                     )}
                 </div>
 
+                {/* Application Settings Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Application Settings</div>
-                    <BaseForm.Item label="Application ID" name="application_id">
-                        <BaseInput placeholder="Enter application ID" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Application Name" name="application_name">
-                        <BaseInput placeholder="Enter application name" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Application Version" name="application_version">
-                        <BaseInput placeholder="Enter version" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Application Status" name="application_status">
-                        <BaseSelect placeholder="BaseSelect status">
-                            <BaseSelect.Option value="active">Active</BaseSelect.Option>
-                            <BaseSelect.Option value="inactive">Inactive</BaseSelect.Option>
-                            <BaseSelect.Option value="development">Development</BaseSelect.Option>
-                        </BaseSelect>
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Object ID" name="object_id">
-                        <BaseInput placeholder="Enter object ID" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="BaseMenu ID" name="menu_id">
-                        <BaseInput placeholder="Auto-generated" disabled />
-                    </BaseForm.Item>
+                    <div style={styles.gridRow2}>
+                        <BaseForm.Item label="Application ID" name="application_id">
+                            <BaseInput placeholder="Enter application ID" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Application Name" name="application_name">
+                            <BaseInput placeholder="Enter application name" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Application Version" name="application_version">
+                            <BaseInput placeholder="Enter version" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Application Status" name="application_status">
+                            <BaseSelect placeholder="BaseSelect status">
+                                <BaseSelect.Option value="active">Active</BaseSelect.Option>
+                                <BaseSelect.Option value="inactive">Inactive</BaseSelect.Option>
+                                <BaseSelect.Option value="development">Development</BaseSelect.Option>
+                            </BaseSelect>
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Object ID" name="object_id">
+                            <BaseInput placeholder="Enter object ID" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="BaseMenu ID" name="menu_id">
+                            <BaseInput placeholder="Auto-generated" disabled />
+                        </BaseForm.Item>
+                    </div>
                 </div>
 
+                {/* Metadata Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Metadata</div>
                     <BaseForm.Item label="BaseMenu Metadata (JSON)" name="menu_metadata">

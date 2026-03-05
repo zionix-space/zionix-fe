@@ -109,6 +109,8 @@ export const menuService = {
             if (item.level !== undefined) menuItem.level = item.level;
             if (item.is_visible !== undefined) menuItem.is_visible = item.is_visible;
             if (item.is_active !== undefined) menuItem.is_active = item.is_active;
+            if (item.showsidebar !== undefined) menuItem.showsidebar = item.showsidebar;
+            if (item.showtopbar !== undefined) menuItem.showtopbar = item.showtopbar;
 
             // Recursively transform children
             if (item.children && Array.isArray(item.children) && item.children.length > 0) {

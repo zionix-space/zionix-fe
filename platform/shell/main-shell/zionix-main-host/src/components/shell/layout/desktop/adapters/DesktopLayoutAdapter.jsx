@@ -16,7 +16,7 @@ import DesktopSidebar from './DesktopSidebarAdapter';
  */
 const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
     const { token, isDarkMode } = useTheme();
-    const { isError, error } = useMenuData();
+    const { isError, error, shouldShowSidebar, shouldShowTopbar } = useMenuData();
     const location = useLocation();
     const { sidebarCollapsed, setSidebarCollapsed, screenWidth } = useResponsiveLayout();
 
@@ -33,12 +33,14 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
                 setSidebarCollapsed,
                 screenWidth,
             }}
-            topBar={<DesktopTopBar />}
+            topBar={shouldShowTopbar ? <DesktopTopBar /> : null}
             sidebar={
-                <DesktopSidebar
-                    collapsed={sidebarCollapsed}
-                    onCollapse={setSidebarCollapsed}
-                />
+                shouldShowSidebar ? (
+                    <DesktopSidebar
+                        collapsed={sidebarCollapsed}
+                        onCollapse={setSidebarCollapsed}
+                    />
+                ) : null
             }
             breadcrumb={<DynamicBreadcrumb />}
             loadingBar={<TopLoadingBar />}

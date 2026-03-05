@@ -12,13 +12,13 @@ export function App() {
     <Suspense fallback={<GlobalTopLoader />}>
       <Routes>
         {/* Kitchen Sink - Component Showcase */}
-        <Route path="app-setup/sink" element={<KitchenSink />} />
+        <Route path="app-Configuration/sink" element={<KitchenSink />} />
         {/* Menu Management Screen */}
-        <Route path="app-setup/menus" element={<MenuManagementScreen />} />
+        <Route path="app-Configuration/menus" element={<MenuManagementScreen />} />
         {/* Role Management Screen */}
-        <Route path="user-setup/roles" element={<RoleManagementScreen />} />
+        <Route path="user-management/roles" element={<RoleManagementScreen />} />
         {/* Form Management Screen */}
-        <Route path="app-setup/forms" element={<FormManagementScreen />} />
+        <Route path="app-Configuration/forms" element={<FormManagementScreen />} />
         {/* 404 Not Found - Wildcard route */}
         <Route
           path="*"

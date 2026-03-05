@@ -58,6 +58,8 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     icon: selectedItem.icon || '',
                     is_visible: selectedItem.is_visible ?? true,
                     is_active: selectedItem.is_active ?? true,
+                    showsidebar: selectedItem.showsidebar ?? true,
+                    showtopbar: selectedItem.showtopbar ?? true,
                     badgeString: typeof selectedItem.badge === 'string' ? selectedItem.badge : '',
                     badgeCount: typeof selectedItem.badge === 'object' && selectedItem.badge !== null ? selectedItem.badge.count : '',
                     badgeColor: typeof selectedItem.badge === 'object' && selectedItem.badge !== null ? selectedItem.badge.color : 'blue',
@@ -289,6 +291,8 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 is_visible: formValues.is_visible ?? true,
                 parent_menu_id: parentMenuId,
                 is_active: formValues.is_active ?? true,
+                showsidebar: formValues.showsidebar ?? true,
+                showtopbar: formValues.showtopbar ?? true,
                 access: ["read"],
                 key: selectedKey || "",
                 badge: badgeValue || "",
@@ -398,51 +402,73 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             </div>
 
             <BaseForm form={form} layout="vertical" onValuesChange={handleFieldChange} style={styles.form} size="middle" className="menu-editor-scrollbar">
+                {/* Basic Information Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Basic Information</div>
-                    <BaseForm.Item
-                        label="Key"
-                        name="key"
-                        tooltip="Auto-generated from label"
-                    >
-                        <BaseInput placeholder="Auto-generated from label" disabled />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Label" name="label" rules={[{ required: true, message: 'Label is required' }]}>
-                        <BaseInput placeholder="Enter label" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Description" name="description">
-                        <TextArea placeholder="Enter description" rows={3} />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Section Title" name="sectionTitle">
-                        <BaseInput placeholder="Enter section title (optional)" />
-                    </BaseForm.Item>
+                    <div style={styles.gridRow2}>
+                        <BaseForm.Item
+                            label="Key"
+                            name="key"
+                            tooltip="Auto-generated from label"
+                        >
+                            <BaseInput placeholder="Auto-generated from label" disabled />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Label" name="label" rules={[{ required: true, message: 'Label is required' }]}>
+                            <BaseInput placeholder="Enter label" />
+                        </BaseForm.Item>
+                        <div style={styles.fullWidth}>
+                            <BaseForm.Item label="Description" name="description">
+                                <TextArea placeholder="Enter description" rows={3} />
+                            </BaseForm.Item>
+                        </div>
+                        <div style={styles.fullWidth}>
+                            <BaseForm.Item label="Section Title" name="sectionTitle">
+                                <BaseInput placeholder="Enter section title (optional)" />
+                            </BaseForm.Item>
+                        </div>
+                    </div>
                 </div>
 
+                {/* Routing & Navigation Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Routing & Navigation</div>
-                    <BaseForm.Item label="Route" name="route">
-                        <BaseInput placeholder="Enter route path" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Component" name="component">
-                        <BaseInput placeholder="Enter component name" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Icon" name="icon">
-                        <BaseInput placeholder="Enter icon class name" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Order Index" name="order_index">
-                        <BaseInputNumber placeholder="Enter order" style={{ width: '100%' }} min={0} />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Level" name="level">
-                        <BaseInputNumber placeholder="Level" style={{ width: '100%' }} disabled min={0} />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Visible" name="is_visible" valuePropName="checked">
-                        <BaseSwitch />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Active" name="is_active" valuePropName="checked">
-                        <BaseSwitch />
-                    </BaseForm.Item>
+                    <div style={styles.gridRow3}>
+                        <BaseForm.Item label="Route" name="route">
+                            <BaseInput placeholder="Enter route path" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Component" name="component">
+                            <BaseInput placeholder="Enter component name" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Icon" name="icon">
+                            <BaseInput placeholder="Enter icon class name" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Order Index" name="order_index">
+                            <BaseInputNumber placeholder="Enter order" style={{ width: '100%' }} min={0} />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Level" name="level">
+                            <BaseInputNumber placeholder="Level" style={{ width: '100%' }} disabled min={0} />
+                        </BaseForm.Item>
+                    </div>
+
+                    {/* Switch Group */}
+                    <div style={styles.switchGroup}>
+                        <div style={styles.switchGroupTitle}>Display Options</div>
+                        <BaseForm.Item label="Visible" name="is_visible" valuePropName="checked">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Active" name="is_active" valuePropName="checked">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Show Sidebar" name="showsidebar" valuePropName="checked" tooltip="Show sidebar when this menu is active">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Show Topbar" name="showtopbar" valuePropName="checked" tooltip="Show topbar when this menu is active">
+                            <BaseSwitch />
+                        </BaseForm.Item>
+                    </div>
                 </div>
 
+                {/* Badge Configuration Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Badge Configuration</div>
                     <BaseForm.Item label="Badge Type">
@@ -460,7 +486,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     )}
 
                     {badgeType === 'object' && (
-                        <>
+                        <div style={styles.gridRow2}>
                             <BaseForm.Item label="Badge Count" name="badgeCount">
                                 <BaseInput placeholder="Enter count" />
                             </BaseForm.Item>
@@ -475,36 +501,40 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                                     <BaseSelect.Option value="gold">Gold</BaseSelect.Option>
                                 </BaseSelect>
                             </BaseForm.Item>
-                        </>
+                        </div>
                     )}
                 </div>
 
+                {/* Application Settings Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Application Settings</div>
-                    <BaseForm.Item label="Application ID" name="application_id" tooltip="Read-only system field">
-                        <BaseInput placeholder="System managed" disabled />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Application Name" name="application_name">
-                        <BaseInput placeholder="Enter application name" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Application Version" name="application_version">
-                        <BaseInput placeholder="Enter version" />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Application Status" name="application_status">
-                        <BaseSelect placeholder="BaseSelect status">
-                            <BaseSelect.Option value="active">Active</BaseSelect.Option>
-                            <BaseSelect.Option value="inactive">Inactive</BaseSelect.Option>
-                            <BaseSelect.Option value="development">Development</BaseSelect.Option>
-                        </BaseSelect>
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Object ID" name="object_id" tooltip="Auto-generated by backend">
-                        <BaseInput placeholder="Auto-generated" disabled />
-                    </BaseForm.Item>
-                    <BaseForm.Item label="Menu ID" name="menu_id" tooltip="Auto-generated by backend">
-                        <BaseInput placeholder="Auto-generated" disabled />
-                    </BaseForm.Item>
+                    <div style={styles.gridRow2}>
+                        <BaseForm.Item label="Application ID" name="application_id" tooltip="Read-only system field">
+                            <BaseInput placeholder="System managed" disabled />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Application Name" name="application_name">
+                            <BaseInput placeholder="Enter application name" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Application Version" name="application_version">
+                            <BaseInput placeholder="Enter version" />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Application Status" name="application_status">
+                            <BaseSelect placeholder="BaseSelect status">
+                                <BaseSelect.Option value="active">Active</BaseSelect.Option>
+                                <BaseSelect.Option value="inactive">Inactive</BaseSelect.Option>
+                                <BaseSelect.Option value="development">Development</BaseSelect.Option>
+                            </BaseSelect>
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Object ID" name="object_id" tooltip="Auto-generated by backend">
+                            <BaseInput placeholder="Auto-generated" disabled />
+                        </BaseForm.Item>
+                        <BaseForm.Item label="Menu ID" name="menu_id" tooltip="Auto-generated by backend">
+                            <BaseInput placeholder="Auto-generated" disabled />
+                        </BaseForm.Item>
+                    </div>
                 </div>
 
+                {/* Metadata Section */}
                 <div style={styles.section}>
                     <div style={styles.sectionTitle}>Metadata</div>
                     <BaseForm.Item label="Menu Metadata (JSON)" name="menu_metadata">

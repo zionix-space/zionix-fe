@@ -384,6 +384,35 @@ export const useMenuData = () => {
         return buildMenuRoute(sidebarMenus, key, baseRoute);
     };
 
+    /**
+     * Get the currently selected sidebar menu item
+     * @returns {Object|null} Selected sidebar menu item or null
+     */
+    const selectedSidebarMenuItem = useMemo(() => {
+        if (!selectedSidebarKey || sidebarMenus.length === 0) return null;
+        return findMenuByKey(sidebarMenus, selectedSidebarKey);
+    }, [selectedSidebarKey, sidebarMenus]);
+
+    /**
+     * Check if sidebar should be shown based on current menu item
+     * @returns {boolean} True if sidebar should be shown
+     */
+    const shouldShowSidebar = useMemo(() => {
+        if (!selectedSidebarMenuItem) return true; // Default to showing sidebar
+        // Check if showsidebar field exists and use it, otherwise default to true
+        return selectedSidebarMenuItem.showsidebar !== false;
+    }, [selectedSidebarMenuItem]);
+
+    /**
+     * Check if topbar should be shown based on current menu item
+     * @returns {boolean} True if topbar should be shown
+     */
+    const shouldShowTopbar = useMemo(() => {
+        if (!selectedSidebarMenuItem) return true; // Default to showing topbar
+        // Check if showtopbar field exists and use it, otherwise default to true
+        return selectedSidebarMenuItem.showtopbar !== false;
+    }, [selectedSidebarMenuItem]);
+
     return {
         // Data
         mainMenus,
@@ -403,6 +432,9 @@ export const useMenuData = () => {
         selectedSidebarKey,
         openSidebarKeys,
         isMenuCollapsed,
+        selectedSidebarMenuItem,
+        shouldShowSidebar,
+        shouldShowTopbar,
 
         // Actions
         selectMainMenu,
