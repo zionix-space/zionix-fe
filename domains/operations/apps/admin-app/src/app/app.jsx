@@ -5,6 +5,7 @@ import { GlobalTopLoader, NotFoundPage } from '@zionix-space/design-system';
 const MenuManagementScreen = lazy(() => import('../pages/MenuManagement'));
 const RoleManagementScreen = lazy(() => import('../pages/RoleManagement'));
 const FormManagementScreen = lazy(() => import('../pages/FormManagement'));
+const WorkfFlowManagementScreen = lazy(() => import('../pages/WorkFlowManagement'));
 const KitchenSink = lazy(() => import('../pages/KitchenSink/KitchenSinkScreen'));
 
 export function App() {
@@ -19,6 +20,8 @@ export function App() {
         <Route path="user-management/roles" element={<RoleManagementScreen />} />
         {/* Form Management Screen */}
         <Route path="app-Configuration/forms" element={<FormManagementScreen />} />
+        {/* Workflow Management Screen */}
+        <Route path="integration-settings/workflows" element={<WorkfFlowManagementScreen />} />
         {/* 404 Not Found - Wildcard route */}
         <Route
           path="*"
