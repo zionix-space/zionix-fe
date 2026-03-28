@@ -7,47 +7,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- <link rel="icon" type="image/x-icon" href="favicon.ico" /> -->
     <link rel="icon" type="image/x-icon" href="./assets/zionix-logo.svg" />
-    
+
     <!-- Initial theme-matching styles to prevent white screen flash -->
     <style>
       /* CSS Custom Properties for dynamic theming */
       :root {
-        --loader-primary: #001968;
-        --loader-primary-light: #001968dd;
-        --loader-primary-shadow: rgba(0, 25, 104, 0.2);
+        --loader-primary: #0565ff;
+        --loader-primary-light: ##0565ff;
+        --loader-primary-shadow: rgba(206, 199, 250, 0.2);
         --loader-bg: #ffffff;
         --loader-text: #444444;
         --loader-bar-bg: #e0e0e0;
       }
-      
+
       /* Dark mode overrides */
-      [data-theme="dark"] {
+      [data-theme='dark'] {
         --loader-bg: #141414;
         --loader-text: #e0e0e0;
         --loader-bar-bg: #2a2a2a;
       }
-      
+
       /* Reset and base styles */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-      
-      html, body {
+
+      html,
+      body {
         height: 100%;
-        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          'Helvetica Neue', Arial, sans-serif;
         background: var(--loader-bg);
         color: var(--loader-text);
         overflow: hidden; /* Prevent scrollbars during initial load */
       }
-      
+
       #main-module {
         height: 100vh;
         width: 100vw;
         background: var(--loader-bg);
       }
-      
+
       /* Initial loading animation with theme colors */
       .initial-loading {
         position: fixed;
@@ -61,29 +63,29 @@
         text-align: center;
         z-index: 9999;
       }
-      
-      .initial-spinner {
-        width: clamp(48px, 15vw, 80px);
-        height: clamp(48px, 15vw, 80px);
-        border: clamp(5px, 1.5vw, 8px) solid transparent;
-        border-top: clamp(5px, 1.5vw, 8px) solid var(--loader-primary);
-        border-radius: 50%;
-        margin-bottom: clamp(1rem, 4vw, 2rem);
-        animation: spin 1s linear infinite;
-        box-shadow: 0 0 clamp(8px, 2vw, 12px) var(--loader-primary-shadow);
-        will-change: transform;
+
+      /* Logo/Brand name */
+      .initial-brand {
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        font-weight: 700;
+        color: var(--loader-primary);
+        margin-bottom: clamp(2rem, 5vw, 3rem);
+        letter-spacing: -0.02em;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          sans-serif;
       }
-      
+
+      /* Premium bar loader */
       .initial-bar {
         width: clamp(200px, 80vw, 400px);
-        height: clamp(4px, 1vw, 5px);
+        height: clamp(3px, 0.8vw, 4px);
         background: var(--loader-bar-bg);
         border-radius: clamp(2px, 0.5vw, 4px);
         position: relative;
         overflow: hidden;
-        margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
+        margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
       }
-      
+
       .initial-bar::before {
         content: '';
         position: absolute;
@@ -91,30 +93,36 @@
         left: 0;
         height: 100%;
         width: 40%;
-        background: linear-gradient(90deg, var(--loader-primary), var(--loader-primary-light));
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--loader-primary),
+          var(--loader-primary),
+          transparent
+        );
         border-radius: clamp(2px, 0.5vw, 4px);
-        animation: shimmer 1.2s linear infinite;
-        filter: blur(1px);
+        animation: shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        box-shadow: 0 0 clamp(8px, 2vw, 12px) var(--loader-primary-shadow);
       }
-      
+
       .initial-text {
-        margin-top: clamp(1rem, 3vw, 1.5rem);
-        font-size: clamp(0.875rem, 2.5vw, 1.1rem);
+        margin-top: clamp(0.5rem, 2vw, 1rem);
+        font-size: clamp(0.875rem, 2.5vw, 1rem);
         color: var(--loader-text);
         font-weight: 400;
         letter-spacing: 0.3px;
+        opacity: 0.7;
       }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-      
+
       @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(250%); }
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(350%);
+        }
       }
-      
+
       /* Smooth transition when React takes over */
       .fade-out {
         opacity: 0;
@@ -123,14 +131,15 @@
     </style>
     <script>
       // Apply theme settings from localStorage dynamically
-      (function() {
+      (function () {
         try {
           // Check dark mode
-          const isDarkMode = localStorage.getItem('zionix-theme-mode') === 'dark';
+          const isDarkMode =
+            localStorage.getItem('zionix-theme-mode') === 'dark';
           if (isDarkMode) {
             document.documentElement.setAttribute('data-theme', 'dark');
           }
-          
+
           // Apply primary color
           const savedColor = localStorage.getItem('zionix-theme-primary-color');
           if (savedColor) {
@@ -141,11 +150,20 @@
               const b = parseInt(hex.slice(5, 7), 16);
               return `rgba(${r}, ${g}, ${b}, ${alpha})`;
             };
-            
+
             // Update CSS custom properties
-            document.documentElement.style.setProperty('--loader-primary', savedColor);
-            document.documentElement.style.setProperty('--loader-primary-light', savedColor + 'dd');
-            document.documentElement.style.setProperty('--loader-primary-shadow', hexToRgba(savedColor, 0.2));
+            document.documentElement.style.setProperty(
+              '--loader-primary',
+              savedColor
+            );
+            document.documentElement.style.setProperty(
+              '--loader-primary-light',
+              savedColor + 'dd'
+            );
+            document.documentElement.style.setProperty(
+              '--loader-primary-shadow',
+              hexToRgba(savedColor, 0.2)
+            );
           }
         } catch (e) {
           // Ignore errors, use default values
@@ -157,15 +175,15 @@
     <div id="main-module">
       <!-- Initial loading state that shows immediately -->
       <div id="html-loader" class="initial-loading">
-        <div class="initial-spinner"></div>
+        <div class="initial-brand">Zionix</div>
         <div class="initial-bar"></div>
-        <div class="initial-text">Loading…</div>
+        <div class="initial-text">Loading your workspace…</div>
       </div>
     </div>
-    
+
     <script>
       // Remove HTML loader when React is ready
-      window.addEventListener('DOMContentLoaded', function() {
+      window.addEventListener('DOMContentLoaded', function () {
         // This will be called when the DOM is ready
         // The actual removal will be handled by main.jsx
       });

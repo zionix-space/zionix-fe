@@ -64,7 +64,7 @@ const AppWithLoader = () => {
     // Get theme settings from localStorage
     const primaryColor = typeof window !== 'undefined'
       ? (localStorage.getItem('zionix-theme-primary-color') || '#001968')
-      : '#001968';
+      : '#0565ff';
     const isDarkMode = typeof window !== 'undefined'
       ? (localStorage.getItem('zionix-theme-mode') === 'dark')
       : false;

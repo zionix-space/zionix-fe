@@ -9,7 +9,7 @@ const showInitialLoader = () => {
   }
 
   // Get theme settings from localStorage
-  const primaryColor = localStorage.getItem('zionix-theme-primary-color') || '#001968';
+  const primaryColor = localStorage.getItem('zionix-theme-primary-color') || '#0565ff';
   const isDarkMode = localStorage.getItem('zionix-theme-mode') === 'dark';
 
   // Theme-aware colors
@@ -30,26 +30,25 @@ const showInitialLoader = () => {
       background: ${bgColor};
       z-index: 9999;
     ">
-      <div class="loader-spinner" style="
-        width: clamp(48px, 15vw, 80px);
-        height: clamp(48px, 15vw, 80px);
-        border: clamp(5px, 1.5vw, 8px) solid transparent;
-        border-top: clamp(5px, 1.5vw, 8px) solid;
-        border-image: linear-gradient(90deg, ${primaryColor}, ${primaryColor}dd) 1;
-        border-radius: 50%;
-        margin-bottom: clamp(1rem, 4vw, 2rem);
-        animation: spin 1s linear infinite;
-        box-shadow: 0 0 clamp(8px, 2vw, 12px) ${primaryColor}33;
-        will-change: transform;
-      "></div>
-      <div class="loader-bar" style="
+      <!-- Brand Name -->
+      <div style="
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        font-weight: 700;
+        color: ${primaryColor};
+        margin-bottom: clamp(2rem, 5vw, 3rem);
+        letter-spacing: -0.02em;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      ">Zionix</div>
+      
+      <!-- Premium Bar Loader -->
+      <div style="
         width: clamp(200px, 80vw, 400px);
-        height: clamp(4px, 1vw, 5px);
+        height: clamp(3px, 0.8vw, 4px);
         background: ${barBgColor};
         border-radius: clamp(2px, 0.5vw, 4px);
         position: relative;
         overflow: hidden;
-        margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
+        margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
       ">
         <div style="
           position: absolute;
@@ -57,25 +56,27 @@ const showInitialLoader = () => {
           left: 0;
           height: 100%;
           width: 40%;
-          background: linear-gradient(90deg, ${primaryColor}, ${primaryColor}dd);
+          background: linear-gradient(90deg, transparent, ${primaryColor}, ${primaryColor}, transparent);
           border-radius: clamp(2px, 0.5vw, 4px);
-          animation: shimmer 1.2s linear infinite;
-          filter: blur(1px);
+          animation: shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+          box-shadow: 0 0 clamp(8px, 2vw, 12px) ${primaryColor}33;
         "></div>
       </div>
-      <div class="loader-text" style="
-        margin-top: clamp(1rem, 3vw, 1.5rem);
-        font-size: clamp(0.875rem, 2.5vw, 1.1rem);
+      
+      <!-- Loading Text -->
+      <div style="
+        margin-top: clamp(0.5rem, 2vw, 1rem);
+        font-size: clamp(0.875rem, 2.5vw, 1rem);
         color: ${textColor};
-      ">Loading...</div>
+        font-weight: 400;
+        letter-spacing: 0.3px;
+        opacity: 0.7;
+      ">Loading your workspace…</div>
+      
       <style>
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
-          100% { transform: translateX(250%); }
+          100% { transform: translateX(350%); }
         }
       </style>
     </div>
