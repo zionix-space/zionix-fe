@@ -98,8 +98,8 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
                 // Clear authentication data
                 localStorage.clear();
                 sessionStorage.clear();
-                // Redirect to login page
-                window.location.href = '/login';
+                // Redirect to home page
+                window.location.href = '/';
                 break;
             default:
                 console.log('Unknown menu action:', key);
