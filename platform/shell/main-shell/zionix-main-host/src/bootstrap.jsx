@@ -9,6 +9,9 @@ import "@fontsource/inter/800.css";
 // Import Remix Icons CSS
 import 'remixicon/fonts/remixicon.css';
 
+// Import Design System styles
+import '@zionix-space/design-system/styles.css';
+
 // Import custom styles last to allow overrides
 import "./styles.scss";
 import React, { StrictMode, useState, useEffect, useRef } from "react";

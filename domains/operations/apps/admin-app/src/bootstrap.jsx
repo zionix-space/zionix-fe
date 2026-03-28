@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
 import { MicrofrontendLoader } from '@zionix-space/design-system';
+import '@zionix-space/design-system/styles.css';
 import App from "./app/app";
 import { initializeWarningSuppression } from "./utils/suppressWarnings";
 

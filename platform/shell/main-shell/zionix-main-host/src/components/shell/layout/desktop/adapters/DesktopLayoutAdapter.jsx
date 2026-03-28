@@ -1,6 +1,7 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@zionix-space/design-system';
 import { MainLayout } from '@zionix-space/design-system/layouts';
+import { GlobalTopLoader } from '@zionix-space/design-system';
 import { useMenuData } from '../../../../../data/hooks/menu';
 import { QueryErrorFallback } from '../../../../common/QueryErrorBoundary';
 import TopLoadingBar from '../../../../common/loaders/TopLoadingBar';
@@ -16,7 +17,7 @@ import { useMemo } from 'react';
  * - Design System's MainLayout (hierarchical menu path array)
  */
 const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
-    const { token, isDarkMode } = useTheme();
+    const { token, isDarkMode, toggleTheme } = useTheme();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -82,6 +83,29 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
         }
     };
 
+    // Handle user menu clicks (profile, settings, logout)
+    const handleUserMenuClick = (key) => {
+        switch (key) {
+            case 'profile':
+                // Navigate to profile page
+                navigate('/apps/profile');
+                break;
+            case 'settings':
+                // Navigate to settings page
+                navigate('/apps/settings');
+                break;
+            case 'logout':
+                // Clear authentication data
+                localStorage.clear();
+                sessionStorage.clear();
+                // Redirect to login page
+                window.location.href = '/login';
+                break;
+            default:
+                console.log('Unknown menu action:', key);
+        }
+    };
+
     // Show error fallback if menu loading failed
     if (isError) {
         return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
@@ -89,17 +113,7 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
 
     // Show loading state
     if (isLoading || !completeMenuData) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh'
-            }}>
-                <TopLoadingBar />
-                Loading...
-            </div>
-        );
+        return <GlobalTopLoader />;
     }
 
     // Transform menu data structure for modern layout
@@ -111,7 +125,7 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
 
     return (
         <MainLayout
-            theme={{ token, isDarkMode }}
+            theme={{ token, isDarkMode, toggleTheme }}
             menuData={menuDataForLayout}
             loadingBar={<TopLoadingBar />}
             currentPath={location.pathname}
@@ -121,6 +135,7 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
             // Controlled props - infinite level support
             selectedMenuPath={selectedMenuPath}
             onMenuSelect={handleMenuSelect}
+            onUserMenuClick={handleUserMenuClick}
         >
             <Outlet />
         </MainLayout>

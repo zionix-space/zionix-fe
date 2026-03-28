@@ -1,8 +1,8 @@
 export const useStyles = (token, isDarkMode) => ({
     container: {
-        padding: '24px',
+
         minHeight: '100vh',
-        background: token.colorBgLayout, // Use theme-based background
+
     },
 
     // Profile Card (Left Sidebar)
