@@ -1,9 +1,20 @@
+
+import "../src/styles.scss";
 import { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
 import { MicrofrontendLoader } from '@zionix-space/design-system';
 import '@zionix-space/design-system/styles.css';
 import App from "./app/app";
 import { initializeWarningSuppression } from "./utils/suppressWarnings";
+
+// Suppress ResizeObserver errors (harmless, caused by React rendering cycles)
+const resizeObserverErrorHandler = (e) => {
+  if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
+    e.stopImmediatePropagation();
+    return;
+  }
+};
+window.addEventListener('error', resizeObserverErrorHandler);
 
 // Performance optimization: Preload critical resources
 const preloadCriticalResources = () => {

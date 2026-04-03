@@ -1,0 +1,531 @@
+{
+  "name": "DomainsView",
+  "version": "1.0.0",
+  "form": {
+    "key": "domainsScreen",
+    "type": "Screen",
+    "props": {},
+    "access": [],
+    "children": [
+      {
+        "type": "AntHeader",
+        "key": "antHeader__iSJebP0j",
+        "props": {
+          "content": {
+            "value": "All Domains"
+          },
+          "headerSize": {
+            "value": "h3"
+          },
+          "type": {
+            "value": ""
+          }
+        },
+        "children": [],
+        "tooltipProps": {}
+      },
+      {
+        "key": "headerContainer",
+        "type": "AntContainer",
+        "access": [],
+        "props": {
+          "direction": {
+            "value": "horizontal"
+          },
+          "gap": {
+            "value": "12px"
+          }
+        },
+        "style": {
+          "desktop": {
+            "padding": "16px",
+            "backgroundColor": "#ffffff",
+            "borderRadius": "8px",
+            "marginBottom": "16px"
+          }
+        },
+        "children": [
+          {
+            "type": "AntContainer",
+            "key": "antContainer__ylP6vVFJ",
+            "props": {
+              "disabled": {
+                "value": false
+              },
+              "readOnly": {
+                "value": false
+              }
+            },
+            "children": [
+              {
+                "key": "statusFilter",
+                "type": "AntSelect",
+                "props": {
+                  "placeholder": {
+                    "value": "All Status"
+                  },
+                  "size": {
+                    "value": "large"
+                  },
+                  "allowClear": {
+                    "value": true
+                  },
+                  "options": {
+                    "value": [
+                      {
+                        "label": "All Status",
+                        "value": ""
+                      },
+                      {
+                        "label": "Active",
+                        "value": "Active"
+                      },
+                      {
+                        "label": "Pending",
+                        "value": "Pending"
+                      },
+                      {
+                        "label": "Inactive",
+                        "value": "Inactive"
+                      }
+                    ]
+                  }
+                },
+                "style": {
+                  "desktop": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "key": "searchInput",
+                "type": "AntInput",
+                "props": {
+                  "placeholder": {
+                    "value": "Search by name, ID, or description"
+                  },
+                  "size": {
+                    "value": "large"
+                  },
+                  "allowClear": {
+                    "value": true
+                  },
+                  "suffix": {
+                    "value": "ri-search-line"
+                  }
+                },
+                "style": {
+                  "desktop": {
+                    "flex": "1"
+                  }
+                },
+                "children": []
+              }
+            ],
+            "tooltipProps": {},
+            "css": {
+              "any": {
+                "object": {
+                  "flexDirection": "row",
+                  "width": "80%",
+                  "padding": "0px"
+                },
+                "string": "flex-direction: row; width: 80%; padding: 0px;"
+              },
+              "mobile": {
+                "object": {
+                  "flexDirection": "column",
+                  "width": "100%"
+                },
+                "string": "flex-direction: column; width: 100%;"
+              }
+            }
+          },
+          {
+            "type": "AntContainer",
+            "key": "antContainer__mEWcTV65",
+            "props": {
+              "disabled": {
+                "value": false
+              },
+              "readOnly": {
+                "value": false
+              }
+            },
+            "children": [
+              {
+                "key": "addBtn",
+                "type": "AntButton",
+                "props": {
+                  "children": {
+                    "value": "Add Domain"
+                  },
+                  "type": {
+                    "value": "primary"
+                  },
+                  "size": {
+                    "value": "large"
+                  },
+                  "shape": {
+                    "value": "round"
+                  }
+                },
+                "events": {
+                  "onClick": [
+                    {
+                      "type": "custom",
+                      "name": "onAddDomain",
+                      "args": {}
+                    }
+                  ]
+                }
+              }
+            ],
+            "tooltipProps": {},
+            "css": {
+              "any": {
+                "object": {
+                  "flexDirection": "row",
+                  "width": "30%",
+                  "alignItems": "flex-end",
+                  "justifyContent": "flex-end",
+                  "padding": "0px"
+                },
+                "string": "flex-direction: row; width: 30%; align-items: flex-end; justify-content: flex-end; padding: 0px;"
+              },
+              "mobile": {
+                "object": {
+                  "flexDirection": "column",
+                  "justifyContent": "flex-end",
+                  "alignItems": "center",
+                  "width": "100%"
+                },
+                "string": "flex-direction: column; justify-content: flex-end; align-items: center; width: 100%;"
+              }
+            }
+          }
+        ],
+        "css": {
+          "any": {
+            "object": {
+              "flexDirection": "row"
+            },
+            "string": "flex-direction: row;"
+          },
+          "mobile": {
+            "object": {
+              "flexDirection": "column"
+            },
+            "string": "flex-direction: column;"
+          }
+        }
+      },
+      {
+        "key": "statsContainer",
+        "type": "AntContainer",
+        "access": [],
+        "props": {
+          "direction": {
+            "value": "horizontal"
+          },
+          "gap": {
+            "value": "16px"
+          }
+        },
+        "style": {
+          "desktop": {
+            "padding": "0 16px 16px 16px",
+            "display": "flex"
+          }
+        },
+        "children": [
+          {
+            "key": "totalCard",
+            "type": "AntCard",
+            "props": {
+              "title": {
+                "value": "Total Domains"
+              },
+              "size": {
+                "value": "small"
+              }
+            },
+            "style": {
+              "desktop": {
+                "flex": "1"
+              }
+            },
+            "children": [
+              {
+                "key": "totalCount",
+                "type": "AntLabel",
+                "props": {
+                  "children": {
+                    "value": "0"
+                  }
+                },
+                "style": {
+                  "desktop": {
+                    "fontSize": "24px",
+                    "fontWeight": "bold"
+                  }
+                }
+              }
+            ],
+            "css": {
+              "any": {
+                "object": {
+                  "width": "25%"
+                },
+                "string": "width: 25%;"
+              },
+              "mobile": {
+                "object": {
+                  "width": "100%"
+                },
+                "string": "width: 100%;"
+              }
+            }
+          },
+          {
+            "key": "activeCard",
+            "type": "AntCard",
+            "props": {
+              "title": {
+                "value": "Active"
+              },
+              "size": {
+                "value": "small"
+              }
+            },
+            "style": {
+              "desktop": {
+                "flex": "1"
+              }
+            },
+            "children": [
+              {
+                "key": "activeCount",
+                "type": "AntLabel",
+                "props": {
+                  "children": {
+                    "value": "0"
+                  }
+                },
+                "style": {
+                  "desktop": {
+                    "fontSize": "24px",
+                    "fontWeight": "bold",
+                    "color": "#52c41a"
+                  }
+                }
+              }
+            ],
+            "css": {
+              "any": {
+                "object": {
+                  "width": "25%"
+                },
+                "string": "width: 25%;"
+              },
+              "mobile": {
+                "object": {
+                  "width": "100%"
+                },
+                "string": "width: 100%;"
+              }
+            }
+          },
+          {
+            "key": "pendingCard",
+            "type": "AntCard",
+            "props": {
+              "title": {
+                "value": "Pending"
+              },
+              "size": {
+                "value": "small"
+              }
+            },
+            "style": {
+              "desktop": {
+                "flex": "1"
+              }
+            },
+            "children": [
+              {
+                "key": "pendingCount",
+                "type": "AntLabel",
+                "props": {
+                  "children": {
+                    "value": "0"
+                  }
+                },
+                "style": {
+                  "desktop": {
+                    "fontSize": "24px",
+                    "fontWeight": "bold",
+                    "color": "#faad14"
+                  }
+                }
+              }
+            ],
+            "css": {
+              "any": {
+                "object": {
+                  "width": "25%"
+                },
+                "string": "width: 25%;"
+              },
+              "mobile": {
+                "object": {
+                  "width": "100%"
+                },
+                "string": "width: 100%;"
+              }
+            }
+          },
+          {
+            "key": "inactiveCard",
+            "type": "AntCard",
+            "props": {
+              "title": {
+                "value": "Inactive"
+              },
+              "size": {
+                "value": "small"
+              }
+            },
+            "style": {
+              "desktop": {
+                "flex": "1"
+              }
+            },
+            "children": [
+              {
+                "key": "inactiveCount",
+                "type": "AntLabel",
+                "props": {
+                  "children": {
+                    "value": "0"
+                  }
+                },
+                "style": {
+                  "desktop": {
+                    "fontSize": "24px",
+                    "fontWeight": "bold",
+                    "color": "#8c8c8c"
+                  }
+                }
+              }
+            ],
+            "css": {
+              "any": {
+                "object": {
+                  "width": "25%"
+                },
+                "string": "width: 25%;"
+              },
+              "mobile": {
+                "object": {
+                  "width": "100%"
+                },
+                "string": "width: 100%;"
+              }
+            }
+          }
+        ],
+        "css": {
+          "any": {
+            "object": {
+              "flexDirection": "row"
+            },
+            "string": "flex-direction: row;"
+          },
+          "mobile": {
+            "object": {
+              "flexDirection": "column"
+            },
+            "string": "flex-direction: column;"
+          }
+        }
+      },
+      {
+        "key": "tableContainer",
+        "type": "AntContainer",
+        "access": [],
+        "style": {
+          "desktop": {
+            "padding": "16px",
+            "backgroundColor": "#ffffff",
+            "borderRadius": "8px"
+          }
+        },
+        "children": [
+          {
+            "key": "domainsTable",
+            "type": "AntTable",
+            "access": [],
+            "props": {
+              "columns": {
+                "value": [
+                  {
+                    "title": "Domain ID",
+                    "dataIndex": "domainId",
+                    "key": "domainId",
+                    "width": 120,
+                    "sorter": true
+                  },
+                  {
+                    "title": "Domain Name",
+                    "dataIndex": "domainName",
+                    "key": "domainName",
+                    "sorter": true
+                  },
+                  {
+                    "title": "Description",
+                    "dataIndex": "description",
+                    "key": "description"
+                  },
+                  {
+                    "title": "Status",
+                    "dataIndex": "status",
+                    "key": "status",
+                    "width": 100
+                  }
+                ]
+              },
+              "dataSource": {
+                "value": []
+              },
+              "pagination": {
+                "value": true
+              },
+              "bordered": {
+                "value": false
+              },
+              "size": {
+                "value": "middle"
+              },
+              "rowKey": {
+                "value": "key"
+              }
+            },
+            "css": {
+              "mobile": {
+                "object": {
+                  "width": "100%"
+                },
+                "string": "width: 100%;"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "actions": {},
+  "modalType": "AntModalAdapter",
+  "tooltipType": "AntTooltip",
+  "errorType": "AntErrorMessage"
+}

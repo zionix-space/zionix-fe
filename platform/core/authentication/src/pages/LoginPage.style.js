@@ -37,25 +37,36 @@ export const useStyles = (token) => {
         minHeight: 'inherit',
       },
 
-      // Right column - Theme-based gradient (not hardcoded blue)
+      // Right column - Theme-based lighter background with wave overlay
       rightColumn: {
         height: '100vh',
         padding: 0,
-        background: `linear-gradient(135deg, ${token.colorPrimaryActive} 0%, ${token.colorPrimary} 50%, ${token.colorPrimaryHover} 100%)`,
+        background: `linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%)`,
         position: 'relative',
         overflow: 'hidden',
         minHeight: 'inherit',
       },
 
-      // Form container - subtle card with minimal styling
+      // Decorative wave SVG overlay
+      decorativeWaveOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 0,
+      },
+
+      // Form container - pure white gradient with no border (dark theme support)
       formContainer: {
         width: '100%',
         maxWidth: 'min(25rem, 90vw)',
         padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-        backgroundColor: token.colorBgContainer,
+        background: token.colorBgElevated || token.colorBgContainer,
         borderRadius: '16px',
-        border: `1px solid ${token.colorBorderSecondary}`,
-        boxShadow: `0 1px 3px 0 rgba(0, 0, 0, 0.04)`,
+        border: 'none',
+        boxShadow: 'none',
       },
 
       // Logo section
@@ -517,15 +528,15 @@ export const useStyles = (token) => {
         minHeight: '100vh',
       },
 
-      // Mobile form container - subtle card
+      // Mobile form container - pure white gradient with no border (dark theme support)
       mobileFormContainer: {
         width: '100%',
         maxWidth: 'min(25rem, 95vw)',
-        backgroundColor: token.colorBgContainer,
+        background: token.colorBgElevated || token.colorBgContainer,
         borderRadius: '16px',
         padding: 'clamp(1.5rem, 4vw, 2rem)',
-        border: `1px solid ${token.colorBorderSecondary}`,
-        boxShadow: `0 1px 3px 0 rgba(0, 0, 0, 0.04)`,
+        border: 'none',
+        boxShadow: 'none',
       },
 
       // Mobile logo

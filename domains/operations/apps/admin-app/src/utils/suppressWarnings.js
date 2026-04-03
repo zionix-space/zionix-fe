@@ -20,11 +20,11 @@ export const suppressFindDOMNodeWarnings = () => {
   console.error = (...args) => {
     // Check if this is a findDOMNode warning
     const message = args[0];
-    
+
     // Handle both string messages and formatted warning messages
     const isStringMessage = typeof message === 'string';
     const messageText = isStringMessage ? message : String(message);
-    
+
     // Check for various findDOMNode warning patterns
     const isFindDOMNodeWarning = (
       messageText.includes('findDOMNode is deprecated in StrictMode') ||
@@ -36,7 +36,7 @@ export const suppressFindDOMNodeWarnings = () => {
       (args.length > 2 && String(args[2]).includes('DomWrapper')) ||
       (args.length > 2 && String(args[2]).includes('deprecated'))
     );
-    
+
     if (isFindDOMNodeWarning) {
       // Suppress this specific warning
       return;
@@ -61,7 +61,7 @@ export const restoreConsoleError = () => {
  */
 export const initializeWarningSuppression = () => {
   suppressFindDOMNodeWarnings();
-  
+
   // Optional: Log that warning suppression is active (only in development)
   if (process.env.NODE_ENV === 'development') {
     console.info(

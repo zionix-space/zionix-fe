@@ -147,6 +147,25 @@ export const useDeleteFormMutation = () => {
     });
 };
 
+/**
+ * Hook to save form to backend
+ * @returns {Object} Mutation object
+ */
+export const useSaveFormMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (payload) => formService.saveForm(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: formKeys.all });
+            bannerMessage.success('Form saved successfully');
+        },
+        onError: (error) => {
+            bannerMessage.error(error.message || 'Failed to save form');
+        },
+    });
+};
+
 
 /**
  * Hook to fetch applications by domain ID
@@ -176,10 +195,31 @@ export const useApplicationsQuery = (domainId, options = {}) => {
 };
 
 /**
- * Hook to fetch menus by application ID
- * @param {string} applicationId - Application ID
- * @returns {Object} Query result with menus data
+ * Hook to fetch forms by menu ID
+ * @param {string} menuId - Menu ID
+ * @returns {Object} Query result with forms data
  */
+export const useFormsByMenuQuery = (menuId, options = {}) => {
+    console.log('useFormsByMenuQuery hook called with menuId:', menuId);
+
+    const result = useQuery({
+        queryKey: [...formKeys.all, 'byMenu', menuId],
+        queryFn: () => formService.getFormsByMenuId(menuId),
+        enabled: !!menuId,
+        staleTime: 0, // Always fetch fresh data
+        cacheTime: 0, // Don't cache results
+        retry: 2,
+        refetchOnWindowFocus: false,
+        onError: (error) => {
+            console.error('useFormsByMenuQuery error:', error);
+            bannerMessage.error(error.message || 'Failed to load forms');
+        },
+        ...options,
+    });
+
+    console.log('useFormsByMenuQuery result:', result);
+    return result;
+};
 export const useMenusQuery = (applicationId, options = {}) => {
     console.log('useMenusQuery hook called with applicationId:', applicationId);
 

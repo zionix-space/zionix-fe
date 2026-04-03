@@ -92,6 +92,35 @@ export const formService = {
     deleteForm: async (menuId) => {
         return await axiosClient.delete(`/menus/${menuId}`);
     },
+
+    /**
+     * Get forms by menu ID
+     * @param {string} menuId - Menu ID
+     * @returns {Promise<Object>} Forms data
+     */
+    getFormsByMenuId: async (menuId) => {
+        console.log('Calling getFormsByMenuId API with menuId:', menuId);
+        const response = await axiosClient.get(`/forms/menu/${menuId}?skip=0&limit=100`);
+        console.log('getFormsByMenuId response:', response);
+        return response;
+    },
+
+    /**
+     * Save form to backend
+     * @param {Object} payload - Form save payload
+     * @param {string} payload.menu_id - Menu ID (UUID)
+     * @param {string} payload.name - Form name
+     * @param {Array} payload.access - Access permissions (e.g., ["read", "write"])
+     * @param {Array} payload.forms - Array of form objects
+     * @returns {Promise<Object>} Saved form response
+     */
+    saveForm: async (payload) => {
+        if (!payload.menu_id) {
+            throw new Error('menu_id is required');
+        }
+
+        return await axiosClient.post('/forms/', payload);
+    }
 };
 
 export default formService;

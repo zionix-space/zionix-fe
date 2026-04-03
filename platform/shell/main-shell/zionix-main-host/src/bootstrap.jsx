@@ -14,110 +14,25 @@ import '@zionix-space/design-system/styles.css';
 
 // Import custom styles last to allow overrides
 import "./styles.scss";
-import React, { StrictMode, useState, useEffect, useRef } from "react";
+import React, { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
 import App from "./app/app";
 import { initializeWarningSuppression } from "./utils/suppressWarnings";
 
+// Suppress ResizeObserver errors (harmless, caused by React rendering cycles)
+const resizeObserverErrorHandler = (e) => {
+  if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
+    e.stopImmediatePropagation();
+    return;
+  }
+};
+window.addEventListener('error', resizeObserverErrorHandler);
+
 // Initialize warning suppression for known Ant Design issues
 initializeWarningSuppression();
 
-// App wrapper with loading state
+// App wrapper
 const AppWithLoader = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const mountTimeRef = useRef(Date.now());
-
-  useEffect(() => {
-    const MIN_DISPLAY_TIME = 400; // Minimum time to show loader for visual feedback
-
-    // Wait for critical resources to load and DOM to be ready
-    const handleLoad = () => {
-      // Calculate elapsed time since mount
-      const elapsedTime = Date.now() - mountTimeRef.current;
-      const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsedTime);
-
-      // Wait for minimum display time + ensure content is painted
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            setIsLoading(false);
-          });
-        });
-      }, remainingTime);
-    };
-
-    // Check if document is already loaded
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-      // Also listen for DOMContentLoaded as fallback
-      document.addEventListener('DOMContentLoaded', handleLoad);
-      return () => {
-        window.removeEventListener('load', handleLoad);
-        document.removeEventListener('DOMContentLoaded', handleLoad);
-      };
-    }
-  }, []);
-
-  if (isLoading) {
-    // Get theme settings from localStorage
-    const primaryColor = typeof window !== 'undefined'
-      ? (localStorage.getItem('zionix-theme-primary-color') || '#001968')
-      : '#0565ff';
-    const isDarkMode = typeof window !== 'undefined'
-      ? (localStorage.getItem('zionix-theme-mode') === 'dark')
-      : false;
-
-    // Theme-aware colors
-    const bgColor = isDarkMode ? '#141414' : '#ffffff';
-
-    return (
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        background: bgColor,
-        zIndex: 99999,
-      }}>
-        {/* Top Loading Bar - Indeterminate flowing style */}
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '3px',
-            backgroundColor: 'transparent',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: '100%',
-              width: '40%',
-              background: `linear-gradient(90deg, transparent, ${primaryColor}, ${primaryColor}, transparent)`,
-              animation: 'bootstrapFlowLoader 1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
-              boxShadow: `0 0 10px ${primaryColor}`,
-            }}
-          />
-        </div>
-        <style>{`
-          @keyframes bootstrapFlowLoader {
-            0% {
-              transform: translateX(-100%);
-            }
-            100% {
-              transform: translateX(350%);
-            }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
   return <App />;
 };
 

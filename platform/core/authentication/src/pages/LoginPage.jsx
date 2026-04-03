@@ -246,12 +246,12 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
 
             {/* Sign Up Link */}
             <div style={styles.signUpContainer}>
-              <Text style={styles.signUpText}>
+              {/* <Text style={styles.signUpText}>
                 Don't have an account?{' '}
                 <Link onClick={handleSignUpClick} style={styles.signUpLink}>
                   Create an account
                 </Link>
-              </Text>
+              </Text> */}
             </div>
           </div>
         </motion.div>
@@ -265,7 +265,211 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
       <style dangerouslySetInnerHTML={{ __html: carouselCustomCSS }} />
       <div style={styles.container}>
         <BaseRow style={styles.row}>
-          {/* Left Side - Login Form */}
+          {/* Left Side - Promotional Carousel */}
+          <BaseCol span={12} style={styles.rightColumn}>
+            {/* Decorative Wave Background */}
+            <svg
+              style={styles.decorativeWaveOverlay}
+              viewBox="0 0 1440 900"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="xMidYMid slice"
+            >
+              <defs>
+                <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.25 }} />
+                  <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 0.1 }} />
+                </linearGradient>
+                <linearGradient id="waveGradient2" x1="100%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: '#000000', stopOpacity: 0.2 }} />
+                  <stop offset="100%" style={{ stopColor: '#000000', stopOpacity: 0.08 }} />
+                </linearGradient>
+              </defs>
+
+              {/* Top flowing wave - white tint */}
+              <path
+                d="M0,0 C200,80 400,120 600,100 C800,80 1000,60 1200,80 C1300,90 1370,100 1440,120 L1440,0 Z"
+                fill="url(#waveGradient1)"
+              />
+
+              {/* Large organic wave from top */}
+              <path
+                d="M0,0 C300,180 600,220 900,180 C1200,140 1320,100 1440,80 L1440,0 Z"
+                fill="#ffffff"
+                opacity="0.15"
+              />
+
+              {/* Middle wave layer */}
+              <path
+                d="M0,300 C240,380 480,420 720,380 C960,340 1200,360 1440,400 L1440,0 L0,0 Z"
+                fill="#ffffff"
+                opacity="0.08"
+              />
+
+              {/* Bottom flowing wave - dark tint */}
+              <path
+                d="M0,900 C200,820 400,780 600,800 C800,820 1000,840 1200,820 C1300,810 1370,800 1440,780 L1440,900 Z"
+                fill="url(#waveGradient2)"
+              />
+
+              {/* Large organic wave from bottom */}
+              <path
+                d="M0,900 C300,720 600,680 900,720 C1200,760 1320,800 1440,820 L1440,900 Z"
+                fill="#000000"
+                opacity="0.15"
+              />
+
+              {/* Bottom middle wave layer */}
+              <path
+                d="M0,900 C240,620 480,580 720,620 C960,660 1200,640 1440,600 L1440,900 Z"
+                fill="#000000"
+                opacity="0.08"
+              />
+
+              {/* Decorative circles with glow effect */}
+              <circle cx="250" cy="180" r="100" fill="#ffffff" opacity="0.1" />
+              <circle cx="250" cy="180" r="60" fill="#ffffff" opacity="0.15" />
+
+              <circle cx="1200" cy="250" r="80" fill="#ffffff" opacity="0.08" />
+              <circle cx="1200" cy="250" r="45" fill="#ffffff" opacity="0.12" />
+
+              <circle cx="1250" cy="650" r="120" fill="#000000" opacity="0.1" />
+              <circle cx="1250" cy="650" r="70" fill="#000000" opacity="0.15" />
+
+              <circle cx="200" cy="750" r="90" fill="#000000" opacity="0.08" />
+              <circle cx="200" cy="750" r="50" fill="#000000" opacity="0.12" />
+
+              {/* Small floating circles */}
+              <circle cx="500" cy="150" r="20" fill="#ffffff" opacity="0.18" />
+              <circle cx="1050" cy="500" r="25" fill="#ffffff" opacity="0.15" />
+              <circle cx="350" cy="800" r="22" fill="#000000" opacity="0.15" />
+              <circle cx="950" cy="200" r="18" fill="#ffffff" opacity="0.2" />
+              <circle cx="700" cy="700" r="28" fill="#000000" opacity="0.12" />
+
+              {/* Triangle accents */}
+              <polygon points="300,400 325,450 275,450" fill="#ffffff" opacity="0.15" />
+              <polygon points="1100,550 1125,600 1075,600" fill="#000000" opacity="0.12" />
+
+              {/* Star-like shapes */}
+              <circle cx="150" cy="450" r="8" fill="#ffffff" opacity="0.22" />
+              <circle cx="1300" cy="400" r="10" fill="#ffffff" opacity="0.2" />
+              <circle cx="600" cy="850" r="12" fill="#000000" opacity="0.18" />
+            </svg>
+
+            <motion.div
+              style={styles.promoContainer}
+              variants={promoVariants}
+              initial="initial"
+              animate="animate"
+            >
+              {/* Floating UI Elements Background */}
+              <div style={styles.floatingElements}>
+                {/* Security Shield Icon */}
+                <motion.div
+                  style={styles.floatingIcon1}
+                  variants={securityIconVariants}
+                  initial="initial"
+                  animate="animate"
+                  whileHover="hover"
+                >
+                  <div style={styles.iconCircle} className="icon-circle">
+                    <i
+                      className="ri-shield-check-fill"
+                      style={styles.floatingIconContent}
+                    />
+                  </div>
+                </motion.div>
+
+                {/* Lock/Encryption Icon */}
+                <motion.div
+                  style={styles.floatingIcon2}
+                  variants={securityIconVariants}
+                  initial="initial"
+                  animate="animate"
+                  whileHover="hover"
+                  transition={{ delay: 0.2 }}
+                >
+                  <div style={styles.iconCircle} className="icon-circle">
+                    <i
+                      className="ri-lock-2-fill"
+                      style={styles.floatingIconContent}
+                    />
+                  </div>
+                </motion.div>
+
+                {/* Certificate/Verification Icon */}
+                <motion.div
+                  style={styles.floatingIcon3}
+                  variants={securityIconVariants}
+                  initial="initial"
+                  animate="animate"
+                  whileHover="hover"
+                  transition={{ delay: 0.4 }}
+                >
+                  <div style={styles.iconCircle} className="icon-circle">
+                    <i
+                      className="ri-verified-badge-fill"
+                      style={styles.floatingIconContent}
+                    />
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Carousel Content */}
+              <div style={styles.carouselContainer}>
+                <BaseCarousel
+                  autoplay
+                  autoplaySpeed={4000}
+                  dots={{ className: 'custom-carousel-dots' }}
+                  effect="fade"
+                  pauseOnHover
+                  style={styles.carousel}
+                >
+                  {carouselSlides.map((slide) => (
+                    <div key={slide.id}>
+                      <motion.div
+                        style={styles.slideContent}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        {/* Slide Illustration */}
+                        <div style={styles.slideIllustration}>
+                          <SvgLogin
+                            height="300px"
+                            primarycolor={token.colorPrimary}
+                            accentcolor={token.colorTextSecondary}
+                            haircolor={token.border}
+                            skincolor={token.colorPrimaryBg}
+                          />
+                        </div>
+
+                        {/* Slide Text Content */}
+                        <div style={styles.slideTextContent}>
+                          <Title level={2} style={styles.slideTitle}>
+                            {slide.title}
+                          </Title>
+                          <Text style={styles.slideDescription}>
+                            {slide.description}
+                          </Text>
+                          <BaseButton
+                            type="link"
+                            style={styles.learnMoreButton}
+                            onClick={() =>
+                              console.log(`Learn more about ${slide.title}`)
+                            }
+                          >
+                            Learn more
+                          </BaseButton>
+                        </div>
+                      </motion.div>
+                    </div>
+                  ))}
+                </BaseCarousel>
+              </div>
+            </motion.div>
+          </BaseCol>
+
+          {/* Right Side - Login Form */}
           <BaseCol span={12} style={styles.leftColumn}>
             <motion.div
               style={{ ...styles.formContainer, position: 'relative' }}
@@ -418,122 +622,16 @@ const LoginPage = ({ onLogin, onForgotPassword, onSignUp, onSocialLogin }) => {
                     </BaseButton>
                   </motion.div>
                 </BaseForm>
-              </div>
-            </motion.div>
-          </BaseCol>
 
-          {/* Right Side - Promotional Carousel */}
-          <BaseCol span={12} style={styles.rightColumn}>
-            <motion.div
-              style={styles.promoContainer}
-              variants={promoVariants}
-              initial="initial"
-              animate="animate"
-            >
-              {/* Floating UI Elements Background */}
-              <div style={styles.floatingElements}>
-                {/* Security Shield Icon */}
-                <motion.div
-                  style={styles.floatingIcon1}
-                  variants={securityIconVariants}
-                  initial="initial"
-                  animate="animate"
-                  whileHover="hover"
-                >
-                  <div style={styles.iconCircle} className="icon-circle">
-                    <i
-                      className="ri-shield-check-fill"
-                      style={styles.floatingIconContent}
-                    />
-                  </div>
-                </motion.div>
-
-                {/* Lock/Encryption Icon */}
-                <motion.div
-                  style={styles.floatingIcon2}
-                  variants={securityIconVariants}
-                  initial="initial"
-                  animate="animate"
-                  whileHover="hover"
-                  transition={{ delay: 0.2 }}
-                >
-                  <div style={styles.iconCircle} className="icon-circle">
-                    <i
-                      className="ri-lock-2-fill"
-                      style={styles.floatingIconContent}
-                    />
-                  </div>
-                </motion.div>
-
-                {/* Certificate/Verification Icon */}
-                <motion.div
-                  style={styles.floatingIcon3}
-                  variants={securityIconVariants}
-                  initial="initial"
-                  animate="animate"
-                  whileHover="hover"
-                  transition={{ delay: 0.4 }}
-                >
-                  <div style={styles.iconCircle} className="icon-circle">
-                    <i
-                      className="ri-verified-badge-fill"
-                      style={styles.floatingIconContent}
-                    />
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Carousel Content */}
-              <div style={styles.carouselContainer}>
-                <BaseCarousel
-                  autoplay
-                  autoplaySpeed={4000}
-                  dots={{ className: 'custom-carousel-dots' }}
-                  effect="fade"
-                  pauseOnHover
-                  style={styles.carousel}
-                >
-                  {carouselSlides.map((slide) => (
-                    <div key={slide.id}>
-                      <motion.div
-                        style={styles.slideContent}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        {/* Slide Illustration */}
-                        <div style={styles.slideIllustration}>
-                          <SvgLogin
-                            height="300px"
-                            primarycolor={token.colorPrimary}
-                            accentcolor={token.colorTextSecondary}
-                            haircolor={token.border}
-                            skincolor={token.colorPrimaryBg}
-                          />
-                        </div>
-
-                        {/* Slide Text Content */}
-                        <div style={styles.slideTextContent}>
-                          <Title level={2} style={styles.slideTitle}>
-                            {slide.title}
-                          </Title>
-                          <Text style={styles.slideDescription}>
-                            {slide.description}
-                          </Text>
-                          <BaseButton
-                            type="link"
-                            style={styles.learnMoreButton}
-                            onClick={() =>
-                              console.log(`Learn more about ${slide.title}`)
-                            }
-                          >
-                            Learn more
-                          </BaseButton>
-                        </div>
-                      </motion.div>
-                    </div>
-                  ))}
-                </BaseCarousel>
+                {/* Sign Up Link */}
+                <div style={styles.signUpContainer}>
+                  {/* <Text style={styles.signUpText}>
+                    Don't have an account?{' '}
+                    <Link onClick={handleSignUpClick} style={styles.signUpLink}>
+                      Create an account
+                    </Link>
+                  </Text> */}
+                </div>
               </div>
             </motion.div>
           </BaseCol>

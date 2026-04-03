@@ -30,6 +30,26 @@ const RouteWithTransition = ({ element }) => {
 
 export function AppRouter() {
   const { isAuthenticated } = useAuthStore();
+  const [isInitialized, setIsInitialized] = React.useState(false);
+
+  React.useEffect(() => {
+    // Remove HTML loader after auth check is complete and routes are ready
+    const timer = setTimeout(() => {
+      const htmlLoader = document.getElementById("html-loader");
+      if (htmlLoader) {
+        htmlLoader.style.opacity = "0";
+        htmlLoader.style.transition = "opacity 0.3s ease-out";
+        setTimeout(() => {
+          htmlLoader.remove();
+          setIsInitialized(true);
+        }, 300);
+      } else {
+        setIsInitialized(true);
+      }
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   function getModuleComponent(moduleName) {
     let ModuleComponent;
@@ -38,6 +58,38 @@ export function AppRouter() {
       case 'adminApp':
         ModuleComponent = React.lazy(() => import('adminApp/Module'));
         break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

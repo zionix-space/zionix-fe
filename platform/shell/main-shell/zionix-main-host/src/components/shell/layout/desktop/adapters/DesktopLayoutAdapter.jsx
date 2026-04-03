@@ -85,24 +85,41 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
 
     // Handle user menu clicks (profile, settings, logout)
     const handleUserMenuClick = (key) => {
-        switch (key) {
-            case 'profile':
-                // Navigate to profile page
-                navigate('/apps/profile');
-                break;
-            case 'settings':
-                // Navigate to settings page
-                navigate('/apps/settings');
-                break;
-            case 'logout':
+        // Find the menu item from profileSection
+        const menuItem = completeMenuData?.profileSection?.menuItems?.find(item => item.key === key);
+
+        if (menuItem) {
+            // Check if it's a logout action
+            if (key === 'logout' || menuItem.action === 'logout') {
                 // Clear authentication data
                 localStorage.clear();
                 sessionStorage.clear();
                 // Redirect to home page
                 window.location.href = '/';
-                break;
-            default:
-                console.log('Unknown menu action:', key);
+                return;
+            }
+
+            // Navigate using route property from API
+            if (menuItem.route) {
+                navigate(menuItem.route);
+            }
+        } else {
+            // Fallback for default items
+            switch (key) {
+                case 'profile':
+                    navigate('/apps/profile');
+                    break;
+                case 'settings':
+                    navigate('/apps/settings');
+                    break;
+                case 'logout':
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = '/';
+                    break;
+                default:
+                    console.log('Unknown menu action:', key);
+            }
         }
     };
 
