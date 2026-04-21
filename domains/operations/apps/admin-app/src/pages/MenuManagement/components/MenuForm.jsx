@@ -25,11 +25,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
         if (selectedKey && selectedKey !== previousSelectedKeyRef.current) {
             previousSelectedKeyRef.current = selectedKey;
 
-            console.log('=== MENU SELECTED ===');
-            console.log('Selected key:', selectedKey);
-            console.log('Selected item:', selectedItem);
-            console.log('Selected item fields:', selectedItem ? Object.keys(selectedItem) : 'null');
-
             if (selectedItem) {
                 let currentBadgeType = 'none';
                 if (selectedItem.badge) {
@@ -71,8 +66,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     menu_id: selectedItem.menu_id || '',
                     menu_metadata: selectedItem.menu_metadata ? JSON.stringify(selectedItem.menu_metadata, null, 2) : '{}',
                 });
-
-                console.log('Form values set successfully');
             }
         } else if (!selectedKey) {
             // No item selected
@@ -303,31 +296,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 }
             }
 
-            console.log('=== PARENT MENU DEBUG ===');
-            console.log('Parent path:', parentPath);
-            console.log('Parent path items:', parentPath.map(id => {
-                const item = findItemById(menuData.mainNavigation, id);
-                return {
-                    id,
-                    label: item?.label,
-                    level: item?.level,
-                    module_id: item?.module_id,
-                    menu_id: item?.menu_id,
-                    application_id: item?.application_id
-                };
-            }));
-            console.log('Parent ID:', parentId);
-            console.log('Parent menu:', parentMenu);
-            console.log('Current item level:', formValues.level);
-            console.log('Is new item?', isNewItem);
-            console.log('Is application (level 1)?', parentMenu?.application_id && !parentMenu?.menu_id && !parentMenu?.module_id);
-            console.log('Is module (level 2)?', parentMenu?.module_id && !parentMenu?.menu_id);
-            console.log('Parent menu ID:', parentMenuId);
-            console.log('Root menu (Application):', rootMenu);
-            console.log('Application ID:', applicationId);
-            console.log('Module ID (to be sent):', moduleId);
-            console.log('Selected item module_id:', selectedItem?.module_id);
-
             // Prepare badge value - must be string, not null
             let badgeValue = "";
             if (badgeType === 'string' && formValues.badgeString) {
@@ -376,10 +344,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             if (moduleId) {
                 menuPayload.module_id = moduleId;
             }
-
-            console.log('Saving menu with payload:', menuPayload);
-            console.log('navDocId:', navDocId);
-            console.log('isNewItem:', isNewItem);
 
             if (isNewItem) {
                 // Call the create menu API for new items

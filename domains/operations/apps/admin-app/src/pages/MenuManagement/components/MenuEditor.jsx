@@ -97,15 +97,57 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 setNavDocId(apiMenuData._id);
             }
 
+            // Store the current selected item's details before updating data
+            const currentSelectedItem = selectedKey && menuData ? findMenuItemByKey(menuData, selectedKey) : null;
+
             setMenuData(apiMenuData);
 
             // After data update, try to restore selection using the last stable ID
             if (lastSelectedStableIdRef.current) {
                 // Find the item by its stable ID in the new data
-                const restoredItem = findMenuItemByKey(apiMenuData, lastSelectedStableIdRef.current);
+                let restoredItem = findMenuItemByKey(apiMenuData, lastSelectedStableIdRef.current);
+
+                // If not found and we had a temp ID, try to find the newly created item by label
+                if (!restoredItem && lastSelectedStableIdRef.current.startsWith('temp-') && currentSelectedItem) {
+                    // Find by matching label and level
+                    const findByLabelAndLevel = (items) => {
+                        for (const item of items) {
+                            if (item.menu_id &&
+                                item.label === currentSelectedItem.label &&
+                                item.level === currentSelectedItem.level) {
+                                return item;
+                            }
+                            if (item.children && item.children.length > 0) {
+                                const found = findByLabelAndLevel(item.children);
+                                if (found) return found;
+                            }
+                        }
+                        return null;
+                    };
+
+                    restoredItem = findByLabelAndLevel(apiMenuData.mainNavigation);
+                }
+
                 if (restoredItem) {
-                    // Restore selection using the stable ID
-                    setSelectedKey(lastSelectedStableIdRef.current);
+                    // Get the stable ID from the restored item (use menu_id for saved items)
+                    const newStableId = restoredItem.menu_id || restoredItem.module_id || restoredItem.application_id;
+
+                    // Update the ref with the new stable ID
+                    lastSelectedStableIdRef.current = newStableId;
+
+                    // Ensure parent nodes are expanded
+                    const parentPath = getParentPath(apiMenuData, newStableId);
+                    if (parentPath && parentPath.length > 0) {
+                        setExpandedKeys(prev => {
+                            const newKeys = [...new Set([...prev, ...parentPath])];
+                            return newKeys;
+                        });
+                    }
+
+                    // Use setTimeout to ensure state update happens after render
+                    setTimeout(() => {
+                        setSelectedKey(newStableId);
+                    }, 50);
                 }
             }
 
@@ -120,7 +162,10 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         if (selectedKey && menuData) {
             const selectedItem = findMenuItemByKey(menuData, selectedKey);
             if (selectedItem) {
-                const stableId = selectedItem.menu_id || selectedItem.module_id || selectedItem.application_id;
+                // For stable ID, prioritize menu_id (saved items)
+                // For new items without menu_id, use _tempId temporarily
+                // DO NOT use module_id as it will select the wrong item (the module instead of the menu)
+                const stableId = selectedItem.menu_id || selectedItem._tempId || selectedItem.application_id;
                 if (stableId) {
                     lastSelectedStableIdRef.current = stableId;
                 }
@@ -260,21 +305,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             children: [...(parentItem.children || []), newItem],
         };
 
-        console.log('=== ADD CHILD DEBUG ===');
-        console.log('Parent item:', parentItem);
-        console.log('Parent selectedKey:', selectedKey);
-        console.log('Parent existing children:', parentItem.children);
-        console.log('New item:', newItem);
-        console.log('New item tempId:', tempId);
-        console.log('Updated parent children:', updatedParent.children);
-
         const updatedData = updateMenuItemByKey(menuData, selectedKey, updatedParent);
-
-        console.log('Updated data:', updatedData);
-        const parentAfterUpdate = findMenuItemByKey(updatedData, selectedKey);
-        console.log('Can find parent after update?', parentAfterUpdate);
-        console.log('Parent children after update:', parentAfterUpdate?.children);
-        console.log('Can find new item?', findMenuItemByKey(updatedData, tempId));
 
         updateMenuData(updatedData);
 

@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useEffect } from 'react';
 import { BaseTree, BaseBadge, useTheme } from '@zionix-space/design-system';
 import './MenuTree.scss';
 
