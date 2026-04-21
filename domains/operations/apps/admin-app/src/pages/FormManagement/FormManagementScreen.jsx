@@ -275,7 +275,7 @@ const FormManagementScreen = () => {
                             }
                         ],
                         localization: schema.localization || {},
-                        modalType: schema.modalType || "AntModalAdapter",
+                        modalType: schema.modalType || "AntModal",
                         tooltipType: schema.tooltipType || "AntTooltip",
                         errorType: schema.errorType || "AntErrorMessage",
                         triggerWhen: schema.triggerWhen || {},

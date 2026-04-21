@@ -6,7 +6,7 @@ import { useMenuData } from '../../../../../data/hooks/menu';
 import { QueryErrorFallback } from '../../../../common/QueryErrorBoundary';
 import TopLoadingBar from '../../../../common/loaders/TopLoadingBar';
 import { PageTransitionWrapper } from '@zionix/shared-utilities/animations';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 /**
  * DesktopLayout Adapter Component - Infinite Level Support
@@ -123,6 +123,56 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
         }
     };
 
+    // Search state management
+    const [searchValue, setSearchValue] = useState('');
+    const [selectedModule, setSelectedModule] = useState('all');
+    const [searchHistory, setSearchHistory] = useState([]);
+    const [searchResults, setSearchResults] = useState([]);
+
+    // Handle search input change
+    const handleSearchChange = (value) => {
+        setSearchValue(value);
+        // TODO: Implement live search API call here
+        // For now, just clear results when empty
+        if (!value.trim()) {
+            setSearchResults([]);
+        }
+    };
+
+    // Handle module filter change
+    const handleModuleChange = (menuId) => {
+        setSelectedModule(menuId);
+        console.log('Selected module menu_id:', menuId);
+    };
+
+    // Handle search submit
+    const handleSearch = (value) => {
+        console.log('Search submitted:', value, 'Module:', selectedModule);
+        // Add to history
+        const historyItem = {
+            text: value,
+            module: selectedModule !== 'all' ? selectedModule : null,
+            timestamp: new Date().toISOString()
+        };
+        setSearchHistory(prev => [historyItem, ...prev.slice(0, 9)]); // Keep last 10
+        // TODO: Implement search API call here
+    };
+
+    // Handle history item click
+    const handleHistoryItemClick = (item) => {
+        setSearchValue(item.text);
+        if (item.module) {
+            setSelectedModule(item.module);
+        }
+        handleSearch(item.text);
+    };
+
+    // Handle advanced search click
+    const handleAdvancedSearchClick = () => {
+        console.log('Advanced search clicked');
+        // TODO: Navigate to advanced search page
+    };
+
     // Show error fallback if menu loading failed
     if (isError) {
         return <QueryErrorFallback error={error} resetErrorBoundary={() => window.location.reload()} />;
@@ -153,6 +203,16 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
             selectedMenuPath={selectedMenuPath}
             onMenuSelect={handleMenuSelect}
             onUserMenuClick={handleUserMenuClick}
+            // Search props
+            searchValue={searchValue}
+            onSearchChange={handleSearchChange}
+            selectedModule={selectedModule}
+            onModuleChange={handleModuleChange}
+            onSearch={handleSearch}
+            searchHistory={searchHistory}
+            onHistoryItemClick={handleHistoryItemClick}
+            onAdvancedSearchClick={handleAdvancedSearchClick}
+            searchResults={searchResults}
         >
             <Outlet />
         </MainLayout>

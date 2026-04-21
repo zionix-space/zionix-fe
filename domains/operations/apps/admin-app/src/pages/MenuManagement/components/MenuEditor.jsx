@@ -200,12 +200,41 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             _tempId: tempId, // Temporary ID for tree tracking (not sent to backend)
         };
 
+        // Inherit module_id from parent if the new item is level 3+
+        // Level 2 is a module itself (gets module_id from backend)
+        // Level 3+ are menus that belong to a module
+        if (newItem.level >= 3) {
+            // If parent is a module (level 2), use its module_id
+            if (parentItem.level === 2 && parentItem.module_id) {
+                newItem.module_id = parentItem.module_id;
+            }
+            // If parent is a menu (level 3+), inherit its module_id
+            else if (parentItem.level >= 3 && parentItem.module_id) {
+                newItem.module_id = parentItem.module_id;
+            }
+        }
+
         const updatedParent = {
             ...parentItem,
             children: [...(parentItem.children || []), newItem],
         };
 
+        console.log('=== ADD CHILD DEBUG ===');
+        console.log('Parent item:', parentItem);
+        console.log('Parent selectedKey:', selectedKey);
+        console.log('Parent existing children:', parentItem.children);
+        console.log('New item:', newItem);
+        console.log('New item tempId:', tempId);
+        console.log('Updated parent children:', updatedParent.children);
+
         const updatedData = updateMenuItemByKey(menuData, selectedKey, updatedParent);
+
+        console.log('Updated data:', updatedData);
+        const parentAfterUpdate = findMenuItemByKey(updatedData, selectedKey);
+        console.log('Can find parent after update?', parentAfterUpdate);
+        console.log('Parent children after update:', parentAfterUpdate?.children);
+        console.log('Can find new item?', findMenuItemByKey(updatedData, tempId));
+
         updateMenuData(updatedData);
 
         // Ensure parent is expanded - add if not already in expandedKeys
@@ -217,7 +246,11 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         });
 
         // Select the new item using its temp ID
-        setSelectedKey(tempId);
+        // Use setTimeout to ensure the state has updated before selecting
+        setTimeout(() => {
+            setSelectedKey(tempId);
+        }, 0);
+
         bannerMessage.success('Child menu item created. Enter a label to generate the key.');
     };
 
@@ -361,6 +394,11 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         menus_description: menu.menus_description || menu.description || "",
                         children: []
                     };
+
+                    // Add module_id if it exists (for level 2+ items)
+                    if (menu.module_id) {
+                        menuUpdateData.module_id = menu.module_id;
+                    }
 
                     try {
                         await updateMenuMutation.mutateAsync({
@@ -531,11 +569,44 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             return;
         }
 
+        // Helper to find which module an item belongs to (returns module_id)
+        const findModuleForItem = (itemKey) => {
+            for (const app of menuData.mainNavigation) {
+                // Search in the application's children
+                const searchInChildren = (items, currentModule = null) => {
+                    for (const item of items) {
+                        const itemId = item.menu_id || item.module_id || item.application_id || item._tempId;
+
+                        // Track the current module as we traverse
+                        let moduleId = currentModule;
+                        if (item.module_id && !item.menu_id) {
+                            // This is a module (level 2)
+                            moduleId = item.module_id;
+                        }
+
+                        if (itemId === itemKey) {
+                            return moduleId;
+                        }
+
+                        if (item.children && item.children.length > 0) {
+                            const found = searchInChildren(item.children, moduleId);
+                            if (found !== null) return found;
+                        }
+                    }
+                    return null;
+                };
+
+                const result = searchInChildren(app.children || []);
+                if (result !== null) return result;
+            }
+            return null;
+        };
+
         // Helper to find which application an item belongs to
         const findApplicationForItem = (itemKey) => {
             for (const app of menuData.mainNavigation) {
                 // Check if the item is the application itself
-                const appId = app.application_id || app.menu_id;
+                const appId = app.application_id || app.menu_id || app.module_id;
                 if (appId === itemKey) {
                     return app.application_id;
                 }
@@ -543,7 +614,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 // Search in the application's children
                 const searchInChildren = (items) => {
                     for (const item of items) {
-                        const itemId = item.menu_id || item.application_id || item._tempId;
+                        const itemId = item.menu_id || item.module_id || item.application_id || item._tempId;
                         if (itemId === itemKey) {
                             return app.application_id;
                         }
@@ -577,7 +648,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         let draggedItem = null;
         const removeItem = (items) => {
             for (let i = 0; i < items.length; i++) {
-                const itemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
+                const itemId = items[i].menu_id || items[i].module_id || items[i].application_id || items[i]._tempId;
                 if (itemId === dragKey) {
                     draggedItem = items.splice(i, 1)[0];
                     return true;
@@ -606,10 +677,29 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 // Update level and parent for dragged item
                 draggedItem.level = (dropItem.level ?? 0) + 1;
 
-                // Check if dropItem is a root-level application (has application_id but no menu_id)
-                // If so, children should have parent_menu_id as null (root level inside application)
-                const isRootApplication = dropItem.application_id && !dropItem.menu_id;
-                draggedItem.parent_menu_id = isRootApplication ? null : dropItem.menu_id;
+                // Check if dropItem is a root-level application (has application_id but no menu_id/module_id)
+                // or a module (has module_id but no menu_id)
+                // If so, children should have parent_menu_id as null
+                const isRootApplication = dropItem.application_id && !dropItem.menu_id && !dropItem.module_id;
+                const isModule = dropItem.module_id && !dropItem.menu_id;
+                draggedItem.parent_menu_id = (isRootApplication || isModule) ? null : dropItem.menu_id;
+
+                // Update module_id for the dragged item based on new location
+                // If dropping into a module (level 2), use that module's ID
+                // If dropping into a menu (level 3+), find the parent module
+                let newModuleId = null;
+                if (isModule) {
+                    // Dropping directly into a module
+                    newModuleId = dropItem.module_id;
+                } else if (!isRootApplication) {
+                    // Dropping into a menu (level 3+), find its module
+                    newModuleId = findModuleForItem(dropKey);
+                }
+
+                // Update the dragged item's module_id if it's a menu (level 3+)
+                if (draggedItem.level >= 3 && newModuleId) {
+                    draggedItem.module_id = newModuleId;
+                }
 
                 // Insert at the BEGINNING (index 0) when dropping on parent
                 dropItem.children.unshift(draggedItem);
@@ -619,15 +709,31 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     item.order_index = (idx + 1) * 1000;
                 });
 
-                // Track affected items (all children of the parent)
+                // Track affected items (all children of the parent) with module_id
+                // Include items that have either menu_id (menus) or module_id (modules)
                 const affectedItems = dropItem.children
-                    .filter(item => item.menu_id) // Only saved items
-                    .map(item => ({
-                        menu_id: item.menu_id,
-                        order_index: item.order_index,
-                        parent_menu_id: isRootApplication ? null : dropItem.menu_id,
-                        level: item.level
-                    }));
+                    .filter(item => item.menu_id || item.module_id) // Saved items (menus or modules)
+                    .map(item => {
+                        const affectedItem = {
+                            order_index: item.order_index,
+                            parent_menu_id: (isRootApplication || isModule) ? null : dropItem.menu_id,
+                            level: item.level
+                        };
+
+                        // Use menu_id for menus, module_id for modules
+                        if (item.menu_id) {
+                            affectedItem.menu_id = item.menu_id;
+                        } else if (item.module_id) {
+                            affectedItem.menu_id = item.module_id; // API uses menu_id field for both
+                        }
+
+                        // Include module_id if present
+                        if (item.module_id) {
+                            affectedItem.module_id = item.module_id;
+                        }
+
+                        return affectedItem;
+                    });
 
                 setAffectedReorderItems(affectedItems);
 
@@ -640,15 +746,20 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             }
         } else {
             // Drop between nodes (as sibling)
-            const insertIntoItems = (items, parentLevel = -1, parentId = null) => {
+            const insertIntoItems = (items, parentLevel = -1, parentId = null, parentModuleId = null) => {
                 for (let i = 0; i < items.length; i++) {
-                    const itemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
+                    const itemId = items[i].menu_id || items[i].module_id || items[i].application_id || items[i]._tempId;
                     if (itemId === dropKey) {
                         const insertIndex = dropPosition === -1 ? i : i + 1;
                         draggedItem.level = parentLevel + 1;
 
                         // Update parent_menu_id for the dragged item
                         draggedItem.parent_menu_id = parentId;
+
+                        // Update module_id for the dragged item if it's a menu (level 3+)
+                        if (draggedItem.level >= 3 && parentModuleId) {
+                            draggedItem.module_id = parentModuleId;
+                        }
 
                         items.splice(insertIndex, 0, draggedItem);
 
@@ -657,26 +768,52 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                             item.order_index = (idx + 1) * 1000;
                         });
 
-                        // Track affected items (all siblings at this level)
+                        // Track affected items (all siblings at this level) with module_id
+                        // Include items that have either menu_id (menus) or module_id (modules)
                         const affectedItems = items
-                            .filter(item => item.menu_id) // Only saved items
-                            .map(item => ({
-                                menu_id: item.menu_id,
-                                order_index: item.order_index,
-                                parent_menu_id: parentId,
-                                level: item.level
-                            }));
+                            .filter(item => item.menu_id || item.module_id) // Saved items (menus or modules)
+                            .map(item => {
+                                const affectedItem = {
+                                    order_index: item.order_index,
+                                    parent_menu_id: parentId,
+                                    level: item.level
+                                };
+
+                                // Use menu_id for menus, module_id for modules
+                                if (item.menu_id) {
+                                    affectedItem.menu_id = item.menu_id;
+                                } else if (item.module_id) {
+                                    affectedItem.menu_id = item.module_id; // API uses menu_id field for both
+                                }
+
+                                // Include module_id if present
+                                if (item.module_id) {
+                                    affectedItem.module_id = item.module_id;
+                                }
+
+                                return affectedItem;
+                            });
 
                         setAffectedReorderItems(affectedItems);
 
                         return true;
                     }
                     if (items[i].children && items[i].children.length > 0) {
-                        // For root-level applications (has application_id but no menu_id), 
+                        // For root-level applications (has application_id but no menu_id/module_id), 
+                        // or modules (has module_id but no menu_id),
                         // children should have parent_menu_id as null
-                        const isRootApplication = items[i].application_id && !items[i].menu_id;
-                        const parentIdForChildren = isRootApplication ? null : (items[i].menu_id || items[i]._tempId);
-                        if (insertIntoItems(items[i].children, items[i].level ?? 0, parentIdForChildren)) return true;
+                        const isRootApplication = items[i].application_id && !items[i].menu_id && !items[i].module_id;
+                        const isModule = items[i].module_id && !items[i].menu_id;
+                        const parentIdForChildren = (isRootApplication || isModule) ? null : (items[i].menu_id || items[i]._tempId);
+
+                        // Track module_id as we traverse
+                        let moduleIdForChildren = parentModuleId;
+                        if (isModule) {
+                            // This is a module, use its module_id for children
+                            moduleIdForChildren = items[i].module_id;
+                        }
+
+                        if (insertIntoItems(items[i].children, items[i].level ?? 0, parentIdForChildren, moduleIdForChildren)) return true;
                     }
                 }
                 return false;

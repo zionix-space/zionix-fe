@@ -47,6 +47,13 @@ module.exports = composePlugins(
   withReact(),
   withModuleFederation(config),
   (config) => {
+    // Better cleanup handling for Windows
+    config.output = config.output || {};
+    config.output.clean = {
+      keep: /\.gitkeep/,
+      dry: false,
+    };
+
     commonRulesRsPack(config, isDevelopment);
 
     // Add path aliases from tsconfig.base.json

@@ -525,7 +525,18 @@
     ]
   },
   "actions": {},
-  "modalType": "AntModalAdapter",
+  "modalType": "AntModal",
   "tooltipType": "AntTooltip",
-  "errorType": "AntErrorMessage"
+  "errorType": "AntErrorMessage",
+  "localization": {},
+  "languages": [
+    {
+      "code": "en",
+      "dialect": "US",
+      "name": "English",
+      "description": "American English",
+      "bidi": "ltr"
+    }
+  ],
+  "defaultLanguage": "en-US"
 }

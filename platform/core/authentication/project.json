@@ -69,6 +69,17 @@
       "options": {
         "jestConfig": "platform/core/authentication/jest.config.js"
       }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "rimraf dist/platform/core/authentication"
+          }
+        ],
+        "parallel": false
+      }
     }
   }
 }

@@ -15,8 +15,14 @@ export const transformToTreeData = (menuItems) => {
     }
 
     return menuItems.map((item) => {
-        // Use menu_id as key, fallback to application_id for root level, then _tempId for new items
-        const treeKey = item.menu_id || item.application_id || item._tempId || `fallback-${Date.now()}`;
+        // Priority order for tree keys:
+        // 1. menu_id - for saved menus (level 3+)
+        // 2. _tempId - for new unsaved items (any level)
+        // 3. module_id - for saved modules (level 2)
+        // 4. application_id - for applications (level 1)
+        // 5. key - fallback for items with key field
+        // _tempId must come before module_id to avoid duplicate keys when new items inherit module_id
+        const treeKey = item.menu_id || item._tempId || item.module_id || item.application_id || item.key || `fallback-${Date.now()}`;
 
         return {
             key: treeKey,
@@ -82,8 +88,9 @@ export const findMenuItemByKey = (menuData, id) => {
         if (!items || !Array.isArray(items)) return null;
 
         for (const item of items) {
-            // Check menu_id, application_id, or _tempId (for new items)
-            const itemId = item.menu_id || item.application_id || item._tempId;
+            // Check menu_id, _tempId, module_id, application_id, or key (for new items)
+            // _tempId must be checked before module_id because new items have module_id but we need to match by _tempId
+            const itemId = item.menu_id || item._tempId || item.module_id || item.application_id || item.key;
             if (itemId === id) {
                 return item;
             }
@@ -127,8 +134,9 @@ export const updateMenuItemByKey = (menuData, id, updates) => {
         if (!items || !Array.isArray(items)) return false;
 
         for (let i = 0; i < items.length; i++) {
-            // Check menu_id, application_id, or _tempId (for new items)
-            const itemId = items[i].menu_id || items[i].application_id || items[i]._tempId;
+            // Check menu_id, _tempId, module_id, application_id, or key (for new items)
+            // _tempId must be checked before module_id because new items have module_id but we need to match by _tempId
+            const itemId = items[i].menu_id || items[i]._tempId || items[i].module_id || items[i].application_id || items[i].key;
             if (itemId === id) {
                 // Update the item
                 items[i] = { ...items[i], ...updates };
@@ -173,8 +181,9 @@ export const getAllExpandableKeys = (menuItems) => {
     const collectKeys = (items) => {
         items.forEach((item) => {
             if (item.children && item.children.length > 0) {
-                // Use menu_id, application_id, or _tempId (for new items)
-                const itemId = item.menu_id || item.application_id || item._tempId;
+                // Use menu_id, _tempId, module_id, application_id, or key (for new items)
+                // _tempId must be checked before module_id
+                const itemId = item.menu_id || item._tempId || item.module_id || item.application_id || item.key;
                 if (itemId) {
                     keys.push(itemId);
                 }
@@ -247,8 +256,9 @@ export const getParentPath = (menuData, targetId) => {
         if (!items || !Array.isArray(items)) return null;
 
         for (const item of items) {
-            // Get the item's ID (menu_id, application_id, or _tempId)
-            const itemId = item.menu_id || item.application_id || item._tempId;
+            // Get the item's ID (menu_id, _tempId, module_id, application_id, or key)
+            // _tempId must be checked before module_id to correctly identify new items
+            const itemId = item.menu_id || item._tempId || item.module_id || item.application_id || item.key;
 
             if (itemId === targetId) {
                 return path;

@@ -69,6 +69,17 @@
       "options": {
         "jestConfig": "domains/operations/apps/admin-app/jest.config.js"
       }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "rimraf dist/domains/operations/apps/admin-app"
+          }
+        ],
+        "parallel": false
+      }
     }
   }
 }

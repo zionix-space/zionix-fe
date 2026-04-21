@@ -8,4 +8,6 @@ module.exports = {
     './AuthService': './src/services/auth/authService.js',
     './useAuthStore': './src/hooks/useAuthStore.js',
   },
+  // Explicitly disable DTS plugin to prevent Windows file lock issues
+  dts: false,
 };

@@ -224,6 +224,8 @@ function generateRemoteConfig(environment, targetModule = null) {
     // Create module federation config with shared dependencies
     const remotesConfigContent = `module.exports = {
   name: 'zionix-main-host',
+  // Explicitly disable DTS plugin to prevent Windows file lock issues
+  dts: false,
   remotes: ${JSON.stringify(remotes, null, 4)},
   shared: (name) => {
 ${sharedFunctionBody}
@@ -277,6 +279,53 @@ function updateAppJs() {
     console.log(`✅ appRouter.jsx updated with module cases`);
 }
 
+// Clean @mf-types directories to prevent Windows file lock issues
+function cleanMfTypes() {
+    const distPath = path.resolve("dist");
+
+    if (!fs.existsSync(distPath)) {
+        return;
+    }
+
+    console.log("🧹 Cleaning @mf-types directories...");
+
+    try {
+        // Find all @mf-types directories recursively
+        const findMfTypes = (dir) => {
+            if (!fs.existsSync(dir)) return;
+
+            const items = fs.readdirSync(dir);
+
+            items.forEach(item => {
+                const fullPath = path.join(dir, item);
+
+                try {
+                    const stat = fs.statSync(fullPath);
+
+                    if (stat.isDirectory()) {
+                        if (item === '@mf-types') {
+                            // Remove @mf-types directory
+                            fs.rmSync(fullPath, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+                            console.log(`  ✓ Cleaned: ${fullPath}`);
+                        } else {
+                            // Recurse into subdirectories
+                            findMfTypes(fullPath);
+                        }
+                    }
+                } catch (err) {
+                    // Skip if file is locked or inaccessible
+                    console.warn(`  ⚠️  Could not access: ${fullPath}`);
+                }
+            });
+        };
+
+        findMfTypes(distPath);
+        console.log("✅ @mf-types cleanup completed");
+    } catch (error) {
+        console.warn(`⚠️  Warning: Could not clean @mf-types directories: ${error.message}`);
+    }
+}
+
 // Build function
 function buildApp(env, targetModule = null) {
     console.log(`
@@ -290,6 +339,9 @@ function buildApp(env, targetModule = null) {
 
     // Load Vercel URLs for displaying deployment links
     const vercelUrls = loadVercelUrls();
+
+    // Step 0: Clean @mf-types directories to prevent file lock issues
+    cleanMfTypes();
 
     // Step 1: Generate remote configuration
     console.log("📋 Step 1: Generating module federation configuration...");

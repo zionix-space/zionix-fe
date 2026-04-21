@@ -111,6 +111,7 @@ export const menuService = {
             if (item.is_active !== undefined) menuItem.is_active = item.is_active;
             if (item.showsidebar !== undefined) menuItem.showsidebar = item.showsidebar;
             if (item.showtopbar !== undefined) menuItem.showtopbar = item.showtopbar;
+            if (item.module_id) menuItem.module_id = item.module_id; // Add module_id for level 2+ items
 
             // Recursively transform children
             if (item.children && Array.isArray(item.children) && item.children.length > 0) {
@@ -153,12 +154,12 @@ export const menuService = {
      * Handles:
      * - Parent menu reordering
      * - Children menu reordering within same parent
-     * - Moving menus between parents
+     * - Moving menus between parents (including between modules)
      * - Nested children reordering (multi-level)
      * - Swap two menus (automatically detected when exactly 2 items with same parent)
      * 
      * @param {string} applicationId - Application ID
-     * @param {Array} items - Array of menu items with menu_id, order_index, parent_menu_id, level
+     * @param {Array} items - Array of menu items with menu_id, order_index, parent_menu_id, level, module_id
      * @returns {Promise<Object>} Response with updated count
      */
     reorderMenus: async (applicationId, items) => {
@@ -172,12 +173,21 @@ export const menuService = {
 
         const payload = {
             application_id: applicationId,
-            items: items.map(item => ({
-                menu_id: item.menu_id,
-                order_index: item.order_index,
-                parent_menu_id: item.parent_menu_id || null,
-                level: item.level !== undefined ? item.level : 0
-            }))
+            items: items.map(item => {
+                const reorderItem = {
+                    menu_id: item.menu_id,
+                    order_index: item.order_index,
+                    parent_menu_id: item.parent_menu_id || null,
+                    level: item.level !== undefined ? item.level : 0
+                };
+
+                // Include module_id if present (for level 2+ items)
+                if (item.module_id) {
+                    reorderItem.module_id = item.module_id;
+                }
+
+                return reorderItem;
+            })
         };
 
         return await axiosClient.post('/menus/reorder', payload);
