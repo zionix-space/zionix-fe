@@ -22,16 +22,11 @@ const TreeToolbar = ({
 }) => {
     const { token } = useTheme();
 
-    // Create light primary background inline
-    const getLightPrimaryBg = () => {
-        return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
-    };
-
     return (
         <div
             className="tree-toolbar-container"
             style={{
-                background: getLightPrimaryBg(),
+                background: token.colorBgElevated,
                 borderBottom: `1px solid ${token.colorBorderSecondary}`
             }}
         >

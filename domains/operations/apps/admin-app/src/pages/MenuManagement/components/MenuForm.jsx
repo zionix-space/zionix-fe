@@ -15,11 +15,6 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
     const createMenuMutation = useCreateMenuMutation();
     const updateMenuMutation = useUpdateMenuMutation();
 
-    // Create light primary background inline
-    const getLightPrimaryBg = () => {
-        return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
-    };
-
     useEffect(() => {
         // Only update BaseForm when a different item is selected (based on selectedKey from parent)
         if (selectedKey && selectedKey !== previousSelectedKeyRef.current) {
@@ -398,7 +393,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
             <div
                 className="menu-form-header"
                 style={{
-                    background: getLightPrimaryBg(),
+                    background: token.colorBgElevated,
                     border: `1px solid ${token.colorBorderSecondary}`
                 }}
             >

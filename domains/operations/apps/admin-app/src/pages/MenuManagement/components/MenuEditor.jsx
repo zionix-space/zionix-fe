@@ -951,7 +951,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 <div
                     className="menu-editor-left-column"
                     style={{
-                        background: token.colorBgContainer,
+                        background: token.colorBgElevated,
                         border: `1px solid ${token.colorBorderSecondary}`
                     }}
                 >
@@ -989,7 +989,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 <div
                     className="menu-editor-right-column menu-editor-scrollbar"
                     style={{
-                        background: token.colorBgContainer,
+                        background: token.colorBgElevated,
                         border: `1px solid ${token.colorBorderSecondary}`
                     }}
                 >
