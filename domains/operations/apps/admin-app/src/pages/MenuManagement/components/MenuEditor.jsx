@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { BaseSpin, bannerMessage, BaseModal, theme } from '@zionix-space/design-system';
 import './MenuEditor.scss';
 import TreeToolbar from './TreeToolbar';
@@ -11,6 +11,7 @@ import {
     updateMenuItemByKey,
     getAllExpandableKeys,
     filterMenuItems,
+    getParentPath,
 } from '../utils/menuTransformers';
 import { useMenusQuery, useSaveMenusMutation, useDeleteMenuMutation, useUpdateMenuMutation, useReorderMenusMutation } from '../hooks/useMenuQuery';
 
@@ -85,6 +86,9 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const [hasFieldChanges, setHasFieldChanges] = useState(false); // Track if field updates happened
     const [affectedReorderItems, setAffectedReorderItems] = useState([]); // Track only affected items during reorder
 
+    // Use ref to track the last selected stable ID
+    const lastSelectedStableIdRef = useRef(null);
+
     // Initialize menu data from API
     useEffect(() => {
         if (apiMenuData) {
@@ -92,12 +96,37 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             if (apiMenuData._id) {
                 setNavDocId(apiMenuData._id);
             }
+
             setMenuData(apiMenuData);
+
+            // After data update, try to restore selection using the last stable ID
+            if (lastSelectedStableIdRef.current) {
+                // Find the item by its stable ID in the new data
+                const restoredItem = findMenuItemByKey(apiMenuData, lastSelectedStableIdRef.current);
+                if (restoredItem) {
+                    // Restore selection using the stable ID
+                    setSelectedKey(lastSelectedStableIdRef.current);
+                }
+            }
+
             if (onMenuDataChange) {
                 onMenuDataChange(apiMenuData);
             }
         }
     }, [apiMenuData, onMenuDataChange]);
+
+    // Track the stable ID whenever selection changes
+    useEffect(() => {
+        if (selectedKey && menuData) {
+            const selectedItem = findMenuItemByKey(menuData, selectedKey);
+            if (selectedItem) {
+                const stableId = selectedItem.menu_id || selectedItem.module_id || selectedItem.application_id;
+                if (stableId) {
+                    lastSelectedStableIdRef.current = stableId;
+                }
+            }
+        }
+    }, [selectedKey, menuData]);
 
     // Add to history when menu data changes
     const addToHistory = (data) => {
@@ -276,6 +305,10 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             return;
         }
 
+        // Find parent to select after delete
+        const parentPath = getParentPath(menuData, selectedKey);
+        const parentId = parentPath && parentPath.length > 0 ? parentPath[parentPath.length - 1] : null;
+
         // Check if this is a saved menu (has menu_id) or a new unsaved menu (_tempId)
         const isSavedMenu = !!selectedItem.menu_id;
 
@@ -286,7 +319,16 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 // Success message and query invalidation handled by the mutation hook
                 // The invalidation will trigger a refetch and update apiMenuData
                 // which will then update menuData via the useEffect
-                setSelectedKey(null);
+
+                // After successful delete, select the parent
+                if (parentId) {
+                    // Wait a bit for the refetch to complete, then select parent
+                    setTimeout(() => {
+                        setSelectedKey(parentId);
+                    }, 100);
+                } else {
+                    setSelectedKey(null);
+                }
             } catch (error) {
                 // Error message handled by the mutation hook
                 console.error('Delete failed:', error);
@@ -313,7 +355,13 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             };
 
             updateMenuData(updatedData);
-            setSelectedKey(null);
+
+            // Select parent after delete
+            if (parentId) {
+                setSelectedKey(parentId);
+            } else {
+                setSelectedKey(null);
+            }
             bannerMessage.success('Menu item removed');
         }
     };
