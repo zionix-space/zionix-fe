@@ -1,5 +1,5 @@
 import { BaseInput, BaseButton, useTheme } from '@zionix-space/design-system';
-import { useStyles } from './TreeToolbar.style';
+import './TreeToolbar.scss';
 
 const TreeToolbar = ({
     searchValue,
@@ -22,29 +22,36 @@ const TreeToolbar = ({
 }) => {
     const { token } = useTheme();
 
-    const isDarkMode =
-        token.colorBgBase === '#000000' ||
-        token.colorBgContainer === '#141414' ||
-        token.colorBgElevated === '#1f1f1f' ||
-        (token.colorBgContainer &&
-            token.colorBgContainer.startsWith('#') &&
-            parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
-
-    const styles = useStyles(token, isDarkMode);
+    // Create light primary background inline
+    const getLightPrimaryBg = () => {
+        return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
+    };
 
     return (
-        <div style={styles.toolbarContainer}>
-            <div style={styles.singleRow}>
+        <div
+            className="tree-toolbar-container"
+            style={{
+                background: getLightPrimaryBg(),
+                borderBottom: `1px solid ${token.colorBorderSecondary}`
+            }}
+        >
+            <div className="tree-toolbar-row">
                 <BaseInput.Search
                     placeholder="Search..."
                     value={searchValue}
                     onChange={(e) => onSearchChange(e.target.value)}
                     allowClear
-                    style={styles.searchInput}
+                    className="tree-toolbar-search"
                     size="small"
                 />
-                <div style={styles.spacer} />
-                <div style={styles.capsuleContainer}>
+                <div className="tree-toolbar-spacer" />
+                <div
+                    className="tree-toolbar-capsule"
+                    style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorderSecondary}`
+                    }}
+                >
                     <BaseButton
                         icon={<i className="ri-arrow-go-back-line" />}
                         onClick={onUndo}
@@ -64,7 +71,13 @@ const TreeToolbar = ({
                         type="text"
                     />
                 </div>
-                <div style={styles.capsuleContainer}>
+                <div
+                    className="tree-toolbar-capsule"
+                    style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorderSecondary}`
+                    }}
+                >
                     <BaseButton
                         icon={<i className="ri-download-line" />}
                         onClick={onExport}
@@ -84,7 +97,13 @@ const TreeToolbar = ({
                         disabled={saving}
                     />
                 </div>
-                <div style={styles.capsuleContainer}>
+                <div
+                    className="tree-toolbar-capsule"
+                    style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorderSecondary}`
+                    }}
+                >
                     <BaseButton
                         icon={<i className="ri-expand-diagonal-line" />}
                         onClick={onExpandAll}
@@ -104,7 +123,7 @@ const TreeToolbar = ({
                         disabled={saving}
                     />
                 </div>
-                <div style={styles.spacer} />
+                <div className="tree-toolbar-spacer" />
                 {hasReorderChanges && (
                     <BaseButton
                         type="default"

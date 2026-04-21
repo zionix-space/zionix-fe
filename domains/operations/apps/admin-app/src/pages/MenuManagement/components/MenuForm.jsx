@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { BaseForm, BaseInput, BaseInputNumber, BaseSwitch, BaseEmpty, BaseButton, BasePopconfirm, BaseRadio, BaseSelect, bannerMessage } from '@zionix-space/design-system';
 import { useTheme } from '@zionix-space/design-system';
-import { useStyles } from './MenuForm.style';
+import './MenuForm.scss';
 import { useCreateMenuMutation, useUpdateMenuMutation } from '../hooks/useMenuQuery';
 import { getParentPath } from '../utils/menuTransformers';
 
@@ -15,15 +15,10 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
     const createMenuMutation = useCreateMenuMutation();
     const updateMenuMutation = useUpdateMenuMutation();
 
-    const isDarkMode =
-        token.colorBgBase === '#000000' ||
-        token.colorBgContainer === '#141414' ||
-        token.colorBgElevated === '#1f1f1f' ||
-        (token.colorBgContainer &&
-            token.colorBgContainer.startsWith('#') &&
-            parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
-
-    const styles = useStyles(token, isDarkMode);
+    // Create light primary background inline
+    const getLightPrimaryBg = () => {
+        return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
+    };
 
     useEffect(() => {
         // Only update BaseForm when a different item is selected (based on selectedKey from parent)
@@ -427,16 +422,22 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
 
     if (!selectedItem) {
         return (
-            <div style={styles.emptyState}>
-                <BaseEmpty description="BaseSelect a menu item to edit" image={BaseEmpty.PRESENTED_IMAGE_SIMPLE} />
+            <div className="menu-form-empty">
+                <BaseEmpty description="Select a menu item to edit" image={BaseEmpty.PRESENTED_IMAGE_SIMPLE} />
             </div>
         );
     }
 
     return (
-        <div style={styles.formContainer}>
+        <div className="menu-form-container">
             {/* Action Header */}
-            <div style={styles.formHeader}>
+            <div
+                className="menu-form-header"
+                style={{
+                    background: getLightPrimaryBg(),
+                    border: `1px solid ${token.colorBorderSecondary}`
+                }}
+            >
                 <BaseButton
                     type="primary"
                     icon={<i className="ri-save-line" />}
@@ -482,11 +483,11 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 </BasePopconfirm>
             </div>
 
-            <BaseForm form={form} layout="vertical" onValuesChange={handleFieldChange} style={styles.form} size="middle" className="menu-editor-scrollbar">
+            <BaseForm form={form} layout="vertical" onValuesChange={handleFieldChange} className="menu-form-content menu-editor-scrollbar" size="middle">
                 {/* Basic Information Section */}
-                <div style={styles.section}>
-                    <div style={styles.sectionTitle}>Basic Information</div>
-                    <div style={styles.gridRow2}>
+                <div className="menu-form-section" style={{ borderBottom: `1px solid ${token.colorBorderSecondary}` }}>
+                    <div className="menu-form-section-title" style={{ color: token.colorTextSecondary }}>Basic Information</div>
+                    <div className="menu-form-grid-row-2">
                         <BaseForm.Item
                             label="Key"
                             name="key"
@@ -497,12 +498,12 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                         <BaseForm.Item label="Label" name="label" rules={[{ required: true, message: 'Label is required' }]}>
                             <BaseInput placeholder="Enter label" />
                         </BaseForm.Item>
-                        <div style={styles.fullWidth}>
+                        <div className="menu-form-grid-full">
                             <BaseForm.Item label="Description" name="description">
                                 <TextArea placeholder="Enter description" rows={3} />
                             </BaseForm.Item>
                         </div>
-                        <div style={styles.fullWidth}>
+                        <div className="menu-form-grid-full">
                             <BaseForm.Item label="Section Title" name="sectionTitle">
                                 <BaseInput placeholder="Enter section title (optional)" />
                             </BaseForm.Item>
@@ -511,9 +512,9 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 </div>
 
                 {/* Routing & Navigation Section */}
-                <div style={styles.section}>
-                    <div style={styles.sectionTitle}>Routing & Navigation</div>
-                    <div style={styles.gridRow3}>
+                <div className="menu-form-section" style={{ borderBottom: `1px solid ${token.colorBorderSecondary}` }}>
+                    <div className="menu-form-section-title" style={{ color: token.colorTextSecondary }}>Routing & Navigation</div>
+                    <div className="menu-form-grid-row-3">
                         <BaseForm.Item label="Route" name="route">
                             <BaseInput placeholder="Enter route path" />
                         </BaseForm.Item>
@@ -532,8 +533,14 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     </div>
 
                     {/* Switch Group */}
-                    <div style={styles.switchGroup}>
-                        <div style={styles.switchGroupTitle}>Display Options</div>
+                    <div
+                        className="menu-form-switch-group"
+                        style={{
+                            background: token.colorBgLayout,
+                            border: `1px solid ${token.colorBorderSecondary}`
+                        }}
+                    >
+                        <div className="menu-form-switch-group-title" style={{ color: token.colorTextSecondary }}>Display Options</div>
                         <BaseForm.Item label="Visible" name="is_visible" valuePropName="checked">
                             <BaseSwitch />
                         </BaseForm.Item>
@@ -550,8 +557,8 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 </div>
 
                 {/* Badge Configuration Section */}
-                <div style={styles.section}>
-                    <div style={styles.sectionTitle}>Badge Configuration</div>
+                <div className="menu-form-section" style={{ borderBottom: `1px solid ${token.colorBorderSecondary}` }}>
+                    <div className="menu-form-section-title" style={{ color: token.colorTextSecondary }}>Badge Configuration</div>
                     <BaseForm.Item label="Badge Type">
                         <BaseRadio.Group value={badgeType} onChange={handleBadgeTypeChange}>
                             <BaseRadio value="none">None</BaseRadio>
@@ -567,7 +574,7 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                     )}
 
                     {badgeType === 'object' && (
-                        <div style={styles.gridRow2}>
+                        <div className="menu-form-grid-row-2">
                             <BaseForm.Item label="Badge Count" name="badgeCount">
                                 <BaseInput placeholder="Enter count" />
                             </BaseForm.Item>
@@ -587,9 +594,9 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 </div>
 
                 {/* Application Settings Section */}
-                <div style={styles.section}>
-                    <div style={styles.sectionTitle}>Application Settings</div>
-                    <div style={styles.gridRow2}>
+                <div className="menu-form-section" style={{ borderBottom: `1px solid ${token.colorBorderSecondary}` }}>
+                    <div className="menu-form-section-title" style={{ color: token.colorTextSecondary }}>Application Settings</div>
+                    <div className="menu-form-grid-row-2">
                         <BaseForm.Item label="Application ID" name="application_id" tooltip="Read-only system field">
                             <BaseInput placeholder="System managed" disabled />
                         </BaseForm.Item>
@@ -619,8 +626,8 @@ const MenuForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
                 </div>
 
                 {/* Metadata Section */}
-                <div style={styles.section}>
-                    <div style={styles.sectionTitle}>Metadata</div>
+                <div className="menu-form-section" style={{ borderBottom: `1px solid ${token.colorBorderSecondary}` }}>
+                    <div className="menu-form-section-title" style={{ color: token.colorTextSecondary }}>Metadata</div>
                     <BaseForm.Item label="Menu Metadata (JSON)" name="menu_metadata">
                         <TextArea placeholder='{"key": "value"}' rows={4} />
                     </BaseForm.Item>

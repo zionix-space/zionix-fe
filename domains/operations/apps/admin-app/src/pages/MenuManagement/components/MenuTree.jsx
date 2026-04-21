@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { BaseTree, BaseBadge, useTheme } from '@zionix-space/design-system';
-import { useStyles } from './MenuTree.style';
+import './MenuTree.scss';
 
 const MenuTree = ({
     treeData,
@@ -12,16 +12,6 @@ const MenuTree = ({
     onDrop,
 }) => {
     const { token } = useTheme();
-
-    const isDarkMode =
-        token.colorBgBase === '#000000' ||
-        token.colorBgContainer === '#141414' ||
-        token.colorBgElevated === '#1f1f1f' ||
-        (token.colorBgContainer &&
-            token.colorBgContainer.startsWith('#') &&
-            parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
-
-    const styles = useStyles(token, isDarkMode);
 
     // Inject minimal CSS for theme-aware tree selection color
     useLayoutEffect(() => {
@@ -77,9 +67,9 @@ const MenuTree = ({
         };
 
         return (
-            <div style={styles.treeNodeTitle}>
-                {icon && <i className={icon} style={styles.treeNodeIcon} />}
-                <span style={styles.treeNodeLabel}>{highlightText(title)}</span>
+            <div className="menu-tree-node-title">
+                {icon && <i className={`${icon} menu-tree-node-icon`} />}
+                <span className="menu-tree-node-label">{highlightText(title)}</span>
             </div>
         );
     };
@@ -94,7 +84,7 @@ const MenuTree = ({
     };
 
     return (
-        <div style={styles.treeContainer} className="menu-editor-scrollbar">
+        <div className="menu-tree-container menu-editor-scrollbar">
             <BaseTree
                 className="menu-editor-tree"
                 treeData={transformedTreeData(treeData)}

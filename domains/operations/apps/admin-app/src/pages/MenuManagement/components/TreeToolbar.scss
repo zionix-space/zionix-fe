@@ -1,0 +1,36 @@
+.tree-toolbar {
+  &-container {
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  &-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  &-search {
+    width: 180px;
+    border-radius: 20px;
+  }
+
+  &-spacer {
+    flex: 1;
+  }
+
+  &-capsule {
+    display: inline-flex;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 20px;
+  }
+}
+
+// RTL support
+[dir='rtl'] {
+  .tree-toolbar {
+    // RTL adjustments if needed
+  }
+}

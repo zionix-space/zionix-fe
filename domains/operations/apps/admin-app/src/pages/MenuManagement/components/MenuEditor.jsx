@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { BaseSpin, bannerMessage, BaseModal, theme } from '@zionix-space/design-system';
-import { useStyles } from './MenuEditor.style';
+import './MenuEditor.scss';
 import TreeToolbar from './TreeToolbar';
 import MenuTree from './MenuTree';
 import MenuForm from './MenuForm';
@@ -26,16 +26,28 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const deleteMenuMutation = useDeleteMenuMutation();
     const reorderMenusMutation = useReorderMenusMutation();
 
-    // Detect dark mode
-    const isDarkMode =
-        token.colorBgBase === '#000000' ||
-        token.colorBgContainer === '#141414' ||
-        token.colorBgElevated === '#1f1f1f' ||
-        (token.colorBgContainer &&
-            token.colorBgContainer.startsWith('#') &&
-            parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
-
-    const styles = useStyles(token, isDarkMode);
+    // Add global scrollbar styles only
+    useEffect(() => {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .menu-editor-scrollbar::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            .menu-editor-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .menu-editor-scrollbar::-webkit-scrollbar-thumb {
+                background: ${token.colorBorder};
+                borderRadius: 10px;
+            }
+            .menu-editor-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: ${token.colorBorderSecondary};
+            }
+        `;
+        document.head.appendChild(style);
+        return () => document.head.removeChild(style);
+    }, [token]);
 
     // Add global scrollbar styles only
     useEffect(() => {
@@ -840,7 +852,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
 
     if (loading) {
         return (
-            <div style={styles.loadingContainer}>
+            <div className="menu-editor-loading">
                 <BaseSpin size="large">
                     <div style={{ padding: '20px', textAlign: 'center' }}>
                         <div style={{ marginTop: '8px', color: token.colorTextSecondary }}>
@@ -853,11 +865,17 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     }
 
     return (
-        <div style={styles.editorContainer}>
+        <div className="menu-editor-container">
             {/* Two-column layout */}
-            <div style={styles.twoColumnLayout}>
+            <div className="menu-editor-two-column">
                 {/* Left column - Tree */}
-                <div style={styles.leftColumn}>
+                <div
+                    className="menu-editor-left-column"
+                    style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorderSecondary}`
+                    }}
+                >
                     <TreeToolbar
                         searchValue={searchValue}
                         onSearchChange={handleSearchChange}
@@ -888,8 +906,14 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                     />
                 </div>
 
-                {/* Right column - BaseForm */}
-                <div style={styles.rightColumn} className="menu-editor-scrollbar">
+                {/* Right column - Form */}
+                <div
+                    className="menu-editor-right-column menu-editor-scrollbar"
+                    style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorderSecondary}`
+                    }}
+                >
                     <MenuForm
                         selectedKey={selectedKey}
                         selectedItem={selectedItem}
@@ -904,7 +928,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 </div>
             </div>
 
-            {/* JSON Preview BaseModal */}
+            {/* JSON Preview Modal */}
             <BaseModal
                 title="Menu Configuration JSON"
                 open={jsonPreviewOpen}
@@ -920,7 +944,7 @@ const MenuEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             >
                 <pre
                     style={{
-                        background: isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.05)',
+                        background: token.colorBgBase === '#000000' ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.05)',
                         padding: '16px',
                         borderRadius: '8px',
                         fontSize: '12px',

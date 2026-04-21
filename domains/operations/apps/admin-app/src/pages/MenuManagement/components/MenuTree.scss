@@ -1,0 +1,59 @@
+.menu-tree {
+  &-container {
+    flex: 1;
+    overflow: auto;
+    padding: 12px 4px;
+    margin-top: 8px;
+  }
+
+  &-node {
+    &-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 2px 0;
+    }
+
+    &-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    &-label {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    &-badge {
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+  }
+}
+
+// Global tree styles
+:global {
+  .menu-editor-tree {
+    .ant-tree-node-selected .ant-tree-node-content-wrapper {
+      // Theme colors applied via JS
+    }
+
+    .ant-tree-node-selected .ant-tree-node-content-wrapper:hover {
+      // Theme colors applied via JS
+    }
+  }
+}
+
+// RTL support
+[dir='rtl'] {
+  .menu-tree {
+    &-node {
+      &-badge {
+        margin-left: 0;
+        margin-right: auto;
+      }
+    }
+  }
+}
