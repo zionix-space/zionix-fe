@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BaseForm, BaseInput, BaseSelect, Empty, BaseButton, BaseCard, BaseTag, BaseSpace, BaseDivider, BaseSwitch, baseMessage, theme } from '@zionix-space/design-system';
+import { BaseForm, BaseInput, BaseSelect, BaseEmpty, BaseButton, BaseCard, BaseTag, BaseSpace, BaseDivider, BaseSwitch, baseMessage, theme } from '@zionix-space/design-system';
 
 const { TextArea } = BaseInput;
 const { Option } = BaseSelect;
@@ -63,9 +63,8 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, permissions, onPermissionC
     if (!selectedItem) {
         return (
             <BaseCard style={{ height: '100%' }}>
-                <Empty
-                    description="BaseSelect a BaseMenu item from the BaseTree to configure role access"
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                <BaseEmpty
+                    description="Select a menu item from the tree to configure role access"
                 />
             </BaseCard>
         );

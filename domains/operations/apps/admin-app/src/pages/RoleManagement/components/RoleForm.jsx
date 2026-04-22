@@ -258,7 +258,7 @@ const RoleForm = ({ selectedKey, selectedItem, allMenuKeys, menuData, onChange, 
     if (!selectedItem) {
         return (
             <div style={styles.emptyState}>
-                <BaseEmpty description="BaseSelect a BaseMenu item to edit" image={BaseEmpty.PRESENTED_IMAGE_SIMPLE} />
+                <BaseEmpty description="Select a menu item to edit" />
             </div>
         );
     }

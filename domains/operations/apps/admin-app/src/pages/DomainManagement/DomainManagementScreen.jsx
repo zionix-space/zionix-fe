@@ -90,7 +90,7 @@ const DomainManagementScreen = () => {
         };
     }, [domainsResponse, filters]);
 
-    // Load form schema from IndexedDB
+    // Load form schema from localStorage
     const getForm = async () => {
         const schema = await formDB.getFormSchema('DomainsView');
         return schema ? JSON.stringify(schema) : null;

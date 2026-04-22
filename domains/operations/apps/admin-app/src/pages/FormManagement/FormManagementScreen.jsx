@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { BaseSelect, BaseSpace, BaseTreeSelect, BasePopover, BaseButton, BaseBadge, baseMessage, useTheme } from '@zionix-space/design-system';
 import { useDomainsQuery, useApplicationsQuery, useMenusQuery, useSaveFormMutation, useFormsByMenuQuery } from './hooks/useFormQuery';
 import {
@@ -10,7 +10,7 @@ import {
     rtlCssLoader,
     zionixlcAntdCssLoader,
     BiDi,
-    formDB
+    useFormBuilderStore
 } from '@zionix-space/lowcode';
 import '@zionix-space/lowcode/styles';
 
@@ -22,31 +22,41 @@ const builderView = new BuilderView(builderComponents)
     .withCssLoader(BiDi.RTL, rtlCssLoader)
     .withCssLoader('common', zionixlcAntdCssLoader);
 
-// Get the currently active form ID
-const getCurrentFormId = () => {
-    return localStorage.getItem('zionixlc-current-form-id') || null;
-};
-
 /**
  * Form Management Screen
- * Manages forms per menu - each menu can have multiple forms
+ * Manages forms per menu - NO IndexedDB, pure React state
  */
 const FormManagementScreen = () => {
     const { token, isDarkMode } = useTheme();
     const [selectedDomain, setSelectedDomain] = useState(null);
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [selectedMenu, setSelectedMenu] = useState(null);
-    const [currentFormId, setCurrentFormId] = useState(() => getCurrentFormId());
     const [filterPopoverOpen, setFilterPopoverOpen] = useState(false);
 
-    // Memoize getForm function to prevent FormBuilder remount
-    const getForm = useMemo(() => {
-        return async (formId) => {
-            if (!formId) return null;
-            const schema = await formDB.getFormSchema(formId);
-            return schema ? JSON.stringify(schema) : null;
-        };
-    }, []);
+    // Store forms in React state - NO IndexedDB
+    const [currentForms, setCurrentForms] = useState([]);
+    const [currentFormIndex, setCurrentFormIndex] = useState(0);
+    const [formKey, setFormKey] = useState(0); // Force FormBuilder remount
+
+    // Generate a stable form ID for FormBuilder
+    const currentFormId = useMemo(() => {
+        if (!selectedMenu || currentForms.length === 0) return null;
+        return `form-${selectedMenu}-${currentFormIndex}`;
+    }, [selectedMenu, currentFormIndex, currentForms.length]);
+
+    // Get current form schema from FormBuilder's Zustand store
+    const formSchema = useFormBuilderStore(state => state.formSchema);
+
+    // Sync FormBuilder changes back to our React state
+    useEffect(() => {
+        if (formSchema && currentForms.length > 0) {
+            setCurrentForms(prev => {
+                const updated = [...prev];
+                updated[currentFormIndex] = formSchema;
+                return updated;
+            });
+        }
+    }, [formSchema, currentFormIndex]);
 
     // Mutation for saving form
     const { mutate: saveForm, isLoading: isSaving } = useSaveFormMutation();
@@ -70,21 +80,18 @@ const FormManagementScreen = () => {
             ? applicationsData.data.map(app => ({ value: app.id, label: app.name }))
             : [];
 
-    // Convert menus to TreeSelect format (nested structure)
+    // Convert menus to TreeSelect format
     const convertToTreeData = (menuArray) => {
         if (!Array.isArray(menuArray)) return [];
-
         return menuArray.map(item => {
             const treeNode = {
                 value: item.menu_id || item.id || item.key,
                 title: item.label || item.name,
                 key: item.menu_id || item.id || item.key,
             };
-
             if (item.children && item.children.length > 0) {
                 treeNode.children = convertToTreeData(item.children);
             }
-
             return treeNode;
         });
     };
@@ -97,14 +104,14 @@ const FormManagementScreen = () => {
                 ? convertToTreeData(menusData.mainNavigation)
                 : [];
 
-    // Auto-select first domain on initial load
+    // Auto-select first domain
     useEffect(() => {
         if (domains.length > 0 && !selectedDomain) {
             setSelectedDomain(domains[0].value);
         }
     }, [domains, selectedDomain]);
 
-    // Auto-select first application when applications load
+    // Auto-select first application
     useEffect(() => {
         if (applications.length > 0 && !selectedApplication) {
             setSelectedApplication(applications[0].value);
@@ -112,217 +119,129 @@ const FormManagementScreen = () => {
     }, [applications, selectedApplication]);
 
     // Handle domain change
-    const handleDomainChange = useMemo(() => (domainId) => {
+    const handleDomainChange = useCallback((domainId) => {
         setSelectedDomain(domainId);
         setSelectedApplication(null);
         setSelectedMenu(null);
+        setCurrentForms([]);
     }, []);
 
     // Handle application change
-    const handleApplicationChange = useMemo(() => (applicationId) => {
+    const handleApplicationChange = useCallback((applicationId) => {
         setSelectedApplication(applicationId);
         setSelectedMenu(null);
+        setCurrentForms([]);
     }, []);
 
     // Handle menu change
-    const handleMenuChange = useMemo(() => (menuKey) => {
-        console.log('[FormManagement] Menu selected:', menuKey);
+    const handleMenuChange = useCallback((menuKey) => {
         setSelectedMenu(menuKey);
-        // Save to localStorage so FormsPanel can access it
-        if (menuKey) {
-            localStorage.setItem('zionixlc-selected-menu-id', menuKey);
-        } else {
-            localStorage.removeItem('zionixlc-selected-menu-id');
-        }
+        setCurrentForms([]);
+        setCurrentFormIndex(0);
     }, []);
 
-    // Auto-load forms from API when menu is selected
+    // Load forms from API into React state
     useEffect(() => {
-        const loadFormsFromAPI = async () => {
-            if (!selectedMenu) {
-                console.log('[FormManagement] No menu selected');
+        if (!selectedMenu || isLoadingForms || !formsData) {
+            return;
+        }
+
+        try {
+            const forms = Array.isArray(formsData)
+                ? formsData
+                : Array.isArray(formsData?.data)
+                    ? formsData.data
+                    : [];
+
+            if (forms.length === 0 || !forms[0]?.forms || forms[0].forms.length === 0) {
+                // Initialize with empty form
+                setCurrentForms([{
+                    version: "1",
+                    tooltipType: "AntTooltip",
+                    errorType: "AntErrorMessage",
+                    modalType: "AntModal",
+                    form: {
+                        key: "Screen",
+                        type: "Screen",
+                        props: {},
+                        children: [],
+                    },
+                    localization: {},
+                    languages: [{
+                        code: "en",
+                        dialect: "US",
+                        name: "English",
+                        description: "American English",
+                        bidi: "ltr",
+                    }],
+                    defaultLanguage: "en-US",
+                    name: "New Form"
+                }]);
+                setCurrentFormIndex(0);
+                setFormKey(prev => prev + 1);
+                baseMessage.info('No forms found. Create a new form.');
                 return;
             }
 
-            if (isLoadingForms) {
-                console.log('[FormManagement] Still loading forms...');
-                return;
-            }
+            // Extract forms from API and store in React state
+            const extractedForms = forms[0].forms.map((formSchema, index) => ({
+                ...formSchema,
+                name: formSchema.name || formSchema.form?.name || `Form ${index + 1}`
+            }));
 
-            console.log('[FormManagement] Processing forms data for menu:', selectedMenu);
-            console.log('[FormManagement] formsData:', formsData);
+            setCurrentForms(extractedForms);
+            setCurrentFormIndex(0);
+            setFormKey(prev => prev + 1);
+            baseMessage.success(`Loaded ${extractedForms.length} form(s)`);
 
-            if (!formsData) {
-                console.log('[FormManagement] No formsData yet');
-                return;
-            }
-
-            try {
-                const forms = Array.isArray(formsData)
-                    ? formsData
-                    : Array.isArray(formsData?.data)
-                        ? formsData.data
-                        : [];
-
-                console.log('[FormManagement] Parsed forms array:', forms);
-
-                if (forms.length === 0) {
-                    console.log('[FormManagement] No forms found - user can create new ones');
-                    // Clear any existing forms for this menu from IndexedDB
-                    const allForms = await formDB.getAllForms();
-                    const menuForms = allForms.filter(f => f.menuId === selectedMenu);
-                    for (const form of menuForms) {
-                        await formDB.deleteForm(form.id);
-                    }
-                    // Clear canvas
-                    localStorage.removeItem('zionixlc-current-form-id');
-                    setCurrentFormId(null);
-                    window.dispatchEvent(new Event('zionixlc-form-selected'));
-                    return;
-                }
-
-                console.log(`[FormManagement] Loading ${forms.length} form(s) for menu`);
-
-                // Clear existing forms for this menu first
-                const allForms = await formDB.getAllForms();
-                const existingMenuForms = allForms.filter(f => f.menuId === selectedMenu);
-                for (const form of existingMenuForms) {
-                    await formDB.deleteForm(form.id);
-                }
-
-                // Load ALL forms into IndexedDB
-                let loadedCount = 0;
-                for (let i = 0; i < forms.length; i++) {
-                    const formData = forms[i];
-
-                    if (!formData.forms || !Array.isArray(formData.forms)) continue;
-
-                    for (let j = 0; j < formData.forms.length; j++) {
-                        const formSchema = formData.forms[j];
-                        const formId = `menu-${selectedMenu}-${i}-${j}`;
-
-                        // Save to IndexedDB
-                        await formDB.saveFormSchema(formId, formSchema);
-                        await formDB.saveFormMeta(formId, {
-                            id: formId,
-                            name: `${formData.name || 'Form'} (${i + 1}-${j + 1})`,
-                            menuId: selectedMenu,
-                            createdAt: new Date().toISOString(),
-                            updatedAt: new Date().toISOString(),
-                        });
-                        loadedCount++;
-                    }
-                }
-
-                // Set first form as active
-                const firstFormId = `menu-${selectedMenu}-0-0`;
-                const firstExists = await formDB.getFormSchema(firstFormId);
-
-                if (firstExists) {
-                    localStorage.setItem('zionixlc-current-form-id', firstFormId);
-                    setCurrentFormId(firstFormId);
-                    window.dispatchEvent(new Event('zionixlc-form-selected'));
-                    if (loadedCount > 0) {
-                        baseMessage.success(`Loaded ${loadedCount} form(s)`);
-                    }
-                } else {
-                    console.log('[FormManagement] No forms loaded, clearing canvas');
-                    localStorage.removeItem('zionixlc-current-form-id');
-                    setCurrentFormId(null);
-                }
-
-            } catch (error) {
-                console.error('[FormManagement] Error loading forms:', error);
-                baseMessage.error('Failed to load forms');
-            }
-        };
-
-        loadFormsFromAPI();
+        } catch (error) {
+            console.error('[FormManagement] Error loading forms:', error);
+            baseMessage.error('Failed to load forms');
+        }
     }, [selectedMenu, formsData, isLoadingForms]);
 
-    // Handle save ALL forms for current menu to backend
-    const handleSaveForm = useMemo(() => async () => {
+    // Provide form to FormBuilder from React state
+    const getForm = useCallback(async () => {
+        if (currentForms.length === 0 || !currentFormId) return null;
+        const form = currentForms[currentFormIndex];
+        return form ? JSON.stringify(form) : null;
+    }, [currentForms, currentFormIndex, currentFormId]);
+
+    // Save all forms to API
+    const handleSaveForm = useCallback(async () => {
         if (!selectedMenu) {
             baseMessage.error('Please select a menu first');
             return;
         }
 
+        if (currentForms.length === 0) {
+            baseMessage.error('No forms to save');
+            return;
+        }
+
         try {
-            // Get ALL forms from IndexedDB that belong to this menu
-            const allForms = await formDB.getAllForms();
-            const menuForms = allForms.filter(f => f.menuId === selectedMenu);
-
-            if (menuForms.length === 0) {
-                baseMessage.error('No forms to save for this menu');
-                return;
-            }
-
-            // Collect all form schemas
-            const formSchemas = [];
-            for (const formMeta of menuForms) {
-                const schema = await formDB.getFormSchema(formMeta.id);
-                if (schema) {
-                    formSchemas.push({
-                        defaultLanguage: "en-US",
-                        form: schema.form,
-                        languages: schema.languages || [
-                            {
-                                bidi: "ltr",
-                                code: "en",
-                                description: "American English",
-                                dialect: "US",
-                                name: "English"
-                            }
-                        ],
-                        localization: schema.localization || {},
-                        modalType: schema.modalType || "AntModal",
-                        tooltipType: schema.tooltipType || "AntTooltip",
-                        errorType: schema.errorType || "AntErrorMessage",
-                        triggerWhen: schema.triggerWhen || {},
-                        version: schema.version || "1"
-                    });
-                }
-            }
-
-            // Build request payload with ALL forms
             const payload = {
                 menu_id: selectedMenu,
-                name: menuForms[0].name || 'Menu Forms',
-                access: ["read", "write"],
-                forms: formSchemas
+                name: 'Form Collections',
+                access: "read",
+                forms: currentForms
             };
 
-            console.log('[FormManagement] Saving forms:', payload);
-
-            // Save to backend
             saveForm(payload, {
                 onSuccess: () => {
                     setFilterPopoverOpen(false);
-                    baseMessage.success(`Saved ${formSchemas.length} form(s) successfully`);
+                    baseMessage.success(`Saved ${currentForms.length} form(s) successfully`);
                 },
+                onError: (error) => {
+                    baseMessage.error(error.message || 'Failed to save forms');
+                }
             });
 
         } catch (error) {
             console.error('[FormManagement] Save error:', error);
-            baseMessage.error(error.message || 'Failed to save forms');
+            baseMessage.error('Failed to save forms');
         }
-    }, [selectedMenu, saveForm]);
-
-    // Listen for form selection changes
-    useEffect(() => {
-        const handleStorageChange = () => {
-            const newFormId = getCurrentFormId();
-            setCurrentFormId(newFormId);
-        };
-
-        window.addEventListener('zionixlc-form-selected', handleStorageChange);
-        window.addEventListener('storage', handleStorageChange);
-
-        return () => {
-            window.removeEventListener('zionixlc-form-selected', handleStorageChange);
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
+    }, [selectedMenu, currentForms, saveForm]);
 
     // Custom validators
     const customValidators = useMemo(() => ({
@@ -336,14 +255,9 @@ const FormManagementScreen = () => {
     // Custom actions
     const customActions = useMemo(() => ({
         logEventArgs: (e) => {
-            console.log('Custom action - logEventArgs:', e);
+            console.log('Custom action:', e);
         }
     }), []);
-
-    // Form data change handler
-    const handleFormDataChange = useMemo(() => ({ data, errors }) => {
-        console.log('Form data changed:', { data, errors });
-    }, []);
 
     // Count active filters
     const activeFiltersCount = [selectedDomain, selectedApplication, selectedMenu].filter(Boolean).length;
@@ -353,12 +267,7 @@ const FormManagementScreen = () => {
         <div style={{ width: 320, padding: '8px 0' }}>
             <BaseSpace direction="vertical" size="middle" style={{ width: '100%' }}>
                 <div>
-                    <div style={{
-                        marginBottom: 8,
-                        fontSize: 12,
-                        fontWeight: 500,
-                        color: token.colorTextSecondary
-                    }}>
+                    <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 500, color: token.colorTextSecondary }}>
                         Domain
                     </div>
                     <BaseSelect
@@ -372,12 +281,7 @@ const FormManagementScreen = () => {
                     />
                 </div>
                 <div>
-                    <div style={{
-                        marginBottom: 8,
-                        fontSize: 12,
-                        fontWeight: 500,
-                        color: token.colorTextSecondary
-                    }}>
+                    <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 500, color: token.colorTextSecondary }}>
                         Application
                     </div>
                     <BaseSelect
@@ -392,12 +296,7 @@ const FormManagementScreen = () => {
                     />
                 </div>
                 <div>
-                    <div style={{
-                        marginBottom: 8,
-                        fontSize: 12,
-                        fontWeight: 500,
-                        color: token.colorTextSecondary
-                    }}>
+                    <div style={{ marginBottom: 8, fontSize: 12, fontWeight: 500, color: token.colorTextSecondary }}>
                         Menu
                     </div>
                     <BaseTreeSelect
@@ -430,8 +329,8 @@ const FormManagementScreen = () => {
             </BaseSpace>
         </div>
     ), [selectedDomain, selectedApplication, selectedMenu, domains, applications, menuTreeData,
-        isLoadingDomains, isLoadingApps, isLoadingMenus, isSaving, token.colorTextSecondary,
-        token.colorBorder, handleDomainChange, handleApplicationChange, handleMenuChange, handleSaveForm]);
+        isLoadingDomains, isLoadingApps, isLoadingMenus, isSaving, token,
+        handleDomainChange, handleApplicationChange, handleMenuChange, handleSaveForm]);
 
     return (
         <div style={{
@@ -474,21 +373,17 @@ const FormManagementScreen = () => {
                 </BasePopover>
             </div>
 
-
-
             <FormBuilder
-                key={currentFormId || 'no-form'}
+                key={formKey}
                 view={builderView}
                 getForm={currentFormId ? getForm : null}
-                formName={currentFormId || null}
+                formName={currentFormId}
                 initialData={{}}
                 validators={customValidators}
                 actions={customActions}
-                onFormDataChange={handleFormDataChange}
                 useLayoutSystem={false}
                 menuId={selectedMenu}
             />
-
         </div>
     );
 };

@@ -3,7 +3,7 @@ import domainsViewSchema from '../DomainsView.schema.json';
 
 /**
  * Import DomainsView schema into FormBuilder
- * Run this once to create the form in IndexedDB
+ * Run this once to create the form in localStorage
  */
 export const importDomainsViewSchema = async () => {
     try {
