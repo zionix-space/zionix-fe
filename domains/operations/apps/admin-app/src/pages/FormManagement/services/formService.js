@@ -1,7 +1,7 @@
 import axiosClient from '@zionix/shared-utilities/shared/middleware/axiosCore';
 
 /**
- * Menu Service - All menu-related API calls
+ * Form Service - All form-related API calls
  * Uses global axios client with built-in auth and error handling
  */
 export const formService = {
@@ -41,59 +41,6 @@ export const formService = {
     },
 
     /**
-     * Get menu by ID
-     * @param {string} menuId - Menu ID
-     * @returns {Promise<Object>} Menu data
-     */
-    getFormByMenuId: async (menuId) => {
-        return await axiosClient.get(`/menus/${menuId}`);
-    },
-
-    /**
-     * Create new menu
-     * @param {Object} menuData - Menu data
-     * @param {string} navDocId - Navigation document ID (from root _id)
-     * @returns {Promise<Object>} Created menu
-     */
-    createForm: async (menuData, navDocId) => {
-        if (!navDocId) {
-            throw new Error('navDocId is required');
-        }
-
-        const params = new URLSearchParams();
-        params.append('nav_doc_id', navDocId);
-
-        return await axiosClient.post(`/menus/?${params.toString()}`, menuData);
-    },
-
-    /**
-     * Update existing menu
-     * @param {string} menuId - Menu ID
-     * @param {Object} menuData - Updated menu data
-     * @param {string} navDocId - Navigation document ID (required)
-     * @returns {Promise<Object>} Updated menu
-     */
-    updateForm: async (menuId, menuData, navDocId) => {
-        if (!navDocId) {
-            throw new Error('nav_doc_id is required for updating menu');
-        }
-
-        const params = new URLSearchParams();
-        params.append('nav_doc_id', navDocId);
-
-        return await axiosClient.put(`/menus/${menuId}?${params.toString()}`, menuData);
-    },
-
-    /**
-     * Delete menu
-     * @param {string} menuId - Menu ID
-     * @returns {Promise<void>}
-     */
-    deleteForm: async (menuId) => {
-        return await axiosClient.delete(`/menus/${menuId}`);
-    },
-
-    /**
      * Get forms by menu ID
      * @param {string} menuId - Menu ID
      * @returns {Promise<Object>} Forms data
@@ -106,10 +53,9 @@ export const formService = {
     },
 
     /**
-     * Save form to backend
+     * Save form to backend (Create)
      * @param {Object} payload - Form save payload
      * @param {string} payload.menu_id - Menu ID (UUID)
-     * @param {string} payload.name - Form name
      * @param {Array} payload.access - Access permissions (e.g., ["read", "write"])
      * @param {Array} payload.forms - Array of form objects
      * @returns {Promise<Object>} Saved form response
@@ -120,6 +66,33 @@ export const formService = {
         }
 
         return await axiosClient.post('/forms/', payload);
+    },
+
+    /**
+     * Update form by form ID
+     * @param {string} formId - Form ID (UUID)
+     * @param {Object} payload - Form update payload (same structure as saveForm)
+     * @returns {Promise<Object>} Updated form response
+     */
+    updateFormById: async (formId, payload) => {
+        if (!formId) {
+            throw new Error('formId is required');
+        }
+
+        return await axiosClient.put(`/forms/${formId}`, payload);
+    },
+
+    /**
+     * Delete form by form ID
+     * @param {string} formId - Form ID (UUID)
+     * @returns {Promise<Object>} Delete response
+     */
+    deleteFormById: async (formId) => {
+        if (!formId) {
+            throw new Error('formId is required');
+        }
+
+        return await axiosClient.delete(`/forms/${formId}`);
     }
 };
 

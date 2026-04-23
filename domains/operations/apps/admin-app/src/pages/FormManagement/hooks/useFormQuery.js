@@ -56,99 +56,7 @@ export const useDomainsQuery = (options = {}) => {
 };
 
 /**
- * Hook to fetch form by ID
- * @param {string} formId - Form ID
- * @returns {Object} Query result with form data
- */
-export const useFormQuery = (formId, options = {}) => {
-    return useQuery({
-        queryKey: formKeys.detail(formId),
-        queryFn: () => formService.getFormById(formId),
-        enabled: !!formId,
-        staleTime: 5 * 60 * 1000,
-        cacheTime: 10 * 60 * 1000,
-        retry: 2,
-        refetchOnWindowFocus: false,
-        onError: (error) => {
-            bannerMessage.error(error.message || 'Failed to load form');
-        },
-        ...options,
-    });
-};
-
-/**
- * Hook to create new form
- * @returns {Object} Mutation object
- */
-export const useCreateFormMutation = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: (formData) => formService.createForm(formData),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: formKeys.lists() });
-            bannerMessage.success('Form created successfully!');
-        },
-        onError: (error) => {
-            bannerMessage.error(error.message || 'Failed to create form');
-        },
-    });
-};
-
-/**
- * Hook to update form
- * @returns {Object} Mutation object
- */
-export const useUpdateFormMutation = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: ({ formId, formData }) => formService.updateForm(formId, formData),
-        onMutate: async ({ formId, formData }) => {
-            await queryClient.cancelQueries({ queryKey: formKeys.detail(formId) });
-            const previousForm = queryClient.getQueryData(formKeys.detail(formId));
-            queryClient.setQueryData(formKeys.detail(formId), formData);
-            return { previousForm, formId };
-        },
-        onError: (error, variables, context) => {
-            if (context?.previousForm) {
-                queryClient.setQueryData(
-                    formKeys.detail(context.formId),
-                    context.previousForm
-                );
-            }
-            bannerMessage.error(error.message || 'Failed to update form');
-        },
-        onSuccess: (data, variables) => {
-            queryClient.invalidateQueries({ queryKey: formKeys.lists() });
-            queryClient.invalidateQueries({ queryKey: formKeys.detail(variables.formId) });
-            bannerMessage.success('Form updated successfully');
-        },
-    });
-};
-
-/**
- * Hook to delete form
- * @returns {Object} Mutation object
- */
-export const useDeleteFormMutation = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: formService.deleteForm,
-        onSuccess: (data, formId) => {
-            queryClient.removeQueries({ queryKey: formKeys.detail(formId) });
-            queryClient.invalidateQueries({ queryKey: formKeys.all });
-            bannerMessage.success('Form deleted successfully');
-        },
-        onError: (error) => {
-            bannerMessage.error(error.message || 'Failed to delete form');
-        },
-    });
-};
-
-/**
- * Hook to save form to backend
+ * Hook to save form to backend (Create)
  * @returns {Object} Mutation object
  */
 export const useSaveFormMutation = () => {
@@ -162,6 +70,44 @@ export const useSaveFormMutation = () => {
         },
         onError: (error) => {
             bannerMessage.error(error.message || 'Failed to save form');
+        },
+    });
+};
+
+/**
+ * Hook to update form by form ID
+ * @returns {Object} Mutation object
+ */
+export const useUpdateFormByIdMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ formId, payload }) => formService.updateFormById(formId, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: formKeys.all });
+            bannerMessage.success('Form updated successfully');
+        },
+        onError: (error) => {
+            bannerMessage.error(error.message || 'Failed to update form');
+        },
+    });
+};
+
+/**
+ * Hook to delete form by form ID
+ * @returns {Object} Mutation object
+ */
+export const useDeleteFormByIdMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (formId) => formService.deleteFormById(formId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: formKeys.all });
+            bannerMessage.success('Form deleted successfully');
+        },
+        onError: (error) => {
+            bannerMessage.error(error.message || 'Failed to delete form');
         },
     });
 };

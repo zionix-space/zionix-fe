@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { BaseSelect, BaseSpace, BaseTreeSelect, BasePopover, BaseButton, BaseBadge, baseMessage, useTheme } from '@zionix-space/design-system';
-import { useDomainsQuery, useApplicationsQuery, useMenusQuery, useSaveFormMutation, useFormsByMenuQuery } from './hooks/useFormQuery';
+import { useDomainsQuery, useApplicationsQuery, useMenusQuery, useSaveFormMutation, useFormsByMenuQuery, useUpdateFormByIdMutation, useDeleteFormByIdMutation } from './hooks/useFormQuery';
 import {
     FormBuilder,
     BuilderView,
@@ -35,37 +35,23 @@ const FormManagementScreen = () => {
 
     // Store forms in React state - NO IndexedDB
     const [currentForms, setCurrentForms] = useState([]);
-    const [currentFormIndex, setCurrentFormIndex] = useState(0);
     const [formKey, setFormKey] = useState(0); // Force FormBuilder remount
-
-    // Generate a stable form ID for FormBuilder
-    const currentFormId = useMemo(() => {
-        if (!selectedMenu || currentForms.length === 0) return null;
-        return `form-${selectedMenu}-${currentFormIndex}`;
-    }, [selectedMenu, currentFormIndex, currentForms.length]);
-
-    // Get current form schema from FormBuilder's Zustand store
-    const formSchema = useFormBuilderStore(state => state.formSchema);
-
-    // Sync FormBuilder changes back to our React state
-    useEffect(() => {
-        if (formSchema && currentForms.length > 0) {
-            setCurrentForms(prev => {
-                const updated = [...prev];
-                updated[currentFormIndex] = formSchema;
-                return updated;
-            });
-        }
-    }, [formSchema, currentFormIndex]);
+    const [currentFormId, setCurrentFormId] = useState(null); // Track actual form ID from localStorage
 
     // Mutation for saving form
-    const { mutate: saveForm, isLoading: isSaving } = useSaveFormMutation();
+    const { mutate: saveForm } = useSaveFormMutation();
+
+    // Mutation for updating form
+    const { mutate: updateFormById } = useUpdateFormByIdMutation();
+
+    // Mutation for deleting form
+    const { mutate: deleteFormById } = useDeleteFormByIdMutation();
 
     // Fetch data
     const { data: domainsData, isLoading: isLoadingDomains } = useDomainsQuery();
     const { data: applicationsData, isLoading: isLoadingApps } = useApplicationsQuery(selectedDomain);
     const { data: menusData, isLoading: isLoadingMenus } = useMenusQuery(selectedApplication);
-    const { data: formsData, isLoading: isLoadingForms } = useFormsByMenuQuery(selectedMenu);
+    const { data: formsData, isLoading: isLoadingForms, refetch: refetchForms } = useFormsByMenuQuery(selectedMenu);
 
     // Transform data for select options
     const domains = Array.isArray(domainsData)
@@ -124,6 +110,7 @@ const FormManagementScreen = () => {
         setSelectedApplication(null);
         setSelectedMenu(null);
         setCurrentForms([]);
+        setCurrentFormId(null);
     }, []);
 
     // Handle application change
@@ -131,31 +118,209 @@ const FormManagementScreen = () => {
         setSelectedApplication(applicationId);
         setSelectedMenu(null);
         setCurrentForms([]);
+        setCurrentFormId(null);
     }, []);
 
     // Handle menu change
     const handleMenuChange = useCallback((menuKey) => {
         setSelectedMenu(menuKey);
         setCurrentForms([]);
-        setCurrentFormIndex(0);
+        setCurrentFormId(null);
     }, []);
 
-    // Load forms from API into React state
+    // Helper function to clear localStorage and state
+    const clearFormsState = useCallback(() => {
+        setCurrentForms([]);
+        setCurrentFormId(null);
+        setFormKey(prev => prev + 1);
+
+        // Clear localStorage
+        localStorage.removeItem('zionixlc-forms-metadata');
+        localStorage.removeItem('zionixlc-current-form-id');
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('zionixlc-form-schema-')) {
+                localStorage.removeItem(key);
+            }
+        });
+
+        // Clear FormBuilder store
+        const store = useFormBuilderStore.getState();
+        store.loadForm(null, null, null);
+
+        // Notify FormsPanel
+        window.dispatchEvent(new Event('zionixlc-forms-updated'));
+        window.dispatchEvent(new Event('zionixlc-form-selected'));
+    }, []);
+
+    // Load forms from API into React state AND sync to localStorage for FormsPanel
     useEffect(() => {
-        if (!selectedMenu || isLoadingForms || !formsData) {
+        if (!selectedMenu) {
+            clearFormsState();
+            return;
+        }
+
+        if (isLoadingForms || !formsData) {
+            if (!isLoadingForms && !formsData) {
+                clearFormsState();
+            }
             return;
         }
 
         try {
-            const forms = Array.isArray(formsData)
-                ? formsData
-                : Array.isArray(formsData?.data)
-                    ? formsData.data
-                    : [];
+            // Handle both array and single object responses
+            let formsResponse;
+            if (Array.isArray(formsData)) {
+                formsResponse = formsData[0];
+            } else if (Array.isArray(formsData?.data)) {
+                formsResponse = formsData.data[0];
+            } else if (formsData && formsData.forms) {
+                formsResponse = formsData;
+            } else {
+                formsResponse = null;
+            }
 
-            if (forms.length === 0 || !forms[0]?.forms || forms[0].forms.length === 0) {
-                // Initialize with empty form
-                setCurrentForms([{
+            if (!formsResponse || !formsResponse.forms || formsResponse.forms.length === 0) {
+                clearFormsState();
+                baseMessage.info('No forms found for this menu.');
+                return;
+            }
+
+            // Clear old form schemas from localStorage
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('zionixlc-form-schema-')) {
+                    localStorage.removeItem(key);
+                }
+            });
+
+            const extractedForms = formsResponse.forms;
+
+            // Validate that all forms have form_id
+            if (!extractedForms.every(form => form.form_id)) {
+                console.error('[FormManagement] Some forms missing form_id:', extractedForms);
+                baseMessage.error('Invalid form data: missing form_id');
+                return;
+            }
+
+            // Sync to localStorage for FormsPanel
+            const now = new Date().toISOString();
+            const formsMetadata = extractedForms.map(form => ({
+                id: form.form_id,
+                name: form.name || 'Untitled Form',
+                description: form.description || '',
+                menuId: selectedMenu,
+                createdAt: now,
+                updatedAt: now,
+            }));
+
+            localStorage.setItem('zionixlc-forms-metadata', JSON.stringify(formsMetadata));
+
+            extractedForms.forEach(form => {
+                localStorage.setItem(`zionixlc-form-schema-${form.form_id}`, JSON.stringify(form));
+            });
+
+            if (formsMetadata.length > 0) {
+                localStorage.setItem('zionixlc-current-form-id', formsMetadata[0].id);
+                setCurrentFormId(formsMetadata[0].id);
+            }
+
+            setCurrentForms(extractedForms);
+            setFormKey(prev => prev + 1);
+
+            window.dispatchEvent(new Event('zionixlc-forms-updated'));
+            window.dispatchEvent(new Event('zionixlc-form-selected'));
+
+            baseMessage.success(`Loaded ${extractedForms.length} form(s)`);
+
+        } catch (error) {
+            console.error('[FormManagement] Error loading forms:', error);
+            clearFormsState();
+            baseMessage.error('Failed to load forms');
+        }
+    }, [selectedMenu, formsData, isLoadingForms, clearFormsState]);
+
+    // Auto-load first form when currentFormId changes and forms are available
+    useEffect(() => {
+        if (currentFormId && currentForms.length > 0) {
+            const store = useFormBuilderStore.getState();
+
+            // Find the form by currentFormId
+            const currentForm = currentForms.find(form => form.form_id === currentFormId);
+
+            if (currentForm) {
+                const formName = currentForm.name || 'Untitled Form';
+                console.log('[FormManagement] Auto-loading form:', currentFormId, formName);
+                store.loadForm(currentForm, currentFormId, formName);
+            } else {
+                console.warn('[FormManagement] Form not found for ID:', currentFormId);
+            }
+        }
+    }, [currentFormId, currentForms]);
+
+    // Listen for form creation/updates from FormsPanel
+    useEffect(() => {
+        const handleFormCreatedOrUpdated = async () => {
+            if (!selectedMenu) return;
+
+            const metadata = localStorage.getItem('zionixlc-forms-metadata');
+            if (!metadata) return;
+
+            const formsMetadata = JSON.parse(metadata);
+            const menuForms = formsMetadata.filter(f => f.menuId === selectedMenu);
+
+            if (menuForms.length === 0) return;
+
+            // Load all form schemas from localStorage
+            const loadedForms = [];
+            for (const meta of menuForms) {
+                const schemaStr = localStorage.getItem(`zionixlc-form-schema-${meta.id}`);
+                if (schemaStr) {
+                    const schema = JSON.parse(schemaStr);
+                    loadedForms.push({
+                        ...schema,
+                        name: schema.name || meta.name,
+                        form_id: schema.form_id || meta.id
+                    });
+                }
+            }
+
+            setCurrentForms(loadedForms);
+
+            // Get current form ID and load it
+            const currentId = localStorage.getItem('zionixlc-current-form-id');
+            if (currentId) {
+                const formToLoad = loadedForms.find(f => f.form_id === currentId);
+                if (formToLoad) {
+                    setCurrentFormId(currentId);
+                    const store = useFormBuilderStore.getState();
+                    const formName = formToLoad.name || 'Untitled Form';
+                    store.loadForm(formToLoad, currentId, formName);
+                }
+            }
+        };
+
+        window.addEventListener('zionixlc-forms-updated', handleFormCreatedOrUpdated);
+        window.addEventListener('zionixlc-form-selected', handleFormCreatedOrUpdated);
+
+        return () => {
+            window.removeEventListener('zionixlc-forms-updated', handleFormCreatedOrUpdated);
+            window.removeEventListener('zionixlc-form-selected', handleFormCreatedOrUpdated);
+        };
+    }, [selectedMenu]);
+
+    // Custom form creation handler for API-based form creation
+    const handleCustomFormCreate = useCallback(async (formData) => {
+        if (!selectedMenu) {
+            throw new Error('No menu selected');
+        }
+
+        try {
+            // Create form via API
+            const payload = {
+                menu_id: selectedMenu,
+                access: "write",
+                forms: [{
+                    name: formData.name,
+                    description: formData.description || '',
                     version: "1",
                     tooltipType: "AntTooltip",
                     errorType: "AntErrorMessage",
@@ -175,73 +340,137 @@ const FormManagementScreen = () => {
                         bidi: "ltr",
                     }],
                     defaultLanguage: "en-US",
-                    name: "New Form"
-                }]);
-                setCurrentFormIndex(0);
-                setFormKey(prev => prev + 1);
-                baseMessage.info('No forms found. Create a new form.');
-                return;
-            }
+                }]
+            };
 
-            // Extract forms from API and store in React state
-            const extractedForms = forms[0].forms.map((formSchema, index) => ({
-                ...formSchema,
-                name: formSchema.name || formSchema.form?.name || `Form ${index + 1}`
-            }));
-
-            setCurrentForms(extractedForms);
-            setCurrentFormIndex(0);
-            setFormKey(prev => prev + 1);
-            baseMessage.success(`Loaded ${extractedForms.length} form(s)`);
-
+            return new Promise((resolve, reject) => {
+                saveForm(payload, {
+                    onSuccess: async () => {
+                        await refetchForms();
+                        resolve({ form_id: 'new-form-created' });
+                    },
+                    onError: (error) => {
+                        reject(error);
+                    }
+                });
+            });
         } catch (error) {
-            console.error('[FormManagement] Error loading forms:', error);
-            baseMessage.error('Failed to load forms');
+            console.error('[FormManagement] Custom form create error:', error);
+            throw error;
         }
-    }, [selectedMenu, formsData, isLoadingForms]);
+    }, [selectedMenu, saveForm, refetchForms]);
 
-    // Provide form to FormBuilder from React state
-    const getForm = useCallback(async () => {
-        if (currentForms.length === 0 || !currentFormId) return null;
-        const form = currentForms[currentFormIndex];
-        return form ? JSON.stringify(form) : null;
-    }, [currentForms, currentFormIndex, currentFormId]);
-
-    // Save all forms to API
-    const handleSaveForm = useCallback(async () => {
+    // Custom form update handler for API-based form update
+    const handleCustomFormUpdate = useCallback(async (formId, formData) => {
         if (!selectedMenu) {
-            baseMessage.error('Please select a menu first');
-            return;
+            throw new Error('No menu selected');
         }
 
-        if (currentForms.length === 0) {
-            baseMessage.error('No forms to save');
-            return;
+        if (!formId) {
+            throw new Error('Form ID is required');
         }
 
         try {
+            // Get the current form from state
+            const currentForm = currentForms.find(f => f.form_id === formId);
+            if (!currentForm) {
+                throw new Error('Form not found');
+            }
+
+            // Get the latest schema from FormBuilder store
+            const store = useFormBuilderStore.getState();
+            const latestFormSchema = store.formSchema;
+
+            // Build the payload with updated name/description and latest schema
             const payload = {
                 menu_id: selectedMenu,
-                name: 'Form Collections',
-                access: "read",
-                forms: currentForms
+                access: "write",
+                forms: [{
+                    ...latestFormSchema,
+                    form_id: formId,
+                    name: formData.name,
+                    description: formData.description || '',
+                }]
             };
 
-            saveForm(payload, {
-                onSuccess: () => {
-                    setFilterPopoverOpen(false);
-                    baseMessage.success(`Saved ${currentForms.length} form(s) successfully`);
-                },
-                onError: (error) => {
-                    baseMessage.error(error.message || 'Failed to save forms');
-                }
+            return new Promise((resolve, reject) => {
+                updateFormById({ formId, payload }, {
+                    onSuccess: async () => {
+                        await refetchForms();
+                        resolve({ form_id: formId });
+                    },
+                    onError: (error) => {
+                        reject(error);
+                    }
+                });
             });
-
         } catch (error) {
-            console.error('[FormManagement] Save error:', error);
-            baseMessage.error('Failed to save forms');
+            console.error('[FormManagement] Custom form update error:', error);
+            throw error;
         }
-    }, [selectedMenu, currentForms, saveForm]);
+    }, [selectedMenu, currentForms, updateFormById, refetchForms]);
+
+    // Custom form delete handler for API-based form deletion
+    const handleCustomFormDelete = useCallback(async (formId) => {
+        if (!selectedMenu) {
+            throw new Error('No menu selected');
+        }
+
+        if (!formId) {
+            throw new Error('Form ID is required');
+        }
+
+        try {
+            return new Promise((resolve, reject) => {
+                deleteFormById(formId, {
+                    onSuccess: async () => {
+                        await refetchForms();
+                        resolve({ form_id: formId });
+                    },
+                    onError: (error) => {
+                        reject(error);
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('[FormManagement] Custom form delete error:', error);
+            throw error;
+        }
+    }, [selectedMenu, deleteFormById, refetchForms]);
+
+    // Get selected menu name for display
+    const selectedMenuName = useMemo(() => {
+        if (!selectedMenu || !menuTreeData) return '';
+
+        const findMenuName = (nodes) => {
+            for (const node of nodes) {
+                if (node.value === selectedMenu) return node.title;
+                if (node.children) {
+                    const found = findMenuName(node.children);
+                    if (found) return found;
+                }
+            }
+            return '';
+        };
+
+        return findMenuName(menuTreeData);
+    }, [selectedMenu, menuTreeData]);
+
+    // Form create configuration
+    const formCreateConfig = useMemo(() => ({
+        customFields: selectedMenu ? [{
+            name: 'menuName',
+            label: 'Menu Name',
+            value: selectedMenuName,
+            disabled: true,
+            placeholder: 'Menu Name'
+        }] : undefined,
+        onFormCreate: selectedMenu ? handleCustomFormCreate : undefined,
+        onFormUpdate: selectedMenu ? handleCustomFormUpdate : undefined,
+        onFormDelete: selectedMenu ? handleCustomFormDelete : undefined
+    }), [selectedMenu, selectedMenuName, handleCustomFormCreate, handleCustomFormUpdate, handleCustomFormDelete]);
+
+
 
     // Custom validators
     const customValidators = useMemo(() => ({
@@ -314,23 +543,11 @@ const FormManagementScreen = () => {
                         dropdownStyle={{ maxHeight: 300, overflow: 'auto' }}
                     />
                 </div>
-                <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${token.colorBorder}` }}>
-                    <BaseButton
-                        type="primary"
-                        block
-                        size="large"
-                        loading={isSaving}
-                        disabled={!selectedMenu}
-                        onClick={handleSaveForm}
-                    >
-                        Save All Forms
-                    </BaseButton>
-                </div>
             </BaseSpace>
         </div>
     ), [selectedDomain, selectedApplication, selectedMenu, domains, applications, menuTreeData,
-        isLoadingDomains, isLoadingApps, isLoadingMenus, isSaving, token,
-        handleDomainChange, handleApplicationChange, handleMenuChange, handleSaveForm]);
+        isLoadingDomains, isLoadingApps, isLoadingMenus, token,
+        handleDomainChange, handleApplicationChange, handleMenuChange]);
 
     return (
         <div style={{
@@ -376,13 +593,14 @@ const FormManagementScreen = () => {
             <FormBuilder
                 key={formKey}
                 view={builderView}
-                getForm={currentFormId ? getForm : null}
-                formName={currentFormId}
+                getForm={null}
+                formName={null}
                 initialData={{}}
                 validators={customValidators}
                 actions={customActions}
                 useLayoutSystem={false}
                 menuId={selectedMenu}
+                formCreateConfig={formCreateConfig}
             />
         </div>
     );
