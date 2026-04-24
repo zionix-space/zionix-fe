@@ -67,16 +67,28 @@ const FormManagementScreen = () => {
             : [];
 
     // Convert menus to TreeSelect format
-    const convertToTreeData = (menuArray) => {
+    // Convert menus to TreeSelect format with depth tracking
+    const convertToTreeData = (menuArray, depth = 0) => {
         if (!Array.isArray(menuArray)) return [];
         return menuArray.map(item => {
+            const isDisabled = depth < 2;
+            const label = item.label || item.name;
+
+            // Add visual indicator for disabled items
+            const displayTitle = isDisabled
+                ? `${label} ${depth === 0 ? '(Application)' : '(Module)'}`
+                : label;
+
             const treeNode = {
                 value: item.menu_id || item.id || item.key,
-                title: item.label || item.name,
+                title: displayTitle,
                 key: item.menu_id || item.id || item.key,
+                depth: depth, // Track depth for validation
+                // Disable selection for level 0 (Application) and level 1 (Module)
+                disabled: isDisabled,
             };
             if (item.children && item.children.length > 0) {
-                treeNode.children = convertToTreeData(item.children);
+                treeNode.children = convertToTreeData(item.children, depth + 1);
             }
             return treeNode;
         });
@@ -121,12 +133,39 @@ const FormManagementScreen = () => {
         setCurrentFormId(null);
     }, []);
 
-    // Handle menu change
+    // Handle menu change with depth validation
     const handleMenuChange = useCallback((menuKey) => {
+        if (!menuKey) {
+            setSelectedMenu(null);
+            setCurrentForms([]);
+            setCurrentFormId(null);
+            return;
+        }
+
+        // Find the selected menu node to check its depth
+        const findMenuNode = (nodes) => {
+            for (const node of nodes) {
+                if (node.value === menuKey) return node;
+                if (node.children) {
+                    const found = findMenuNode(node.children);
+                    if (found) return found;
+                }
+            }
+            return null;
+        };
+
+        const selectedNode = findMenuNode(menuTreeData);
+
+        // Validate depth: Only allow level 2+ (screens), not level 0 (application) or level 1 (module)
+        if (selectedNode && selectedNode.depth < 2) {
+            baseMessage.warning('Please select a screen (3rd level or deeper). Applications and Modules cannot have forms.');
+            return;
+        }
+
         setSelectedMenu(menuKey);
         setCurrentForms([]);
         setCurrentFormId(null);
-    }, []);
+    }, [menuTreeData]);
 
     // Helper function to clear localStorage and state
     const clearFormsState = useCallback(() => {
@@ -255,6 +294,25 @@ const FormManagementScreen = () => {
             }
         }
     }, [currentFormId, currentForms]);
+
+    // Update BuilderView templates whenever forms change (for Modal Template dropdown)
+    useEffect(() => {
+        if (!currentForms || currentForms.length === 0) {
+            // No forms - clear templates
+            builderView.withTemplates([]);
+            return;
+        }
+
+        // Extract form names for template dropdown
+        const formNames = currentForms.map(form => form.name || form.form_id || 'Untitled Form');
+        console.log('[FormManagement] Updating templates in BuilderView:', formNames);
+
+        // Update BuilderView with available form templates
+        builderView.withTemplates(formNames, currentFormId);
+
+        // Force FormBuilder to re-render with updated view
+        setFormKey(prev => prev + 1);
+    }, [currentForms, currentFormId]);
 
     // Listen for form creation/updates from FormsPanel
     useEffect(() => {

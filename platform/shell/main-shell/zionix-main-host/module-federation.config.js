@@ -48,7 +48,7 @@ module.exports = {
       return {
       "singleton": true,
       "eager": false,
-      "requiredVersion": "^1.1.20"
+      "requiredVersion": "^1.1.21"
 };
     }
     if (name === '@zionix-space/design-system') {
