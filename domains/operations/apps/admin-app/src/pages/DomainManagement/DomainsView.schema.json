@@ -1,6 +1,7 @@
 {
-  "name": "DomainsView",
-  "version": "1.0.0",
+  "form_id": "69a0f28f-01be-4dab-a5fa-5ff799ccc041",
+  "name": "ClientListPage",
+  "defaultLanguage": "en-US",
   "form": {
     "key": "domainsScreen",
     "type": "Screen",
@@ -8,11 +9,55 @@
     "access": [],
     "children": [
       {
+        "type": "AntModal",
+        "key": "antModal__AJDrYdFX",
+        "props": {
+          "opened": {
+            "value": false
+          },
+          "fullScreen": {
+            "value": false
+          },
+          "title": {
+            "value": ""
+          },
+          "width": {
+            "value": 620
+          },
+          "backdrop": {
+            "value": true
+          },
+          "closeOnEscape": {
+            "value": true
+          },
+          "closeOnBackdropClick": {
+            "value": true
+          },
+          "destroyOnClose": {
+            "value": true
+          },
+          "autoFocus": {
+            "value": true
+          },
+          "scroll": {
+            "value": "paper"
+          },
+          "zIndex": {
+            "value": 1000
+          },
+          "modalTemplate": {
+            "value": "Add Client"
+          }
+        },
+        "children": [],
+        "tooltipProps": {}
+      },
+      {
         "type": "AntHeader",
         "key": "antHeader__iSJebP0j",
         "props": {
           "content": {
-            "value": "All Domains"
+            "value": "All Clients"
           },
           "headerSize": {
             "value": "h3"
@@ -158,7 +203,7 @@
                 "type": "AntButton",
                 "props": {
                   "children": {
-                    "value": "Add Domain"
+                    "value": "Add Client"
                   },
                   "type": {
                     "value": "primary"
@@ -173,9 +218,13 @@
                 "events": {
                   "onClick": [
                     {
-                      "type": "custom",
-                      "name": "onAddDomain",
-                      "args": {}
+                      "key": "action_1777037958501_ihzu9el6x",
+                      "type": "common",
+                      "name": "openModal",
+                      "args": {
+                        "modalKey": "antModal__AJDrYdFX",
+                        "useFormData": true
+                      }
                     }
                   ]
                 }
@@ -195,12 +244,13 @@
               },
               "mobile": {
                 "object": {
-                  "flexDirection": "column",
+                  "flexDirection": "row",
                   "justifyContent": "flex-end",
                   "alignItems": "center",
-                  "width": "100%"
+                  "width": "100%",
+                  "flexWrap": "nowrap"
                 },
-                "string": "flex-direction: column; justify-content: flex-end; align-items: center; width: 100%;"
+                "string": "flex-direction: row; justify-content: flex-end; align-items: center; width: 100%; flex-wrap: nowrap;"
               }
             }
           }
@@ -244,7 +294,7 @@
             "type": "AntCard",
             "props": {
               "title": {
-                "value": "Total Domains"
+                "value": "Total Client"
               },
               "size": {
                 "value": "small"
@@ -470,16 +520,16 @@
               "columns": {
                 "value": [
                   {
-                    "title": "Domain ID",
-                    "dataIndex": "domainId",
-                    "key": "domainId",
+                    "title": "#",
+                    "dataIndex": "clientid",
+                    "key": "clientid",
                     "width": 120,
                     "sorter": true
                   },
                   {
-                    "title": "Domain Name",
-                    "dataIndex": "domainName",
-                    "key": "domainName",
+                    "title": "Client Name",
+                    "dataIndex": "Clients Name",
+                    "key": "clientName",
                     "sorter": true
                   },
                   {
@@ -524,11 +574,6 @@
       }
     ]
   },
-  "actions": {},
-  "modalType": "AntModal",
-  "tooltipType": "AntTooltip",
-  "errorType": "AntErrorMessage",
-  "localization": {},
   "languages": [
     {
       "code": "en",
@@ -538,5 +583,10 @@
       "bidi": "ltr"
     }
   ],
-  "defaultLanguage": "en-US"
+  "localization": {},
+  "modalType": "AntModal",
+  "tooltipType": "AntTooltip",
+  "errorType": "AntErrorMessage",
+  "triggerWhen": null,
+  "version": "1.0.0"
 }

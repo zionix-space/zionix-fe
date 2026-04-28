@@ -48,14 +48,14 @@ module.exports = {
       return {
       "singleton": true,
       "eager": false,
-      "requiredVersion": "^1.1.21"
+      "requiredVersion": "^1.1.23"
 };
     }
     if (name === '@zionix-space/design-system') {
       return {
       "singleton": true,
       "eager": false,
-      "requiredVersion": "^1.3.19"
+      "requiredVersion": "^1.3.22"
 };
     }
     if (name === 'framer-motion') {

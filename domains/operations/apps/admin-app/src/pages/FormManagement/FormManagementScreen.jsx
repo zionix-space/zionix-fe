@@ -525,7 +525,8 @@ const FormManagementScreen = () => {
         }] : undefined,
         onFormCreate: selectedMenu ? handleCustomFormCreate : undefined,
         onFormUpdate: selectedMenu ? handleCustomFormUpdate : undefined,
-        onFormDelete: selectedMenu ? handleCustomFormDelete : undefined
+        onFormDelete: selectedMenu ? handleCustomFormDelete : undefined,
+        disableCreate: !selectedMenu // Disable "Add a new form" button when no menu is selected
     }), [selectedMenu, selectedMenuName, handleCustomFormCreate, handleCustomFormUpdate, handleCustomFormDelete]);
 
 
