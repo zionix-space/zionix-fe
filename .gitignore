@@ -51,3 +51,7 @@ Thumbs.db
 /.trae
 /platform/shell/main-shell/zionix-main-host/@mf-types
 /.kiro
+
+.claude/worktrees
+.nx/polygraph
+.nx/self-healing
