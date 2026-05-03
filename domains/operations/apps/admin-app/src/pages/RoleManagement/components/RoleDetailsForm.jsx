@@ -160,29 +160,31 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, accessLevels, onAccessChan
                         <BaseForm.Item
                             label="Route Path"
                             name="route"
-                            tooltip="The URL path for this menu item"
+                            tooltip="The URL path for this menu item (read-only)"
                         >
                             <BaseInput
                                 placeholder="/admin/dashboard"
                                 prefix={<i className="ri-route-line" />}
+                                disabled
                             />
                         </BaseForm.Item>
 
                         <BaseForm.Item
                             label="Component"
                             name="component"
-                            tooltip="The React component to render for this route"
+                            tooltip="The React component to render for this route (read-only)"
                         >
                             <BaseInput
                                 placeholder="DashboardComponent"
                                 prefix={<i className="ri-code-box-line" />}
+                                disabled
                             />
                         </BaseForm.Item>
 
                         <BaseForm.Item
                             label="Menu Level"
                             name="level"
-                            tooltip="Hierarchy level in the menu tree"
+                            tooltip="Hierarchy level in the menu tree (read-only)"
                         >
                             <BaseInput
                                 placeholder="Level"
