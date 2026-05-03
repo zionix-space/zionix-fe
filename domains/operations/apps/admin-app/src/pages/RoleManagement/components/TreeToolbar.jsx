@@ -1,35 +1,25 @@
 import { BaseInput, BaseButton, theme } from '@zionix-space/design-system';
-import { useStyles } from './TreeToolbar.style';
+import './TreeToolbar.scss';
 
 const { Search } = BaseInput;
 const { useToken } = theme;
 
-const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport }) => {
+const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, onSave, isDirty, saving, onUndo, onRedo, canUndo, canRedo, onExport, onImport, onBulkAccessChange }) => {
     const { token } = useToken();
 
-    const isDarkMode =
-        token.colorBgBase === '#000000' ||
-        token.colorBgContainer === '#141414' ||
-        token.colorBgElevated === '#1f1f1f' ||
-        (token.colorBgContainer &&
-            token.colorBgContainer.startsWith('#') &&
-            parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
-
-    const styles = useStyles(token, isDarkMode);
-
     return (
-        <div style={styles.toolbarContainer}>
-            <div style={styles.singleRow}>
+        <div className="tree-toolbar-container">
+            <div className="tree-toolbar-row">
                 <Search
                     placeholder="Search..."
                     value={searchValue}
                     onChange={(e) => onSearchChange(e.target.value)}
                     allowClear
-                    style={styles.searchInput}
+                    className="tree-toolbar-search"
                     size="small"
                 />
-                <div style={styles.spacer} />
-                <div style={styles.capsuleContainer}>
+                <div className="tree-toolbar-spacer" />
+                <div className="tree-toolbar-capsule">
                     <BaseButton
                         icon={<i className="ri-arrow-go-back-line" />}
                         onClick={onUndo}
@@ -49,7 +39,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         type="text"
                     />
                 </div>
-                <div style={styles.capsuleContainer}>
+                <div className="tree-toolbar-capsule">
                     <BaseButton
                         icon={<i className="ri-download-line" />}
                         onClick={onExport}
@@ -67,7 +57,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         type="text"
                     />
                 </div>
-                <div style={styles.capsuleContainer}>
+                <div className="tree-toolbar-capsule">
                     <BaseButton
                         icon={<i className="ri-expand-diagonal-line" />}
                         onClick={onExpandAll}
@@ -85,7 +75,7 @@ const TreeToolbar = ({ searchValue, onSearchChange, onExpandAll, onCollapseAll, 
                         type="text"
                     />
                 </div>
-                <div style={styles.spacer} />
+                <div className="tree-toolbar-spacer" />
                 <BaseButton
                     type="primary"
                     icon={<i className="ri-save-line" />}

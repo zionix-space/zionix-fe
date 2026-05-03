@@ -1,9 +1,7 @@
-import { useState, useCallback, useEffect, lazy, Suspense } from 'react';
-import { BaseLayout, BaseTypography, BaseSpace, BaseButton, BaseTooltip, BaseDrawer, BaseSpin, theme } from '@zionix-space/design-system';
+import { useState, useCallback, lazy, Suspense } from 'react';
+import { BaseLayout, BaseTypography, BaseSpace, BaseButton, BaseTooltip, BaseSpin, theme } from '@zionix-space/design-system';
 
 // Lazy load heavy components
-const RoleTopBar = lazy(() => import('../components/RoleTopBar'));
-const RoleSidebar = lazy(() => import('../components/RoleSidebar'));
 const RoleEditor = lazy(() => import('../components/RoleEditor'));
 
 const { Content } = BaseLayout;
@@ -18,11 +16,8 @@ const ComponentLoader = () => (
 
 const RoleManagementTab = ({ isMobile }) => {
     const { token } = useToken();
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     const [showJsonPreview, setShowJsonPreview] = useState(false);
     const [menuData, setMenuData] = useState(null);
-    const [selectedMainMenuKey, setSelectedMainMenuKey] = useState('');
 
     const getLightPrimaryBg = () => {
         return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
@@ -32,50 +27,14 @@ const RoleManagementTab = ({ isMobile }) => {
         setMenuData(data);
     }, []);
 
-    useEffect(() => {
-        if (!selectedMainMenuKey && menuData?.mainNavigation?.length > 0) {
-            setSelectedMainMenuKey(menuData.mainNavigation[0].key);
-        }
-    }, [menuData, selectedMainMenuKey]);
-
     if (isMobile) {
         return (
-            <BaseLayout style={{ height: '100%', minHeight: 'calc(100vh - 46px)' }}>
-                <Suspense fallback={<ComponentLoader />}>
-                    <RoleTopBar
-                        menuData={menuData}
-                        selectedMainMenuKey={selectedMainMenuKey}
-                        onSelectMainMenu={setSelectedMainMenuKey}
-                        isMobile={isMobile}
-                        onMenuClick={() => setMobileSidebarOpen(true)}
-                    />
-                </Suspense>
-
-                <BaseDrawer
-                    placement="left"
-                    open={mobileSidebarOpen}
-                    onClose={() => setMobileSidebarOpen(false)}
-                    width="80%"
-                    styles={{ body: { padding: 0 } }}
-                >
-                    <Suspense fallback={<ComponentLoader />}>
-                        <RoleSidebar
-                            collapsed={false}
-                            onCollapse={() => { }}
-                            menuData={menuData}
-                            selectedMainMenuKey={selectedMainMenuKey}
-                            isMobile={isMobile}
-                            onItemClick={() => setMobileSidebarOpen(false)}
-                        />
-                    </Suspense>
-                </BaseDrawer>
-
+            <BaseLayout style={{ height: '100%', minHeight: '100vh' }}>
                 <Content
                     style={{
                         padding: '16px',
-                        background: getLightPrimaryBg(),
                         overflow: 'auto',
-                        height: 'calc(100vh - 98px)',
+                        height: '100vh',
                     }}
                 >
                     <BaseSpace orientation="vertical" size="middle" style={{ width: '100%' }}>
@@ -101,67 +60,43 @@ const RoleManagementTab = ({ isMobile }) => {
     }
 
     return (
-        <BaseLayout style={{ height: '100%', minHeight: 'calc(100vh - 46px)' }}>
-            <Suspense fallback={<ComponentLoader />}>
-                <RoleTopBar
-                    menuData={menuData}
-                    selectedMainMenuKey={selectedMainMenuKey}
-                    onSelectMainMenu={setSelectedMainMenuKey}
-                    isMobile={false}
-                />
-            </Suspense>
+        <Content
+            style={{
+                padding: '24px',
+                overflow: 'auto',
+                minHeight: '100vh',
+            }}
+        >
+            <BaseSpace orientation="vertical" size="large" style={{ width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                        <Title level={2} style={{ margin: 0 }}>User Roles Setup</Title>
+                        <Paragraph style={{ margin: '4px 0 0 0' }}>
+                            Configure and manage your application User Menus Role Access.
+                        </Paragraph>
+                    </div>
 
-            <BaseLayout style={{ height: 'calc(100vh - 98px)' }}>
+                    <BaseTooltip title="Preview JSON">
+                        <BaseButton
+                            type="text"
+                            icon={<i className="ri-code-s-slash-line" style={{ fontSize: '20px' }} />}
+                            onClick={() => setShowJsonPreview(true)}
+                            shape="circle"
+                            size="large"
+                        />
+                    </BaseTooltip>
+                </div>
+
                 <Suspense fallback={<ComponentLoader />}>
-                    <RoleSidebar
-                        collapsed={sidebarCollapsed}
-                        onCollapse={setSidebarCollapsed}
-                        menuData={menuData}
-                        selectedMainMenuKey={selectedMainMenuKey}
+                    <RoleEditor
+                        jsonPreviewOpen={showJsonPreview}
+                        onJsonPreviewClose={() => setShowJsonPreview(false)}
+                        onMenuDataChange={handleMenuDataChange}
                         isMobile={false}
                     />
                 </Suspense>
-
-                <Content
-                    style={{
-                        padding: '24px',
-                        background: getLightPrimaryBg(),
-                        overflow: 'auto',
-                        height: '100%',
-                    }}
-                >
-                    <BaseSpace orientation="vertical" size="large" style={{ width: '100%' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <div>
-                                <Title level={3} style={{ margin: 0 }}>User Roles Setup</Title>
-                                <Paragraph style={{ margin: '4px 0 0 0' }}>
-                                    Configure and manage your application User Menus Role Access.
-                                </Paragraph>
-                            </div>
-
-                            <BaseTooltip title="Preview JSON">
-                                <BaseButton
-                                    type="text"
-                                    icon={<i className="ri-code-s-slash-line" style={{ fontSize: '20px' }} />}
-                                    onClick={() => setShowJsonPreview(true)}
-                                    shape="circle"
-                                    size="large"
-                                />
-                            </BaseTooltip>
-                        </div>
-
-                        <Suspense fallback={<ComponentLoader />}>
-                            <RoleEditor
-                                jsonPreviewOpen={showJsonPreview}
-                                onJsonPreviewClose={() => setShowJsonPreview(false)}
-                                onMenuDataChange={handleMenuDataChange}
-                                isMobile={false}
-                            />
-                        </Suspense>
-                    </BaseSpace>
-                </Content>
-            </BaseLayout>
-        </BaseLayout>
+            </BaseSpace>
+        </Content>
     );
 };
 

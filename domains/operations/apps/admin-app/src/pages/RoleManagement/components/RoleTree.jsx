@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
-import { BaseTree, BaseBadge, theme } from '@zionix-space/design-system';
-import { useStyles } from './RoleTree.style';
+import { BaseTree, BaseBadge, BaseCheckbox, theme } from '@zionix-space/design-system';
+import './RoleTree.scss';
 
 const { useToken } = theme;
 
@@ -12,22 +12,46 @@ const RoleTree = ({
     onSelect,
     onExpand,
     onDrop,
+    accessLevels,
+    onAccessChange,
+    menuData, // Need this to find parent access levels
 }) => {
     const { token } = useToken();
 
-    const isDarkMode =
-        token.colorBgBase === '#000000' ||
-        token.colorBgContainer === '#141414' ||
-        token.colorBgElevated === '#1f1f1f' ||
-        (token.colorBgContainer &&
-            token.colorBgContainer.startsWith('#') &&
-            parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
+    // Helper function to find parent access level
+    const getParentAccess = (nodeKey) => {
+        if (!menuData?.mainNavigation) return 'full'; // Default to full if no parent
 
-    const styles = useStyles(token, isDarkMode);
+        const findParent = (items, targetKey, parentAccess = 'full') => {
+            for (const item of items) {
+                const itemId = item.key || item.menu_id || item.application_id || item.module_id;
+
+                if (item.children && item.children.length > 0) {
+                    // Check if target is a direct child
+                    const isDirectChild = item.children.some(child => {
+                        const childId = child.key || child.menu_id || child.application_id || child.module_id;
+                        return childId === targetKey;
+                    });
+
+                    if (isDirectChild) {
+                        return accessLevels[itemId] || 'full';
+                    }
+
+                    // Recursively search in children
+                    const result = findParent(item.children, targetKey, accessLevels[itemId] || 'full');
+                    if (result !== 'full' || result !== null) return result;
+                }
+            }
+            return null;
+        };
+
+        const parentAccess = findParent(menuData.mainNavigation, nodeKey);
+        return parentAccess || 'full'; // Default to full if no parent found
+    };
 
     // Inject minimal CSS for theme-aware BaseTree selection color
     useLayoutEffect(() => {
-        const styleId = 'BaseMenu-BaseTree-theme-styles';
+        const styleId = 'role-tree-theme-styles';
         const existingStyle = document.getElementById(styleId);
         if (existingStyle) {
             existingStyle.remove();
@@ -54,9 +78,11 @@ const RoleTree = ({
         };
     }, [token]);
 
-    // Custom title renderer
+    // Custom title renderer with checkboxes (Strict Inheritance)
     const renderTitle = (nodeData) => {
-        const { title, icon, BaseBadge } = nodeData;
+        const { title, icon, badge, key } = nodeData;
+        const currentAccess = accessLevels?.[key] || 'disabled';
+        const parentAccess = getParentAccess(key);
 
         const highlightText = (text) => {
             if (!searchValue || !text) return text;
@@ -78,16 +104,74 @@ const RoleTree = ({
             );
         };
 
+        const handleCheckboxChange = (access, checked) => {
+            if (onAccessChange) {
+                if (checked) {
+                    // Checking a checkbox: set that access level and cascade to children
+                    onAccessChange(key, access, true); // cascade = true
+                } else {
+                    // Unchecking: only uncheck if it's currently selected
+                    if (currentAccess === access) {
+                        onAccessChange(key, 'disabled', true); // cascade = true
+                    }
+                }
+            }
+        };
+
+        // Strict Inheritance: Determine which checkboxes should be disabled
+        const isFullAccessDisabled = parentAccess === 'read' || parentAccess === 'disabled';
+        const isReadDisabled = parentAccess === 'disabled';
+
         return (
-            <div style={styles.treeNodeTitle}>
-                {icon && <i className={icon} style={styles.treeNodeIcon} />}
-                <span style={styles.treeNodeLabel}>{highlightText(title)}</span>
-                {BaseBadge && (
-                    <span style={styles.treeNodeBadge}>
-                        {typeof BaseBadge === 'string' ? (
-                            <BaseBadge count={BaseBadge} style={{ backgroundColor: token.colorPrimary }} />
+            <div className="role-tree-node-title">
+                {icon && <i className={`${icon} role-tree-node-icon`} />}
+                <span className="role-tree-node-label">{highlightText(title)}</span>
+
+                {/* Access Level Checkboxes - Strict Inheritance */}
+                <div className="role-tree-access-controls" onClick={(e) => e.stopPropagation()}>
+                    <BaseCheckbox
+                        checked={currentAccess === 'full'}
+                        onChange={(e) => handleCheckboxChange('full', e.target.checked)}
+                        onClick={(e) => e.stopPropagation()}
+                        disabled={isFullAccessDisabled}
+                    >
+                        <span style={{
+                            fontSize: '12px',
+                            color: isFullAccessDisabled ? token.colorTextDisabled : token.colorSuccess
+                        }}>
+                            Full Access
+                        </span>
+                    </BaseCheckbox>
+                    <BaseCheckbox
+                        checked={currentAccess === 'read'}
+                        onChange={(e) => handleCheckboxChange('read', e.target.checked)}
+                        onClick={(e) => e.stopPropagation()}
+                        disabled={isReadDisabled}
+                    >
+                        <span style={{
+                            fontSize: '12px',
+                            color: isReadDisabled ? token.colorTextDisabled : token.colorInfo
+                        }}>
+                            Read
+                        </span>
+                    </BaseCheckbox>
+                    <BaseCheckbox
+                        checked={currentAccess === 'disabled'}
+                        onChange={(e) => handleCheckboxChange('disabled', e.target.checked)}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <span style={{ fontSize: '12px', color: token.colorTextTertiary }}>
+                            Disabled
+                        </span>
+                    </BaseCheckbox>
+                </div>
+
+                {badge && (
+                    <span className="role-tree-node-badge">
+                        {typeof badge === 'string' ? (
+                            <BaseBadge count={badge} style={{ backgroundColor: token.colorPrimary }} />
                         ) : (
-                            <BaseBadge count={BaseBadge.count} style={{ backgroundColor: token.colorPrimary }} />
+                            <BaseBadge count={badge.count} style={{ backgroundColor: token.colorPrimary }} />
                         )}
                     </span>
                 )}
@@ -105,9 +189,9 @@ const RoleTree = ({
     };
 
     return (
-        <div style={styles.treeContainer} className="BaseMenu-editor-scrollbar">
+        <div className="role-tree-container role-editor-scrollbar">
             <BaseTree
-                className="BaseMenu-editor-BaseTree"
+                className="role-editor-tree"
                 treeData={transformedTreeData(treeData)}
                 selectedKeys={selectedKey ? [selectedKey] : []}
                 expandedKeys={expandedKeys}

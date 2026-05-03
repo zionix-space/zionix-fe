@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { BaseSpin, baseMessage, BaseButton, BaseModal, theme } from '@zionix-space/design-system';
-import { useStyles } from './RoleEditor.style';
+import './RoleEditor.scss';
 import TreeToolbar from './TreeToolbar';
 import RoleTree from './RoleTree';
 import RoleDetailsForm from './RoleDetailsForm';
@@ -23,33 +23,22 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const { data: apiMenuData, isLoading: loading, isError, error } = useMenusQuery();
     const bulkUpdateMutation = useBulkUpdateMenusMutation();
 
-    // Detect dark mode
-    const isDarkMode =
-        token.colorBgBase === '#000000' ||
-        token.colorBgContainer === '#141414' ||
-        token.colorBgElevated === '#1f1f1f' ||
-        (token.colorBgContainer &&
-            token.colorBgContainer.startsWith('#') &&
-            parseInt(token.colorBgContainer.slice(1), 16) < 0x808080);
-
-    const styles = useStyles(token, isDarkMode);
-
     // Add global scrollbar styles only
     useEffect(() => {
         const style = document.createElement('style');
         style.innerHTML = `
-            .menu-editor-scrollbar::-webkit-scrollbar {
+            .role-editor-scrollbar::-webkit-scrollbar {
                 width: 6px;
                 height: 6px;
             }
-            .menu-editor-scrollbar::-webkit-scrollbar-track {
+            .role-editor-scrollbar::-webkit-scrollbar-track {
                 background: transparent;
             }
-            .menu-editor-scrollbar::-webkit-scrollbar-thumb {
+            .role-editor-scrollbar::-webkit-scrollbar-thumb {
                 background: ${token.colorBorder};
                 borderRadius: 10px;
             }
-            .menu-editor-scrollbar::-webkit-scrollbar-thumb:hover {
+            .role-editor-scrollbar::-webkit-scrollbar-thumb:hover {
                 background: ${token.colorBorderSecondary};
             }
         `;
@@ -65,7 +54,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     const [isDirty, setIsDirty] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
-    const [permissions, setPermissions] = useState({}); // State for role permissions
+    const [accessLevels, setAccessLevels] = useState({}); // State for role access levels
 
     // Initialize menu data from API
     useEffect(() => {
@@ -75,20 +64,32 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 onMenuDataChange(apiMenuData);
             }
 
-            // Initialize permissions for all menu items (default to disabled)
-            const initializePermissions = (items, perms = {}) => {
+            // Initialize access levels for all menu items from access array
+            const initializeAccessLevels = (items, levels = {}) => {
                 items.forEach(item => {
-                    perms[item.key] = item.permission || 'disabled';
+                    // Convert access array to access level string
+                    // access: ["write"] or ["read"] or [] (empty = disabled/hidden)
+                    let accessLevel = 'disabled';
+                    if (item.access && Array.isArray(item.access) && item.access.length > 0) {
+                        const accessValue = item.access[0].toLowerCase();
+                        if (accessValue === 'write' || accessValue === 'full') {
+                            accessLevel = 'full';
+                        } else if (accessValue === 'read') {
+                            accessLevel = 'read';
+                        }
+                    }
+                    levels[item.key] = accessLevel;
+
                     if (item.children && item.children.length > 0) {
-                        initializePermissions(item.children, perms);
+                        initializeAccessLevels(item.children, levels);
                     }
                 });
-                return perms;
+                return levels;
             };
 
             if (apiMenuData.mainNavigation) {
-                const initialPerms = initializePermissions(apiMenuData.mainNavigation);
-                setPermissions(initialPerms);
+                const initialLevels = initializeAccessLevels(apiMenuData.mainNavigation);
+                setAccessLevels(initialLevels);
             }
         }
     }, [apiMenuData, onMenuDataChange]);
@@ -244,7 +245,36 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         // Prevent multiple clicks - mutation handles loading state
         if (bulkUpdateMutation.isLoading) return;
 
-        bulkUpdateMutation.mutate(menuData.mainNavigation, {
+        // Convert access levels object to access array format for API
+        const convertAccessLevelsToArray = (items) => {
+            return items.map(item => {
+                const accessLevel = accessLevels[item.key] || 'disabled';
+                let access = [];
+
+                if (accessLevel === 'full') {
+                    access = ['write']; // or ['full'] depending on your API
+                } else if (accessLevel === 'read') {
+                    access = ['read'];
+                } else {
+                    access = []; // disabled/hidden = empty array
+                }
+
+                return {
+                    ...item,
+                    access: access,
+                    children: item.children && item.children.length > 0
+                        ? convertAccessLevelsToArray(item.children)
+                        : []
+                };
+            });
+        };
+
+        const updatedMenuData = {
+            ...menuData,
+            mainNavigation: convertAccessLevelsToArray(menuData.mainNavigation)
+        };
+
+        bulkUpdateMutation.mutate(updatedMenuData.mainNavigation, {
             onSuccess: () => {
                 setIsDirty(false);
                 // Clear history after successful save
@@ -322,60 +352,80 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         input.click();
     };
 
-    // Handle permission change for a single node with cascading
-    const handlePermissionChange = (nodeKey, permission, cascade = true) => {
+    // Handle access level change for a single node with strict inheritance
+    const handleAccessChange = (nodeKey, accessLevel, cascade = true) => {
         if (!menuData?.mainNavigation) return;
 
-        const newPermissions = { ...permissions };
+        const newAccessLevels = { ...accessLevels };
 
         // Update the node itself
-        newPermissions[nodeKey] = permission;
+        newAccessLevels[nodeKey] = accessLevel;
 
-        // Cascade to all children if enabled
+        // Cascade to all children if enabled (Strict Inheritance)
         if (cascade) {
-            const cascadeToChildren = (items) => {
+            const cascadeToChildren = (items, parentAccess) => {
                 items.forEach(item => {
                     if (item.key === nodeKey && item.children && item.children.length > 0) {
-                        const updateChildren = (children) => {
+                        const updateChildren = (children, maxAccess) => {
                             children.forEach(child => {
-                                newPermissions[child.key] = permission;
+                                // Strict Inheritance: Child cannot have more access than parent
+                                // If parent is 'read', child can only be 'read' or 'disabled'
+                                // If parent is 'disabled', child must be 'disabled'
+
+                                const currentChildAccess = newAccessLevels[child.key] || 'disabled';
+
+                                if (maxAccess === 'disabled') {
+                                    // Parent is disabled, all children must be disabled
+                                    newAccessLevels[child.key] = 'disabled';
+                                } else if (maxAccess === 'read') {
+                                    // Parent is read, children can be read or disabled (not full)
+                                    if (currentChildAccess === 'full') {
+                                        newAccessLevels[child.key] = 'read'; // Downgrade from full to read
+                                    } else {
+                                        newAccessLevels[child.key] = accessLevel; // Set to parent's access level
+                                    }
+                                } else if (maxAccess === 'full') {
+                                    // Parent is full, children can be anything
+                                    newAccessLevels[child.key] = accessLevel; // Set to parent's access level
+                                }
+
                                 if (child.children && child.children.length > 0) {
-                                    updateChildren(child.children);
+                                    updateChildren(child.children, newAccessLevels[child.key]);
                                 }
                             });
                         };
-                        updateChildren(item.children);
+                        updateChildren(item.children, accessLevel);
                     } else if (item.children && item.children.length > 0) {
-                        cascadeToChildren(item.children);
+                        cascadeToChildren(item.children, parentAccess);
                     }
                 });
             };
 
-            cascadeToChildren(menuData.mainNavigation);
+            cascadeToChildren(menuData.mainNavigation, accessLevel);
         }
 
-        setPermissions(newPermissions);
+        setAccessLevels(newAccessLevels);
         setIsDirty(true);
     };
 
-    // Handle bulk permission change for all nodes
-    const handleBulkPermissionChange = (permission) => {
+    // Handle bulk access level change for all nodes
+    const handleBulkAccessChange = (accessLevel) => {
         if (!menuData?.mainNavigation) return;
 
-        const updateAllPermissions = (items, perms = {}) => {
+        const updateAllAccessLevels = (items, levels = {}) => {
             items.forEach(item => {
-                perms[item.key] = permission;
+                levels[item.key] = accessLevel;
                 if (item.children && item.children.length > 0) {
-                    updateAllPermissions(item.children, perms);
+                    updateAllAccessLevels(item.children, levels);
                 }
             });
-            return perms;
+            return levels;
         };
 
-        const newPermissions = updateAllPermissions(menuData.mainNavigation);
-        setPermissions(newPermissions);
+        const newAccessLevels = updateAllAccessLevels(menuData.mainNavigation);
+        setAccessLevels(newAccessLevels);
         setIsDirty(true);
-        baseMessage.success(`All permissions set to ${permission}`);
+        baseMessage.success(`All access levels set to ${accessLevel}`);
     };
 
     const handleDrop = (info) => {
@@ -493,9 +543,42 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
         return extractAllKeys(menuData);
     }, [menuData]);
 
+    // Memoize menu data with current access levels for JSON preview
+    const menuDataWithAccessLevels = useMemo(() => {
+        if (!menuData?.mainNavigation) return menuData;
+
+        const convertAccessLevelsToArray = (items) => {
+            return items.map(item => {
+                const accessLevel = accessLevels[item.key] || 'disabled';
+                let access = [];
+
+                if (accessLevel === 'full') {
+                    access = ['write'];
+                } else if (accessLevel === 'read') {
+                    access = ['read'];
+                } else {
+                    access = [];
+                }
+
+                return {
+                    ...item,
+                    access: access,
+                    children: item.children && item.children.length > 0
+                        ? convertAccessLevelsToArray(item.children)
+                        : []
+                };
+            });
+        };
+
+        return {
+            ...menuData,
+            mainNavigation: convertAccessLevelsToArray(menuData.mainNavigation)
+        };
+    }, [menuData, accessLevels]);
+
     if (loading) {
         return (
-            <div style={styles.loadingContainer}>
+            <div className="role-editor-loading">
                 <BaseSpin size="large">
                     <div style={{ padding: '20px', textAlign: 'center' }}>
                         <div style={{ marginTop: '8px', color: token.colorTextSecondary }}>
@@ -508,11 +591,11 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
     }
 
     return (
-        <div style={styles.editorContainer}>
+        <div className="role-editor-container">
             {/* Two-column layout */}
-            <div style={styles.twoColumnLayout}>
+            <div className="role-editor-two-column">
                 {/* Left column - Tree */}
-                <div style={styles.leftColumn}>
+                <div className="role-editor-left-column">
                     <TreeToolbar
                         searchValue={searchValue}
                         onSearchChange={handleSearchChange}
@@ -527,7 +610,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         canRedo={canRedo}
                         onExport={handleExport}
                         onImport={handleImport}
-                        onBulkPermissionChange={handleBulkPermissionChange}
+                        onBulkAccessChange={handleBulkAccessChange}
                     />
                     <RoleTree
                         treeData={getTreeData()}
@@ -537,18 +620,19 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         onSelect={handleSelect}
                         onExpand={handleExpand}
                         onDrop={handleDrop}
-                        permissions={permissions}
-                        onPermissionChange={handlePermissionChange}
+                        accessLevels={accessLevels}
+                        onAccessChange={handleAccessChange}
+                        menuData={menuData}
                     />
                 </div>
 
                 {/* Right column - Form */}
-                <div style={styles.rightColumn} className="menu-editor-scrollbar">
+                <div className="role-editor-right-column role-editor-scrollbar">
                     <RoleDetailsForm
                         selectedKey={selectedKey}
                         selectedItem={selectedItem}
-                        permissions={permissions}
-                        onPermissionChange={handlePermissionChange}
+                        accessLevels={accessLevels}
+                        onAccessChange={handleAccessChange}
                     />
                 </div>
             </div>
@@ -569,7 +653,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
             >
                 <pre
                     style={{
-                        background: isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.05)',
+                        background: 'rgba(0, 0, 0, 0.05)',
                         padding: '16px',
                         borderRadius: '8px',
                         fontSize: '12px',
@@ -578,7 +662,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         color: token.colorText,
                     }}
                 >
-                    {JSON.stringify(menuData, null, 2)}
+                    {JSON.stringify(menuDataWithAccessLevels, null, 2)}
                 </pre>
             </BaseModal>
         </div>

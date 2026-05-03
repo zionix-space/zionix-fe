@@ -1,0 +1,83 @@
+.role-tree {
+  &-container {
+    flex: 1;
+    overflow: auto;
+    padding: 12px 4px;
+    margin-top: 8px;
+  }
+
+  &-node {
+    &-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 4px 0;
+    }
+
+    &-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    &-label {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      min-width: 120px;
+    }
+
+    &-badge {
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+  }
+
+  &-access-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding: 0 8px;
+
+    .ant-checkbox-wrapper {
+      margin: 0;
+    }
+  }
+}
+
+// Global tree styles
+:global {
+  .role-editor-tree {
+    .ant-tree-node-selected .ant-tree-node-content-wrapper {
+      // Theme colors applied via JS
+    }
+
+    .ant-tree-node-selected .ant-tree-node-content-wrapper:hover {
+      // Theme colors applied via JS
+    }
+
+    // Prevent checkbox click from selecting tree node
+    .ant-tree-node-content-wrapper {
+      cursor: pointer;
+    }
+  }
+}
+
+// RTL support
+[dir='rtl'] {
+  .role-tree {
+    &-access-controls {
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    &-node {
+      &-badge {
+        margin-left: 0;
+        margin-right: 8px;
+      }
+    }
+  }
+}
