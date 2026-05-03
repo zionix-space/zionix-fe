@@ -8,6 +8,15 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config = {
   ...baseConfig,
+  // Rspack 1.2+ optimizations
+  experiments: {
+    // Enable persistent cache for 250% faster hot starts
+    cache: isDevelopment ? {
+      type: 'persistent',
+    } : undefined,
+    // Enable parallel code splitting for faster builds
+    parallelCodeSplitting: true,
+  },
 };
 
 // Nx plugins for rspack to build config object from Nx options and context.
@@ -33,43 +42,63 @@ module.exports = composePlugins(
     // Performance optimizations for adminApp
     config.optimization = {
       ...config.optimization,
+      usedExports: true,
+      providedExports: true,
+      sideEffects: true,
+      innerGraph: true,
       splitChunks: {
         chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
         cacheGroups: {
-          // Separate vendor chunks for better caching
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-            priority: 10,
+          // React vendor chunk
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react-vendor',
+            priority: 40,
+            reuseExistingChunk: true,
           },
-          // Separate antd chunk for better caching
+          // Ant Design - separate chunk for better caching
           antd: {
             test: /[\\/]node_modules[\\/]antd[\\/]/,
             name: 'antd',
-            chunks: 'all',
-            priority: 20,
-          },
-          // Separate react chunk for better caching
-          react: {
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            name: 'react',
-            chunks: 'all',
             priority: 30,
+            reuseExistingChunk: true,
+          },
+          // Lowcode - separate chunk
+          lowcode: {
+            test: /[\\/]node_modules[\\/]@zionix-space[\\/]lowcode[\\/]/,
+            name: 'lowcode',
+            priority: 25,
+            reuseExistingChunk: true,
+          },
+          // Design system
+          designSystem: {
+            test: /[\\/]node_modules[\\/]@zionix-space[\\/]design-system[\\/]/,
+            name: 'design-system',
+            priority: 20,
+            reuseExistingChunk: true,
+          },
+          // Other vendors
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            priority: 10,
+            reuseExistingChunk: true,
           },
           // Form builder specific chunk
           formBuilder: {
             test: /[\\/]src[\\/]pages[\\/]FormSetup[\\/]/,
             name: 'form-builder',
-            chunks: 'all',
             priority: 5,
+            reuseExistingChunk: true,
           },
         },
       },
       // Enable module concatenation for better tree shaking
       concatenateModules: true,
-      // Enable side effects optimization
-      sideEffects: false,
     };
 
     // Add performance hints - suppress in development

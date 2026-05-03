@@ -8,6 +8,15 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config = {
   ...baseConfig,
+  // Rspack 1.2+ optimizations
+  experiments: {
+    // Enable persistent cache for 250% faster hot starts
+    cache: isDevelopment ? {
+      type: 'persistent',
+    } : undefined,
+    // Enable parallel code splitting for faster builds
+    parallelCodeSplitting: true,
+  },
   // Production optimizations
   ...(isDevelopment ? {} : {
     optimization: {

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { BaseSpin } from '@zionix-space/design-system';
 import { useDomainsQuery } from './hooks/useDomainQuery';
 import { importDomainsViewSchema } from './utils/importSchema';
@@ -15,7 +15,7 @@ import {
 } from '@zionix-space/lowcode';
 import '@zionix-space/lowcode/styles';
 
-// Create BuilderView with Ant Design components
+// Create BuilderView with Ant Design components (singleton - created once)
 const builderComponents = antdComponents.map(c => c.build());
 const builderView = new BuilderView(builderComponents)
     .withViewerWrapper(AntLocalizationWrapper)
@@ -31,10 +31,16 @@ const builderView = new BuilderView(builderComponents)
  * 2. API: React Query hooks fetch data from backend
  * 3. Transform: API response → form data structure
  * 4. Render: FormViewer displays form with injected data
+ * 
+ * Performance Strategy:
+ * - Use FormViewer's ref to update ONLY table data without full re-render
+ * - Filter inputs are controlled by FormViewer's internal state
+ * - Only API response changes trigger table updates via setFieldsValue
  */
 const DomainManagementScreen = () => {
     const [filters, setFilters] = useState({ search: '', status: '' });
     const debounceTimerRef = useRef(null);
+    const viewerRef = useRef(null);
 
     // Auto-import form schema on first load
     useEffect(() => {
@@ -53,9 +59,20 @@ const DomainManagementScreen = () => {
     // Fetch domains from API
     const { data: domainsResponse, isLoading, refetch } = useDomainsQuery(filters);
 
-    // Transform API response to form data
-    const formData = useMemo(() => {
-        if (!domainsResponse) return {};
+    // Initial form data - only set once on mount
+    const initialFormData = useMemo(() => ({
+        searchInput: '',
+        statusFilter: '',
+        totalCount: '0',
+        activeCount: '0',
+        pendingCount: '0',
+        inactiveCount: '0',
+        domainsTable: []
+    }), []);
+
+    // Update ONLY table data when API response changes (no full re-render)
+    useEffect(() => {
+        if (!domainsResponse || !viewerRef.current) return;
 
         const domains = domainsResponse.data || domainsResponse || [];
 
@@ -74,30 +91,25 @@ const DomainManagementScreen = () => {
             status: domain.status || 'Active'
         }));
 
-        return {
-            // Statistics
+        // Update ONLY the data fields, not filter inputs
+        // This prevents full FormViewer re-render
+        viewerRef.current.setFieldsValue({
             totalCount: total.toString(),
             activeCount: active.toString(),
             pendingCount: pending.toString(),
             inactiveCount: inactive.toString(),
+            domainsTable: tableData
+        });
+    }, [domainsResponse]);
 
-            // Table data
-            domainsTable: tableData,
-
-            // Filter values
-            searchInput: filters.search,
-            statusFilter: filters.status
-        };
-    }, [domainsResponse, filters]);
-
-    // Load form schema from localStorage
-    const getForm = async () => {
+    // Load form schema from localStorage (stable reference)
+    const getForm = useCallback(async () => {
         const schema = await formDB.getFormSchema('DomainsView');
         return schema ? JSON.stringify(schema) : null;
-    };
+    }, []);
 
-    // Handle form data changes (user interactions)
-    const handleFormDataChange = ({ data }) => {
+    // Handle form data changes (user interactions) - stable reference
+    const handleFormDataChange = useCallback(({ data }) => {
         // Clear previous timer
         if (debounceTimerRef.current) {
             clearTimeout(debounceTimerRef.current);
@@ -111,20 +123,23 @@ const DomainManagementScreen = () => {
             };
 
             // Only update if filters changed
-            if (newFilters.search !== filters.search || newFilters.status !== filters.status) {
-                setFilters(newFilters);
-            }
+            setFilters(prevFilters => {
+                if (newFilters.search !== prevFilters.search || newFilters.status !== prevFilters.status) {
+                    return newFilters;
+                }
+                return prevFilters;
+            });
         }, 500);
-    };
+    }, []);
 
-    // Custom actions for buttons
-    const customActions = {
+    // Custom actions for buttons (stable reference)
+    const customActions = useMemo(() => ({
         onSearch: () => refetch(),
         onExport: () => console.log('Export domains'),
         onAddDomain: () => console.log('Add new domain'),
         onViewDomain: (e) => console.log('View domain:', e),
         onEditDomain: (e) => console.log('Edit domain:', e)
-    };
+    }), [refetch]);
 
     if (isLoading && !domainsResponse) {
         return (
@@ -142,10 +157,11 @@ const DomainManagementScreen = () => {
     return (
         <div style={{ height: '100vh', overflow: 'auto' }}>
             <FormViewer
+                ref={viewerRef}
                 view={builderView}
                 getForm={getForm}
                 formName="DomainsView"
-                initialData={formData}
+                initialData={initialFormData}
                 actions={customActions}
                 onFormDataChange={handleFormDataChange}
             />

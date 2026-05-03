@@ -1,10 +1,6 @@
-// Import Inter font IMMEDIATELY for fastest loading (before React)
-import "@fontsource/inter/300.css";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/500.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/inter/700.css";
-import "@fontsource/inter/800.css";
+// Import only essential font weights for faster initial load
+import "@fontsource/inter/400.css"; // Regular - most used
+import "@fontsource/inter/600.css"; // Semi-bold - for headings
 
 // Import Remix Icons CSS
 import 'remixicon/fonts/remixicon.css';
@@ -14,6 +10,14 @@ import '@zionix-space/design-system/styles.css';
 
 // Import custom styles last to allow overrides
 import "./styles.scss";
+
+// Lazy load additional font weights after initial render
+setTimeout(() => {
+  import("@fontsource/inter/300.css"); // Light
+  import("@fontsource/inter/500.css"); // Medium
+  import("@fontsource/inter/700.css"); // Bold
+  import("@fontsource/inter/800.css"); // Extra Bold
+}, 100);
 import React, { StrictMode } from "react";
 import * as ReactDOM from "react-dom/client";
 import App from "./app/app";

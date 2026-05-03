@@ -258,9 +258,12 @@ function loadSharedDependencies() {
       const version = packageJson.dependencies[packageName] || packageJson.devDependencies[packageName];
 
       if (version) {
+        // Make React and React-DOM eager for faster dev loading
+        const isEager = packageName === 'react' || packageName === 'react-dom';
+
         sharedDeps[packageName] = {
           singleton: true,
-          eager: false,  // Use false for dev mode to allow lazy loading
+          eager: isEager,  // React/React-DOM load immediately, others lazy
           requiredVersion: version
         };
       } else {

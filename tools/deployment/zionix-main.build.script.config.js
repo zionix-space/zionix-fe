@@ -52,9 +52,13 @@ function loadSharedDependencies() {
             const version = packageJson.dependencies[packageName] || packageJson.devDependencies[packageName];
 
             if (version) {
+                // Only React and React-DOM should be eager in production
+                // Everything else lazy loads for better performance
+                const isEager = packageName === 'react' || packageName === 'react-dom';
+
                 sharedDeps[packageName] = {
-                    singleton: true,  // Default: singleton for all shared packages
-                    eager: true,      // Default: eager loading
+                    singleton: true,
+                    eager: isEager,
                     requiredVersion: version
                 };
             } else {

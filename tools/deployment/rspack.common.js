@@ -7,10 +7,15 @@ function commonRulesRsPack(config, isDevelopment = false) {
     (rule) => !(rule.test && rule.test.toString().includes('.scss'))
   );
 
-  // Optimized asset handling with caching
+  // Optimized asset handling with caching and compression
   module.rules.push({
     test: /\.(png|jpg|jpeg|gif|svg)$/,
-    type: 'asset/resource',
+    type: 'asset',
+    parser: {
+      dataUrlCondition: {
+        maxSize: 8 * 1024, // 8KB - inline small images
+      },
+    },
     generator: {
       filename: isDevelopment ? 'assets/[name][ext]' : 'assets/[name].[contenthash:8][ext]',
     },
@@ -72,17 +77,30 @@ function commonRulesRsPack(config, isDevelopment = false) {
       ],
     });
   } else {
-    // Production CSS processing
+    // Production CSS processing with optimization
     module.rules.push({
       test: /\.css$/,
-      use: ['style-loader', 'css-loader'],
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 1,
+          },
+        },
+      ],
     });
 
     module.rules.push({
       test: /\.scss$/i,
       use: [
         'style-loader',
-        'css-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 2,
+          },
+        },
         'sass-loader',
       ],
     });
@@ -97,8 +115,6 @@ function commonRulesRsPack(config, isDevelopment = false) {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
         ...config.resolve?.alias,
-        // Add common aliases to speed up resolution
-        '@': 'src',
       },
     };
 

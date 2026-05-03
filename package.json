@@ -2,18 +2,19 @@
   "name": "@zionix-web/source",
   "version": "0.0.0",
   "license": "MIT",
+  "sideEffects": [
+    "*.css",
+    "*.scss",
+    "*.sass"
+  ],
   "moduleFederation": {
     "shared": [
       "react",
       "react-dom",
-      "dayjs",
       "react-router-dom",
       "zustand",
       "@tanstack/react-query",
-      "@zionix-space/lowcode",
-      "@zionix-space/design-system",
-      "framer-motion",
-      "remixicon"
+      "@zionix-space/design-system"
     ]
   },
   "scripts": {
@@ -31,7 +32,8 @@
     "perf:audit-admin": "lighthouse http://localhost:4200/adminApp/menu-setup --output=json --output-path=./lighthouse-admin-report.json --only-categories=performance --chrome-flags=\"--headless\"",
     "perf:analyze": "node -e \"const report = JSON.parse(require('fs').readFileSync('./lighthouse-report.json', 'utf8')); console.log('Performance Score:', report.categories.performance.score * 100); console.log('FCP:', report.audits['first-contentful-paint'].displayValue); console.log('LCP:', report.audits['largest-contentful-paint'].displayValue); console.log('TBT:', report.audits['total-blocking-time'].displayValue);\"",
     "perf:bundle-analyze": "nx build adminApp --analyze && echo 'Bundle analysis complete. Check dist folder for stats.'",
-    "perf:monitor": "npm run perf:audit && npm run perf:analyze"
+    "perf:monitor": "npm run perf:audit && npm run perf:analyze",
+    "perf:measure": "node tools/performance/measure-performance.js"
   },
   "private": true,
   "dependencies": {
