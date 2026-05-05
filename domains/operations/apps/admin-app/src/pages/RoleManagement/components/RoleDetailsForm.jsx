@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { BaseForm, BaseInput, BaseSelect, BaseEmpty, BaseTag, BaseSpace, BaseSwitch } from '@zionix-space/design-system';
 import { useTheme } from '@zionix-space/design-system';
 import './RoleDetailsForm.scss';
@@ -6,12 +6,16 @@ import './RoleDetailsForm.scss';
 const { TextArea } = BaseInput;
 const { Option } = BaseSelect;
 
-const RoleDetailsForm = ({ selectedKey, selectedItem, accessLevels, onAccessChange }) => {
+const RoleDetailsForm = ({ selectedKey, selectedItem, accessLevels, onAccessChange, onFieldChange }) => {
     const { token } = useTheme();
     const [form] = BaseForm.useForm();
+    const previousSelectedKeyRef = useRef(null);
 
     useEffect(() => {
-        if (selectedItem) {
+        // Only update form when a different item is selected (not when the same item is updated)
+        if (selectedItem && selectedKey !== previousSelectedKeyRef.current) {
+            previousSelectedKeyRef.current = selectedKey;
+
             const currentAccess = accessLevels?.[selectedKey] || 'disabled';
 
             // Update fields when tree selection changes
@@ -28,6 +32,32 @@ const RoleDetailsForm = ({ selectedKey, selectedItem, accessLevels, onAccessChan
         // If access level changed, update the tree access levels
         if (changedValues.accessLevel && selectedKey && onAccessChange) {
             onAccessChange(selectedKey, changedValues.accessLevel, true);
+        }
+
+        // For other field changes, update the menu item data
+        if (selectedKey && onFieldChange) {
+            // Filter out accessLevel as it's handled separately
+            const { accessLevel, ...otherChanges } = changedValues;
+
+            if (Object.keys(otherChanges).length > 0) {
+                // Map form field names to API field names
+                const mappedChanges = {};
+
+                if ('isActive' in otherChanges) {
+                    mappedChanges.is_active = otherChanges.isActive;
+                }
+                if ('roleName' in otherChanges) {
+                    mappedChanges.label = otherChanges.roleName; // or whatever field it should map to
+                }
+                if ('roleDescription' in otherChanges) {
+                    mappedChanges.description = otherChanges.roleDescription;
+                }
+
+                // Only call onFieldChange if we have mapped changes
+                if (Object.keys(mappedChanges).length > 0) {
+                    onFieldChange(selectedKey, mappedChanges);
+                }
+            }
         }
     };
 

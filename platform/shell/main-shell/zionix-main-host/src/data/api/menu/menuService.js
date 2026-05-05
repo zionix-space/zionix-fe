@@ -64,7 +64,7 @@ const transformMenuResponse = (apiResponse) => {
       mainNavigation: parseBadges(apiResponse.mainNavigation),
       profileSection: apiResponse.profileSection ? {
         ...apiResponse.profileSection,
-        items: parseBadges(apiResponse.profileSection.items || [])
+        menuItems: parseBadges(apiResponse.profileSection.menuItems || apiResponse.profileSection.items || [])
       } : null
     };
   }
@@ -72,7 +72,10 @@ const transformMenuResponse = (apiResponse) => {
   // Handle legacy format or unexpected structure
   return {
     mainNavigation: parseBadges(Array.isArray(apiResponse) ? apiResponse : []),
-    profileSection: apiResponse.profileSection || null,
+    profileSection: apiResponse.profileSection ? {
+      ...apiResponse.profileSection,
+      menuItems: parseBadges(apiResponse.profileSection.menuItems || apiResponse.profileSection.items || [])
+    } : null,
     config: apiResponse.config || {},
   };
 };

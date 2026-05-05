@@ -280,6 +280,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                 // Clear history after successful save
                 setHistory([]);
                 setHistoryIndex(-1);
+                baseMessage.success('Menus updated successfully');
             },
         });
     };
@@ -633,6 +634,7 @@ const RoleEditor = ({ jsonPreviewOpen, onJsonPreviewClose, onMenuDataChange, isM
                         selectedItem={selectedItem}
                         accessLevels={accessLevels}
                         onAccessChange={handleAccessChange}
+                        onFieldChange={handleFieldChange}
                     />
                 </div>
             </div>

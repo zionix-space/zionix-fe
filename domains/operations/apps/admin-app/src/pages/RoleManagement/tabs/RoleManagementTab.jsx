@@ -14,14 +14,10 @@ const ComponentLoader = () => (
     </div>
 );
 
-const RoleManagementTab = ({ isMobile }) => {
+const RoleManagementTab = ({ isMobile, selectedRole }) => {
     const { token } = useToken();
     const [showJsonPreview, setShowJsonPreview] = useState(false);
     const [menuData, setMenuData] = useState(null);
-
-    const getLightPrimaryBg = () => {
-        return `color-mix(in srgb, ${token.colorPrimaryBg} 30%, ${token.colorBgContainer})`;
-    };
 
     const handleMenuDataChange = useCallback((data) => {
         setMenuData(data);
@@ -32,28 +28,19 @@ const RoleManagementTab = ({ isMobile }) => {
             <BaseLayout style={{ height: '100%', minHeight: '100vh' }}>
                 <Content
                     style={{
-                        padding: '16px',
+                        padding: 0,
                         overflow: 'auto',
                         height: '100vh',
                     }}
                 >
-                    <BaseSpace orientation="vertical" size="middle" style={{ width: '100%' }}>
-                        <div>
-                            <Title level={3} style={{ margin: 0 }}>User Roles Setup</Title>
-                            <Paragraph style={{ margin: '4px 0 0 0', fontSize: '14px' }}>
-                                Configure and manage your application User Menus Role Access.
-                            </Paragraph>
-                        </div>
-
-                        <Suspense fallback={<ComponentLoader />}>
-                            <RoleEditor
-                                jsonPreviewOpen={showJsonPreview}
-                                onJsonPreviewClose={() => setShowJsonPreview(false)}
-                                onMenuDataChange={handleMenuDataChange}
-                                isMobile={isMobile}
-                            />
-                        </Suspense>
-                    </BaseSpace>
+                    <Suspense fallback={<ComponentLoader />}>
+                        <RoleEditor
+                            jsonPreviewOpen={showJsonPreview}
+                            onJsonPreviewClose={() => setShowJsonPreview(false)}
+                            onMenuDataChange={handleMenuDataChange}
+                            isMobile={isMobile}
+                        />
+                    </Suspense>
                 </Content>
             </BaseLayout>
         );
@@ -62,40 +49,31 @@ const RoleManagementTab = ({ isMobile }) => {
     return (
         <Content
             style={{
-                padding: '24px',
+                padding: 0,
                 overflow: 'auto',
                 minHeight: '100vh',
             }}
         >
-            <BaseSpace orientation="vertical" size="large" style={{ width: '100%' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div>
-                        <Title level={2} style={{ margin: 0 }}>User Roles Setup</Title>
-                        <Paragraph style={{ margin: '4px 0 0 0' }}>
-                            Configure and manage your application User Menus Role Access.
-                        </Paragraph>
-                    </div>
-
-                    <BaseTooltip title="Preview JSON">
-                        <BaseButton
-                            type="text"
-                            icon={<i className="ri-code-s-slash-line" style={{ fontSize: '20px' }} />}
-                            onClick={() => setShowJsonPreview(true)}
-                            shape="circle"
-                            size="large"
-                        />
-                    </BaseTooltip>
-                </div>
-
-                <Suspense fallback={<ComponentLoader />}>
-                    <RoleEditor
-                        jsonPreviewOpen={showJsonPreview}
-                        onJsonPreviewClose={() => setShowJsonPreview(false)}
-                        onMenuDataChange={handleMenuDataChange}
-                        isMobile={false}
+            <div style={{ position: 'absolute', top: '16px', right: '24px', zIndex: 10 }}>
+                <BaseTooltip title="Preview JSON">
+                    <BaseButton
+                        type="text"
+                        icon={<i className="ri-code-s-slash-line" style={{ fontSize: '20px' }} />}
+                        onClick={() => setShowJsonPreview(true)}
+                        shape="circle"
+                        size="large"
                     />
-                </Suspense>
-            </BaseSpace>
+                </BaseTooltip>
+            </div>
+
+            <Suspense fallback={<ComponentLoader />}>
+                <RoleEditor
+                    jsonPreviewOpen={showJsonPreview}
+                    onJsonPreviewClose={() => setShowJsonPreview(false)}
+                    onMenuDataChange={handleMenuDataChange}
+                    isMobile={false}
+                />
+            </Suspense>
         </Content>
     );
 };

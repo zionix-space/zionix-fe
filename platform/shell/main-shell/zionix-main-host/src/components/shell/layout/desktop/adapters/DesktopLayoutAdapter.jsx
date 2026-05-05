@@ -99,27 +99,16 @@ const DesktopLayoutAdapter = ({ className = '', style = {} }) => {
                 return;
             }
 
-            // Navigate using route property from API
+            // Navigate using route property from API (only if route exists)
             if (menuItem.route) {
                 navigate(menuItem.route);
+            } else {
+                // No route defined - just log the action
+                console.log('Profile menu action:', key, '- No route defined');
             }
         } else {
-            // Fallback for default items
-            switch (key) {
-                case 'profile':
-                    navigate('/apps/profile');
-                    break;
-                case 'settings':
-                    navigate('/apps/settings');
-                    break;
-                case 'logout':
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location.href = '/';
-                    break;
-                default:
-                    console.log('Unknown menu action:', key);
-            }
+            // No menu item found in API data
+            console.log('Profile menu item not found in API:', key);
         }
     };
 

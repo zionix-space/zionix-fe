@@ -1,6 +1,62 @@
 import axiosClient from '@zionix/shared-utilities/shared/middleware/axiosCore';
 
 /**
+ * Role Service - All role-related API calls
+ * Uses global axios client with built-in auth and error handling
+ */
+export const roleService = {
+    /**
+     * Get all roles
+     * @param {Object} params - Query parameters
+     * @param {number} params.skip - Number of records to skip (default: 0)
+     * @param {number} params.limit - Number of records to return (default: 100)
+     * @param {boolean} params.active_only - Filter by active status (default: false)
+     * @returns {Promise<Array>} List of roles
+     */
+    getRoles: async (params = {}) => {
+        const { skip = 0, limit = 100, active_only = false } = params;
+        return await axiosClient.get(`/user-roles/?skip=${skip}&limit=${limit}&active_only=${active_only}`);
+    },
+
+    /**
+     * Get role by ID
+     * @param {string} roleId - Role ID
+     * @returns {Promise<Object>} Role data
+     */
+    getRoleById: async (roleId) => {
+        return await axiosClient.get(`/user-roles/${roleId}`);
+    },
+
+    /**
+     * Create new role
+     * @param {Object} roleData - Role data
+     * @returns {Promise<Object>} Created role
+     */
+    createRole: async (roleData) => {
+        return await axiosClient.post('/user-roles/', roleData);
+    },
+
+    /**
+     * Update existing role
+     * @param {string} roleId - Role ID
+     * @param {Object} roleData - Updated role data
+     * @returns {Promise<Object>} Updated role
+     */
+    updateRole: async (roleId, roleData) => {
+        return await axiosClient.put(`/user-roles/${roleId}`, roleData);
+    },
+
+    /**
+     * Delete role
+     * @param {string} roleId - Role ID
+     * @returns {Promise<void>}
+     */
+    deleteRole: async (roleId) => {
+        return await axiosClient.delete(`/user-roles/${roleId}`);
+    },
+};
+
+/**
  * Menu Service - All menu-related API calls
  * Uses global axios client with built-in auth and error handling
  */
@@ -70,4 +126,4 @@ export const menuService = {
     },
 };
 
-export default menuService;
+export default { roleService, menuService };

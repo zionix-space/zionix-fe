@@ -28,23 +28,24 @@ const ProfilePage = () => {
     // Active menu state
     const [activeMenu, setActiveMenu] = useState('personal-info');
 
-    // Mock user data - replace with actual data from your auth store
+    // User data - should come from API/auth store
+    // TODO: Replace with actual API call to fetch user profile data
     const [userData, setUserData] = useState({
-        firstName: 'Chris',
-        lastName: 'Johnson',
-        nickname: '@john1989',
-        sex: 'male',
-        birthday: dayjs('2022-01-26'),
-        language: 'english',
-        phone: '+1 814 351 9459',
-        email: 'chrisjohnson@afterbe.com',
-        emailVerified: true,
-        country: 'United Kingdom of Great Britain and Northern Ireland',
-        city: 'London',
-        address1: '14 London Road',
+        firstName: '',
+        lastName: '',
+        nickname: '',
+        sex: '',
+        birthday: null,
+        language: '',
+        phone: '',
+        email: '',
+        emailVerified: false,
+        country: '',
+        city: '',
+        address1: '',
         address2: '',
-        avatar: 'https://i.pravatar.cc/150?img=12',
-        profileCompletion: 90,
+        avatar: '',
+        profileCompletion: 0,
     });
 
     // Handle menu click

@@ -113,6 +113,19 @@ export function AppRouter() {
       case 'adminApp':
         ModuleComponent = React.lazy(() => import('adminApp/Module'));
         break;
+
+
+
+
+
+
+
+
+
+
+
+
+
       default:
         ModuleComponent = () => <div>App not found</div>;
     }

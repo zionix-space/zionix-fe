@@ -4,6 +4,7 @@ import { GlobalTopLoader, NotFoundPage } from '@zionix-space/design-system';
 
 const MenuManagementScreen = lazy(() => import('../pages/MenuManagement'));
 const RoleManagementScreen = lazy(() => import('../pages/RoleManagement'));
+const RoleManagementList = lazy(() => import('../pages/RoleManagement/components/RoleManagementList'));
 const FormManagementScreen = lazy(() => import('../pages/FormManagement'));
 const DomainManagementScreen = lazy(() => import('../pages/DomainManagement'));
 const WorkfFlowManagementScreen = lazy(() => import('../pages/WorkFlowManagement'));
@@ -20,7 +21,9 @@ export function App() {
         {/* Domain Management Screen */}
         <Route path="app-Configuration/domains" element={<DomainManagementScreen />} />
         {/* Role Management Screen */}
-        <Route path="user-management/roles" element={<RoleManagementScreen />} />
+        <Route path="user-management/roles" element={<RoleManagementList />} />
+        <Route path="user-management/roles/create-role" element={<RoleManagementScreen />} />
+        <Route path="user-management/roles/:roleId" element={<RoleManagementScreen />} />
         {/* Form Management Screen */}
         <Route path="app-Configuration/forms" element={<FormManagementScreen />} />
         {/* Workflow Management Screen */}
